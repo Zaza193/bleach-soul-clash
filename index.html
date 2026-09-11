@@ -51,7 +51,7 @@
   root.classList.add('responsive-booted');
 })();
 </script>
-<title>BLEACH: Soul Clash v320 — Supabase Realtime</title>
+<title>BLEACH: Soul Clash v322 — WSS Relay</title>
 <style>
   :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -9940,6 +9940,837 @@ html.pwa-standalone.phone-device.phone-landscape .app{
 }
 </style>
 
+
+<style id="v327-mobile-only-ui-repairs">
+/* V327: the v321 sizing patch was intended for phone/touch landscape only.
+   Keep it away from desktop so the original desktop geometry wins again. */
+@media (hover:none) and (pointer:coarse) and (orientation:landscape){
+
+/* ===== V321: final browser + PWA UI repairs ===== */
+
+/* 1. Global instructional copy is readable in setup / battle helper panels. */
+#deckBuilderSub,
+#mulliganOverlay .mulligan-instruction,
+#networkCreateStatus,
+#networkJoinStatus,
+#networkWaitStatus,
+#choiceOverlay #choiceSub,
+#choiceOverlay .choice-modal.initiative-choice #choiceSub,
+.pwa-install-hint,
+.rotate-device-card p,
+.mulligan-info,
+.ability-block .ability-text,
+.detail .desc{
+  font-size:clamp(14px,1vw,18px)!important;
+  line-height:1.38!important;
+}
+.detail h3{font-size:19px!important;line-height:1.02!important}
+.detail .meta{font-size:10px!important}
+.ability-block{padding:10px 11px!important}
+
+/* 2. Setup/footer buttons are much less chunky. */
+#deckBuilderOverlay .deck-builder-actions,
+#mulliganOverlay .mulligan-actions{
+  gap:8px!important;
+  padding:8px!important;
+}
+#deckBuilderOverlay .deck-builder-actions button,
+#mulliganOverlay .mulligan-actions button,
+#deckBuilderOverlay .deck-builder-back,
+#mulliganOverlay .deck-builder-back,
+#deckBuilderOverlay .deck-builder-confirm,
+#mulliganOverlay .mulligan-confirm{
+  min-height:56px!important;
+  height:56px!important;
+  padding:8px 14px!important;
+  font-size:12px!important;
+  line-height:1.05!important;
+}
+
+/* 3. Desktop/browser mulligan cards get a rigid geometry so they cannot go crooked. */
+@media (min-width:900px){
+  #mulliganOverlay .mulligan-grid{
+    display:grid!important;
+    grid-template-columns:repeat(5,132px)!important;
+    grid-auto-rows:auto!important;
+    justify-content:center!important;
+    align-content:start!important;
+    gap:10px 14px!important;
+    max-width:760px!important;
+    margin:0 auto!important;
+    padding:12px 0 10px!important;
+    overflow:visible!important;
+  }
+  #mulliganOverlay .mulligan-card-wrap{
+    width:132px!important;
+    min-width:132px!important;
+    max-width:132px!important;
+  }
+  #mulliganOverlay .mulligan-card-wrap>.card,
+  #mulliganOverlay .mulligan-grid>.card{
+    width:132px!important;
+    min-width:132px!important;
+    max-width:132px!important;
+    height:190px!important;
+    min-height:190px!important;
+    max-height:190px!important;
+    aspect-ratio:132 / 190!important;
+  }
+}
+
+/* 4. Hand cards: restore sane strength semicircle size and a stable card footprint. */
+#hand .card,
+#hand.hand-expanded .card{
+  flex:0 0 72px!important;
+  width:72px!important;
+  min-width:72px!important;
+  max-width:72px!important;
+  height:104px!important;
+  min-height:104px!important;
+  max-height:104px!important;
+}
+#hand .card .power,
+#hand.hand-expanded .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2px!important;
+  transform:translateX(-50%)!important;
+  width:34px!important;
+  min-width:34px!important;
+  max-width:34px!important;
+  height:18px!important;
+  min-height:18px!important;
+  max-height:18px!important;
+  padding:2px 0 0!important;
+  border-radius:34px 34px 0 0!important;
+  border:2px solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  font-size:20px!important;
+  line-height:1!important;
+  box-shadow:none!important;
+}
+
+/* 5. Battlefield cards: smaller footprint, readable strength, centered badge. */
+.row{grid-template-columns:34px minmax(0,1fr) 36px!important}
+.row-label{padding:6px 4px 6px 8px!important}
+.row-label strong{font-size:10px!important}
+.row-score{font-size:22px!important}
+.row-cards{
+  gap:4px!important;
+  padding:4px!important;
+}
+.row-cards .card{
+  flex:0 0 54px!important;
+  width:54px!important;
+  min-width:54px!important;
+  max-width:54px!important;
+  height:78px!important;
+  min-height:78px!important;
+  max-height:78px!important;
+}
+.row-cards .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2px!important;
+  transform:translateX(-50%)!important;
+  width:31px!important;
+  min-width:31px!important;
+  max-width:31px!important;
+  height:17px!important;
+  min-height:17px!important;
+  max-height:17px!important;
+  padding:2px 0 0!important;
+  border-radius:31px 31px 0 0!important;
+  border:2px solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  font-size:18px!important;
+  line-height:1!important;
+}
+.row-cards .card .name{font-size:7px!important;padding:12px 3px 3px!important}
+.row-cards .card .faction-mark{left:4px!important;bottom:20px!important;width:14px!important;height:14px!important;font-size:9px!important}
+.row-cards .card.hero:before{right:4px!important;bottom:18px!important;font-size:10px!important}
+
+/* 6. Give sidebars more width; the battle board gives some space back. */
+@media (min-width:1000px){
+  .app{grid-template-columns:260px minmax(0,1fr) 290px!important}
+}
+@media (max-width:999px){
+  html.touch-device.touch-landscape .app,
+  html.phone-device.phone-landscape .app,
+  html.pwa-standalone.touch-device.touch-landscape .app,
+  html.pwa-standalone.phone-device.phone-landscape .app{
+    grid-template-columns:148px minmax(0,1fr) 122px!important;
+  }
+}
+
+/* 7. Leaders: compact, readable, no overlap with the round score. */
+#enemyLeader.leader-art-ui,
+#playerLeaderPanel.leader-art-ui,
+.leader-card.leader-art-ui{
+  overflow:hidden!important;
+  min-height:0!important;
+}
+#enemyLeader .leader-ui-shell,
+#playerLeaderPanel .leader-ui-shell,
+.leader-card.leader-art-ui .leader-ui-shell{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:4px!important;
+  width:100%!important;
+  height:100%!important;
+}
+#enemyLeader .leader-ui-epithet,
+#playerLeaderPanel .leader-ui-epithet,
+.leader-card.leader-art-ui .leader-ui-epithet{
+  display:none!important;
+}
+#enemyLeader .leader-ui-name,
+#playerLeaderPanel .leader-ui-name,
+.leader-card.leader-art-ui .leader-ui-name{
+  min-height:0!important;
+  padding:0 4px!important;
+  font-size:14px!important;
+  line-height:.92!important;
+  text-align:center!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  word-break:break-word!important;
+}
+#enemyLeader .leader-ui-art,
+#playerLeaderPanel .leader-ui-art,
+.leader-card.leader-art-ui .leader-ui-art{
+  margin:0!important;
+  height:92px!important;
+  flex:0 0 92px!important;
+}
+#enemyLeader .leader-score,
+#playerLeaderPanel .leader-score,
+.leader-card.leader-art-ui .leader-score{
+  top:auto!important;
+  right:4px!important;
+  bottom:4px!important;
+  width:34px!important;
+  height:34px!important;
+  font-size:20px!important;
+}
+#enemyLeader .leader-ui-ability,
+#enemyLeader .leader-ui-use{display:none!important}
+#playerLeaderPanel .leader-ui-ability{
+  display:block!important;
+  margin:0!important;
+  padding:4px 5px 5px!important;
+  min-height:0!important;
+}
+#playerLeaderPanel .leader-ui-ability-title{
+  font-size:7px!important;
+  line-height:1.05!important;
+  margin:0 0 2px!important;
+  padding:0 0 2px!important;
+}
+#playerLeaderPanel .leader-ui-ability-text,
+#playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+#playerLeaderPanel .leader-ui-ability-text.leader-text-dense{
+  min-height:0!important;
+  max-height:32px!important;
+  padding:0!important;
+  font-size:6.6px!important;
+  line-height:1.16!important;
+  overflow:hidden!important;
+}
+#playerLeaderPanel .leader-ui-use{
+  display:block!important;
+  min-height:18px!important;
+  height:18px!important;
+  margin-top:3px!important;
+  padding:1px 3px!important;
+  font-size:6px!important;
+  line-height:1!important;
+}
+
+/* 8. Compact left column stack on mobile landscape so leaders stop breaking. */
+html.touch-device.touch-landscape .side,
+html.phone-device.phone-landscape .side{
+  padding:4px!important;
+  gap:4px!important;
+}
+html.touch-device.touch-landscape .battle-brand,
+html.phone-device.phone-landscape .battle-brand{padding:0 0 2px!important}
+html.touch-device.touch-landscape .battle-brand b,
+html.phone-device.phone-landscape .battle-brand b{font-size:12px!important;letter-spacing:.08em!important}
+html.touch-device.touch-landscape .round-outcome.round-series-score,
+html.phone-device.phone-landscape .round-outcome.round-series-score{
+  flex:0 0 22px!important;
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  margin:1px 0!important;
+  padding:0!important;
+  gap:0!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape .round-outcome.round-series-score .round-turn-indicator,
+html.phone-device.phone-landscape .round-outcome.round-series-score .round-turn-indicator{display:none!important}
+html.touch-device.touch-landscape .round-series-score-value,
+html.phone-device.phone-landscape .round-series-score-value{font-size:19px!important;line-height:22px!important}
+html.touch-device.touch-landscape #enemyLeader.leader-art-ui,
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui,
+html.phone-device.phone-landscape #enemyLeader.leader-art-ui,
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui{
+  padding:4px!important;
+}
+html.touch-device.touch-landscape #enemyLeader .leader-ui-name,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-name,
+html.phone-device.phone-landscape #enemyLeader .leader-ui-name,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-name{font-size:10px!important;padding:0 2px!important}
+html.touch-device.touch-landscape #enemyLeader .leader-ui-art,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-art,
+html.phone-device.phone-landscape #enemyLeader .leader-ui-art,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-art{height:66px!important;flex-basis:66px!important}
+html.touch-device.touch-landscape #enemyLeader .leader-score,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-score,
+html.phone-device.phone-landscape #enemyLeader .leader-score,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-score{width:27px!important;height:27px!important;font-size:15px!important;right:3px!important;bottom:3px!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability{padding:3px!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-title,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-title{font-size:6px!important;margin:0 0 1px!important;padding:0 0 1px!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{font-size:5.5px!important;line-height:1.12!important;max-height:22px!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-use,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-use{min-height:14px!important;height:14px!important;margin-top:2px!important;font-size:5px!important;padding:1px 2px!important}
+
+/* 9. Right preview column also gets real usable space on mobile. */
+html.touch-device.touch-landscape .rightbar,
+html.phone-device.phone-landscape .rightbar{
+  grid-template-rows:34px minmax(0,1fr) 34px!important;
+  gap:4px!important;
+  padding:4px!important;
+}
+html.touch-device.touch-landscape .detail-preview,
+html.phone-device.phone-landscape .detail-preview{width:98px!important;max-width:98px!important;margin:0 auto 4px!important}
+html.touch-device.touch-landscape .detail-preview .card,
+html.phone-device.phone-landscape .detail-preview .card{width:98px!important;max-width:98px!important}
+
+}
+</style>
+
+
+<style id="v323-online-preview-medic-row-marks">
+/* V323 — an opponent play occupies the preview as a face-only card. */
+.rightbar .detail-preview.opponent-play-preview .card-info-panel,
+.rightbar .detail-preview.opponent-play-preview .ability-block,
+.rightbar .detail-preview.opponent-play-preview .card-info-name,
+.rightbar .detail-preview.opponent-play-preview .card-info-desc{
+  display:none!important;
+}
+.rightbar .detail-preview.opponent-play-preview .card{
+  margin:0 auto!important;
+}
+/* Medic/grave target selection is the explicit exception to V282: the returned
+   card's legal row is gameplay-relevant once it reaches the hand. */
+#choiceOverlay .choice-card-preview.show-row-placement .row-badge,
+#choiceOverlay .choice-card-btn .choice-card-preview.show-row-placement .row-badge{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+</style>
+
+
+<style id="v326-network-flat-handcount">
+/* V326 — keep all ONLINE setup screens rectangular: no folded/cut corners. */
+#networkOverlay .network-modal,
+#networkCreateOverlay .network-modal,
+#networkJoinOverlay .network-modal,
+#handoffOverlay .handoff-modal{
+  clip-path:none!important;
+  border-radius:0!important;
+}
+#networkOverlay button,
+#networkCreateOverlay button,
+#networkJoinOverlay button,
+#handoffOverlay button,
+#networkOverlay .start-btn,
+#networkCreateOverlay .start-btn,
+#networkJoinOverlay .start-btn{
+  clip-path:none!important;
+  border-radius:0!important;
+}
+#networkCreateOverlay input,
+#networkJoinOverlay input,
+#networkCreateOverlay .network-status,
+#networkJoinOverlay .network-status,
+#networkCreateOverlay .network-room-code,
+#networkJoinOverlay .network-room-code{
+  clip-path:none!important;
+  border-radius:0!important;
+}
+.network-vpn-note{
+  margin:12px auto 8px!important;
+  max-width:560px!important;
+  padding:0 8px!important;
+  color:#4c4c4c!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  line-height:1.35!important;
+  text-align:center!important;
+}
+.opponent-hand-count{
+  position:absolute!important;
+  z-index:8!important;
+  left:5px!important;
+  top:5px!important;
+  min-width:42px!important;
+  padding:3px 5px!important;
+  box-sizing:border-box!important;
+  background:rgba(5,5,6,.86)!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  color:#fff!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:8px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:.04em!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  box-shadow:2px 2px 0 rgba(0,0,0,.72)!important;
+}
+html.touch-device.touch-landscape .opponent-hand-count,
+html.phone-device.phone-landscape .opponent-hand-count{
+  left:3px!important;top:3px!important;min-width:34px!important;padding:2px 3px!important;font-size:6px!important;
+}
+html.touch-device.touch-landscape .network-vpn-note,
+html.phone-device.phone-landscape .network-vpn-note{
+  margin:5px auto 4px!important;
+  padding:0 4px!important;
+  font-size:7px!important;
+  line-height:1.2!important;
+}
+</style>
+
+
+<style id="v328-opponent-hand-panel">
+/* V328 — enemy hand count is a dedicated information strip, never an overlay on leader art. */
+.opponent-hand-count{display:none!important}
+
+.opponent-hand-panel{
+  position:relative;
+  flex:0 0 auto;
+  min-height:38px;
+  display:grid;
+  grid-template-columns:40px minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:6px 9px 6px 8px;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.15);
+  border-left:3px solid var(--e);
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.035),transparent 50%),
+    #101010;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.72);
+  color:#f1eee7;
+  overflow:hidden;
+}
+.opponent-hand-panel:after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--e),transparent 72%);
+  opacity:.72;
+}
+.opponent-hand-icon{
+  position:relative;
+  width:34px;
+  height:25px;
+}
+.opponent-hand-icon i{
+  position:absolute;
+  top:3px;
+  width:18px;
+  height:24px;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.74);
+  background:
+    repeating-linear-gradient(135deg,rgba(255,255,255,.10) 0 2px,transparent 2px 5px),
+    #090909;
+  box-shadow:1px 2px 0 #000;
+}
+.opponent-hand-icon i:nth-child(1){left:1px;transform:rotate(-7deg)}
+.opponent-hand-icon i:nth-child(2){left:8px;top:1px;transform:rotate(0)}
+.opponent-hand-icon i:nth-child(3){left:15px;transform:rotate(7deg);border-bottom-color:var(--e)}
+.opponent-hand-copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+  text-transform:uppercase;
+}
+.opponent-hand-copy b{
+  color:#f3f0e9;
+  font-size:9px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.11em;
+  white-space:nowrap;
+}
+.opponent-hand-value{
+  min-width:27px;
+  padding-left:8px;
+  border-left:1px solid rgba(255,255,255,.13);
+  font-family:Impact,"Arial Narrow",sans-serif;
+  font-size:27px;
+  line-height:1;
+  text-align:center;
+  color:#f5f2ea;
+  text-shadow:2px 2px 0 #000;
+}
+
+/* Mobile/PWA: same idea, compressed into one clean strip. */
+html.touch-device.touch-landscape .opponent-hand-panel,
+html.phone-device.phone-landscape .opponent-hand-panel{
+  min-height:24px!important;
+  grid-template-columns:25px minmax(0,1fr) auto!important;
+  gap:4px!important;
+  padding:3px 5px!important;
+  border-left-width:2px!important;
+}
+html.touch-device.touch-landscape .opponent-hand-icon,
+html.phone-device.phone-landscape .opponent-hand-icon{
+  width:23px!important;height:18px!important;
+}
+html.touch-device.touch-landscape .opponent-hand-icon i,
+html.phone-device.phone-landscape .opponent-hand-icon i{
+  width:12px!important;height:17px!important;top:1px!important;
+}
+html.touch-device.touch-landscape .opponent-hand-icon i:nth-child(1),
+html.phone-device.phone-landscape .opponent-hand-icon i:nth-child(1){left:0!important}
+html.touch-device.touch-landscape .opponent-hand-icon i:nth-child(2),
+html.phone-device.phone-landscape .opponent-hand-icon i:nth-child(2){left:5px!important;top:0!important}
+html.touch-device.touch-landscape .opponent-hand-icon i:nth-child(3),
+html.phone-device.phone-landscape .opponent-hand-icon i:nth-child(3){left:10px!important}
+html.touch-device.touch-landscape .opponent-hand-copy b,
+html.phone-device.phone-landscape .opponent-hand-copy b{
+  font-size:6px!important;letter-spacing:.06em!important;
+}
+html.touch-device.touch-landscape .opponent-hand-value,
+html.phone-device.phone-landscape .opponent-hand-value{
+  min-width:17px!important;
+  padding-left:4px!important;
+  font-size:17px!important;
+}
+</style>
+
+
+<style id="v330-hand-panel-no-leader-shift">
+/* V330 — opponent hand and round score share the OLD round-score footprint.
+   The new hand counter must never push the local leader down. */
+.battle-status{
+  position:relative;
+  flex:0 0 72px;
+  width:100%;
+  min-height:72px;
+  height:72px;
+  margin:8px 0;
+  box-sizing:border-box;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 72px;
+  align-items:center;
+  gap:7px;
+  overflow:visible;
+}
+.battle-status .opponent-hand-panel{
+  width:100%;
+  min-width:0;
+  min-height:40px;
+  height:40px;
+  margin:0!important;
+  padding:5px 8px;
+  grid-template-columns:34px minmax(0,1fr) auto;
+  gap:6px;
+}
+.battle-status .opponent-hand-icon{
+  width:29px;
+  height:23px;
+}
+.battle-status .opponent-hand-icon i{
+  width:15px;
+  height:21px;
+  top:2px;
+}
+.battle-status .opponent-hand-icon i:nth-child(1){left:0}
+.battle-status .opponent-hand-icon i:nth-child(2){left:6px;top:0}
+.battle-status .opponent-hand-icon i:nth-child(3){left:12px}
+.battle-status .opponent-hand-copy b{
+  font-size:8px;
+  letter-spacing:.075em;
+}
+.battle-status .opponent-hand-value{
+  min-width:24px;
+  padding-left:6px;
+  font-size:24px;
+}
+.battle-status .round-outcome.round-series-score{
+  width:72px!important;
+  min-width:72px!important;
+  max-width:72px!important;
+  min-height:72px!important;
+  height:72px!important;
+  max-height:72px!important;
+  margin:0!important;
+  padding:0!important;
+  flex:0 0 72px!important;
+  overflow:hidden!important;
+}
+.battle-status .round-series-score-value{
+  font-size:32px!important;
+  line-height:1!important;
+}
+
+/* Keep the local leader bottom-anchored exactly as before the hand panel existed. */
+.side #playerLeaderWrap{
+  margin-top:auto!important;
+  margin-bottom:0!important;
+  flex:0 0 auto!important;
+  min-height:0!important;
+}
+.side #playerLeaderPanel{
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+.side #playerLeaderPanel .leader-ui-shell,
+.side #playerLeaderPanel .leader-ui-ability{
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+
+/* Phone/PWA: status zone replaces the old 22px score zone instead of adding 24px. */
+html.touch-device.touch-landscape .battle-status,
+html.phone-device.phone-landscape .battle-status{
+  flex:0 0 24px!important;
+  min-height:24px!important;
+  height:24px!important;
+  margin:2px 0!important;
+  grid-template-columns:minmax(0,1fr) 34px!important;
+  gap:2px!important;
+  overflow:visible!important;
+}
+html.touch-device.touch-landscape .battle-status .opponent-hand-panel,
+html.phone-device.phone-landscape .battle-status .opponent-hand-panel{
+  min-height:22px!important;
+  height:22px!important;
+  padding:2px 4px!important;
+  grid-template-columns:20px minmax(0,1fr) auto!important;
+  gap:3px!important;
+}
+html.touch-device.touch-landscape .battle-status .opponent-hand-icon,
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon{
+  width:19px!important;
+  height:15px!important;
+}
+html.touch-device.touch-landscape .battle-status .opponent-hand-icon i,
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i{
+  width:10px!important;
+  height:14px!important;
+  top:1px!important;
+}
+html.touch-device.touch-landscape .battle-status .opponent-hand-icon i:nth-child(1),
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i:nth-child(1){left:0!important}
+html.touch-device.touch-landscape .battle-status .opponent-hand-icon i:nth-child(2),
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i:nth-child(2){left:4px!important;top:0!important}
+html.touch-device.touch-landscape .battle-status .opponent-hand-icon i:nth-child(3),
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i:nth-child(3){left:8px!important}
+html.touch-device.touch-landscape .battle-status .opponent-hand-copy b,
+html.phone-device.phone-landscape .battle-status .opponent-hand-copy b{
+  font-size:5.5px!important;
+  line-height:1!important;
+  letter-spacing:.025em!important;
+}
+html.touch-device.touch-landscape .battle-status .opponent-hand-value,
+html.phone-device.phone-landscape .battle-status .opponent-hand-value{
+  min-width:14px!important;
+  padding-left:3px!important;
+  font-size:15px!important;
+}
+html.touch-device.touch-landscape .battle-status .round-outcome.round-series-score,
+html.phone-device.phone-landscape .battle-status .round-outcome.round-series-score{
+  width:34px!important;
+  min-width:34px!important;
+  max-width:34px!important;
+  min-height:24px!important;
+  height:24px!important;
+  max-height:24px!important;
+  margin:0!important;
+  padding:0!important;
+  flex:0 0 24px!important;
+}
+html.touch-device.touch-landscape .battle-status .round-series-score-value,
+html.phone-device.phone-landscape .battle-status .round-series-score-value{
+  font-size:19px!important;
+  line-height:24px!important;
+}
+
+/* Explicit containment: ability plaque/button may shrink text internally,
+   but must never escape the local leader box or viewport. */
+html.touch-device.touch-landscape #playerLeaderPanel,
+html.phone-device.phone-landscape #playerLeaderPanel{
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability{
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+}
+</style>
+
+
+<style id="v331-desktop-top-battle-status">
+/* V331 — desktop battle status moves to the top bar.
+   Mobile/PWA layout remains unchanged. */
+@media (min-width:900px){
+  html:not(.phone-device):not(.tablet-device) .board-shell{
+    grid-template-rows:42px minmax(0,1fr) 156px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .board-shell:before{
+    inset:42px 0 156px!important;
+  }
+
+  html:not(.phone-device):not(.tablet-device) .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:12px!important;
+    min-height:42px!important;
+    height:42px!important;
+    padding:0 10px!important;
+    overflow:hidden!important;
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.035),transparent 42%),
+      #0e0e0e!important;
+    color:#f2eee7!important;
+    border:0!important;
+    border-bottom:1px solid #2a2a2a!important;
+    box-shadow:inset 0 -2px 0 rgba(0,0,0,.78)!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .topbar:after{
+    content:none!important;
+    display:none!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .topbar>div:first-child{
+    min-width:0!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:7px!important;
+    overflow:hidden!important;
+    white-space:nowrap!important;
+  }
+
+  html:not(.phone-device):not(.tablet-device) #roundLabel,
+  html:not(.phone-device):not(.tablet-device) #turnLabel,
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel{
+    display:inline-flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    height:27px!important;
+    box-sizing:border-box!important;
+    padding:0 10px!important;
+    border:1px solid #2f2f2f!important;
+    border-left:3px solid #777!important;
+    background:#171717!important;
+    color:#eeeae2!important;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+    font-size:11px!important;
+    font-weight:900!important;
+    line-height:1!important;
+    letter-spacing:.055em!important;
+    text-transform:uppercase!important;
+    text-shadow:none!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #roundLabel{
+    border-left-color:#aaa!important;
+    color:#c7c2b9!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #turnLabel.turn.player{
+    border-left-color:var(--p)!important;
+    color:#fff!important;
+    box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--p) 62%,transparent)!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #turnLabel.turn.enemy{
+    border-left-color:var(--e)!important;
+    color:#fff!important;
+    box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--e) 62%,transparent)!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel{
+    min-width:82px!important;
+    border-left-color:#d7d1c4!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;
+    font-size:18px!important;
+    letter-spacing:.035em!important;
+    color:#fff!important;
+  }
+
+  html:not(.phone-device):not(.tablet-device) .topbar .top-controls{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-end!important;
+    gap:6px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .topbar .tiny-btn{
+    min-height:27px!important;
+    height:27px!important;
+    padding:0 9px!important;
+    border:1px solid #333!important;
+    border-bottom:2px solid var(--p)!important;
+    background:#151515!important;
+    color:#d8d4cc!important;
+    font-size:9px!important;
+    line-height:1!important;
+    clip-path:none!important;
+    border-radius:0!important;
+  }
+
+  /* The left column keeps only the opponent-hand panel on desktop.
+     Round score / turn labels no longer live here. */
+  html:not(.phone-device):not(.tablet-device) .battle-status{
+    flex:0 0 40px!important;
+    min-height:40px!important;
+    height:40px!important;
+    margin:6px 0!important;
+    display:block!important;
+    overflow:visible!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .battle-status .opponent-hand-panel{
+    width:100%!important;
+    min-height:40px!important;
+    height:40px!important;
+    margin:0!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .battle-status .round-outcome{
+    display:none!important;
+  }
+}
+
+/* Do not add the desktop round score to the existing mobile bar. */
+html.phone-device .top-score-label,
+html.tablet-device .top-score-label,
+html.touch-device.touch-landscape .top-score-label{
+  display:none!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -9961,12 +10792,19 @@ html.pwa-standalone.phone-device.phone-landscape .app{
   <aside class="side">
     <div class="brand battle-brand"><b>SOUL CLASH</b></div>
     <div id="enemyLeader" class="leader-card enemy"></div>
-    <div id="roundOutcome" class="round-outcome" aria-label="Результаты раундов"></div>
+    <div class="battle-status" aria-label="Статус соперника и счёт раундов">
+      <div id="opponentHandPanel" class="opponent-hand-panel" title="Количество карт в руке соперника" aria-label="Карт в руке соперника: 0">
+        <span class="opponent-hand-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="opponent-hand-copy"><b>РУКА СОПЕРНИКА</b></span>
+        <strong id="opponentHandValue" class="opponent-hand-value">0</strong>
+      </div>
+      <div id="roundOutcome" class="round-outcome" aria-label="Результаты раундов"></div>
+    </div>
   </aside>
 
   <main class="board-shell">
     <div class="topbar">
-      <div><span id="roundLabel">РАУНД 1 / 3</span> · <span id="turnLabel" class="turn player">ВАШ ХОД</span></div>
+      <div><span id="roundLabel">РАУНД 1 / 3</span><span id="turnLabel" class="turn player">ВАШ ХОД</span><span id="topScoreLabel" class="top-score-label">СЧЁТ 0:0</span></div>
       <div class="top-controls">
         <button id="restartBtn" class="tiny-btn">Новая игра</button>
       </div>
@@ -10008,6 +10846,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
 <div id="networkOverlay" class="overlay hidden">
   <div class="modal network-modal network-choice-modal">
     <h1>ONLINE <span>DUEL</span></h1>
+    <p class="network-vpn-note">Если подключение к другому игроку не устанавливается, попробуйте включить VPN и повторить попытку.</p>
     <div class="network-choice-grid">
       <button id="networkCreateTab" type="button" class="start-btn">CREATE ROOM</button>
       <button id="networkJoinTab" type="button" class="start-btn">JOIN ROOM</button>
@@ -10121,7 +10960,8 @@ html.pwa-standalone.phone-device.phone-landscape .app{
 </div>
 <div id="toast" class="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<script src="https://unpkg.com/mqtt@5.15.2/dist/mqtt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js" integrity="sha512-XEKeWX+mI3Ov+tg2evDlVQFzVOIp4T8J3cNcCEPaEUGpxJV3eZaN8rHuvnFPvQpGJBHPmrozJDMpm2xcDvtmyQ==" crossorigin="anonymous"></script>
 <script>
 (() => {
   // ===== V293: clean mobile/tablet device layer =====
@@ -10210,7 +11050,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       leaders: [
         {id:"aizen", name:"Соскэ Айдзэн", ban:["h_aizen"], abilityKey:"huecoLeaderAizen", ability:"Подавляющая реацу: выберите один вражеский ряд. Обычные бойцы становятся силой 1, Герои получают −3. Снимается Превозмоганием."},
         {id:"barragan", name:"Барраган Луизенбарн", ban:["h_barragan"], abilityKey:"huecoLeaderBarragan", ability:"Senescencia: выберите один вражеский ряд. До конца раунда обычные карты в нём −3, Герои −1, минимум 0; эффект действует и на карты, добавленные позже."},
-        {id:"tousen", name:"Канамэ Тоусэн", ban:["h_tousen"], abilityKey:"huecoLeaderTousen", ability:"Novenos Aspectos: выберите любого вражеского бойца и уничтожьте его, включая Героя."},
+        {id:"tousen", name:"Канамэ Тоусэн", ban:["h_tousen"], abilityKey:"huecoLeaderTousen", ability:"Novenos Aspectos: выберите вражеского бойца и уничтожьте его. Герой является допустимой целью только при текущей силе 10 или ниже; Герои силой 11+ игнорируют Novenos Aspectos."},
         {id:"harribel", name:"Тиа Харрибел", ban:["h_harribel"], abilityKey:"huecoLeaderHarribel", ability:"Королева Уэко Мундо: выберите один свой ряд. До конца раунда обычные бойцы текущей силы 0–6 получают +2; эффект действует и на карты, добавленные позже."}
       ]
     },
@@ -10240,8 +11080,8 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     S("sp_pressure_1","Давление реацу","reiatsuPressure","Выберите один свободный вражеский ряд. Давление реацу делает обычных бойцов этого ряда силой 1."),
     S("sp_pressure_2","Давление реацу","reiatsuPressure","Выберите один свободный вражеский ряд. Давление реацу делает обычных бойцов этого ряда силой 1."),
     S("sp_pressure_3","Давление реацу","reiatsuPressure","Выберите один свободный вражеский ряд. Давление реацу делает обычных бойцов этого ряда силой 1."),
-    S("sp_overcome_1","Превозмогание","overcome","Выберите один свой ряд под Давлением реацу и полностью снимите эффект."),
-    S("sp_overcome_2","Превозмогание","overcome","Выберите один свой ряд под Давлением реацу и полностью снимите эффект."),
+    S("sp_overcome_1","Превозмогание","overcome","Если есть Давление реацу — выберите один свой ряд под эффектом и полностью снимите его. Если Давления нет, карта разыгрывается без эффекта и всё равно тратит основной ход."),
+    S("sp_overcome_2","Превозмогание","overcome","Если есть Давление реацу — выберите один свой ряд под эффектом и полностью снимите его. Если Давления нет, карта разыгрывается без эффекта и всё равно тратит основной ход."),
     S("sp_hollowification_1","Пустофикация","hollowification","Активирует формы с масками у всех Вайзардов, уже находящихся на вашей стороне. Трансформация автоматическая, не считается повторным розыгрышем и не активирует способности при выходе."),
     S("sp_hogyoku_1","Хогёку","hogyoku","Выберите один свой ряд. Первое применение удваивает текущую силу обычных бойцов в нём до конца раунда; Герои не усиливаются. Уэко Мундо может применить второй Хогёку на тот же ряд. Ряд запоминает оба применения: как только базовый Айзен оказывается в ряду с двумя Хогёку, он автоматически превращается в Форму Бабочки 25 — даже если оба Хогёку были сыграны раньше."),
     S("sp_hogyoku_2","Хогёку","hogyoku","Выберите один свой ряд. Первое применение удваивает текущую силу обычных бойцов в нём до конца раунда; Герои не усиливаются. Уэко Мундо может применить второй Хогёку на тот же ряд. Ряд запоминает оба применения: как только базовый Айзен оказывается в ряду с двумя Хогёку, он автоматически превращается в Форму Бабочки 25 — даже если оба Хогёку были сыграны раньше."),
@@ -10317,7 +11157,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     C("s_kensei","Кэнсэй Мугурума","soul",8,"melee","soulKenseiAura","Капитан 9-го отряда: пока Кэнсэй активен, Хисаги и Масиро получают +2. Silence Кэнсэя выключает ауру."),
     C("s_hisagi","Сюхэй Хисаги","soul",6,"melee","soulKazeshiniHidden","Скрытая сила Kazeshini: первое вражеское уничтожение или первое отрицательное изменение силы за текущее пребывание вместо обычного результата раскрывает скрытую форму и устанавливает силу Хисаги на 3. Повторно не срабатывает."),
     C("s_mashiro","Масиро Куна","soul",5,"melee","soulMashiroKick","Mashiro Kick: при выходе вручную выбрать одного обычного врага текущей силы 0–5 и уничтожить его. Герои недоступны."),
-    C("s_toshiro","Тосиро Хицугая","soul",7,"ranged","soulToshiroFreeze","Герой. При выходе выбрать обычного врага: его текущая сила становится 1 и он получает Silence. Герои недоступны. В позднем профиле после 4 завершённых активных ходов владельца доступна бесплатная взрослая форма.",true),
+    C("s_toshiro","Тосиро Хицугая","soul",7,"ranged","soulToshiroFreeze","Герой. При выходе выбрать обычного врага: его текущая сила становится 1 и он получает Silence. Герои недоступны. В позднем профиле после 4 завершённых активных ходов владельца доступна взрослая форма; её атакующий розыгрыш тратит основной ход.",true),
     C("s_rangiku","Рангику Мацумото","soul",5,"ranged","soulRangikuVacuum","Если Рангику и базовый Тосиро одновременно находятся на своей стороне до его взрослой трансформации, в руку один раз создаётся специальная карта «Вакуумный лёд»."),
     C("s_kenpachi","Кэнпати Дзараки","soul",12,"melee","soulBattleThirst","Герой. Жажда боя: каждый раз, когда противник разыгрывает бойца силой выше 8, Кэнпати получает +1, максимум +15 за текущее пребывание.",true),
     C("s_kenpachi_nozarashi","Кэнпати Дзараки — Nozarashi","soul",12,"melee","soulNozarashi","Герой. Отдельная игровая карта. При выходе выбрать обычного врага текущей силы 0–10 и уничтожить его. За каждое уничтожение собственным эффектом получает +1, максимум +3 за пребывание. Вместе с Ятиру Кусадзиси открывает бесплатный Bankai Kenpachi.",true),
@@ -10338,10 +11178,10 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     C("s_kirio","Кирио Хикифунэ","soul",9,"support","soulSoulFood","Герой. Пища души: выберите до трёх своих обычных бойцов; каждый получает +2. Эффект мгновенный.",true),
     C("s_tenjiro","Тэндзиро Кириндзи","soul",10,"support","soulHotSprings","Герой. Горячие источники: выберите один свой ряд и очистите Давление реацу, снимаемые отрицательные модификаторы и обычные связанные дебаффы.",true),
 
-    // Free conditional forms. Adult Toshiro/Rukia are late-era forms; Bankai Kenpachi depends only on Nozarashi + Yachiru. They never belong to the normal deck.
-    C("s_toshiro_complete","Взрослый Тосиро — Completed Daiguren Hyorinmaru","soul",10,"ranged","soulToshiroComplete","Бесплатная форма после 4 завершённых активных ходов владельца позднего Тосиро. При трансформации выберите один вражеский ряд: все карты ряда получают −3 силы, включая Hero.",true),
-    C("s_rukia_hakka","Рукия — Hakka no Togame","soul",10,"ranged","soulHakka","Бесплатная поздняя форма. Выберите обычного врага 0–10: цель становится силой 1 и получает Silence, пока Банкай активен.",true),
-    C("s_kenpachi_bankai","Bankai Kenpachi","soul",18,"melee","soulKenpachiBankai","Бесплатная условная форма: требует одновременно Nozarashi Kenpachi и Ятиру Кусадзиси. Nozarashi заменяется на Bankai, Ятиру исчезает. При появлении уничтожает всех сильнейших обычных бойцов противника при равенстве; Hero иммунны. Игнорирует первые 5 единиц отрицательного изменения силы за пребывание.",true),
+    // Conditional forms. Forms with an immediate offensive entry effect spend the normal turn. They never belong to the normal deck.
+    C("s_toshiro_complete","Взрослый Тосиро — Completed Daiguren Hyorinmaru","soul",10,"ranged","soulToshiroComplete","Условная атакующая форма после 4 завершённых активных ходов владельца позднего Тосиро. При трансформации выберите один вражеский ряд: все карты ряда получают −3 силы, включая Hero. Розыгрыш тратит основной ход.",true),
+    C("s_rukia_hakka","Рукия — Hakka no Togame","soul",10,"ranged","soulHakka","Поздняя атакующая форма. Выберите обычного врага 0–10: цель становится силой 1 и получает Silence, пока Банкай активен. Розыгрыш тратит основной ход.",true),
+    C("s_kenpachi_bankai","Bankai Kenpachi","soul",18,"melee","soulKenpachiBankai","Условная атакующая форма: требует одновременно Nozarashi Kenpachi и Ятиру Кусадзиси. Nozarashi заменяется на Bankai, Ятиру исчезает. При появлении уничтожает всех сильнейших обычных бойцов противника при равенстве; Hero иммунны. Игнорирует первые 5 единиц отрицательного изменения силы за пребывание. Розыгрыш тратит основной ход.",true),
 
     // Hueco Mundo — v130 Horde + Nnoitra/Tesla patch.
     C("h_yammy","Ямми Лларго","hueco",4,"melee","huecoYammy","Ярость: при розыгрыше превращается в Resurrección 10, если в вашем кладбище 4+ бойца, сумма их базовой силы 16+ или там есть любая форма Улькиорры."),
@@ -10405,10 +11245,10 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     // Separate conditional physical cards.
     C("h_szayel_resurreccion","Сзаэльапорро — Resurrección","hueco",8,"support","huecoSzayelRes","Бесплатная условная форма. Требует базового Сзаэльапорро и его Фрасьонов на вашей стороне; заменяет базовую карту, а Фрасьоны отправляются в кладбище.",false),
     C("h_nelliel_adult","Неллиэл — взрослая форма","hueco",10,"melee","huecoAdultNel","Условная форма. Требует Нэл-ребёнка, Пешше и Дондочакку на вашей стороне.",true),
-    C("h_ulquiorra_segunda","Улькиорра — Segunda Etapa","hueco",12,"melee","huecoSegunda","Бесплатная условная форма. Заменяет базового Улькиорру; Lanza del Relámpago позволяет выбрать обычного вражеского бойца текущей силой 0–4 и уничтожить его.",true),
+    C("h_ulquiorra_segunda","Улькиорра — Segunda Etapa","hueco",12,"melee","huecoSegunda","Условная атакующая форма. Заменяет базового Улькиорру; Lanza del Relámpago позволяет выбрать обычного вражеского бойца текущей силой 0–4 и уничтожить его. Розыгрыш тратит основной ход.",true),
     C("h_ayon","Айон","hueco",10,"melee","huecoAyon","Герой. Условная форма: требует всех Tres Bestias и отставание минимум 15; жертвует их и уничтожает обычного врага текущей силой 0–4.",true),
     C("h_los_lobos","Старрк — Los Lobos","hueco",12,"ranged","huecoLosLobos","Условная форма. Требует Старрка и Лилинетт. Первые три обычные карты, уничтоженные противником, заменяются Волками 3.",true),
-    C("h_ichigo_berserk","Ичиго — Берсерк","hueco",15,"melee","huecoBerserk","Условная форма. После появления Segunda Etapa условие активируется, если противник ведёт больше чем на 10 очков. При появлении уничтожает всех Улькиорр на поле.",true),
+    C("h_ichigo_berserk","Ичиго — Берсерк","hueco",15,"melee","huecoBerserk","Бесплатная условная форма. После появления Segunda Etapa условие активируется, если противник ведёт больше чем на 10 очков. При появлении уничтожает свою форму Улькиорры как цену трансформации; это не считается атакой по противнику.",true),
 
     // Wandenreich
     C("w_jugram","Юграм Хашвальт","wanden",10,"support","none","Легенда.",true),
@@ -10451,18 +11291,20 @@ html.pwa-standalone.phone-device.phone-landscape .app{
   let duelInitiativeChoice={player:null,enemy:null};
   let handoffContinuation=null;
   let networkApplyingState=false;
+  // V323: visual-only preview used when the remote opponent reveals a played card.
+  // It is intentionally outside `state`, so it can never leak into canonical snapshots.
+  let transientPlayedCardPreview=null;
+  let transientPlayedCardPreviewActor=null;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="320";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v320-";
-  // V320: ONLINE DUEL uses Supabase Realtime Broadcast + Presence.
-  // The supplied publishable key is browser-safe; no secret/service_role key is embedded.
-  const SUPABASE_URL="https://dtevbelpawkjcyhezatc.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY="sb_publishable_YU8UhLU3sAw9ObVawLzZKw_oYg_x5bL";
-  const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v320";
-  // Kept under the old broker variable name to minimize changes to the proven room/handshake code.
+  const ONLINE_GAME_VERSION="326";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v326-";
+  // V322: ONLINE DUEL uses the proven public WSS/MQTT relay transport.
+  // E/H is encoded as the first room-code character so Guest selects the same broker as HOST.
+  const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
   const ONLINE_MQTT_BROKERS=[
-    {key:"S",name:"Supabase Realtime",url:SUPABASE_URL}
+    {key:"E",name:"EMQX Relay",url:"wss://broker.emqx.io:8084/mqtt"},
+    {key:"H",name:"HiveMQ Relay",url:"wss://broker.hivemq.com:8884/mqtt"}
   ];
 
   // V294: resilient ICE stack. PeerJS Cloud is signalling only; actual WebRTC
@@ -10907,7 +11749,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     const late=leader?.id!=="yamamoto";
     if(c.id==="s_rukia"){
       c._eraProfile=late?"late":"yamamoto";
-      if(late){ c.name="Рукия Кучики — TYBW"; c.power=8; c.desc="Sode no Shirayuki: обычный враг 0–7 удерживается на силе 1. Доступна бесплатная форма Hakka no Togame."; }
+      if(late){ c.name="Рукия Кучики — TYBW"; c.power=8; c.desc="Sode no Shirayuki: обычный враг 0–7 удерживается на силе 1. Доступна форма Hakka no Togame; её атакующий розыгрыш тратит основной ход."; }
     }
     if(c.id==="s_toshiro") c._eraProfile=late?"late":"yamamoto";
     return c;
@@ -12252,6 +13094,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     state.rowTargeting=null;
     state.draggingUid=null;
     state.previewCard=null;
+    transientPlayedCardPreview=null; transientPlayedCardPreviewActor=null;
     state.flightLandedUid=null;
     state.selected=null;
     document.body.classList.remove("card-flight-active","row-targeting");
@@ -12349,6 +13192,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
         if(opt.card){
           const cardEl=renderCard(opt.card,false,opt.sideKey||sideKey,false,true);
           cardEl.classList.add("choice-card-preview");
+          if(opt.showRowMark) cardEl.classList.add("show-row-placement");
           btn.appendChild(cardEl);
         } else {
           btn.innerHTML=`<b>${opt.label||opt.value}</b>${opt.sub?`<span>${opt.sub}</span>`:""}`;
@@ -12447,7 +13291,9 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     return chooseOptionForActor(actorKey,title,subtitle,opts,arr=>[...arr].sort((a,b)=>fieldPower(targetSideKey,b.row,b.card)-fieldPower(targetSideKey,a.row,a.card))[0]);
   }
   async function chooseGraveTarget(actorKey,sideKey,predicate,title){
-    const opts=state[sideKey].grave.filter(predicate).map(card=>({card,sideKey,caption:card.name}));
+    // V323: grave/Medic selection is the one target-picker where the placement row
+    // matters after the card returns to hand, so keep its Roman row mark visible.
+    const opts=state[sideKey].grave.filter(predicate).map(card=>({card,sideKey,caption:card.name,showRowMark:true}));
     return chooseOptionForActor(actorKey,title,"",opts,arr=>[...arr].sort((a,b)=>b.card.power-a.card.power)[0]);
   }
 
@@ -12539,7 +13385,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     const shown=shownCardPower(card,sideKey,inHand);
     const infoPanel=showInfoPanel ? `<div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>` : "";
     const rowBadge=!card.special ? `<div class="row-badge" data-rows="${validRows(card).length}" aria-label="Допустимые ряды: ${rowPlacementLabel(card)}">${rowPlacementLabel(card)}</div>` : "";
-    el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${shown}</div>${rowBadge}${inHand&&isTransformationCard(card)?`<div class="transform-badge">FREE</div>`:""}</div>${infoPanel}`;
+    el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${shown}</div>${rowBadge}${inHand&&isFreeTransformationCard(card)?`<div class="transform-badge">FREE</div>`:""}</div>${infoPanel}`;
     applyCardArtElement(el.querySelector(".art"),card);
     if(enableDetail && inHand) el.addEventListener("mouseenter",()=>{});
     el.addEventListener("click",e=>{
@@ -13109,6 +13955,15 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     return false;
   }
   function isTransformationCard(card){ return !!card && (HUECO_TRANSFORMATION_IDS.has(card.id)||SOUL_TRANSFORMATION_IDS.has(card.id)); }
+  // V325: a transformation is free only when its entry does NOT add an immediate offensive effect.
+  // These forms attack/debuff/destroy on entry, so playing them spends the actor's normal turn.
+  const TURN_SPENDING_TRANSFORMATION_IDS=new Set([
+    "h_ulquiorra_segunda","h_ayon","h_aizen_butterfly",
+    "s_toshiro_complete","s_rukia_hakka","s_kenpachi_bankai"
+  ]);
+  function isFreeTransformationCard(card){
+    return isTransformationCard(card) && !TURN_SPENDING_TRANSFORMATION_IDS.has(card.id);
+  }
   function transformationTemplate(id){ return CARD_POOL.find(c=>c.id===id) || null; }
   function syncConditionalTransformCards(sideKey){
     if(!state?.[sideKey] || state[sideKey].faction!=="hueco") return;
@@ -13124,9 +13979,11 @@ html.pwa-standalone.phone-device.phone-landscape .app{
           const generated=clone(template);
           generated._ownerKey=sideKey;
           generated._transformationCard=true;
-          generated._freeAction=true;
+          generated._freeAction=isFreeTransformationCard(generated);
           addCardToHand(sideKey,generated);
-          addLog(`<b>Трансформация доступна:</b> ${generated.name} появляется в руке и не тратит ход.`);
+          addLog(generated._freeAction
+            ? `<b>Трансформация доступна:</b> ${generated.name} появляется в руке и не тратит ход.`
+            : `<b>Трансформация доступна:</b> ${generated.name} появляется в руке и разыгрывается как основное действие.`);
         }
       } else if(!available && inHand){
         side.hand=side.hand.filter(c=>c.uid!==inHand.uid);
@@ -13155,7 +14012,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       const onField=allBoard(side).some(c=>c.id===id);
       if(available&&!inHand&&!onField){
         const template=transformationTemplate(id);
-        if(template){ const generated=clone(template); generated._ownerKey=sideKey; generated._transformationCard=true; generated._freeAction=true; addCardToHand(sideKey,generated); addLog(`<b>Форма доступна:</b> ${generated.name} появляется в руке и не тратит основной ход.`); }
+        if(template){ const generated=clone(template); generated._ownerKey=sideKey; generated._transformationCard=true; generated._freeAction=isFreeTransformationCard(generated); addCardToHand(sideKey,generated); addLog(generated._freeAction ? `<b>Форма доступна:</b> ${generated.name} появляется в руке и не тратит основной ход.` : `<b>Форма доступна:</b> ${generated.name} появляется в руке и тратит основной ход при розыгрыше.`); }
       } else if(!available&&inHand){
         side.hand=side.hand.filter(c=>c.uid!==inHand.uid);
         if(state.selected?.uid===inHand.uid) state.selected=null;
@@ -13281,10 +14138,16 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     requestAnimationFrame(fitHandLayout);
   }
   function renderDetail(){
-    const c=state.previewCard||state.selected;
+    const transient=transientPlayedCardPreview;
+    const c=transient||state.previewCard||state.selected;
     if(!c || state.phase==="mulligan"){ detailEl.innerHTML=``; return; }
-    detailEl.innerHTML=`<div class="detail-preview"></div>`;
-    detailEl.querySelector(".detail-preview").appendChild(renderCard(c,false,activeViewSide(),false,true));
+    const view=activeViewSide();
+    const actionActor=state?.actionLock?.actor||null;
+    const isOpponentPlayedPreview=!!transient
+      ? (!!transientPlayedCardPreviewActor && transientPlayedCardPreviewActor!==view)
+      : (!!state.previewCard && state.previewCard.uid===c.uid && !!actionActor && actionActor!==view);
+    detailEl.innerHTML=`<div class="detail-preview${isOpponentPlayedPreview?" opponent-play-preview":""}"></div>`;
+    detailEl.querySelector(".detail-preview").appendChild(renderCard(c,false,view,false,!isOpponentPlayedPreview));
   }
   function renderLeaders(){
     const pKey=activeViewSide(), eKey=enemyOf(pKey);
@@ -13293,6 +14156,11 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     enemyPanel.className="leader-card enemy leader-art-ui";
     enemyPanel.innerHTML=leaderArtMarkup(state[eKey],false,false);
     applyLeaderPortraitArt(enemyPanel,eL);
+    const opponentHandPanel=$("#opponentHandPanel");
+    const opponentHandValue=$("#opponentHandValue");
+    const opponentHandSize=state[eKey]?.hand?.length||0;
+    if(opponentHandValue) opponentHandValue.textContent=String(opponentHandSize);
+    if(opponentHandPanel) opponentHandPanel.setAttribute("aria-label",`Карт в руке соперника: ${opponentHandSize}`);
 
     let existingWrap=$("#playerLeaderWrap"); if(existingWrap) existingWrap.remove();
     let existing=$("#playerLeaderPanel"); if(existing) existing.remove();
@@ -13312,6 +14180,8 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     const history=state.roundHistory||[];
     const viewWins=history.filter(r=>r.winner===view).length;
     const foeWins=history.filter(r=>r.winner===foe).length;
+    const topScore=$("#topScoreLabel");
+    if(topScore) topScore.textContent=`СЧЁТ ${viewWins}:${foeWins}`;
 
     // V297: keep the round score between the leaders and make turn ownership
     // immediately readable from the local player's point of view.
@@ -13581,14 +14451,12 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     fx.remove();
   }
 
-  function spawnLandingImpact(uid){
-    const cardEl=document.querySelector(`.row-cards .card[data-uid="${uid}"]`);
-    if(!cardEl) return;
-    const r=cardEl.getBoundingClientRect();
+  function spawnLandingImpactAtRect(r){
+    if(!r || r.width<2 || r.height<2) return;
     const impact=document.createElement('div');
     impact.className='landing-impact';
     impact.style.setProperty('--impact-x',`${r.left+r.width/2}px`);
-    impact.style.setProperty('--impact-y',`${r.bottom-2}px`);
+    impact.style.setProperty('--impact-y',`${r.top+r.height-2}px`);
     impact.style.setProperty('--impact-w',`${Math.max(96,r.width*2.05)}px`);
     impact.style.setProperty('--impact-h',`${Math.max(38,r.height*.52)}px`);
     impact.innerHTML='<div class="dust-core"></div><div class="dust-ring"></div>';
@@ -13610,6 +14478,11 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     }
     document.body.appendChild(impact);
     setTimeout(()=>impact.remove(),760);
+  }
+  function spawnLandingImpact(uid){
+    const cardEl=document.querySelector(`.row-cards .card[data-uid="${uid}"]`);
+    if(!cardEl) return;
+    spawnLandingImpactAtRect(cardEl.getBoundingClientRect());
   }
 
   async function playSelected(row){
@@ -13644,10 +14517,12 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       if(state!==actionState) return;
       state.flightLandedUid=null;
 
-      if(!isTransformationCard(c)) tickCompletedTurnPassives();
+      const freeTransform=isFreeTransformationCard(c);
+      if(!freeTransform) tickCompletedTurnPassives();
       if(!checkRoundEnd()){
-        state.turn=isTransformationCard(c)?actor:nextActorAfterResolvedAction(actor);
-        if(isTransformationCard(c)) addLog(`<b>${c.name}</b> — свободная трансформация: ход остаётся у Игрока ${sidePlayerNumber(actor)}.`);
+        state.turn=freeTransform?actor:nextActorAfterResolvedAction(actor);
+        if(freeTransform) addLog(`<b>${c.name}</b> — свободная трансформация: ход остаётся у Игрока ${sidePlayerNumber(actor)}.`);
+        else if(isTransformationCard(c)) addLog(`<b>${c.name}</b> — атакующая трансформация: основной ход потрачен.`);
       }
     } catch(err) {
       if(isGameplayChoiceCancellation(err)){
@@ -14448,7 +15323,10 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       }
       case "huecoBerserk": {
         state[ownerKey]._berserkReady=false;
-        for(const k of ["player","enemy"]){ const ulqs=allBoard(state[k]).filter(c=>c.id==="h_ulquiorra"||c.id==="h_ulquiorra_segunda"); ulqs.forEach(c=>destroyCard(k,c,"Берсерком Ичиго",ownerKey,{bypassShield:true})); }
+        // V326: Berserk consumes its owner's Ulquiorra/Segunda as the transformation cost.
+        // This is not an offensive entry effect and never destroys the opponent's Ulquiorra.
+        const ownUlquiorras=allBoard(owner).filter(c=>c.id==="h_ulquiorra"||c.id==="h_ulquiorra_segunda");
+        ownUlquiorras.forEach(c=>destroyCard(ownerKey,c,"ценой трансформации Ичиго — Берсерк",ownerKey,{bypassShield:true}));
         break;
       }
 
@@ -14708,11 +15586,14 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     const region=targetRect||v242BoardRect();
     if(!start||!region) return;
     const target=v242RectCenterTarget(region,start); if(!target) return;
+    const detailCard=detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`) || detailEl?.querySelector('.detail-preview .card');
     const flyer=renderCard(card,false,activeViewSide(),false,false);
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
     flyer.classList.add('card-flight','compact-card','effect-card-table-cast',`effect-kind-${effectKind}`);
     flyer.querySelector('.card-info-panel')?.remove();
     document.body.appendChild(flyer);
+    const oldVisibility=detailCard?.style.visibility??null;
+    if(detailCard) detailCard.style.visibility='hidden';
     document.body.classList.add('card-flight-active');
     try{
       const arc=Math.min(72,Math.max(26,Math.abs(target.left-start.left)*.04+Math.abs(target.top-start.top)*.035));
@@ -14721,7 +15602,9 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       flyer.classList.add('v242-sink');
       await waitForMs(280);
     } finally {
-      flyer.remove(); document.body.classList.remove('card-flight-active');
+      flyer.remove();
+      if(detailCard?.isConnected) detailCard.style.visibility=oldVisibility||'';
+      document.body.classList.remove('card-flight-active');
     }
   }
   function v242AshBurstForRect(r){
@@ -15298,7 +16181,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
     if(card.ability==="returnTechnique") return allBoard(state[sideKey]).some(c=>isReturnableBoardCard(c));
     if(card.ability==="reiatsuPressure") return ROWS.some(r=>!isRowPressured(enemyOf(sideKey),r)&&!isZankaProtectedRow(enemyOf(sideKey),r));
     if(card.ability==="soulKamikake") return allBoard(state[sideKey]).some(c=>c.id==="s_ukitake");
-    if(card.ability==="overcome") return ROWS.some(r=>isRowPressured(sideKey,r));
+    if(card.ability==="overcome") return true;
     if(card.ability==="hogyoku") return ROWS.some(r=>rowHogyokuUses(sideKey,r)<maxHogyokuUsesForSide(sideKey));
     if(card.ability==="hollowification") return allBoard(state[sideKey]).some(c=>VIZARD_IDS.includes(c.id)&&!c._hollowified);
     if(card.ability==="ceroSincretico") return allBoard(state[enemyOf(sideKey)]).some(c=>!c.hero&&fieldPower(enemyOf(sideKey),findBoardCardByUid(c.uid)?.row||c.row,c)>=0&&fieldPower(enemyOf(sideKey),findBoardCardByUid(c.uid)?.row||c.row,c)<=8);
@@ -15401,21 +16284,28 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       }
     } else if(card.ability==="overcome"){
       const eligible=ROWS.filter(r=>isRowPressured(sideKey,r));
-      const chosen=await chooseBoardRowForActor(
-        sideKey,
-        sideKey,
-        "ПРЕВОЗМОГАНИЕ",
-        eligible,
-        arr=>arr[0],
-        "overcome"
-      );
-      if(!chosen) return false;
-      await v242AnimateEffectCardTableCast(card,v243RowStartRect(sideKey,chosen.value),"overcome");
-      await animateLeaderRowEffect(sideKey,chosen.value,"overcome");
-      state.pressure[sideKey]=state.pressure[sideKey].filter(r=>r!==chosen.value);
-      if(state.pressureHeroPenalty?.[sideKey]) delete state.pressureHeroPenalty[sideKey][chosen.value];
-      addLog(`<b>Превозмогание:</b> Давление реацу снято с ${rowRuleLabel(chosen.value,"gen")}.`);
-      if(isHumanControlled(sideKey)) toast("ДАВЛЕНИЕ РЕАЦУ СНЯТО");
+      if(!eligible.length){
+        // V326: the card can always be spent as the player's main action, even with nothing to cleanse.
+        await v242AnimateEffectCardTableCast(card,v243DefaultEffectRowStart(sideKey),"overcome");
+        addLog(`<b>Превозмогание:</b> активного Давления реацу нет — карта разыграна без эффекта.`);
+        if(isHumanControlled(sideKey)) toast("ПРЕВОЗМОГАНИЕ: НЕТ АКТИВНОГО ДАВЛЕНИЯ");
+      } else {
+        const chosen=await chooseBoardRowForActor(
+          sideKey,
+          sideKey,
+          "ПРЕВОЗМОГАНИЕ",
+          eligible,
+          arr=>arr[0],
+          "overcome"
+        );
+        if(!chosen) return false;
+        await v242AnimateEffectCardTableCast(card,v243RowStartRect(sideKey,chosen.value),"overcome");
+        await animateLeaderRowEffect(sideKey,chosen.value,"overcome");
+        state.pressure[sideKey]=state.pressure[sideKey].filter(r=>r!==chosen.value);
+        if(state.pressureHeroPenalty?.[sideKey]) delete state.pressureHeroPenalty[sideKey][chosen.value];
+        addLog(`<b>Превозмогание:</b> Давление реацу снято с ${rowRuleLabel(chosen.value,"gen")}.`);
+        if(isHumanControlled(sideKey)) toast("ДАВЛЕНИЕ РЕАЦУ СНЯТО");
+      }
     } else if(card.ability==="ceroSincretico"){
       const target=await chooseFieldTarget(sideKey,foeKey,(c,r)=>{ const p=fieldPower(foeKey,r,c); return !c.hero&&p>=0&&p<=8; },"CERO SINCRÉTICO","Выберите одного обычного вражеского бойца текущей силы 0–8. Герои недоступны.");
       if(!target) return false;
@@ -15611,7 +16501,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
       const playable=e.hand.filter(c=>!c.special || canPlaySpecial("enemy",c));
       const units=playable.filter(c=>!c.special&&canPlayUnit("enemy",c));
       const specials=playable.filter(c=>c.special);
-      const freeTransforms=units.filter(isTransformationCard);
+      const freeTransforms=units.filter(isFreeTransformationCard);
       let card=freeTransforms.length ? [...freeTransforms].sort((a,b)=>b.power-a.power)[0] : null;
 
       // Free transformation cards are always taken first because they do not spend the actor's turn.
@@ -15660,11 +16550,13 @@ html.pwa-standalone.phone-device.phone-landscape .app{
         if(state!==actionState) return;
         state.flightLandedUid=null;
 
-        if(!isTransformationCard(card)) tickCompletedTurnPassives();
+        const freeTransform=isFreeTransformationCard(card);
+        if(!freeTransform) tickCompletedTurnPassives();
         if(!checkRoundEnd()){
-          state.turn=isTransformationCard(card)?"enemy":nextActorAfterResolvedAction("enemy");
+          state.turn=freeTransform?"enemy":nextActorAfterResolvedAction("enemy");
           passToPlayer=state.turn==="player";
-          if(isTransformationCard(card)) addLog(`<b>${card.name}</b> — свободная трансформация противника.`);
+          if(freeTransform) addLog(`<b>${card.name}</b> — свободная трансформация противника.`);
+          else if(isTransformationCard(card)) addLog(`<b>${card.name}</b> — атакующая трансформация противника тратит ход.`);
         }
       } finally {
         if(state===actionState){
@@ -15769,7 +16661,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
           }
         }
       } else if(leader.abilityKey==="huecoLeaderTousen"){
-        const target=await chooseFieldTarget(sideKey,foeKey,()=>true,"NOVENOS ASPECTOS","Выберите вражеского бойца. Герои также являются допустимой целью.");
+        const target=await chooseFieldTarget(sideKey,foeKey,(c,r)=>!c.hero || fieldPower(foeKey,r,c)<=10,"NOVENOS ASPECTOS","Выберите вражеского бойца. Обычные бойцы доступны независимо от силы; Герои — только при текущей силе 10 или ниже.");
         if(target){ destroyCard(foeKey,target.card,"Novenos Aspectos",sideKey); used=true; }
       } else if(leader.abilityKey==="huecoLeaderHarribel"){
         const chosen=await chooseBoardRowForActor(sideKey,sideKey,"КОРОЛЕВА УЭКО МУНДО",ROWS,arr=>arr.find(x=>state[sideKey].board[x.value].some(c=>!c.hero&&fieldPower(sideKey,x.value,c)>=0&&fieldPower(sideKey,x.value,c)<=6))||arr[0],"harribel");
@@ -16302,7 +17194,7 @@ ${template.desc}`:""}`;
     destroyNetworkPeer(false);
     Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null,linkSuspended:false,hostSetupStarted:false,pregameUiStarted:false,guestDisconnectTimer:null,hostDisconnectTimer:null});
   }
-  function mqttAvailable(){ return !!globalThis.supabase?.createClient; }
+  function mqttAvailable(){ return !!globalThis.mqtt?.connect; }
   function mqttBrokerByKey(key){ return ONLINE_MQTT_BROKERS.find(b=>b.key===String(key||"").toUpperCase())||null; }
   function mqttTopics(code,role){
     const root=`${ONLINE_MQTT_TOPIC_PREFIX}/${code}`;
@@ -16310,7 +17202,7 @@ ${template.desc}`:""}`;
   }
   function makeMqttClientId(role,code){
     const rand=()=>Math.random().toString(36).slice(2,8);
-    return `bsc320_${role}_${code}_${rand()}_${Date.now().toString(36).slice(-5)}`.slice(0,62);
+    return `bsc322_${role}_${code}_${rand()}_${Date.now().toString(36).slice(-5)}`.slice(0,62);
   }
   function generateRelayRoomCode(brokerKey){
     const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -16355,7 +17247,7 @@ ${template.desc}`:""}`;
     networkSession.linkSuspended=false;
     networkSession.roomClosed=false;
     if(status) status.textContent=`Игрок 2 подключён через ${networkSession.mqttBroker?.name||"WSS relay"}. Переходим к созданию колоды…`;
-    onlineDiagLog("Supabase Guest accepted",{roomCode:networkSession.roomCode,guestId,broker:networkSession.mqttBroker?.name||null});
+    onlineDiagLog("MQTT Guest accepted",{roomCode:networkSession.roomCode,guestId,broker:networkSession.mqttBroker?.name||null});
     mqttPublishTo(guestId,"hello",{role:"host",roomCode:networkSession.roomCode},{senderRole:"host"});
     if(networkSession.localSetup) sendNetworkEvent("setup",networkSession.localSetup);
     await handleNetworkEvent({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"hello",payload:{role:"guest",roomCode:networkSession.roomCode},senderRole:"guest",senderId:guestId,roomCode:networkSession.roomCode});
@@ -16402,107 +17294,71 @@ ${template.desc}`:""}`;
   }
   function connectMqttTransport(broker,role,code,statusEl){
     return new Promise((resolve,reject)=>{
-      if(!mqttAvailable()){
-        reject(makeOnlineDiagError("relay-unavailable","Supabase Realtime SDK не загрузился. Для ONLINE DUEL нужен интернет."));
-        return;
-      }
+      if(!mqttAvailable()){ reject(makeOnlineDiagError("relay-unavailable","MQTT.js не загрузился. Для ONLINE DUEL нужен интернет.")); return; }
       const topics=mqttTopics(code,role);
       const clientId=makeMqttClientId(role,code);
-      const roomTopic=`${ONLINE_MQTT_TOPIC_PREFIX}/${code}`;
-      let settled=false, closing=false, subscribedOnce=false;
-      let sb=null, channel=null;
+      const willType=role==="host"?"host_closed":"guest_left";
+      const willPacket={protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:willType,payload:{},senderRole:role,senderId:clientId,targetId:null,roomCode:code,messageId:`${clientId}:will`,ts:Date.now()};
+      let settled=false;
+      let client;
       try{
-        sb=globalThis.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
-          auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}
+        client=globalThis.mqtt.connect(broker.url,{
+          clientId,clean:true,keepalive:20,reconnectPeriod:1500,connectTimeout:10000,protocolVersion:4,resubscribe:true,
+          will:{topic:topics.out,payload:JSON.stringify(willPacket),qos:1,retain:false}
         });
-        channel=sb.channel(roomTopic,{
-          config:{broadcast:{ack:true,self:false},presence:{key:clientId}}
-        });
-      }catch(err){
-        reject(makeOnlineDiagError("relay-unavailable",err?.message||String(err),{cause:err}));
-        return;
-      }
-      const adapter={
-        connected:false,
-        publish(_topic,raw,_opts,cb){
-          if(!this.connected){ cb?.(new Error("Supabase channel is not connected")); return; }
-          const str=typeof raw==="string"?raw:JSON.stringify(raw);
-          const bytes=typeof TextEncoder!=="undefined"?new TextEncoder().encode(str).length:str.length;
-          if(bytes>250*1024){
-            const err=new Error(`Supabase Broadcast payload too large: ${bytes} bytes`);
-            onlineDiagWarn("Supabase payload too large",{bytes}); cb?.(err); return;
-          }
-          Promise.resolve(channel.send({type:"broadcast",event:"bsc",payload:{raw:str}}))
-            .then(result=>{
-              if(result==="ok") cb?.(null);
-              else cb?.(new Error(`Supabase Broadcast: ${result||"unknown error"}`));
-            })
-            .catch(err=>cb?.(err));
-        },
-        end(_force){
-          closing=true; this.connected=false;
-          try{ channel?.untrack?.(); }catch(_e){}
-          try{ Promise.resolve(sb?.removeChannel?.(channel)).catch(()=>{}); }catch(_e){}
-        }
-      };
-      const failInitial=(message,err=null)=>{
-        if(settled) return;
-        settled=true; clearTimeout(timer); closing=true; adapter.connected=false;
-        try{ Promise.resolve(sb?.removeChannel?.(channel)).catch(()=>{}); }catch(_e){}
-        reject(makeOnlineDiagError("relay-unavailable",message,{cause:err||undefined}));
-      };
-      const timer=setTimeout(()=>failInitial(`${broker.name} не ответил за 12 секунд`),12000);
-
-      channel
-        .on("broadcast",{event:"bsc"},msg=>{
-          const raw=msg?.payload?.raw;
-          if(typeof raw!=="string") return;
-          handleMqttMessage(roomTopic,raw);
-        })
-        .on("presence",{event:"leave"},({key})=>{
-          if(closing||networkSession.closing) return;
-          if(!key || key!==networkSession.remoteId) return;
-          onlineDiagWarn("Supabase remote presence left",{roomCode:code,remoteId:key,role:networkSession.role});
-          if(networkSession.role==="guest") handleHostClosed(); else handleGuestClosed();
-        })
-        .subscribe(async (status,err)=>{
-          if(closing) return;
-          if(status==="SUBSCRIBED"){
-            adapter.connected=true;
-            networkSession.transport="mqtt"; // compatibility name; transport is Supabase Realtime in v320
-            networkSession.mqtt=adapter;
-            networkSession.mqttBroker=broker;
-            networkSession.mqttClientId=clientId;
-            networkSession.mqttTopicIn=topics.in;
-            networkSession.mqttTopicOut=topics.out;
-            networkSession.peerReady=true;
-            try{ await channel.track({clientId,role,gameVersion:ONLINE_GAME_VERSION,onlineAt:new Date().toISOString()}); }
-            catch(trackErr){ onlineDiagWarn("Supabase presence track failed",{message:trackErr?.message||String(trackErr)}); }
-            const wasConnectedBefore=subscribedOnce||networkSession.mqttWasConnected;
-            subscribedOnce=true; networkSession.mqttWasConnected=true;
-            if(!settled){
-              settled=true; clearTimeout(timer); resolve(adapter);
-            }else if(wasConnectedBefore && networkSession.remoteId){
-              networkSession.linkSuspended=true;
-              if(networkSession.role==="guest"){
-                sendRawNetworkEnvelope({type:"join_request",payload:{roomCode:networkSession.roomCode},senderRole:"guest",targetId:networkSession.remoteId});
-              }else{
-                sendRawNetworkEnvelope({type:"hello",payload:{role:"host",roomCode:networkSession.roomCode},senderRole:"host",targetId:networkSession.remoteId});
-                if(networkSession.pregameFinalized && state) setTimeout(()=>resendCanonicalState("supabase-reconnect"),60);
-              }
-            }
-            if(statusEl) statusEl.textContent=`${broker.name}: подключено`;
+      }catch(err){ reject(makeOnlineDiagError("relay-unavailable",err?.message||String(err),{cause:err})); return; }
+      const timer=setTimeout(()=>{
+        if(settled) return; settled=true;
+        try{client.end(true);}catch(_e){}
+        reject(makeOnlineDiagError("relay-unavailable",`${broker.name} не ответил за 10 секунд`));
+      },10000);
+      client.on("message",handleMqttMessage);
+      client.on("connect",()=>{
+        if(settled && networkSession.mqtt!==client){ try{client.end(true);}catch(_e){} return; }
+        client.subscribe(topics.in,{qos:1},err=>{
+          if(err){
+            if(!settled){ settled=true; clearTimeout(timer); reject(makeOnlineDiagError("relay-unavailable",`не удалось подписаться на комнату: ${err.message||err}`)); }
             return;
           }
-          if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"||status==="CLOSED"){
-            adapter.connected=false;
-            if(!settled){ failInitial(`${broker.name}: ${err?.message||status}`,err); return; }
-            networkSession.linkSuspended=true;
-            onlineDiagWarn("Supabase Realtime channel state",{status,message:err?.message||null,roomCode:code});
-            if(statusEl) statusEl.textContent=`${broker.name}: связь потеряна, переподключаемся…`;
-            if(gameMode==="online" && networkSession.connected) showNetworkWaiting("Связь с Supabase потеряна. Восстанавливаем соединение…");
+          networkSession.transport="mqtt";
+          networkSession.mqtt=client;
+          networkSession.mqttBroker=broker;
+          networkSession.mqttClientId=clientId;
+          networkSession.mqttTopicIn=topics.in;
+          networkSession.mqttTopicOut=topics.out;
+          networkSession.peerReady=true;
+          const wasConnectedBefore=networkSession.mqttWasConnected;
+          networkSession.mqttWasConnected=true;
+          if(!settled){
+            settled=true; clearTimeout(timer); resolve(client);
+          } else if(networkSession.remoteId){
+            // After a broker reconnect, re-run the application handshake rather than
+            // continuing gameplay on an unverified link. Guest re-announces JOIN so HOST
+            // can cancel its disconnect grace timer; HOST answers with HELLO/state.
+            if(networkSession.role==="guest"){
+              sendRawNetworkEnvelope({type:"join_request",payload:{roomCode:networkSession.roomCode},senderRole:"guest",targetId:networkSession.remoteId});
+            } else {
+              sendRawNetworkEnvelope({type:"hello",payload:{role:"host",roomCode:networkSession.roomCode},senderRole:"host",targetId:networkSession.remoteId});
+            }
           }
+          if(wasConnectedBefore && gameMode==="online") networkSession.linkSuspended=true;
         });
+      });
+      client.on("reconnect",()=>{
+        if(networkSession.closing) return;
+        networkSession.linkSuspended=true;
+        if(statusEl) statusEl.textContent=`${broker.name}: переподключение…`;
+      });
+      client.on("offline",()=>{
+        if(networkSession.closing) return;
+        networkSession.linkSuspended=true;
+        if(statusEl) statusEl.textContent=`${broker.name}: связь потеряна, переподключаемся…`;
+        if(gameMode==="online" && networkSession.connected) showNetworkWaiting("Связь с relay потеряна. Восстанавливаем соединение…");
+      });
+      client.on("error",err=>{
+        onlineDiagWarn("MQTT relay error",{broker:broker.name,message:err?.message||String(err)});
+        if(!settled){ settled=true; clearTimeout(timer); try{client.end(true);}catch(_e){} reject(makeOnlineDiagError("relay-unavailable",`${broker.name}: ${err?.message||err}`)); }
+      });
     });
   }
   function waitForMqttHost(status,code){
@@ -16575,7 +17431,7 @@ ${template.desc}`:""}`;
       gameMode="online"; setupSideKey="player"; pendingSetup={player:null,enemy:null}; state=null; localViewSide="player";
       $("#networkRoomCode").textContent=code;
       if(status) status.textContent=`${networkSession.mqttBroker.name} подключён → комната ${code} готова → ждём Игрока 2`;
-      onlineDiagLog("HOST Supabase room ready",{roomCode:code,broker:networkSession.mqttBroker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
+      onlineDiagLog("HOST relay room ready",{roomCode:code,broker:networkSession.mqttBroker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
       return true;
     }catch(err){
       resetNetworkSession();
@@ -16670,14 +17526,14 @@ ${template.desc}`:""}`;
     $("#networkJoinCode").value=code;
     if(code.length!==6){ if(status) status.textContent="Введите полный шестизначный код комнаты."; return false; }
     const broker=mqttBrokerByKey(code[0]);
-    if(!broker){ if(status) status.textContent="Этот код комнаты создан старой версией. HOST должен создать новую комнату в v320."; return false; }
+    if(!broker){ if(status) status.textContent="Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v322."; return false; }
     if(btn) btn.disabled=true;
     try{
       resetNetworkSession();
       Object.assign(networkSession,{role:"guest",localSide:"enemy",roomCode:code,closing:false,roomClosed:false});
       resetDiagStatus(status,`connecting to ${broker.name}`);
       await connectMqttTransport(broker,"guest",code,status);
-      onlineDiagLog("Guest Supabase relay ready",{roomCode:code,broker:broker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
+      onlineDiagLog("Guest relay ready",{roomCode:code,broker:broker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
       await waitForMqttHost(status,code);
       gameMode="online"; setupSideKey="enemy"; pendingSetup={player:null,enemy:null}; state=null; localViewSide="enemy";
       appendDiagStatus(status,"ONLINE DUEL ready");
@@ -16740,9 +17596,25 @@ ${template.desc}`:""}`;
     });
     return best;
   }
+  async function showRemotePlayedCardPreview(card,actor,holdMs=520){
+    if(!card || !actor || actor===activeViewSide()) return false;
+    transientPlayedCardPreview=safeNetworkClone(card)||card;
+    transientPlayedCardPreviewActor=actor;
+    renderDetail();
+    if(holdMs>0) await waitForMs(holdMs);
+    return true;
+  }
+  function clearRemotePlayedCardPreview(card=null){
+    if(card && transientPlayedCardPreview?.uid && card.uid!==transientPlayedCardPreview.uid) return;
+    transientPlayedCardPreview=null;
+    transientPlayedCardPreviewActor=null;
+    if(state) renderDetail();
+  }
   function networkCardStartRect(actor,card){
-    const view=activeViewSide();
-    if(actor===view) return previewFlightStartRect(card);
+    // V323: remote hand plays originate from the same right-side preview as local plays.
+    // Fall back only if the preview cannot be measured for some browser/layout reason.
+    const fromPreview=previewFlightStartRect(card);
+    if(fromPreview) return fromPreview;
     const enemyArt=document.querySelector('#enemyLeader .leader-ui-art')||document.getElementById('enemyLeader');
     const r=visibleRect(enemyArt);
     if(r){
@@ -16750,13 +17622,17 @@ ${template.desc}`:""}`;
       const height=width*1.5;
       return {left:r.left+(r.width-width)/2,top:r.top+(r.height-height)/2,width,height};
     }
-    return previewFlightStartRect(card);
+    return null;
   }
   async function replayNetworkCardFlight(payload){
     const card=payload.card; if(!card) return;
+    const previewShown=await showRemotePlayedCardPreview(card,payload.actor,520);
     const target=measureCardLandingRect(payload.targetSide,payload.row,card);
     const start=networkCardStartRect(payload.actor,card);
-    if(!target||!start) return;
+    if(!target||!start){ if(previewShown) clearRemotePlayedCardPreview(card); return; }
+    const previewCard=previewShown ? detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`) : null;
+    const oldVisibility=previewCard?.style.visibility??null;
+    if(previewCard) previewCard.style.visibility='hidden';
     const flyer=renderCard(card,false,payload.targetSide,false,false);
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
     flyer.classList.add('card-flight','compact-card');
@@ -16765,13 +17641,21 @@ ${template.desc}`:""}`;
     try{
       const arc=Math.min(118,Math.max(48,Math.abs(target.left-start.left)*.08+Math.abs(target.top-start.top)*.055));
       await runPhysicalCardFlight(flyer,start,target,{duration:CARD_FLIGHT_MS,arc,fadeFrom:1});
-      spawnLandingImpact(card.uid);
-    } finally { flyer.remove(); document.body.classList.remove('card-flight-active'); }
+      // Canonical state has not arrived yet, so the destination card is not in DOM.
+      // Use the measured target itself; this restores the missing online dust/impact animation.
+      spawnLandingImpactAtRect(target);
+    } finally {
+      flyer.remove();
+      if(previewCard?.isConnected) previewCard.style.visibility=oldVisibility||'';
+      if(previewShown) clearRemotePlayedCardPreview(card);
+      document.body.classList.remove('card-flight-active');
+    }
   }
 
   const v303Original={
     animateCardToField,
     animateCardFromDeckToField,
+    animateSpecialCardCast,
     v242AnimateEffectCardTableCast,
     v242AnimateReiatsuPressure,
     animateLeaderRowEffect,
@@ -16797,9 +17681,15 @@ ${template.desc}`:""}`;
     broadcastNetworkVfx("deck-flight",{ownerKey,targetSide,row,card:safeNetworkClone(card)});
     return v303Original.animateCardFromDeckToField(card,row,targetSide,ownerKey);
   };
+  animateSpecialCardCast=async function(effectKind="generic"){
+    const card=state?.previewCard||state?.selected||null;
+    broadcastNetworkVfx("special-cast",{effectKind,actor:state?.actionLock?.actor||card?._ownerKey||localControlledSide(),card:safeNetworkClone(card)});
+    return v303Original.animateSpecialCardCast(effectKind);
+  };
   v242AnimateEffectCardTableCast=async function(card,targetRect,effectKind='generic'){
     const target=inferNetworkRowTarget(targetRect);
-    broadcastNetworkVfx("effect-cast",{effectKind,target,card:safeNetworkClone(card)});
+    const actor=card?._ownerKey||state?.actionLock?.actor||localControlledSide();
+    broadcastNetworkVfx("effect-cast",{effectKind,target,actor,card:safeNetworkClone(card)});
     return v303Original.v242AnimateEffectCardTableCast(card,targetRect,effectKind);
   };
   v242AnimateReiatsuPressure=async function(sideKey,row){
@@ -16843,11 +17733,23 @@ ${template.desc}`:""}`;
     networkVfxReplayDepth++;
     try{
       if(payload.kind==="card-flight") return await replayNetworkCardFlight(payload);
-      if(payload.kind==="deck-flight") return await v303Original.animateCardFromDeckToField(payload.card,payload.row,payload.targetSide,payload.ownerKey);
+      if(payload.kind==="deck-flight"){
+        const target=measureCardLandingRect(payload.targetSide,payload.row,payload.card);
+        await v303Original.animateCardFromDeckToField(payload.card,payload.row,payload.targetSide,payload.ownerKey);
+        if(target) spawnLandingImpactAtRect(target);
+        return;
+      }
+      if(payload.kind==="special-cast"){
+        const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,420);
+        try{return await v303Original.animateSpecialCardCast(payload.effectKind||"generic");}
+        finally{if(shown) clearRemotePlayedCardPreview(payload.card);}
+      }
       if(payload.kind==="effect-cast"){
+        const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,520);
         const t=payload.target;
         const rect=t?.sideKey&&t?.row ? (v243RowStartRect(t.sideKey,t.row)||v243DefaultEffectRowStart(t.sideKey)) : v242BoardRect();
-        return await v303Original.v242AnimateEffectCardTableCast(payload.card,rect,payload.effectKind||"generic");
+        try{return await v303Original.v242AnimateEffectCardTableCast(payload.card,rect,payload.effectKind||"generic");}
+        finally{if(shown) clearRemotePlayedCardPreview(payload.card);}
       }
       if(payload.kind==="reiatsu-pressure") return await v303Original.v242AnimateReiatsuPressure(payload.sideKey,payload.row);
       if(payload.kind==="leader-row") return await v303Original.animateLeaderRowEffect(payload.sideKey,payload.row,payload.effectKind||"generic");
