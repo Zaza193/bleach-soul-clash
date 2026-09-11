@@ -8562,31 +8562,6 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   margin-top:14px!important;
 }
 
-/* ONLINE DUEL is intentionally unavailable. This is both visual and native-disabled. */
-#modeOnlineBtn.mode-card.online.locked,
-#modeOnlineBtn.mode-card.online.locked:hover,
-#modeOnlineBtn.mode-card.online.locked:focus{
-  position:relative!important;
-  cursor:not-allowed!important;
-  opacity:.52!important;
-  filter:grayscale(.72) contrast(.9)!important;
-  transform:none!important;
-  box-shadow:none!important;
-}
-#modeOnlineBtn.mode-card.online.locked::after{
-  content:"🔒"!important;
-  position:absolute!important;
-  right:16px!important;
-  top:14px!important;
-  display:block!important;
-  font-size:30px!important;
-  line-height:1!important;
-  opacity:1!important;
-  filter:none!important;
-}
-#modeOnlineBtn.mode-card.online.locked:disabled{
-  pointer-events:auto!important;
-}
 </style>
 
 
@@ -8679,7 +8654,7 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
     <div class="mode-grid">
       <button id="modeAiBtn" type="button" class="mode-card"><b>VS AI</b><span>Классический матч против компьютера.</span></button>
       <button id="modeDuelBtn" type="button" class="mode-card"><b>DUEL</b><span>Два игрока за одним компьютером. Активный игрок всегда находится снизу.</span></button>
-      <button id="modeOnlineBtn" type="button" class="mode-card online locked" disabled aria-disabled="true"><b>ONLINE DUEL</b><span>Прямой матч между двумя браузерами по коду комнаты.</span></button>
+      <button id="modeOnlineBtn" type="button" class="mode-card online"><b>ONLINE DUEL</b><span>Прямой матч между двумя браузерами по коду комнаты.</span></button>
     </div>
   </div>
 </div>
@@ -14664,6 +14639,10 @@ ${template.desc}`:""}`;
   $("#modeDuelBtn").onclick=()=>{
     gameMode="duel"; setupSideKey="player"; localViewSide="player"; selectedFaction="living"; pendingSetup={player:null,enemy:null}; duelPreparedSides={player:null,enemy:null}; duelInitiativeChoice={player:null,enemy:null}; state=null;
     openPathPicker("player");
+  };
+  $("#modeOnlineBtn").onclick=()=>{
+    resetNetworkSession(); state=null; gameMode="online"; setupSideKey="player"; localViewSide="player"; selectedFaction="living"; pendingSetup={player:null,enemy:null};
+    $("#modeOverlay").classList.add("hidden"); $("#networkOverlay").classList.remove("hidden");
   };
   $("#networkCreateTab").onclick=()=>{$("#networkCreatePanel").classList.add("active");$("#networkJoinPanel").classList.remove("active");};
   $("#networkJoinTab").onclick=()=>{$("#networkJoinPanel").classList.add("active");$("#networkCreatePanel").classList.remove("active");};
