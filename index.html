@@ -11647,6 +11647,321 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
 }
 </style>
 
+
+<style id="v335-mobile-assemble-compact-footer">
+/* V335 — ASSEMBLE footer only: compact in PWA + mobile browser. */
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) 70px!important;
+  gap:5px!important;
+  padding:4px 0 0!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions>button,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions>button{
+  height:26px!important;
+  min-height:26px!important;
+  max-height:26px!important;
+  padding:0 7px!important;
+  font-size:7.4px!important;
+  line-height:26px!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-counter,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-counter{
+  height:26px!important;
+  min-height:26px!important;
+  max-height:26px!important;
+  padding:0 3px!important;
+  font-size:13px!important;
+  line-height:26px!important;
+}
+@media (max-height:390px){
+  html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions>button,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions>button{
+    height:24px!important;min-height:24px!important;max-height:24px!important;line-height:24px!important;
+  }
+  html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-counter,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-counter{
+    height:24px!important;min-height:24px!important;max-height:24px!important;line-height:24px!important;
+  }
+}
+</style>
+
+
+<style id="v336-mulligan-pwa-mobile-balance">
+/* V336 — CHOOSE YOUR SOUL only.
+   Standalone/PWA has more usable height: cards are intentionally larger.
+   Mobile browser has less usable height: cards are intentionally smaller.
+   The ability hover/focus overlay is removed from this screen entirely. */
+#mulliganOverlay .mulligan-hover-info{display:none!important}
+#mulliganOverlay .mulligan-card-wrap>.card:hover,
+#mulliganOverlay .mulligan-card-wrap>.card:focus-within{
+  transform:none!important;
+  z-index:auto!important;
+}
+#mulliganOverlay .mulligan-card-wrap>.card:hover .card-face,
+#mulliganOverlay .mulligan-card-wrap>.card:focus-within .card-face{
+  transform:none!important;
+  filter:none!important;
+}
+
+/* Standalone PWA: enlarge cards while preserving exact 6 x 2 geometry. */
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+  width:min(84px,100%)!important;
+  max-width:84px!important;
+  min-width:0!important;
+  height:auto!important;
+  max-height:none!important;
+  aspect-ratio:2 / 3!important;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power{
+  width:27px!important;height:13px!important;
+  min-width:27px!important;min-height:13px!important;
+  max-width:27px!important;max-height:13px!important;
+  font-size:11px!important;
+}
+
+/* Mobile browser: reduce cards so both rows and footer breathe inside Safari UI. */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+  width:min(64px,100%)!important;
+  max-width:64px!important;
+  min-width:0!important;
+  height:auto!important;
+  max-height:none!important;
+  aspect-ratio:2 / 3!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power{
+  width:21px!important;height:10px!important;
+  min-width:21px!important;min-height:10px!important;
+  max-width:21px!important;max-height:10px!important;
+  bottom:1px!important;
+  font-size:8.5px!important;
+}
+
+/* Very low Safari landscape: one more small reduction, PWA untouched. */
+@media (max-height:390px){
+  html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+  html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+    width:min(60px,100%)!important;
+    max-width:60px!important;
+  }
+}
+</style>
+
+
+<style id="v337-flight-continuity">
+/* V337: a flown card must remain visible until the real board card exists. */
+.network-landing-ghost,
+.local-landing-hold{
+  pointer-events:none!important;
+  user-select:none!important;
+  z-index:10080!important;
+}
+.network-landing-ghost{
+  position:fixed!important;
+  margin:0!important;
+  opacity:1!important;
+}
+</style>
+
+
+<style id="v339-mobile-right-rail-balance">
+/* V339 — phone/PWA battle polish only. Desktop is intentionally untouched. */
+
+/* 1) The narrow hand counter only needs the word "РУКА" on phones. */
+html.phone-device.phone-landscape .battle-status .opponent-hand-copy b,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-copy b{
+  font-size:0!important;
+  letter-spacing:0!important;
+  overflow:visible!important;
+}
+html.phone-device.phone-landscape .battle-status .opponent-hand-copy b::after,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-copy b::after{
+  content:"РУКА";
+  font-size:7px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  letter-spacing:.06em!important;
+  white-space:nowrap!important;
+  color:#f3f0e9!important;
+}
+
+/* 2) Roman row placement marks in the gameplay hand were inherited from the
+   old XXL row-mark layer. Keep them readable, but subordinate to card art. */
+html.phone-device.phone-landscape #hand .card .row-badge,
+html.phone-device.phone-landscape #hand .card .row-badge[data-rows="1"],
+html.phone-device.phone-landscape #hand .card .row-badge[data-rows="2"],
+html.phone-device.phone-landscape #hand .card .row-badge[data-rows="3"],
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge[data-rows="1"],
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge[data-rows="2"],
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge[data-rows="3"]{
+  top:2px!important;
+  right:2px!important;
+  max-width:calc(100% - 4px)!important;
+  font-size:10px!important;
+  line-height:.9!important;
+  letter-spacing:0!important;
+  -webkit-text-stroke:.65px #000!important;
+  text-shadow:0 1px 1px #000,0 0 2px rgba(0,0,0,.9)!important;
+}
+
+/* 3) Right rail:
+   - real, larger deck/grave boxes;
+   - central preview is a finite box rather than consuming the entire rail;
+   - no .44 transform that made piles microscopic. */
+html.phone-device.phone-landscape .rightbar,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar{
+  grid-template-rows:66px minmax(0,220px) 66px!important;
+  align-content:space-between!important;
+  gap:4px!important;
+  padding:3px!important;
+}
+
+html.phone-device.phone-landscape .pile-zone,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-zone{
+  width:100%!important;
+  height:66px!important;
+  min-height:66px!important;
+  max-height:66px!important;
+  padding:2px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  border:1px solid #272727!important;
+  background:#0c0c0c!important;
+}
+
+html.phone-device.phone-landscape .pile-inner,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner{
+  width:100%!important;
+  height:100%!important;
+  padding:2px!important;
+  gap:5px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  transform:none!important;
+  transform-origin:center!important;
+  box-sizing:border-box!important;
+}
+
+html.phone-device.phone-landscape .pile-inner .deck-stack,
+html.phone-device.phone-landscape .pile-inner .discard-stack,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .deck-stack,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .discard-stack{
+  width:43px!important;
+  min-width:43px!important;
+  max-width:43px!important;
+  height:58px!important;
+  min-height:58px!important;
+  max-height:58px!important;
+  flex:0 0 43px!important;
+}
+
+html.phone-device.phone-landscape .pile-inner .deck-stack:after,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .deck-stack:after{
+  font-size:8px!important;
+  letter-spacing:.055em!important;
+}
+
+html.phone-device.phone-landscape .pile-inner .deck-number,
+html.phone-device.phone-landscape .pile-inner .discard-number,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .deck-number,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .discard-number{
+  right:2px!important;
+  bottom:2px!important;
+  width:18px!important;
+  height:18px!important;
+  min-width:18px!important;
+  min-height:18px!important;
+  font-size:10px!important;
+  border-width:1px!important;
+  outline-width:1px!important;
+}
+
+html.phone-device.phone-landscape .rightbar .detail,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail{
+  width:100%!important;
+  height:220px!important;
+  min-height:0!important;
+  max-height:220px!important;
+  align-self:center!important;
+  padding:3px!important;
+  box-sizing:border-box!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  background:#0b0b0b!important;
+  border:1px solid #272727!important;
+}
+
+html.phone-device.phone-landscape .detail-preview,
+html.touch-device.touch-landscape:not(.tablet-device) .detail-preview{
+  width:72px!important;
+  max-width:72px!important;
+  margin:0 auto 3px!important;
+}
+html.phone-device.phone-landscape .detail-preview .card,
+html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
+  width:72px!important;
+  min-width:72px!important;
+  max-width:72px!important;
+  height:auto!important;
+  aspect-ratio:2 / 3!important;
+}
+
+/* Extra-short browser/PWA landscape: keep all three right-rail boxes usable. */
+@media (max-height:395px){
+  html.phone-device.phone-landscape .rightbar,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar{
+    grid-template-rows:58px minmax(0,176px) 58px!important;
+    gap:3px!important;
+  }
+  html.phone-device.phone-landscape .pile-zone,
+  html.touch-device.touch-landscape:not(.tablet-device) .pile-zone{
+    height:58px!important;
+    min-height:58px!important;
+    max-height:58px!important;
+  }
+  html.phone-device.phone-landscape .pile-inner .deck-stack,
+  html.phone-device.phone-landscape .pile-inner .discard-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .deck-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .pile-inner .discard-stack{
+    width:39px!important;
+    min-width:39px!important;
+    max-width:39px!important;
+    height:52px!important;
+    min-height:52px!important;
+    max-height:52px!important;
+    flex-basis:39px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .detail,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail{
+    height:176px!important;
+    max-height:176px!important;
+  }
+  html.phone-device.phone-landscape .detail-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) .detail-preview{
+    width:66px!important;
+    max-width:66px!important;
+  }
+  html.phone-device.phone-landscape .detail-preview .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
+    width:66px!important;
+    min-width:66px!important;
+    max-width:66px!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -11970,12 +12285,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     C("l_urahara","Кисукэ Урахара","living",10,"support","uraharaReflect","Герой. Щит из крови: первое негативное вражеское воздействие за каждое пребывание Урахары на поле отражается, а если зеркально применить его нельзя — отменяется.",true),
     C("l_yoruichi","Йоруичи Шихоин — Кошка","living",5,"support","yoruichiShunpo","Герой. Шунпо: верните одного своего обычного бойца с поля в руку. Героя вернуть нельзя.",true),
     C("l_ginjo","Куго Гиндзё","living",10,"melee","fullbringerAura","Герой. Лидер Fullbringer: пока Гиндзё активен на вашей стороне, все ваши Fullbringer получают +2 силы.",true),
-    C("l_ichigo","Ичиго Куросаки","living",10,"melee","battleSpirit","Боевой дух: все остальные обычные бойцы 1-го ряда получают +2 силы.",true),
+    C("l_ichigo","Ичиго Куросаки","living",10,"melee","battleSpirit","Fullbringer. Боевой дух: все остальные обычные бойцы 1-го ряда получают +2 силы. Получает бонус Лидера Fullbringer Гиндзё.",true),
     C("vh_shinji","Хирако Синдзи","living",10,"ranged","shinjiMasks","Герой. Если до его выхода на вашей стороне уже был другой Вайзард, выберите Sakanade или Пустофикацию Вайзардов. Иначе Sakanade срабатывает автоматически.",true),
     C("l_isshin","Исшин Куросаки","living",8,"melee","getsugaExecute","Гэцуга Тэнсё: при выходе выберите обычного врага с текущей силой ниже текущей силы Иссина и уничтожьте его."),
     C("l_ryuken","Рюкэн Исида","living",6,"ranged","quincyPride","Гордость Квинси: если Рюкэн и Урю одновременно на вашей стороне, Урю получает +2 и становится Героем до конца своего текущего пребывания на поле."),
     C("l_uryu","Урю Исида","living",7,"melee","reishiAbsorb","Поглощение рейси: при выходе крадёт одну случайную обычную боевую карту непосредственно из колоды противника в вашу руку.",false,true),
-    C("l_chad","Ясутора Садо (Чад)","living",7,"melee","laMuerteExecute","La Muerte — Казнь: если вражеский 1-й ряд имеет 10+ силы, уничтожает всех сильнейших обычных бойцов этого ряда с одинаковой максимальной силой."),
+    C("l_chad","Ясутора Садо (Чад)","living",7,"melee","laMuerteExecute","Fullbringer. La Muerte — Казнь: если вражеский 1-й ряд имеет 10+ силы, уничтожает всех сильнейших обычных бойцов этого ряда с одинаковой максимальной силой. Получает бонус Лидера Fullbringer Гиндзё."),
     C("l_rukia","Рукия Кучики","living",6,"melee","sodeFreeze","Содэ но Сираюки: при выходе выберите обычного врага текущей силой 0–8 и установите его силу в 1.",false,true),
     C("vh_love","Айкава Лав","living",6,"melee","none","Вайзард. После Пустофикации становится силой 9. Можно сыграть в 1-й или 2-й ряд.",false,true),
     C("vh_rose","Оторибаси Родзюро (Роуз)","living",4,"melee","none","Вайзард. После Пустофикации становится силой 7. Можно сыграть в 1-й или 2-й ряд.",false,true),
@@ -11998,7 +12313,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     C("vh_jackie","Тристан Джеки","living",5,"melee","dirtyBoots","Dirty Boots: после каждого полностью завершённого хода, пока Джеки на поле, получает +1 до 9. При 9 становится Героем."),
     C("vh_yukio","Юкио","living",5,"support","digitalPrison","Digital Prison: выберите обычного вражеского бойца текущей силой 0–5. Герои недоступны. Цель временно убирается с поля и возвращается без повторной entry-способности, если Юкио погибает, покидает поле или получает Silence."),
     C("l_chizuru","Тидзуру Хонсё","living",2,"ranged","schoolBond","Прочная связь: Школьные друзья. Множитель зависит от числа школьных друзей на всей вашей стороне, независимо от рядов."),
-    C("l_orihime","Орихимэ Иноуэ","living",0,"support","medic","Медик: выберите бойца из своего кладбища и верните его в руку. Герои также являются допустимой целью."),
+    C("l_orihime","Орихимэ Иноуэ","living",0,"support","medic","Fullbringer. Медик: выберите бойца из своего кладбища и верните его в руку. Герои также являются допустимой целью. Получает бонус Лидера Fullbringer Гиндзё."),
     C("vh_hachi","Усёда Хатигэн","living",3,"support","medic","Вайзард. Медик: возвращает только обычного бойца из своего кладбища в руку; Герои недоступны. После Пустофикации становится силой 6."),
     C("l_kurosaki_sisters","Сёстры Куросаки — Карин и Юдзу","living",3,"support","medicOrdinary","Медик: при выходе выберите обычного бойца из своего кладбища и верните его в руку. Героя вернуть нельзя."),
 
@@ -12120,7 +12435,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     // Separate conditional physical cards.
     C("h_szayel_resurreccion","Сзаэльапорро — Resurrección","hueco",8,"support","huecoSzayelRes","Бесплатная условная форма. Требует базового Сзаэльапорро и его Фрасьонов на вашей стороне; заменяет базовую карту, а Фрасьоны отправляются в кладбище.",false),
     C("h_nelliel_adult","Неллиэл — взрослая форма","hueco",10,"melee","huecoAdultNel","Условная форма. Требует Нэл-ребёнка, Пешше и Дондочакку на вашей стороне.",true),
-    C("h_ulquiorra_segunda","Улькиорра — Segunda Etapa","hueco",12,"melee","huecoSegunda","Условная атакующая форма. Заменяет базового Улькиорру; Lanza del Relámpago позволяет выбрать обычного вражеского бойца текущей силой 0–4 и уничтожить его. Розыгрыш тратит основной ход.",true),
+    C("h_ulquiorra_segunda","Улькиорра — Segunda Etapa","hueco",12,"melee","huecoSegunda","Условная атакующая форма. Заменяет базового Улькиорру; Lanza del Relámpago позволяет выбрать обычного вражеского бойца текущей силой 0–8 и уничтожить его. Розыгрыш тратит основной ход.",true),
     C("h_ayon","Айон","hueco",10,"melee","huecoAyon","Герой. Условная форма: требует всех Tres Bestias и отставание минимум 15; жертвует их и уничтожает обычного врага текущей силой 0–4.",true),
     C("h_los_lobos","Старрк — Los Lobos","hueco",12,"ranged","huecoLosLobos","Условная форма. Требует Старрка и Лилинетт. Первые три обычные карты, уничтоженные противником, заменяются Волками 3.",true),
     C("h_ichigo_berserk","Ичиго — Берсерк","hueco",15,"melee","huecoBerserk","Бесплатная условная форма. После появления Segunda Etapa условие активируется, если противник ведёт больше чем на 10 очков. При появлении уничтожает свою форму Улькиорры как цену трансформации; это не считается атакой по противнику.",true),
@@ -12172,8 +12487,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
   let transientPlayedCardPreviewActor=null;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="334";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v334-";
+  const ONLINE_GAME_VERSION="340";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v340-";
   // V322: ONLINE DUEL uses the proven public WSS/MQTT relay transport.
   // E/H is encoded as the first room-code character so Guest selects the same broker as HOST.
   const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
@@ -12215,7 +12530,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     localSetup:null, peerSetup:null, roomClosed:false, lastError:null,
     localPreparedSide:null, peerPreparedSide:null, localMulliganReady:false, peerMulliganReady:false, pregameFinalized:false,
     localRematchReady:false, peerRematchReady:false, rematchStarting:false,
-    revision:0, awaitingCanonical:false, lastAcceptedReason:null,
+    revision:0, awaitingCanonical:false, lastAcceptedReason:null, canonicalRetryTimer:null, pendingProposal:null,
     linkSuspended:false, hostSetupStarted:false, pregameUiStarted:false, guestDisconnectTimer:null, hostDisconnectTimer:null
   };
 
@@ -12223,14 +12538,27 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
   const boardEl = $("#board"), handEl = $("#hand"), detailEl = $("#detail");
 
   const lastLeaderPick=Object.create(null);
+  // V337: target choices are collected before a unit flies to the table, then replayed
+  // during the real resolution. Random rolls used by that ability are replayed too so
+  // conditional branches (for example Shunsui / Jackpot) cannot change after the flight.
+  let cardChoicePreflightContext=null;
+  const cardChoicePreflightPlans=new Map();
   function randomIndex(max){
     if(max<=1) return 0;
+    const ctx=cardChoicePreflightContext;
+    if(ctx?.phase==="replay" && Array.isArray(ctx.randoms) && ctx.randomCursor<ctx.randoms.length){
+      const recorded=Number(ctx.randoms[ctx.randomCursor++])||0;
+      return Math.max(0,Math.min(max-1,recorded%max));
+    }
+    let value=null;
     try{
       if(globalThis.crypto?.getRandomValues){
-        const a=new Uint32Array(1); globalThis.crypto.getRandomValues(a); return a[0]%max;
+        const a=new Uint32Array(1); globalThis.crypto.getRandomValues(a); value=a[0]%max;
       }
     }catch(_e){}
-    return Math.floor(Math.random()*max);
+    if(value==null) value=Math.floor(Math.random()*max);
+    if(ctx?.phase==="collect" && Array.isArray(ctx.randoms)) ctx.randoms.push(value);
+    return value;
   }
   function pickLeader(faction){
     const leaders=FACTIONS[faction].leaders;
@@ -12347,6 +12675,40 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     if(selected) group.ids.forEach(id=>deckBuilderSelection.add(id));
     else group.ids.forEach(id=>deckBuilderSelection.delete(id));
   }
+  function makeDeckBuildRule(leader,selectedTemplateIds=null){
+    return {
+      allowed:selectedTemplateIds ? [...new Set(selectedTemplateIds)] : null,
+      leaderBan:[...new Set(leader?.ban||[])]
+    };
+  }
+  function deckCardAllowedByBuildRule(side,card){
+    if(!side || !card) return false;
+    const rule=side._deckBuildRule;
+    if(!rule) return true;
+    if(Array.isArray(rule.leaderBan) && rule.leaderBan.includes(card.id)) return false;
+    if(HUECO_TRANSFORMATION_IDS.has(card.id) || SOUL_TRANSFORMATION_IDS.has(card.id) || isHuecoSummonReserveUnit(card)) return false;
+    if(Array.isArray(rule.allowed) && !rule.allowed.includes(card.id)) return false;
+    return true;
+  }
+  function enforceDeckBuildRule(sideKey,{quiet=false}={}){
+    const side=state?.[sideKey];
+    if(!side?.deck || !side._deckBuildRule) return 0;
+    const removed=side.deck.filter(c=>!deckCardAllowedByBuildRule(side,c));
+    if(!removed.length) return 0;
+    side.deck=side.deck.filter(c=>deckCardAllowedByBuildRule(side,c));
+    if(!quiet){
+      console.warn("SOUL CLASH: removed cards forbidden by ASSEMBLE/leader ban",{
+        sideKey,
+        cards:removed.map(c=>({id:c.id,name:c.name}))
+      });
+    }
+    return removed.length;
+  }
+  function enforceAllDeckBuildRules(opts={}){
+    if(!state) return 0;
+    return ["player","enemy"].reduce((n,k)=>n+enforceDeckBuildRule(k,opts),0);
+  }
+
   function makeDeck(faction, leader, selectedTemplateIds=null) {
     // v84: the selected leader is a separate entity for every faction.
     // Its matching combat card is always excluded from the battle deck.
@@ -12471,11 +12833,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     state = {
       round:1, turn:"player", playerPassed:false, enemyPassed:false, passReason:{player:null,enemy:null}, gameOver:false, selected:null, phase:"mulligan", mulliganSideKey:"player", initiativeSideKey:null, mulliganSelected:[], mulliganInspect:null, roundHistory:[], globalEffects:[], draggingUid:null, justPlayed:null, justPlayedRow:null, justPlayedSide:null, actionLock:null, flightLandedUid:null, previewCard:null, handRevealUid:null, rowTargeting:null,
       pressure:{player:[],enemy:[]}, pressureHeroPenalty:{player:{},enemy:{}}, hogyoku:{player:[],enemy:[]}, rowEffects:{player:{support:[],ranged:[],melee:[]},enemy:{support:[],ranged:[],melee:[]}}, prisons:[], scoreOffsets:{player:0,enemy:0}, musterSpent:{player:[],enemy:[]},
-      player:{ faction:selectedFaction, leader:playerLeader, hand:takeFactionOpeningCards(pDeck,STARTING_HAND_SIZE,selectedFaction), deck:pDeck, grave:[], board:{support:[],ranged:[],melee:[]}, leaderUsed:false },
-      enemy:{ faction:enemyFaction, leader:enemyLeader, hand:takeFactionOpeningCards(eDeck,STARTING_HAND_SIZE,enemyFaction), deck:eDeck, grave:[], board:{support:[],ranged:[],melee:[]}, leaderUsed:false },
+      player:{ faction:selectedFaction, leader:playerLeader, hand:takeFactionOpeningCards(pDeck,STARTING_HAND_SIZE,selectedFaction), deck:pDeck, grave:[], board:{support:[],ranged:[],melee:[]}, leaderUsed:false, _deckBuildRule:makeDeckBuildRule(playerLeader,playerDeckSelection) },
+      enemy:{ faction:enemyFaction, leader:enemyLeader, hand:takeFactionOpeningCards(eDeck,STARTING_HAND_SIZE,enemyFaction), deck:eDeck, grave:[], board:{support:[],ranged:[],melee:[]}, leaderUsed:false, _deckBuildRule:makeDeckBuildRule(enemyLeader,null) },
       lastDetail:null
     };
     for(const k of ["player","enemy"]) for(const c of [...state[k].hand,...state[k].deck]) c._ownerKey=k;
+    enforceAllDeckBuildRules();
     addLog(`Матч готовится: <b>${FACTIONS[selectedFaction].name}</b> против <b>${FACTIONS[enemyFaction].name}</b>.`);
     if(selectedFaction==="hueco"||enemyFaction==="hueco") addLog(`<b>Уэко Мундо — Инстинкт выживания:</b> один случайный подходящий обычный боец переживает конец раунда.`);
     render();
@@ -12491,11 +12854,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     state={
       round:1, turn:"player", playerPassed:false, enemyPassed:false, gameOver:false, selected:null, phase:"mulligan", mulliganSideKey:"player", initiativeSideKey:null, mulliganSelected:[], mulliganInspect:null, roundHistory:[], globalEffects:[], draggingUid:null, justPlayed:null, justPlayedRow:null, justPlayedSide:null, actionLock:null, flightLandedUid:null, previewCard:null, handRevealUid:null, rowTargeting:null,
       pressure:{player:[],enemy:[]}, pressureHeroPenalty:{player:{},enemy:{}}, hogyoku:{player:[],enemy:[]}, rowEffects:{player:{support:[],ranged:[],melee:[]},enemy:{support:[],ranged:[],melee:[]}}, prisons:[], scoreOffsets:{player:0,enemy:0}, musterSpent:{player:[],enemy:[]},
-      player:{faction:pFaction,leader:pLeader,hand:takeFactionOpeningCards(pDeck,STARTING_HAND_SIZE,pFaction),deck:pDeck,grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false},
-      enemy:{faction:eFaction,leader:eLeader,hand:takeFactionOpeningCards(eDeck,STARTING_HAND_SIZE,eFaction),deck:eDeck,grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false},
+      player:{faction:pFaction,leader:pLeader,hand:takeFactionOpeningCards(pDeck,STARTING_HAND_SIZE,pFaction),deck:pDeck,grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false,_deckBuildRule:makeDeckBuildRule(pLeader,pSelection)},
+      enemy:{faction:eFaction,leader:eLeader,hand:takeFactionOpeningCards(eDeck,STARTING_HAND_SIZE,eFaction),deck:eDeck,grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false,_deckBuildRule:makeDeckBuildRule(eLeader,eSelection)},
       lastDetail:null
     };
     for(const k of ["player","enemy"]) for(const c of [...state[k].hand,...state[k].deck]) c._ownerKey=k;
+    enforceAllDeckBuildRules();
     localViewSide=gameMode==="online" ? (networkSession.localSide||"player") : "player";
     addLog(`DUEL: <b>${FACTIONS[pFaction].name}</b> против <b>${FACTIONS[eFaction].name}</b>. Лидеры назначены случайно.`);
     if(pFaction==="hueco"||eFaction==="hueco") addLog(`<b>Уэко Мундо — Инстинкт выживания:</b> один случайный подходящий обычный боец переживает конец раунда.`);
@@ -12512,7 +12876,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     const side={
       faction, leader,
       hand:takeFactionOpeningCards(deck,STARTING_HAND_SIZE,faction),
-      deck, grave:[], board:{support:[],ranged:[],melee:[]}, leaderUsed:false
+      deck, grave:[], board:{support:[],ranged:[],melee:[]}, leaderUsed:false,
+      _deckBuildRule:makeDeckBuildRule(leader,selection)
     };
     for(const c of [...side.hand,...side.deck]) c._ownerKey=sideKey;
     return side;
@@ -12630,7 +12995,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     return c;
   }
   const HUECO_SPECIAL_SURVIVOR_EXCLUDE=new Set(["h_szayel_resurreccion","h_ayon","h_ulquiorra_segunda","h_los_lobos","h_ichigo_berserk","h_nelliel_adult","h_aizen_butterfly"]);
-  const LIVING_FULLBRINGER_IDS=new Set(["l_tsukishima","vh_riruka","vh_yukio","vh_jackie","l_giriko","l_moe"]);
+  const LIVING_FULLBRINGER_IDS=new Set(["l_tsukishima","vh_riruka","vh_yukio","vh_jackie","l_giriko","l_moe","l_chad","l_ichigo","l_orihime"]);
   function livingDynamicModifier(sideKey,card){
     const side=state?.[sideKey]; if(!side || !LIVING_FULLBRINGER_IDS.has(card?.id)) return 0;
     const ginjo=allBoard(side).find(c=>c.id==="l_ginjo"&&!c.silenced);
@@ -13585,8 +13950,54 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     if(!source) return null;
     return JSON.parse(JSON.stringify({...source,actionLock:null,rowTargeting:null,draggingUid:null,previewCard:null,selected:null}));
   }
+  function clearCanonicalProposalWait(){
+    if(networkSession.canonicalRetryTimer){ clearTimeout(networkSession.canonicalRetryTimer); networkSession.canonicalRetryTimer=null; }
+    networkSession.awaitingCanonical=false;
+    networkSession.pendingProposal=null;
+  }
+  function armCanonicalProposalRetry(){
+    if(networkSession.role!=="guest" || !networkSession.awaitingCanonical || !networkSession.pendingProposal) return;
+    if(networkSession.canonicalRetryTimer) clearTimeout(networkSession.canonicalRetryTimer);
+    networkSession.canonicalRetryTimer=setTimeout(async()=>{
+      networkSession.canonicalRetryTimer=null;
+      const pending=networkSession.pendingProposal;
+      if(!pending || !networkSession.awaitingCanonical || !networkSession.connected || networkSession.linkSuspended || networkSession.roomClosed) return;
+      pending.attempts=(pending.attempts||1)+1;
+      if(pending.attempts<=4){
+        await sendNetworkEvent("state_proposal",{reason:pending.reason,baseRevision:pending.baseRevision,state:pending.state});
+      }
+      // A stale duplicate is useful too: HOST answers it with the current canonical snapshot.
+      await sendNetworkEvent("resync_request",{revision:networkSession.revision});
+      armCanonicalProposalRetry();
+    },3200);
+  }
+  function stabilizeOnlineTurnState(){
+    if(!state || state.phase!=="play" || state.gameOver) return false;
+    let changed=false;
+    const reasons=ensurePassReasons();
+    for(const sideKey of ["player","enemy"]){
+      if((state[sideKey]?.hand?.length||0)===0 && !hasPassed(sideKey)){
+        markSidePassed(sideKey,"empty");
+        reasons[sideKey]="empty";
+        changed=true;
+      }
+    }
+    if(state.playerPassed && state.enemyPassed){
+      const last=state.roundHistory?.[state.roundHistory.length-1];
+      if(!last || last.round!==state.round){ checkRoundEnd(); changed=true; }
+      return changed;
+    }
+    const actor=state.turn, other=enemyOf(actor);
+    if(hasPassed(actor) && !hasPassed(other)){
+      state.turn=other;
+      changed=true;
+    }
+    return changed;
+  }
+
   async function broadcastCanonicalState(reason="state",increment=true){
     if(networkSession.role!=="host"||!state) return false;
+    stabilizeOnlineTurnState();
     if(increment) networkSession.revision+=1;
     networkSession.lastAcceptedReason=reason;
     return sendNetworkEvent("state",{reason,revision:networkSession.revision,state:makeNetworkSnapshot()});
@@ -13598,9 +14009,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     if(gameMode!=="online"||!networkSession.connected||networkApplyingState||!state||isActionLocked()) return false;
     if(networkSession.role==="host") return broadcastCanonicalState(reason,true);
     if(networkSession.awaitingCanonical) return false;
+    const proposal={reason,baseRevision:networkSession.revision,state:makeNetworkSnapshot(),attempts:1};
     networkSession.awaitingCanonical=true;
-    const ok=await sendNetworkEvent("state_proposal",{reason,baseRevision:networkSession.revision,state:makeNetworkSnapshot()});
-    if(!ok) networkSession.awaitingCanonical=false;
+    networkSession.pendingProposal=proposal;
+    const ok=await sendNetworkEvent("state_proposal",{reason:proposal.reason,baseRevision:proposal.baseRevision,state:proposal.state});
+    if(!ok) clearCanonicalProposalWait();
+    else armCanonicalProposalRetry();
     return ok;
   }
   function guestProposalAllowed(candidate){
@@ -13621,6 +14035,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
   function applyCanonicalSnapshot(snapshot){
     state=snapshot;
     state.actionLock=null; state.rowTargeting=null; state.draggingUid=null; state.previewCard=null; state.selected=null;
+    enforceAllDeckBuildRules();
   }
   function rejectIncomingConnection(conn,reasonCode,reasonText){
     const status=$("#networkCreateStatus");
@@ -13869,7 +14284,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
       try{
         applyCanonicalSnapshot(ev.payload.state);
         networkSession.revision=revision;
-        networkSession.awaitingCanonical=false;
+        clearCanonicalProposalWait();
         networkSession.lastAcceptedReason=ev.payload.reason||"state";
         networkSession.connected=true;
         networkSession.linkSuspended=false;
@@ -14012,8 +14427,25 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
   }
   function isGameplayChoiceCancellation(err){ return err===GAMEPLAY_CHOICE_CANCELLED; }
 
+  function serializePreflightChoice(opt){
+    if(!opt) return {kind:"none"};
+    if(opt.card) return {kind:"card",uid:opt.card.uid,row:opt.row||null,sideKey:opt.sideKey||null};
+    if(Object.prototype.hasOwnProperty.call(opt,"value")) return {kind:"value",value:opt.value};
+    return {kind:"none"};
+  }
+  function resolvePreflightChoice(record,options){
+    if(!record || record.kind==="none") return null;
+    if(record.kind==="card") return options.find(opt=>opt?.card?.uid===record.uid && (!record.row || opt.row===record.row)) || options.find(opt=>opt?.card?.uid===record.uid) || null;
+    if(record.kind==="value") return options.find(opt=>opt?.value===record.value) || null;
+    return null;
+  }
   function chooseOptionForActor(sideKey,title,subtitle,options,aiPick){
     if(!options?.length) return Promise.resolve(null);
+    const preflight=cardChoicePreflightContext;
+    if(preflight?.phase==="replay" && !preflight.recordingPaused){
+      const record=preflight.choices[preflight.choiceCursor++]||null;
+      return Promise.resolve(resolvePreflightChoice(record,options));
+    }
     if(!isHumanControlled(sideKey)) return Promise.resolve(aiPick ? aiPick(options) : options[0]);
     return new Promise((resolve,reject)=>{
       const overlay=$("#choiceOverlay"), grid=$("#choiceGrid"), t=$("#choiceTitle"), s=$("#choiceSub"), cancelBtn=$("#choiceCancel");
@@ -14070,6 +14502,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
         overlay.classList.add("hidden");
         modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable");
         grid.innerHTML="";
+        const ctx=cardChoicePreflightContext;
+        if(ctx?.phase==="collect" && !ctx.recordingPaused) ctx.choices.push(serializePreflightChoice(opt));
         resolve(opt);
       };
       const cancelChoice=()=>{
@@ -14121,12 +14555,30 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     render();
     active.resolve(row ? {value:row} : null);
   }
-  function chooseBoardRowForActor(actorKey,targetSideKey,title,rows=ROWS,aiPick=null,effectKind="generic"){
+  async function chooseBoardRowForActor(actorKey,targetSideKey,title,rows=ROWS,aiPick=null,effectKind="generic"){
     const eligible=[...rows].filter(r=>ROWS.includes(r));
-    if(!eligible.length) return Promise.resolve(null);
+    if(!eligible.length) return null;
+    const preflight=cardChoicePreflightContext;
+    if(preflight?.phase==="replay" && !preflight.recordingPaused){
+      const record=preflight.choices[preflight.choiceCursor++]||null;
+      const value=record?.kind==="row" ? record.value : (record?.kind==="value" ? record.value : null);
+      return value && eligible.includes(value) ? {value} : null;
+    }
+    if(preflight?.phase==="collect" && isHumanControlled(actorKey)){
+      const rowOptions=eligible.map(value=>({value,label:rowRuleLabel(value).toUpperCase()}));
+      preflight.recordingPaused=true;
+      let picked=null;
+      try{
+        picked=await chooseOptionForActor(actorKey,title,"Выберите ряд до розыгрыша карты.",rowOptions,aiPick);
+      } finally {
+        preflight.recordingPaused=false;
+      }
+      preflight.choices.push({kind:"row",value:picked?.value||null});
+      return picked;
+    }
     if(!isHumanControlled(actorKey)){
       const choices=eligible.map(value=>({value}));
-      return Promise.resolve(aiPick ? aiPick(choices) : choices[0]);
+      return aiPick ? aiPick(choices) : choices[0];
     }
     if(activeBoardRowChoice) finishBoardRowChoice(null);
     return new Promise(resolve=>{
@@ -14242,6 +14694,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     }
     tl.className="turn "+(state.turn===view?"player":"enemy");
     $("#passBtn").disabled = !canLocalSideAct();
+    if(typeof clearResolvedNetworkLandingGhosts==="function") clearResolvedNetworkLandingGhosts();
     if(state.justPlayed){ setTimeout(()=>{ if(state){ state.justPlayed=null; state.justPlayedRow=null; state.justPlayedSide=null; } },520); }
   }
   function renderRow(sideKey,row,viewSide=activeViewSide()){
@@ -15261,12 +15714,19 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
       if(el){ hidden.push([el,el.style.visibility]); el.style.visibility='hidden'; }
     });
     document.body.classList.add('card-flight-active');
+    let landed=false;
     try{
       const arc=Math.min(118,Math.max(48,Math.abs(target.left-start.left)*.08+Math.abs(target.top-start.top)*.055));
       await runPhysicalCardFlight(flyer,start,target,{duration:CARD_FLIGHT_MS,arc,fadeFrom:1});
+      landed=true;
     } finally {
-      flyer.remove();
-      hidden.forEach(([el,visibility])=>{ if(el&&el.isConnected) el.style.visibility=visibility; });
+      if(landed){
+        flyer.classList.add('local-landing-hold');
+        requestAnimationFrame(()=>requestAnimationFrame(()=>flyer.remove()));
+      } else {
+        flyer.remove();
+        hidden.forEach(([el,visibility])=>{ if(el&&el.isConnected) el.style.visibility=visibility; });
+      }
       document.body.classList.remove('card-flight-active');
     }
   }
@@ -15283,11 +15743,16 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     flyer.querySelector('.card-info-panel')?.remove();
     document.body.appendChild(flyer);
     document.body.classList.add('card-flight-active');
+    let landed=false;
     try{
       const arc=Math.min(112,Math.max(46,Math.abs(target.left-start.left)*.07+Math.abs(target.top-start.top)*.04));
       await runPhysicalCardFlight(flyer,start,target,{duration:640,arc,fadeFrom:.35});
+      landed=true;
     } finally {
-      flyer.remove();
+      if(landed){
+        flyer.classList.add('local-landing-hold');
+        requestAnimationFrame(()=>requestAnimationFrame(()=>flyer.remove()));
+      } else flyer.remove();
       document.body.classList.remove('card-flight-active');
     }
   }
@@ -15394,6 +15859,40 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     spawnLandingImpactAtRect(cardEl.getBoundingClientRect());
   }
 
+  const CARD_PREFLIGHT_CHOICE_ABILITIES=new Set(["jackpotKnuckle","yoruichiShunpo","omaedaShunpoGuard","soulByakuyaShunpo","shinjiMasks","sodeFreeze","getsugaExecute","dollhouse","medicOrdinary","soulRetsuMedic","extinguir","bookEnd","digitalPrison","medic","soulShunsuiRandom","soulNanaoBarrier","soulNigeki","soulRenjiSooZabimaru","soulKomamuraBankai","soulRoseShow","soulWabisuke","soulWabisukeZombie","soulHealing","soulSakanade","soulTobiume","soulToshiroFreeze","soulUnohanaBloodlust","soulMashiroKick","soulByakuyaIkkaSenjinka","soulDrug","soulResearch","soulIchimonji","soulSayafushi","soulFateCloth","soulSoulFood","soulHotSprings","soulToshiroComplete","soulHakka","soulNozarashi","soulVacuumIce","gemelosSonido","szayelAbsorb","huecoSegunda","huecoAyon","medicWeak"]);
+  async function collectCardPreflightChoicePlan(ownerKey,targetSideKey,card,row){
+    if(!card || !CARD_PREFLIGHT_CHOICE_ABILITIES.has(card.ability) || !isHumanControlled(ownerKey)) return null;
+    const liveState=state;
+    const simulated=JSON.parse(JSON.stringify(liveState));
+    const simCard=simulated?.[ownerKey]?.hand?.find(c=>c.uid===card.uid);
+    if(!simCard) return null;
+
+    const saved={
+      render,toast,waitForMs,animateReturnSmoke,v254AnimateGetsugaTensho,animateHellGatesTargets,animateBladeCutTargets
+    };
+    const ctx={phase:"collect",actorKey:ownerKey,choices:[],choiceCursor:0,randoms:[],randomCursor:0,recordingPaused:false};
+    cardChoicePreflightContext=ctx;
+    cardChoicePreflightPlans.delete(card.uid);
+    try{
+      state=simulated;
+      simulated[ownerKey].hand=simulated[ownerKey].hand.filter(c=>c.uid!==simCard.uid);
+      simulated.selected=null; simulated.previewCard=null; simulated.flightLandedUid=null;
+      render=()=>{}; toast=()=>{}; waitForMs=async()=>{};
+      animateReturnSmoke=async()=>{}; v254AnimateGetsugaTensho=async()=>{};
+      animateHellGatesTargets=async()=>{}; animateBladeCutTargets=async()=>{};
+      await placeCard(ownerKey,targetSideKey,simCard,row);
+      return {choices:ctx.choices.map(x=>({...x})),randoms:[...ctx.randoms]};
+    } finally {
+      render=saved.render; toast=saved.toast; waitForMs=saved.waitForMs;
+      animateReturnSmoke=saved.animateReturnSmoke; v254AnimateGetsugaTensho=saved.v254AnimateGetsugaTensho;
+      animateHellGatesTargets=saved.animateHellGatesTargets; animateBladeCutTargets=saved.animateBladeCutTargets;
+      state=liveState;
+      cardChoicePreflightContext=null;
+      $("#choiceOverlay")?.classList.add("hidden");
+      render();
+    }
+  }
+
   async function playSelected(row){
     const actor=localControlledSide();
     const c=state.selected;
@@ -15410,6 +15909,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     render();
 
     try{
+      const preflightPlan=await collectCardPreflightChoicePlan(actor,targetSide,c,row);
+      if(preflightPlan) cardChoicePreflightPlans.set(c.uid,preflightPlan);
       await animateCardToField(c,row,targetSide);
       if(state!==actionState || state.gameOver) return;
 
@@ -15434,6 +15935,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
         else if(isTransformationCard(c)) addLog(`<b>${c.name}</b> — атакующая трансформация: основной ход потрачен.`);
       }
     } catch(err) {
+      cardChoicePreflightPlans.delete(c.uid);
+      cardChoicePreflightContext=null;
       if(isGameplayChoiceCancellation(err)){
         restoreGameplayActionSnapshot(cancelSnapshot);
         return false;
@@ -15740,6 +16243,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     const ownerBoard=allBoard(owner), foeBoard=allBoard(foe);
     const boost=(c,n)=>{if(c&&!c.hero){c.currentPower+=n;}};
     const damage=(c,n)=>{ if(!c||c.hero) return; const next=reducedScore(c.currentPower,n,1); const loc=findBoardCardByUid(c.uid); if(loc) applyHostilePowerChange(loc.sideKey,c,next,ownerKey,"ослабление"); else c.currentPower=next; };
+    const replayPlan=cardChoicePreflightPlans.get(card.uid)||null;
+    const previousPreflightContext=cardChoicePreflightContext;
+    if(replayPlan){
+      cardChoicePreflightContext={phase:"replay",actorKey:ownerKey,choices:replayPlan.choices||[],choiceCursor:0,randoms:replayPlan.randoms||[],randomCursor:0,recordingPaused:false};
+    }
+    try{
     switch(card.ability){
       case "battleSpirit": applyIchigoAura(targetSideKey); break;
       case "fullbringerAura": break;
@@ -15814,7 +16323,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
         break;
       }
       case "reishiAbsorb": {
-        const foeKey=enemyOf(ownerKey), foeDeck=state[foeKey].deck;
+        const foeKey=enemyOf(ownerKey);
+        enforceDeckBuildRule(foeKey);
+        const foeDeck=state[foeKey].deck;
         const candidates=foeDeck.filter(c=>!c.special&&!c.hero&&!c._token&&!isTransformationCard(c));
         if(candidates.length){
           const stolen=candidates[randomIndex(candidates.length)];
@@ -16206,9 +16717,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
         const target=await chooseFieldTarget(
           ownerKey,
           foeKey,
-          (c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=4,
+          (c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=8,
           "LANZA DEL RELÁMPAGO",
-          "Выберите обычного вражеского бойца с текущей силой 0–4. Герои не являются допустимой целью."
+          "Выберите обычного вражеского бойца с текущей силой 0–8. Герои не являются допустимой целью."
         );
         if(target){
           destroyCard(foeKey,target.card,"Lanza del Relámpago",ownerKey);
@@ -16273,6 +16784,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
       case "balance": { boost(weakest(ownerBoard,c=>!c.hero),2); if(!consumeAizenShield(enemyOf(ownerKey),ownerKey,"The Balance")) damage(strongest(foeBoard,c=>!c.hero),2); break; }
       case "harribelBoost": card.currentPower += allBoard(owner).filter(c=>["h_apacci","h_milarose","h_sunsun"].includes(c.id)).length; break;
       case "bambieBond": if(ownerBoard.some(c=>c.uid!==card.uid && ["w_candice","w_meninas","w_liltotto","w_giselle","w_bambi"].includes(c.id))) card.currentPower+=2; break;
+    }
+    } finally {
+      if(replayPlan){
+        cardChoicePreflightPlans.delete(card.uid);
+        cardChoicePreflightContext=previousPreflightContext;
+      }
     }
   }
 
@@ -16437,6 +16954,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
   }
 
   function draw(sideKey,n,opts={}){
+    enforceDeckBuildRule(sideKey);
     const side=state[sideKey];
     let cards=[];
     if(opts.spyRestrictions){
@@ -17521,6 +18039,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     let used=false;
     try{
       if(leader.abilityKey==="plan"){
+        enforceDeckBuildRule(sideKey);
         const peek=side.deck.splice(0,Math.min(3,side.deck.length));
         if(peek.length){
           const options=peek.map(card=>({card,sideKey,caption:card.name}));
@@ -17763,10 +18282,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
       const wrap=document.createElement("div");
       wrap.className="mulligan-card-wrap";
       const el=renderCard(c,false,sideKey,false,false);
-      const hover=document.createElement("div");
-      hover.className="mulligan-hover-info";
-      hover.innerHTML=`<b>${abilityName(c.ability)}</b><span>${c.desc||"Без особой способности."}</span>`;
-      (el.querySelector(".card-face")||el).appendChild(hover);
+      // V336: CHOOSE YOUR SOUL is selection-only on touch screens.
+      // Ability hover/focus overlays were unreliable in both PWA and mobile Safari,
+      // so this screen intentionally renders only the card face and selection state.
       const name=document.createElement("div");
       name.className="mulligan-nameplate";
       name.textContent=c.name;
@@ -17778,7 +18296,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
         lock.innerHTML=`<span class="legacy-lock-badge">🔒</span>`;
         (el.querySelector(".card-face")||el).appendChild(lock);
       }
-      el.addEventListener("click",()=>{state.mulliganInspect=c.uid;toggleMulligan(c.uid);});
+      el.addEventListener("click",()=>toggleMulligan(c.uid));
       wrap.append(el,name);
       grid.appendChild(wrap);
     });
@@ -17788,6 +18306,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
     const i=state.mulliganSelected.indexOf(uid); if(i>=0) state.mulliganSelected.splice(i,1); else { if(state.mulliganSelected.length>=2){toast("Можно заменить максимум 2 карты");return;} state.mulliganSelected.push(uid); } renderMulligan();
   }
   function applyMulliganForSide(sideKey){
+    enforceDeckBuildRule(sideKey);
     const side=state[sideKey];
     const chosen=side.hand.filter(c=>state.mulliganSelected.includes(c.uid));
     if(chosen.length){
@@ -17795,6 +18314,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px
       const replacements=takeOpeningCards(side.deck,chosen.length,side.hand,side.faction); side.hand.push(...replacements); side.deck=shuffle([...side.deck,...chosen]);
     }
     if(side.faction==="hueco") ensureHuecoSpyInFirstTen(side.hand,side.deck);
+    enforceDeckBuildRule(sideKey);
     state.mulliganSelected=[]; state.mulliganInspect=null; state.lastDetail=null; state.selected=null;
   }
   async function resolveInitiative(){
@@ -18100,8 +18620,9 @@ ${template.desc}`:""}`;
   function resetNetworkSession(){
     if(networkSession.guestDisconnectTimer) clearTimeout(networkSession.guestDisconnectTimer);
     if(networkSession.hostDisconnectTimer) clearTimeout(networkSession.hostDisconnectTimer);
+    if(networkSession.canonicalRetryTimer) clearTimeout(networkSession.canonicalRetryTimer);
     destroyNetworkPeer(false);
-    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null,linkSuspended:false,hostSetupStarted:false,pregameUiStarted:false,guestDisconnectTimer:null,hostDisconnectTimer:null});
+    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null,canonicalRetryTimer:null,pendingProposal:null,linkSuspended:false,hostSetupStarted:false,pregameUiStarted:false,guestDisconnectTimer:null,hostDisconnectTimer:null});
   }
   function mqttAvailable(){ return !!globalThis.mqtt?.connect; }
   function mqttBrokerByKey(key){ return ONLINE_MQTT_BROKERS.find(b=>b.key===String(key||"").toUpperCase())||null; }
@@ -18482,7 +19003,7 @@ ${template.desc}`:""}`;
     $("#networkJoinCode").value=code;
     if(code.length!==6){ if(status) status.textContent="Введите полный шестизначный код комнаты."; return false; }
     const broker=mqttBrokerByKey(code[0]);
-    if(!broker){ if(status) status.textContent="Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v334."; return false; }
+    if(!broker){ if(status) status.textContent="Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v337."; return false; }
     if(btn) btn.disabled=true;
     try{
       resetNetworkSession();
@@ -18580,6 +19101,31 @@ ${template.desc}`:""}`;
     }
     return null;
   }
+  function createNetworkLandingGhost(card,targetSide,target){
+    if(!card||!target) return null;
+    const ghost=renderCard(card,false,targetSide,false,false);
+    ghost.classList.remove('selected','enter','landed-impact','dragging','with-info');
+    ghost.classList.add('card-flight','compact-card','network-landing-ghost');
+    ghost.querySelector('.card-info-panel')?.remove();
+    ghost.style.setProperty('left',`${target.left}px`,'important');
+    ghost.style.setProperty('top',`${target.top}px`,'important');
+    ghost.style.setProperty('width',`${target.width}px`,'important');
+    ghost.style.setProperty('height',`${target.height}px`,'important');
+    ghost.style.setProperty('transform','none','important');
+    ghost.style.setProperty('opacity','1','important');
+    document.body.appendChild(ghost);
+    setTimeout(()=>ghost.remove(),8000);
+    return ghost;
+  }
+  function clearResolvedNetworkLandingGhosts(){
+    document.querySelectorAll('.network-landing-ghost[data-uid]').forEach(ghost=>{
+      const uid=ghost.dataset.uid;
+      if(!uid) return;
+      const real=document.querySelector(`.row-cards .card[data-uid="${uid}"]`);
+      if(real) requestAnimationFrame(()=>requestAnimationFrame(()=>ghost.remove()));
+    });
+  }
+
   async function replayNetworkCardFlight(payload){
     const card=payload.card; if(!card) return;
     const previewShown=await showRemotePlayedCardPreview(card,payload.actor,520);
@@ -18594,14 +19140,18 @@ ${template.desc}`:""}`;
     flyer.classList.add('card-flight','compact-card');
     flyer.querySelector('.card-info-panel')?.remove();
     document.body.appendChild(flyer); document.body.classList.add('card-flight-active');
+    let landed=false;
     try{
       const arc=Math.min(118,Math.max(48,Math.abs(target.left-start.left)*.08+Math.abs(target.top-start.top)*.055));
       await runPhysicalCardFlight(flyer,start,target,{duration:CARD_FLIGHT_MS,arc,fadeFrom:1});
-      // Canonical state has not arrived yet, so the destination card is not in DOM.
-      // Use the measured target itself; this restores the missing online dust/impact animation.
+      landed=true;
       spawnLandingImpactAtRect(target);
     } finally {
-      flyer.remove();
+      if(landed){
+        flyer.classList.add('network-landing-ghost');
+        flyer.style.setProperty('transform','none','important');
+        setTimeout(()=>flyer.remove(),8000);
+      } else flyer.remove();
       if(previewCard?.isConnected) previewCard.style.visibility=oldVisibility||'';
       if(previewShown) clearRemotePlayedCardPreview(card);
       document.body.classList.remove('card-flight-active');
@@ -18692,7 +19242,7 @@ ${template.desc}`:""}`;
       if(payload.kind==="deck-flight"){
         const target=measureCardLandingRect(payload.targetSide,payload.row,payload.card);
         await v303Original.animateCardFromDeckToField(payload.card,payload.row,payload.targetSide,payload.ownerKey);
-        if(target) spawnLandingImpactAtRect(target);
+        if(target){ spawnLandingImpactAtRect(target); createNetworkLandingGhost(payload.card,payload.targetSide,target); }
         return;
       }
       if(payload.kind==="special-cast"){
@@ -18779,7 +19329,7 @@ ${template.desc}`:""}`;
     networkSession.localSetup=null; networkSession.peerSetup=null;
     networkSession.localPreparedSide=null; networkSession.peerPreparedSide=null;
     networkSession.localMulliganReady=false; networkSession.peerMulliganReady=false;
-    networkSession.pregameFinalized=false; networkSession.revision=0; networkSession.awaitingCanonical=false; networkSession.lastAcceptedReason=null;
+    networkSession.pregameFinalized=false; networkSession.revision=0; clearCanonicalProposalWait(); networkSession.lastAcceptedReason=null;
     networkSession.pregameUiStarted=false; networkSession.hostSetupStarted=(networkSession.role==="host");
     state=null; pendingSetup={player:null,enemy:null}; selectedFaction="living";
     setupSideKey=networkSession.localSide||"player"; localViewSide=setupSideKey;
@@ -18839,7 +19389,7 @@ ${template.desc}`:""}`;
     delete document.body.dataset.enemyFaction;
     delete document.body.dataset.viewSide;
     document.body.classList.remove("action-locked","card-flight-active","leader-unleash-active","leader-unleash-living","leader-unleash-hueco","local-handoff-active");
-    document.querySelectorAll(".landing-impact,.hellfire-overlay,.return-smoke-overlay,.leader-unleash-fx").forEach(el=>el.remove());
+    document.querySelectorAll(".landing-impact,.hellfire-overlay,.return-smoke-overlay,.leader-unleash-fx,.network-landing-ghost,.local-landing-hold").forEach(el=>el.remove());
     const range=document.getElementById("handScrollRange");
     if(range){ range.value="0"; range.max="0"; range.disabled=true; range.style.setProperty("--hand-scroll-pct","0%"); }
     if(handEl){
