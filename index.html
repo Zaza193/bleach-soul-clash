@@ -10771,6 +10771,77 @@ html.touch-device.touch-landscape .top-score-label{
 }
 </style>
 
+
+<style id="v332-desktop-score-hud">
+/* V332 — clearer desktop score: no tiny "СЧЁТ 0:0" string. */
+@media (min-width:900px){
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel{
+    height:31px!important;
+    min-width:150px!important;
+    padding:0!important;
+    display:inline-grid!important;
+    grid-template-columns:minmax(42px,1fr) 20px minmax(66px,1fr)!important;
+    align-items:stretch!important;
+    overflow:hidden!important;
+    border:1px solid #3a3a3a!important;
+    border-left:3px solid #d4cec2!important;
+    background:#0d0d0d!important;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+    text-transform:none!important;
+    letter-spacing:0!important;
+    box-shadow:inset 0 0 0 1px #050505!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel .score-side{
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    gap:6px!important;
+    padding:0 7px!important;
+    background:linear-gradient(180deg,#1b1b1b,#121212)!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel .score-side.foe{
+    grid-template-columns:1fr auto!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel small{
+    color:#8f8a82!important;
+    font-size:7px!important;
+    font-weight:900!important;
+    line-height:1!important;
+    letter-spacing:.08em!important;
+    white-space:nowrap!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel b{
+    color:#fff!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;
+    font-size:23px!important;
+    font-weight:400!important;
+    line-height:1!important;
+    text-align:center!important;
+    text-shadow:2px 2px 0 #000!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel .score-side.me b{
+    color:#f5f1ea!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel .score-side.foe b{
+    color:#f0ece5!important;
+  }
+  html:not(.phone-device):not(.tablet-device) #topScoreLabel .score-colon{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    background:#070707!important;
+    color:#817b72!important;
+    border-left:1px solid #292929!important;
+    border-right:1px solid #292929!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;
+    font-size:18px!important;
+    font-style:normal!important;
+    line-height:1!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -10804,7 +10875,7 @@ html.touch-device.touch-landscape .top-score-label{
 
   <main class="board-shell">
     <div class="topbar">
-      <div><span id="roundLabel">РАУНД 1 / 3</span><span id="turnLabel" class="turn player">ВАШ ХОД</span><span id="topScoreLabel" class="top-score-label">СЧЁТ 0:0</span></div>
+      <div><span id="roundLabel">РАУНД 1 / 3</span><span id="turnLabel" class="turn player">ВАШ ХОД</span><span id="topScoreLabel" class="top-score-label" aria-label="Счёт по раундам: вы 0, соперник 0"><span class="score-side me"><small>ВЫ</small><b id="topScoreMe">0</b></span><i class="score-colon">:</i><span class="score-side foe"><b id="topScoreFoe">0</b><small>СОПЕРНИК</small></span></span></div>
       <div class="top-controls">
         <button id="restartBtn" class="tiny-btn">Новая игра</button>
       </div>
@@ -11297,8 +11368,8 @@ html.touch-device.touch-landscape .top-score-label{
   let transientPlayedCardPreviewActor=null;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="326";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v326-";
+  const ONLINE_GAME_VERSION="332";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v332-";
   // V322: ONLINE DUEL uses the proven public WSS/MQTT relay transport.
   // E/H is encoded as the first room-code character so Guest selects the same broker as HOST.
   const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
@@ -12828,6 +12899,43 @@ html.touch-device.touch-landscape .top-score-label{
       else handleGuestClosed();
     });
   }
+  function ensureHostOnlinePregameUi(reason="guest-connected"){
+    if(gameMode!=="online" || networkSession.role!=="host" || !networkSession.connected || networkSession.pregameFinalized) return false;
+    if(networkSession.localSetup || networkSession.localPreparedSide || networkSession.localMulliganReady) return true;
+
+    const status=$("#networkCreateStatus");
+    const createOverlay=$("#networkCreateOverlay");
+    const startOverlay=$("#startOverlay");
+    const deckOverlay=$("#deckBuilderOverlay");
+    const mulliganOverlay=$("#mulliganOverlay");
+
+    networkSession.hostSetupStarted=true;
+    if(status) status.textContent="Игрок 2 подключён. Открываем выбор фракции…";
+
+    if(!networkSession.pregameUiStarted){
+      selectedFaction="living";
+      const opened=openPathPicker("player");
+      onlineDiagLog("HOST pregame UI started",{reason,opened,roomCode:networkSession.roomCode});
+      return opened!==false;
+    }
+
+    // Repair only the specific stuck-room state. Never rewind a HOST who is already
+    // choosing a deck or mulliganing just because another HELLO arrives.
+    const stuckOnCreate=!!createOverlay && !createOverlay.classList.contains("hidden");
+    const deckOpen=!!deckOverlay && !deckOverlay.classList.contains("hidden");
+    const mulliganOpen=!!mulliganOverlay && !mulliganOverlay.classList.contains("hidden");
+    if(stuckOnCreate && !deckOpen && !mulliganOpen){
+      setupSideKey="player";
+      selectedFaction="living";
+      updateSetupPlayerLabel();
+      buildFactionPicker();
+      ["#modeOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+      startOverlay?.classList.remove("hidden");
+      onlineDiagWarn("HOST pregame UI repaired from stuck CREATE ROOM",{reason,roomCode:networkSession.roomCode});
+    }
+    return true;
+  }
+
   async function handleNetworkEvent(ev){
     if(ev.type==="hello"){
       // HELLO is also used after MQTT reconnect. It must be idempotent: a reconnect must
@@ -12856,13 +12964,7 @@ html.touch-device.touch-landscape .top-score-label{
         networkSession.linkSuspended=false;
         const status=$("#networkCreateStatus");
         if(!networkSession.hostSetupStarted){
-          networkSession.hostSetupStarted=true;
-          if(status) status.textContent=`Игрок 2 подключён. Переходим к созданию колоды…`;
-          setTimeout(()=>{
-            if(gameMode!=="online"||networkSession.role!=="host"||!networkSession.connected||networkSession.pregameFinalized) return;
-            if(networkSession.localSetup||networkSession.localPreparedSide) return;
-            selectedFaction="living"; openPathPicker("player");
-          },0);
+          ensureHostOnlinePregameUi("hello");
         } else {
           if(status) status.textContent=`Игрок 2 снова на связи. Комната ${networkSession.roomCode}.`;
           if(networkSession.pregameFinalized && state){
@@ -14181,7 +14283,10 @@ html.touch-device.touch-landscape .top-score-label{
     const viewWins=history.filter(r=>r.winner===view).length;
     const foeWins=history.filter(r=>r.winner===foe).length;
     const topScore=$("#topScoreLabel");
-    if(topScore) topScore.textContent=`СЧЁТ ${viewWins}:${foeWins}`;
+    const topScoreMe=$("#topScoreMe"), topScoreFoe=$("#topScoreFoe");
+    if(topScoreMe) topScoreMe.textContent=String(viewWins);
+    if(topScoreFoe) topScoreFoe.textContent=String(foeWins);
+    if(topScore) topScore.setAttribute("aria-label",`Счёт по раундам: вы ${viewWins}, соперник ${foeWins}`);
 
     // V297: keep the round score between the leaders and make turn ownership
     // immediately readable from the local player's point of view.
@@ -17248,6 +17353,7 @@ ${template.desc}`:""}`;
     networkSession.roomClosed=false;
     if(status) status.textContent=`Игрок 2 подключён через ${networkSession.mqttBroker?.name||"WSS relay"}. Переходим к созданию колоды…`;
     onlineDiagLog("MQTT Guest accepted",{roomCode:networkSession.roomCode,guestId,broker:networkSession.mqttBroker?.name||null});
+    ensureHostOnlinePregameUi("mqtt-join-request");
     mqttPublishTo(guestId,"hello",{role:"host",roomCode:networkSession.roomCode},{senderRole:"host"});
     if(networkSession.localSetup) sendNetworkEvent("setup",networkSession.localSetup);
     await handleNetworkEvent({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"hello",payload:{role:"guest",roomCode:networkSession.roomCode},senderRole:"guest",senderId:guestId,roomCode:networkSession.roomCode});
