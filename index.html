@@ -8609,6 +8609,21 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
 }
 </style>
 
+
+<style id="v292-online-pregame-flow">
+/* ===== V292: three-stage ONLINE DUEL entry + independent pregame READY barrier ===== */
+#networkOverlay .network-choice-modal{width:min(640px,92vw)!important;padding:34px 38px 30px!important;text-align:center}
+#networkOverlay .network-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 18px}
+#networkOverlay .network-choice-grid .start-btn{min-height:62px!important;font-size:16px!important}
+#networkCreateOverlay .network-role-modal,#networkJoinOverlay .network-role-modal{width:min(650px,92vw)!important;padding:34px 38px 30px!important;text-align:center}
+#networkCreateOverlay .network-role-actions,#networkJoinOverlay .network-role-actions{display:flex;justify-content:center;margin-top:16px}
+#networkCreateOverlay .network-role-actions .start-btn,#networkJoinOverlay .network-role-actions .start-btn{min-height:50px!important}
+#networkCreateOverlay .network-status,#networkJoinOverlay .network-status{margin:18px 0 12px!important}
+#networkCreateOverlay .network-room-code{margin:16px 0 18px!important}
+.network-flow-back{display:block!important;width:100%!important;min-height:46px!important;margin-top:10px!important;border:0!important;border-radius:0!important;clip-path:none!important;background:#d8d4ca!important;color:#111!important;box-shadow:inset 0 -4px 0 #777!important;font-weight:1000!important;letter-spacing:.055em!important;text-transform:uppercase!important;cursor:pointer!important}
+.network-flow-back:hover,.network-flow-back:focus-visible{background:#c7c2b7!important;color:#111!important;outline:none!important}
+@media(max-width:620px){#networkOverlay .network-choice-grid{grid-template-columns:1fr}.network-role-modal,.network-choice-modal{padding:24px 18px!important}}
+</style>
 </head>
 <body>
 <div id="app" class="app">
@@ -8660,24 +8675,33 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
 </div>
 
 <div id="networkOverlay" class="overlay hidden">
-  <div class="modal network-modal">
+  <div class="modal network-modal network-choice-modal">
     <h1>ONLINE <span>DUEL</span></h1>
-    <div class="network-tabs">
+    <div class="network-choice-grid">
       <button id="networkCreateTab" type="button" class="start-btn">CREATE ROOM</button>
       <button id="networkJoinTab" type="button" class="start-btn">JOIN ROOM</button>
     </div>
-    <div id="networkCreatePanel" class="network-panel active">
-      <div id="networkCreateStatus" class="network-status">Создайте комнату. Игра выдаст шестизначный код для Игрока 2.</div>
-      <div id="networkRoomCode" class="network-room-code">------</div>
-      <div class="network-actions"><button id="networkCreateBtn" class="start-btn" type="button">CREATE ROOM</button><button id="networkHostContinue" class="start-btn hidden" type="button">CHOOSE YOUR PATH</button></div>
-    </div>
-    <div id="networkJoinPanel" class="network-panel">
-      <div class="network-field"><label>ROOM CODE</label><input id="networkJoinCode" maxlength="6" placeholder="7K4P2F" autocomplete="off" spellcheck="false"></div>
-      <div id="networkJoinStatus" class="network-status">Введите шестизначный код, который показан у HOST.</div>
-      <div class="network-actions"><button id="networkJoinBtn" class="start-btn" type="button">JOIN ROOM</button></div>
-    </div>
-    <p class="network-note">Соединение идёт напрямую между браузерами через WebRTC / PeerJS. Отдельный Soul Clash Server и открытие портов не нужны. Если HOST покидает матч, ONLINE DUEL завершается.</p>
-    <button id="networkBackBtn" type="button" class="deck-builder-back">BACK TO BATTLES</button>
+    <button id="networkBackBtn" type="button" class="deck-builder-back network-flow-back">BACK TO BATTLES</button>
+  </div>
+</div>
+
+<div id="networkCreateOverlay" class="overlay hidden">
+  <div class="modal network-modal network-role-modal">
+    <h1>CREATE <span>ROOM</span></h1>
+    <div id="networkCreateStatus" class="network-status">Создайте комнату. Игра выдаст шестизначный код для Игрока 2.</div>
+    <div id="networkRoomCode" class="network-room-code">------</div>
+    <div class="network-role-actions"><button id="networkCreateBtn" class="start-btn" type="button">CREATE ROOM</button></div>
+    <button id="networkCreateBackBtn" type="button" class="deck-builder-back network-flow-back">BACK</button>
+  </div>
+</div>
+
+<div id="networkJoinOverlay" class="overlay hidden">
+  <div class="modal network-modal network-role-modal">
+    <h1>JOIN <span>ROOM</span></h1>
+    <div class="network-field"><label>ROOM CODE</label><input id="networkJoinCode" maxlength="6" placeholder="7K4P2F" autocomplete="off" spellcheck="false"></div>
+    <div id="networkJoinStatus" class="network-status">Введите шестизначный код, который показан у HOST.</div>
+    <div class="network-role-actions"><button id="networkJoinBtn" class="start-btn" type="button">JOIN ROOM</button></div>
+    <button id="networkJoinBackBtn" type="button" class="deck-builder-back network-flow-back">BACK</button>
   </div>
 </div>
 
@@ -9092,8 +9116,8 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   let networkApplyingState=false;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-peer-v2";
-  const ONLINE_GAME_VERSION="145";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v145-";
+  const ONLINE_GAME_VERSION="292";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v292-";
   const ONLINE_BASE_ICE_SERVERS=[{urls:"stun:stun.l.google.com:19302"}];
   function onlineIceServers(){
     const extra=Array.isArray(globalThis.BSC_TURN_SERVERS)?globalThis.BSC_TURN_SERVERS:[];
@@ -9103,6 +9127,7 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
     connected:false, role:null, localSide:null, roomCode:null,
     peer:null, conn:null, peerReady:false, closing:false,
     localSetup:null, peerSetup:null, roomClosed:false, lastError:null,
+    localPreparedSide:null, peerPreparedSide:null, localMulliganReady:false, peerMulliganReady:false, pregameFinalized:false,
     revision:0, awaitingCanonical:false, lastAcceptedReason:null
   };
 
@@ -10272,35 +10297,147 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
     for(let i=0;i<6;i++) code+=alphabet[randomIndex(alphabet.length)];
     return code;
   }
+  function makeOnlineDiagError(type,message,extra={}){
+    const err=new Error(message||type||"P2P diagnostic error");
+    err.type=type||"p2p-diagnostic";
+    try{ Object.assign(err,extra||{}); }catch(_e){}
+    return err;
+  }
+  function onlineDiagLog(label,payload={}){
+    try{ console.info(`[ONLINE DIAG] ${label}`,payload); }catch(_e){}
+  }
+  function onlineDiagWarn(label,payload={}){
+    try{ console.warn(`[ONLINE DIAG] ${label}`,payload); }catch(_e){}
+  }
+  function resetDiagStatus(el,first=""){
+    if(!el) return;
+    el._onlineDiagStages=[];
+    if(first) appendDiagStatus(el,first);
+    else el.textContent="";
+  }
+  function appendDiagStatus(el,stage){
+    if(!el||!stage) return;
+    if(!Array.isArray(el._onlineDiagStages)) el._onlineDiagStages=[];
+    if(!el._onlineDiagStages.includes(stage)) el._onlineDiagStages.push(stage);
+    // Keep the complete diagnostic chain visible while preventing unbounded growth.
+    if(el._onlineDiagStages.length>9) el._onlineDiagStages=el._onlineDiagStages.slice(-9);
+    el.textContent=el._onlineDiagStages.join(" → ");
+  }
+  function removeEmitterListener(emitter,event,fn){
+    try{
+      if(typeof emitter?.off==="function") emitter.off(event,fn);
+      else if(typeof emitter?.removeListener==="function") emitter.removeListener(event,fn);
+    }catch(_e){}
+  }
   function p2pErrorText(err){
     const type=err?.type||"";
-    if(type==="peer-unavailable") return "комната не найдена или HOST ещё не создал её";
+    if(type==="peer-unavailable") return "HOST peer не существует: комната не найдена или HOST ещё не создал её";
     if(type==="unavailable-id") return "такой код комнаты уже занят";
     if(type==="browser-incompatible") return "этот браузер не поддерживает WebRTC";
-    if(type==="webrtc") return "WebRTC не смог установить прямой канал (NAT/CGNAT/firewall); для таких сетей нужен TURN";
-    if(type==="network"||type==="server-error"||type==="socket-error"||type==="socket-closed") return "не удалось связаться с PeerJS Cloud — проверьте интернет";
+    if(type==="host-rejected") return `HOST отклонил соединение${err?.reason?`: ${err.reason}`:""}`;
+    if(type==="room-busy") return "HOST отклонил соединение: room busy — в комнате уже есть Игрок 2";
+    if(type==="protocol-mismatch") return "HOST отклонил соединение: protocol mismatch";
+    if(type==="version-mismatch") return `HOST отклонил соединение: gameVersion mismatch${err?.expected?`; нужна v${err.expected}`:""}`;
+    if(type==="host-state") return "HOST отклонил соединение: host closing / wrong role";
+    if(type==="signalling-disconnected") return "signalling disconnected: соединение с PeerJS Cloud оборвалось до открытия DataChannel";
+    if(type==="ice-failed"||type==="webrtc") return "ICE/WebRTC failed: прямой канал не установился (NAT/CGNAT/firewall); TURN нужен только если это подтверждается этим статусом";
+    if(type==="datachannel-closed") return "DataChannel closed до завершения подключения";
+    if(type==="connect-timeout") return "настоящий timeout: HOST/ICE/DataChannel не завершили handshake за 45 секунд";
+    if(type==="signalling-timeout") return err?.message||"PeerJS Cloud не ответил вовремя";
+    if(type==="network"||type==="server-error"||type==="socket-error"||type==="socket-closed") return "не удалось связаться с PeerJS Cloud — signalling/network error";
     return err?.message||type||"ошибка P2P-соединения";
   }
   function updateNetworkStatusForError(err){
     networkSession.lastError=err;
     const text=p2pErrorText(err);
+    onlineDiagWarn("P2P error",{role:networkSession.role,peerId:networkSession.peer?.id||null,type:err?.type||null,message:err?.message||String(err),details:err});
     if(networkSession.role==="host"){
       const el=$("#networkCreateStatus"); if(el) el.textContent=`P2P: ${text}.`;
     } else {
       const el=$("#networkJoinStatus"); if(el) el.textContent=`P2P: ${text}.`;
     }
   }
+  function peerConnectionSnapshot(conn){
+    const pc=conn?.peerConnection;
+    return {
+      peer:conn?.peer||null,
+      dataChannel:conn?.dataChannel?.readyState||null,
+      connectionState:pc?.connectionState||null,
+      iceConnectionState:pc?.iceConnectionState||null,
+      iceGatheringState:pc?.iceGatheringState||null,
+      signalingState:pc?.signalingState||null,
+      localDescription:pc?.localDescription?.type||null,
+      remoteDescription:pc?.remoteDescription?.type||null
+    };
+  }
+  function classifyPreReadyClose(peer,conn){
+    const pc=conn?.peerConnection;
+    const connectionState=pc?.connectionState||"";
+    const iceState=pc?.iceConnectionState||"";
+    if(peer?.disconnected) return makeOnlineDiagError("signalling-disconnected","PeerJS signalling disconnected before DataChannel open");
+    if(connectionState==="failed"||iceState==="failed") return makeOnlineDiagError("ice-failed","ICE/WebRTC failed before DataChannel open");
+    if(connectionState==="connected"||iceState==="connected"||iceState==="completed") return makeOnlineDiagError("datachannel-closed","DataChannel closed before application handshake",{connectionState,iceState});
+    return makeOnlineDiagError("host-rejected","HOST closed/rejected the incoming connection before application handshake",{reason:"connection closed before open/hello",connectionState,iceState});
+  }
+  function attachPeerConnectionDiagnostics(conn,{side="unknown",statusEl=null,onFailure=null}={}){
+    let pc=null,stopped=false,retryTimer=null;
+    const cleanups=[];
+    const stop=()=>{
+      if(stopped) return; stopped=true;
+      if(retryTimer) clearTimeout(retryTimer);
+      while(cleanups.length){ try{ cleanups.pop()(); }catch(_e){} }
+    };
+    const add=(target,event,fn)=>{
+      try{ target?.addEventListener?.(event,fn); cleanups.push(()=>target?.removeEventListener?.(event,fn)); }catch(_e){}
+    };
+    const failIce=(why)=>{
+      const err=makeOnlineDiagError("ice-failed",why,{snapshot:peerConnectionSnapshot(conn)});
+      onlineDiagWarn(`${side}: ICE/WebRTC failed`,err.snapshot);
+      if(typeof onFailure==="function") onFailure(err);
+      else updateNetworkStatusForError(err);
+    };
+    const wire=()=>{
+      if(stopped) return;
+      pc=conn?.peerConnection;
+      if(!pc){ retryTimer=setTimeout(wire,80); return; }
+      onlineDiagLog(`${side}: RTCPeerConnection attached`,peerConnectionSnapshot(conn));
+      if(side==="guest") appendDiagStatus(statusEl,"WebRTC negotiating");
+      let hostAnswerMarked=false;
+      const markHostAnswer=()=>{
+        if(side!=="guest"||hostAnswerMarked||!pc?.remoteDescription) return;
+        hostAnswerMarked=true;
+        appendDiagStatus(statusEl,"HOST connection received");
+        onlineDiagLog("guest: remote description received",peerConnectionSnapshot(conn));
+      };
+      const logState=(name)=>()=>{
+        const snap=peerConnectionSnapshot(conn);
+        onlineDiagLog(`${side}: ${name}`,snap);
+        markHostAnswer();
+        if(snap.connectionState==="failed"||snap.iceConnectionState==="failed") failIce(`${name}: ${snap.connectionState||snap.iceConnectionState||"failed"}`);
+      };
+      add(pc,"connectionstatechange",logState("connectionState change"));
+      add(pc,"iceconnectionstatechange",logState("iceConnectionState change"));
+      add(pc,"icegatheringstatechange",logState("iceGatheringState change"));
+      add(pc,"signalingstatechange",logState("signalingState change"));
+      markHostAnswer();
+      if(pc.connectionState==="failed"||pc.iceConnectionState==="failed") failIce("initial RTCPeerConnection state is failed");
+    };
+    wire();
+    return stop;
+  }
   function bindPeerLifecycle(peer){
     peer.on("disconnected",()=>{
       if(networkSession.closing||networkSession.peer!==peer) return;
+      onlineDiagWarn("PeerJS signalling disconnected",{peerId:peer?.id||null,conn:peerConnectionSnapshot(networkSession.conn)});
       // The already-open WebRTC data channel can survive signalling loss.
       if(networkSession.conn?.open){
         try{ setTimeout(()=>{ if(networkSession.peer===peer && peer.disconnected && !peer.destroyed) peer.reconnect(); },1200); }catch(_e){}
-      } else updateNetworkStatusForError({type:"network",message:"PeerJS signalling disconnected"});
+      } else updateNetworkStatusForError(makeOnlineDiagError("signalling-disconnected","PeerJS signalling disconnected"));
     });
     peer.on("error",err=>{
       if(networkSession.closing||networkSession.peer!==peer) return;
-      // peer-unavailable during JOIN is reported by the join promise too.
+      onlineDiagWarn("PeerJS error",{peerId:peer?.id||null,type:err?.type||null,message:err?.message||String(err)});
+      // peer-unavailable / unavailable-id are handled by the active create/join promise too.
       if(err?.type!=="peer-unavailable" && err?.type!=="unavailable-id") updateNetworkStatusForError(err);
     });
   }
@@ -10355,41 +10492,83 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
     state=snapshot;
     state.actionLock=null; state.rowTargeting=null; state.draggingUid=null; state.previewCard=null; state.selected=null;
   }
-  function acceptIncomingConnection(conn){
-    if(networkSession.role!=="host"||networkSession.closing){ try{conn.close();}catch(_e){} return; }
-    if(conn.metadata?.protocol && conn.metadata.protocol!==ONLINE_PROTOCOL){ try{conn.close();}catch(_e){} return; }
-    if(String(conn.metadata?.gameVersion||ONLINE_GAME_VERSION)!==ONLINE_GAME_VERSION){ try{conn.close();}catch(_e){} return; }
-    if(networkSession.conn && networkSession.conn!==conn){
-      try{ conn.on("open",()=>{ try{conn.send({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"room_busy",payload:{}});}catch(_e){} setTimeout(()=>conn.close(),120); }); }catch(_e){}
-      return;
+  function rejectIncomingConnection(conn,reasonCode,reasonText){
+    const status=$("#networkCreateStatus");
+    const remote=conn?.peer||"unknown peer";
+    const label=reasonText||reasonCode||"unknown reason";
+    if(status) status.textContent=`HOST connection received: ${remote} → отклонено: ${label}.`;
+    onlineDiagWarn("HOST rejecting incoming connection",{peerId:networkSession.peer?.id||null,remotePeer:remote,reasonCode,reasonText,metadata:conn?.metadata||null,states:peerConnectionSnapshot(conn)});
+    try{ conn._bscRejected=true; }catch(_e){}
+    let closed=false;
+    const closeNow=()=>{ if(closed) return; closed=true; try{conn.close();}catch(_e){} };
+    const sendReason=()=>{
+      try{
+        if(conn?.open) conn.send({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"connection_rejected",payload:{reason:reasonCode,detail:reasonText,expected:ONLINE_GAME_VERSION},senderRole:"host",ts:Date.now()});
+      }catch(err){ onlineDiagWarn("HOST rejection packet failed",{reasonCode,message:err?.message||String(err)}); }
+      setTimeout(closeNow,180);
+    };
+    if(conn?.open) sendReason();
+    else {
+      try{ conn.on("open",sendReason); }catch(_e){}
+      // If negotiation never reaches OPEN, do not leave a rejected connection hanging forever.
+      setTimeout(()=>{ if(!conn?.open) closeNow(); },1800);
     }
+  }
+  function acceptIncomingConnection(conn){
+    const status=$("#networkCreateStatus");
+    const remote=conn?.peer||"unknown peer";
+    if(status) status.textContent=`HOST connection received: ${remote}. Проверяем protocol / gameVersion…`;
+    onlineDiagLog("HOST connection received",{peerId:networkSession.peer?.id||null,remotePeer:remote,metadata:conn?.metadata||null});
+    if(networkSession.role!=="host"||networkSession.closing){ rejectIncomingConnection(conn,"host-state","host closing / wrong role"); return; }
+    if(conn.metadata?.protocol && conn.metadata.protocol!==ONLINE_PROTOCOL){ rejectIncomingConnection(conn,"protocol-mismatch","protocol mismatch"); return; }
+    if(String(conn.metadata?.gameVersion||ONLINE_GAME_VERSION)!==ONLINE_GAME_VERSION){ rejectIncomingConnection(conn,"version-mismatch",`gameVersion mismatch (expected ${ONLINE_GAME_VERSION}, got ${conn.metadata?.gameVersion??"missing"})`); return; }
+    if(networkSession.conn && networkSession.conn!==conn){ rejectIncomingConnection(conn,"room-busy","room busy"); return; }
+    if(status) status.textContent=`HOST connection received: ${remote} → WebRTC negotiating…`;
+    attachPeerConnectionDiagnostics(conn,{side:"host",statusEl:status,onFailure:err=>{
+      if(status) status.textContent=`HOST connection received: ${remote} → ${p2pErrorText(err)}.`;
+    }});
     bindDataConnection(conn,"guest");
   }
   function bindDataConnection(conn,remoteRole){
     networkSession.conn=conn;
     let closedHandled=false;
+    let everOpened=!!conn?.open;
+    onlineDiagLog("bindDataConnection",{localRole:networkSession.role,remoteRole,localPeerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,open:!!conn?.open,metadata:conn?.metadata||null});
     conn.on("open",()=>{
+      everOpened=true;
       if(networkSession.closing||networkSession.conn!==conn) return;
       networkSession.connected=true; networkSession.roomClosed=false;
+      onlineDiagLog("DataChannel open",{localRole:networkSession.role,peerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,states:peerConnectionSnapshot(conn)});
       sendRawNetworkEnvelope({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"hello",payload:{role:networkSession.role,roomCode:networkSession.roomCode},senderRole:networkSession.role,ts:Date.now()});
       if(networkSession.role==="host"){
-        const status=$("#networkCreateStatus"); if(status) status.textContent=`Игрок 2 подключён к комнате ${networkSession.roomCode}.`;
+        const status=$("#networkCreateStatus"); if(status) status.textContent=`DataChannel open: Игрок 2 ${conn?.peer||""} подключён к комнате ${networkSession.roomCode}.`;
       }
       if(networkSession.localSetup) sendNetworkEvent("setup",networkSession.localSetup);
     });
     conn.on("data",data=>{
       if(!data||typeof data!=="object") return;
+      if(data.type==="connection_rejected"){
+        try{ conn._bscHandshakeRejected=true; }catch(_e){}
+      }
       if(data.protocol!==ONLINE_PROTOCOL||String(data.gameVersion||"")!==ONLINE_GAME_VERSION){
-        sendRawNetworkEnvelope({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"version_mismatch",payload:{expected:ONLINE_GAME_VERSION},senderRole:networkSession.role});
+        sendRawNetworkEnvelope({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"version_mismatch",payload:{expected:ONLINE_GAME_VERSION},senderRole:networkSession.role,ts:Date.now()});
         return;
       }
       Promise.resolve(handleNetworkEvent(data)).catch(err=>console.error("ONLINE DUEL event:",err));
     });
-    conn.on("error",err=>{ if(!networkSession.closing) updateNetworkStatusForError(err); });
+    conn.on("error",err=>{
+      onlineDiagWarn("DataConnection error",{localRole:networkSession.role,peerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,type:err?.type||null,message:err?.message||String(err),states:peerConnectionSnapshot(conn)});
+      if(!networkSession.closing) updateNetworkStatusForError(err);
+    });
     conn.on("close",()=>{
       if(closedHandled) return; closedHandled=true;
+      onlineDiagWarn("DataConnection close",{localRole:networkSession.role,peerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,everOpened,rejected:!!conn?._bscHandshakeRejected,states:peerConnectionSnapshot(conn)});
       if(networkSession.closing||networkSession.conn!==conn) return;
       networkSession.connected=false; networkSession.conn=null;
+      // During JOIN, close-before-open is handled by the diagnostic join promise.
+      if(!everOpened) return;
+      // Rejected handshakes are also handled by the JOIN promise and should not open a false HOST-disconnected modal.
+      if(conn._bscHandshakeRejected) return;
       if(networkSession.role==="guest") handleHostClosed();
       else handleGuestClosed();
     });
@@ -10398,20 +10577,61 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
     if(ev.type==="hello"){
       if(networkSession.role==="guest"){
         const status=$("#networkJoinStatus"); if(status) status.textContent=`Подключено к комнате ${networkSession.roomCode}.`;
+      } else if(networkSession.role==="host" && gameMode==="online"){
+        const status=$("#networkCreateStatus"); if(status) status.textContent=`Игрок 2 подключён. Переходим к созданию колоды…`;
+        // HOST starts his own pre-match setup as soon as the Guest handshake is confirmed.
+        setTimeout(()=>{
+          if(gameMode!=="online"||networkSession.role!=="host"||!networkSession.connected) return;
+          selectedFaction="living"; openPathPicker("player");
+        },0);
       }
       return;
     }
+    if(ev.type==="connection_rejected"){
+      const reason=ev.payload?.reason||"host-rejected";
+      const detail=ev.payload?.detail||reason;
+      const type=reason==="room-busy"?"room-busy":reason==="protocol-mismatch"?"protocol-mismatch":reason==="version-mismatch"?"version-mismatch":reason==="host-state"?"host-state":"host-rejected";
+      updateNetworkStatusForError(makeOnlineDiagError(type,detail,{reason:detail,expected:ev.payload?.expected}));
+      return;
+    }
     if(ev.type==="room_busy"){
-      updateNetworkStatusForError(new Error("в комнате уже есть Игрок 2"));
+      updateNetworkStatusForError(makeOnlineDiagError("room-busy","в комнате уже есть Игрок 2"));
       return;
     }
     if(ev.type==="version_mismatch"){
-      updateNetworkStatusForError(new Error(`несовместимая версия игры; нужна v${ev.payload?.expected||ONLINE_GAME_VERSION}`));
+      updateNetworkStatusForError(makeOnlineDiagError("version-mismatch",`несовместимая версия игры; нужна v${ev.payload?.expected||ONLINE_GAME_VERSION}`,{expected:ev.payload?.expected||ONLINE_GAME_VERSION}));
       return;
     }
     if(ev.type==="setup"){
       networkSession.peerSetup=ev.payload;
-      if(networkSession.role==="host") await tryStartOnlineMatch();
+      onlineDiagLog("Peer setup received",{localRole:networkSession.role,peerFaction:ev.payload?.faction||null});
+      return;
+    }
+    if(ev.type==="pregame_ready"){
+      if(networkSession.role!=="host" || ev.senderRole!=="guest" || networkSession.pregameFinalized) return;
+      const side=ev.payload?.side;
+      if(!side || ev.payload?.sideKey!=="enemy" || !Array.isArray(side.hand) || !Array.isArray(side.deck)){
+        onlineDiagWarn("Rejected malformed Guest pregame_ready",{payload:ev.payload});
+        return;
+      }
+      if(networkSession.peerSetup?.faction && side.faction!==networkSession.peerSetup.faction){
+        onlineDiagWarn("Rejected Guest pregame_ready faction mismatch",{expected:networkSession.peerSetup.faction,got:side.faction});
+        return;
+      }
+      restorePreparedSideOwners(side,"enemy");
+      networkSession.peerPreparedSide=side;
+      networkSession.peerMulliganReady=true;
+      onlineDiagLog("Guest READY received",{peer:networkSession.conn?.peer||null,faction:side.faction,hand:side.hand.length,deck:side.deck.length});
+      await sendNetworkEvent("pregame_status",{hostReady:networkSession.localMulliganReady,guestReady:true});
+      await maybeFinalizeOnlinePregame();
+      return;
+    }
+    if(ev.type==="pregame_status"){
+      if(networkSession.role!=="guest") return;
+      networkSession.peerMulliganReady=!!ev.payload?.hostReady;
+      if(networkSession.localMulliganReady && !ev.payload?.hostReady){
+        showNetworkWaiting("READY. Ожидание HOST.");
+      }
       return;
     }
     if(ev.type==="state" && ev.payload?.state){
@@ -14195,7 +14415,9 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   function openMulligan(sideKey=state?.mulliganSideKey||"player"){
     if(!state) return;
     state.phase="mulligan"; state.mulliganSideKey=sideKey; state.mulliganSelected=[]; state.mulliganInspect=null; state.lastDetail=null; state.selected=null;
-    if(gameMode==="duel") localViewSide=sideKey;
+    if(gameMode==="duel"||gameMode==="online") localViewSide=sideKey;
+    const confirm=$("#mulliganConfirmBtn");
+    if(confirm) confirm.textContent=gameMode==="online"?"READY":"SHOW YOUR RESOLVE";
     $("#mulliganOverlay").classList.remove("hidden"); renderMulligan(); render();
   }
   function renderMulligan(){
@@ -14269,14 +14491,10 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   async function processOnlinePhase(){
     if(gameMode!=="online"||!networkSession.connected||!state) return;
     const local=networkSession.localSide;
-    if(state.phase==="mulligan"){
-      if(state.mulliganSideKey===local){ hideHandoff(); openMulligan(local); }
-      else showNetworkWaiting(`Игрок ${sidePlayerNumber(state.mulliganSideKey)} выбирает стартовые карты.`);
-      return;
-    }
     if(state.phase==="initiative"){
-      if(state.initiativeSideKey===local){ hideHandoff(); await resolvePvPInitiativeChoice(local); }
-      else showNetworkWaiting("Соперник решает, кто начнёт первый раунд.");
+      hideHandoff(); localViewSide=local; render();
+      if(state.initiativeSideKey===local) await resolvePvPInitiativeChoice(local);
+      else toast("СОПЕРНИК ВЫБИРАЕТ ИНИЦИАТИВУ");
       return;
     }
     if(state.phase==="play"){
@@ -14316,13 +14534,27 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
       return;
     }
     if(gameMode==="online"){
-      if(sideKey==="player"){
-        state.mulliganSideKey="enemy"; await sendNetworkState("mulligan-player"); showNetworkWaiting("Игрок 2 выбирает стартовые карты.");
+      const local=networkSession.localSide||sideKey;
+      if(sideKey!==local) return;
+      networkSession.localPreparedSide=state[local];
+      networkSession.localMulliganReady=true;
+      restorePreparedSideOwners(networkSession.localPreparedSide,local);
+      if(networkSession.role==="host"){
+        await sendNetworkEvent("pregame_status",{hostReady:true,guestReady:networkSession.peerMulliganReady});
+        await maybeFinalizeOnlinePregame();
+        if(networkSession.localMulliganReady && !networkSession.peerMulliganReady) showNetworkWaiting("READY. Ожидание Игрока 2.");
       } else {
-        const owner=pvpInitiativeOwner();
-        if(owner){ state.phase="initiative"; state.initiativeSideKey=owner; await sendNetworkState("mulligan-complete"); await processOnlinePhase(); }
-        else { state.phase="play"; state.turn="player"; state.initiativeSideKey=null; addLog(`<b>Стартовая замена завершена.</b> Начинается первый раунд.`); await sendNetworkState("mulligan-complete"); render(); }
+        const payloadSide=JSON.parse(JSON.stringify(networkSession.localPreparedSide));
+        const sent=await sendNetworkEvent("pregame_ready",{sideKey:"enemy",side:payloadSide});
+        if(!sent){
+          networkSession.localMulliganReady=false;
+          toast("НЕ УДАЛОСЬ ОТПРАВИТЬ READY");
+          openMulligan(local);
+          return;
+        }
+        showNetworkWaiting("READY. Ожидание HOST.");
       }
+      return;
     }
   }
 
@@ -14448,12 +14680,17 @@ ${template.desc}`:""}`;
       return;
     }
     if(gameMode==="online"){
+      const local=networkSession.localSide||setupSideKey;
       networkSession.localSetup=setup;
-      await sendNetworkEvent('setup',setup);
-      if(networkSession.role==='host'){
-        await tryStartOnlineMatch();
-        if(!state) showNetworkWaiting("Колода хоста готова. Ожидание колоды Игрока 2.");
-      } else showNetworkWaiting("Ваша колода готова. Ожидание хоста.");
+      networkSession.localMulliganReady=false;
+      await sendNetworkEvent("setup",setup);
+      const prepared=prepareDuelSide(setup,local);
+      networkSession.localPreparedSide=prepared;
+      state=buildDuelPregameState(local==="player"?prepared:null,local==="enemy"?prepared:null,local);
+      localViewSide=local;
+      addLog(`<b>ONLINE DUEL · PLAYER ${sidePlayerNumber(local)}:</b> колода готова. Завершите стартовую замену и нажмите READY.`);
+      openMulligan(local);
+      return;
     }
   }
 
@@ -14465,28 +14702,73 @@ ${template.desc}`:""}`;
   }
   function openPathPicker(sideKey=setupSideKey){
     setupSideKey=sideKey; updateSetupPlayerLabel(); buildFactionPicker();
-    $("#modeOverlay").classList.add("hidden"); $("#networkOverlay").classList.add("hidden"); $("#startOverlay").classList.remove("hidden");
+    $("#modeOverlay").classList.add("hidden");
+    ["#networkOverlay","#networkCreateOverlay","#networkJoinOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+    $("#startOverlay").classList.remove("hidden");
+  }
+  function restorePreparedSideOwners(side,sideKey){
+    if(!side) return side;
+    const cards=[...(side.hand||[]),...(side.deck||[]),...(side.grave||[])];
+    for(const row of ROWS) cards.push(...(side.board?.[row]||[]));
+    for(const c of cards) if(c) c._ownerKey=sideKey;
+    return side;
+  }
+  async function maybeFinalizeOnlinePregame(){
+    if(gameMode!=="online"||networkSession.role!=="host"||!networkSession.connected||networkSession.pregameFinalized) return false;
+    if(!networkSession.localMulliganReady||!networkSession.peerMulliganReady||!networkSession.localPreparedSide||!networkSession.peerPreparedSide) return false;
+    networkSession.pregameFinalized=true;
+    const playerSide=restorePreparedSideOwners(networkSession.localPreparedSide,"player");
+    const enemySide=restorePreparedSideOwners(networkSession.peerPreparedSide,"enemy");
+    state=buildDuelPregameState(playerSide,enemySide,null);
+    localViewSide="player";
+    state.mulliganSelected=[]; state.mulliganInspect=null; state.mulliganSideKey=null;
+    const owner=pvpInitiativeOwner();
+    if(owner){
+      state.phase="initiative"; state.initiativeSideKey=owner;
+    } else {
+      state.phase="play"; state.turn="player"; state.initiativeSideKey=null;
+      addLog(`<b>Оба игрока готовы.</b> Начинается первый раунд.`);
+    }
+    $("#mulliganOverlay")?.classList.add("hidden");
+    hideHandoff();
+    await broadcastCanonicalState("pregame-both-ready",true);
+    render();
+    await processOnlinePhase();
+    return true;
   }
   async function tryStartOnlineMatch(){
-    if(gameMode!=="online"||networkSession.role!=="host"||state||!networkSession.localSetup||!networkSession.peerSetup) return;
-    initPvPGame(networkSession.localSetup,networkSession.peerSetup);
-    state.mulliganSideKey="player"; localViewSide="player";
-    await sendNetworkState("match-start");
-    hideHandoff(); openMulligan("player");
+    // Kept as a compatibility hook for older calls. v292 starts each player's mulligan locally
+    // immediately after their own deck is confirmed; the HOST combines sides only after both READY.
+    return maybeFinalizeOnlinePregame();
   }
   function resetNetworkSession(){
     destroyNetworkPeer(false);
-    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,revision:0,awaitingCanonical:false,lastAcceptedReason:null});
+    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null});
   }
   function createPeerAndWait(id){
     return new Promise((resolve,reject)=>{
-      if(!peerJsAvailable()){ reject(new Error("PeerJS не загрузился. Для ONLINE DUEL нужен интернет.")); return; }
+      if(!peerJsAvailable()){ reject(makeOnlineDiagError("network","PeerJS не загрузился. Для ONLINE DUEL нужен интернет.")); return; }
       let peer;
-      try{ peer=new Peer(id,{debug:1,config:{iceServers:onlineIceServers()}}); }catch(err){ reject(err); return; }
+      try{
+        onlineDiagLog("Creating PeerJS peer",{requestedId:id||null,debug:3,iceServers:onlineIceServers()});
+        peer=new Peer(id,{debug:3,config:{iceServers:onlineIceServers()}});
+      }catch(err){ reject(err); return; }
       let settled=false;
-      const timer=setTimeout(()=>{ if(settled) return; settled=true; try{peer.destroy();}catch(_e){} reject(new Error("PeerJS Cloud не ответил за 12 секунд")); },12000);
-      peer.on("open",()=>{ if(settled) return; settled=true; clearTimeout(timer); resolve(peer); });
-      peer.on("error",err=>{ if(settled) return; settled=true; clearTimeout(timer); try{peer.destroy();}catch(_e){} reject(err); });
+      const timer=setTimeout(()=>{
+        if(settled) return; settled=true;
+        onlineDiagWarn("PeerJS signalling timeout",{requestedId:id||null,peerId:peer?.id||null});
+        try{peer.destroy();}catch(_e){}
+        reject(makeOnlineDiagError("signalling-timeout","PeerJS Cloud не ответил за 12 секунд"));
+      },12000);
+      peer.on("open",peerId=>{
+        if(settled) return; settled=true; clearTimeout(timer);
+        onlineDiagLog("PeerJS connected / ID received",{requestedId:id||null,peerId:peerId||peer?.id||null});
+        resolve(peer);
+      });
+      peer.on("error",err=>{
+        onlineDiagWarn("PeerJS startup error",{requestedId:id||null,peerId:peer?.id||null,type:err?.type||null,message:err?.message||String(err)});
+        if(settled) return; settled=true; clearTimeout(timer); try{peer.destroy();}catch(_e){} reject(err);
+      });
     });
   }
   async function createOnlineRoom(){
@@ -14495,7 +14777,7 @@ ${template.desc}`:""}`;
     try{
       resetNetworkSession();
       Object.assign(networkSession,{role:"host",localSide:"player",closing:false,roomClosed:false});
-      if(status) status.textContent="Создаём P2P-комнату…";
+      if(status) status.textContent="PeerJS connecting…";
       let peer=null, code=null, lastErr=null;
       for(let attempt=0;attempt<5 && !peer;attempt++){
         code=generateRoomCode();
@@ -14505,17 +14787,98 @@ ${template.desc}`:""}`;
       if(!peer) throw lastErr||new Error("не удалось подобрать свободный код комнаты");
       Object.assign(networkSession,{peer,peerReady:true,roomCode:code,connected:false,closing:false});
       bindPeerLifecycle(peer);
+      onlineDiagLog("HOST PeerJS ready",{peerId:peer.id,roomCode:code,targetRoomPeerId:roomPeerId(code)});
       peer.on("connection",acceptIncomingConnection);
       gameMode="online"; setupSideKey="player"; pendingSetup={player:null,enemy:null}; state=null; localViewSide="player";
       $("#networkRoomCode").textContent=code;
-      if(status) status.textContent=`Комната ${code} создана. Передайте код Игроку 2. Можно уже собирать свою колоду.`;
-      $("#networkHostContinue").classList.remove("hidden");
+      if(status) status.textContent=`PeerJS connected → HOST ID registered: ${peer.id} → waiting for Guest`;
       return true;
     }catch(err){
       resetNetworkSession();
       if(status) status.textContent=`Не удалось создать комнату: ${p2pErrorText(err)}.`;
       return false;
     }finally{ if(btn) btn.disabled=false; }
+  }
+  function waitForGuestConnectionReady(peer,conn,status,targetPeerId){
+    return new Promise((resolve,reject)=>{
+      let settled=false;
+      let opened=!!conn?.open;
+      let cleanupPc=()=>{};
+      const timer=setTimeout(()=>fail(makeOnlineDiagError("connect-timeout","Connection handshake timed out after 45 seconds",{targetPeerId,snapshot:peerConnectionSnapshot(conn)})),45000);
+      const cleanup=()=>{
+        clearTimeout(timer);
+        cleanupPc();
+        removeEmitterListener(conn,"open",onOpen);
+        removeEmitterListener(conn,"data",onData);
+        removeEmitterListener(conn,"error",onConnError);
+        removeEmitterListener(conn,"close",onClose);
+        removeEmitterListener(peer,"error",onPeerError);
+        removeEmitterListener(peer,"disconnected",onPeerDisconnected);
+      };
+      const ok=()=>{ if(settled) return; settled=true; cleanup(); resolve(); };
+      function fail(err){ if(settled) return; settled=true; cleanup(); reject(err); }
+      const onOpen=()=>{
+        opened=true;
+        appendDiagStatus(status,"DataChannel open");
+        onlineDiagLog("Guest DataChannel open",{peerId:peer?.id||null,targetPeerId,connPeer:conn?.peer||null,states:peerConnectionSnapshot(conn)});
+      };
+      const onData=data=>{
+        if(!data||typeof data!=="object") return;
+        if(data.type==="connection_rejected"){
+          try{ conn._bscHandshakeRejected=true; }catch(_e){}
+          const reason=data.payload?.reason||"host-rejected";
+          const detail=data.payload?.detail||reason;
+          const type=reason==="room-busy"?"room-busy":reason==="protocol-mismatch"?"protocol-mismatch":reason==="version-mismatch"?"version-mismatch":reason==="host-state"?"host-state":"host-rejected";
+          fail(makeOnlineDiagError(type,detail,{reason:detail,expected:data.payload?.expected,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
+          return;
+        }
+        if(data.type==="room_busy"){
+          try{ conn._bscHandshakeRejected=true; }catch(_e){}
+          fail(makeOnlineDiagError("room-busy","room busy",{targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
+          return;
+        }
+        if(data.type==="version_mismatch"){
+          try{ conn._bscHandshakeRejected=true; }catch(_e){}
+          fail(makeOnlineDiagError("version-mismatch","gameVersion mismatch",{expected:data.payload?.expected||ONLINE_GAME_VERSION,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
+          return;
+        }
+        if(data.type==="hello"){
+          if(!opened) onOpen();
+          appendDiagStatus(status,"HOST handshake received");
+          onlineDiagLog("Guest received HOST hello",{peerId:peer?.id||null,targetPeerId,senderRole:data.senderRole||null,states:peerConnectionSnapshot(conn)});
+          ok();
+        }
+      };
+      const onConnError=err=>{
+        onlineDiagWarn("Guest DataConnection error before ready",{peerId:peer?.id||null,targetPeerId,type:err?.type||null,message:err?.message||String(err),states:peerConnectionSnapshot(conn)});
+        if(err?.type==="webrtc") fail(makeOnlineDiagError("ice-failed",err?.message||"WebRTC error",{cause:err,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
+        else fail(err);
+      };
+      const onClose=()=>{
+        if(settled) return;
+        const err=classifyPreReadyClose(peer,conn);
+        onlineDiagWarn("Guest connection closed before ready",{peerId:peer?.id||null,targetPeerId,opened,errorType:err.type,states:peerConnectionSnapshot(conn)});
+        fail(err);
+      };
+      const onPeerError=err=>{
+        onlineDiagWarn("Guest PeerJS error while joining",{peerId:peer?.id||null,targetPeerId,type:err?.type||null,message:err?.message||String(err)});
+        if(err?.type==="peer-unavailable") fail(err);
+        else if(err?.type==="webrtc") fail(makeOnlineDiagError("ice-failed",err?.message||"WebRTC failed",{cause:err,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
+        else if(err?.type==="network"||err?.type==="socket-error"||err?.type==="socket-closed"||err?.type==="server-error") fail(makeOnlineDiagError("signalling-disconnected",err?.message||"PeerJS signalling disconnected",{cause:err,targetPeerId}));
+      };
+      const onPeerDisconnected=()=>{
+        if(settled||conn?.open) return;
+        fail(makeOnlineDiagError("signalling-disconnected","PeerJS signalling disconnected before connection became ready",{targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
+      };
+      conn.on("open",onOpen);
+      conn.on("data",onData);
+      conn.on("error",onConnError);
+      conn.on("close",onClose);
+      peer.on("error",onPeerError);
+      peer.on("disconnected",onPeerDisconnected);
+      cleanupPc=attachPeerConnectionDiagnostics(conn,{side:"guest",statusEl:status,onFailure:fail});
+      if(conn.open) onOpen();
+    });
   }
   async function joinOnlineRoom(){
     const status=$("#networkJoinStatus"), btn=$("#networkJoinBtn");
@@ -14526,27 +14889,27 @@ ${template.desc}`:""}`;
     try{
       resetNetworkSession();
       Object.assign(networkSession,{role:"guest",localSide:"enemy",roomCode:code,closing:false,roomClosed:false});
-      if(status) status.textContent=`Ищем комнату ${code}…`;
+      resetDiagStatus(status,"PeerJS connecting");
       const peer=await createPeerAndWait(undefined);
       Object.assign(networkSession,{peer,peerReady:true}); bindPeerLifecycle(peer);
-      const conn=peer.connect(roomPeerId(code),{serialization:"json",reliable:true,metadata:{protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,role:"guest"}});
-      // Bind data/close/open listeners before OPEN can fire. v118 bound after awaiting OPEN,
-      // which could miss lifecycle events and required manual state initialization.
+      appendDiagStatus(status,"PeerJS connected");
+      appendDiagStatus(status,`Guest ID received: ${peer.id}`);
+      onlineDiagLog("Guest PeerJS ready",{peerId:peer.id,roomCode:code});
+      const targetPeerId=roomPeerId(code);
+      appendDiagStatus(status,`connecting to HOST ID: ${targetPeerId}`);
+      onlineDiagLog("Guest connecting to HOST",{peerId:peer.id,targetPeerId,roomCode:code});
+      const conn=peer.connect(targetPeerId,{serialization:"json",reliable:true,metadata:{protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,role:"guest"}});
+      onlineDiagLog("Guest DataConnection created",{peerId:peer.id,targetPeerId,connPeer:conn?.peer||null});
+      // Attach the diagnostic promise BEFORE the normal lifecycle binding so close/error/open cannot be missed.
+      const readyPromise=waitForGuestConnectionReady(peer,conn,status,targetPeerId);
       bindDataConnection(conn,"host");
-      await new Promise((resolve,reject)=>{
-        let settled=false;
-        const timer=setTimeout(()=>{ if(settled) return; settled=true; reject(new Error("HOST не ответил за 15 секунд")); },15000);
-        const ok=()=>{ if(settled) return; settled=true; clearTimeout(timer); resolve(); };
-        const fail=err=>{ if(settled) return; settled=true; clearTimeout(timer); reject(err); };
-        if(conn.open) ok(); else conn.on("open",ok);
-        conn.on("error",fail);
-        peer.on("error",err=>{ if(err?.type==="peer-unavailable" && !settled) fail(err); });
-      });
+      await readyPromise;
       gameMode="online"; setupSideKey="enemy"; pendingSetup={player:null,enemy:null}; state=null; localViewSide="enemy";
-      if(status) status.textContent=`Подключено к комнате ${code}.`;
+      appendDiagStatus(status,"ONLINE DUEL ready");
       selectedFaction="living"; openPathPicker("enemy");
       return true;
     }catch(err){
+      onlineDiagWarn("JOIN failed",{roomCode:code,type:err?.type||null,message:err?.message||String(err),details:err});
       resetNetworkSession();
       if(status) status.textContent=`Не удалось войти: ${p2pErrorText(err)}.`;
       return false;
@@ -14556,13 +14919,23 @@ ${template.desc}`:""}`;
     if(networkSession.role==='host') await closeHostedRoom();
     resetNetworkSession(); state=null; gameMode="ai"; setupSideKey="player"; localViewSide="player"; pendingSetup={player:null,enemy:null}; duelPreparedSides={player:null,enemy:null}; duelInitiativeChoice={player:null,enemy:null}; selectedFaction="living";
     hideHandoff(); resetInterfaceForFactionPicker();
-    ["#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#resultOverlay","#networkOverlay"].forEach(s=>$(s)?.classList.add("hidden"));
-    $("#networkRoomCode").textContent="------";
-    $("#networkHostContinue").classList.add("hidden");
-    $("#networkCreateStatus").textContent="Создайте комнату. Игра выдаст шестизначный код для Игрока 2.";
-    $("#networkJoinStatus").textContent="Введите шестизначный код, который показан у HOST.";
-    $("#networkJoinCode").value="";
+    ["#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#resultOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+    if($("#networkRoomCode")) $("#networkRoomCode").textContent="------";
+    if($("#networkCreateStatus")) $("#networkCreateStatus").textContent="Создайте комнату. Игра выдаст шестизначный код для Игрока 2.";
+    if($("#networkJoinStatus")) $("#networkJoinStatus").textContent="Введите шестизначный код, который показан у HOST.";
+    if($("#networkJoinCode")) $("#networkJoinCode").value="";
     $("#modeOverlay").classList.remove("hidden");
+  }
+  async function returnToOnlineChoice(){
+    if(networkSession.role==="host") await closeHostedRoom();
+    resetNetworkSession(); state=null; gameMode="online"; setupSideKey="player"; localViewSide="player"; pendingSetup={player:null,enemy:null}; selectedFaction="living";
+    hideHandoff();
+    ["#networkCreateOverlay","#networkJoinOverlay","#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+    if($("#networkRoomCode")) $("#networkRoomCode").textContent="------";
+    if($("#networkCreateStatus")) $("#networkCreateStatus").textContent="Создайте комнату. Игра выдаст шестизначный код для Игрока 2.";
+    if($("#networkJoinStatus")) $("#networkJoinStatus").textContent="Введите шестизначный код, который показан у HOST.";
+    if($("#networkJoinCode")) $("#networkJoinCode").value="";
+    $("#networkOverlay")?.classList.remove("hidden");
   }
 
   function buildFactionPicker(){
@@ -14642,14 +15015,22 @@ ${template.desc}`:""}`;
   };
   $("#modeOnlineBtn").onclick=()=>{
     resetNetworkSession(); state=null; gameMode="online"; setupSideKey="player"; localViewSide="player"; selectedFaction="living"; pendingSetup={player:null,enemy:null};
-    $("#modeOverlay").classList.add("hidden"); $("#networkOverlay").classList.remove("hidden");
+    $("#modeOverlay").classList.add("hidden");
+    $("#networkCreateOverlay")?.classList.add("hidden"); $("#networkJoinOverlay")?.classList.add("hidden");
+    $("#networkOverlay").classList.remove("hidden");
   };
-  $("#networkCreateTab").onclick=()=>{$("#networkCreatePanel").classList.add("active");$("#networkJoinPanel").classList.remove("active");};
-  $("#networkJoinTab").onclick=()=>{$("#networkJoinPanel").classList.add("active");$("#networkCreatePanel").classList.remove("active");};
+  $("#networkCreateTab").onclick=()=>{
+    $("#networkOverlay").classList.add("hidden"); $("#networkJoinOverlay")?.classList.add("hidden"); $("#networkCreateOverlay")?.classList.remove("hidden");
+  };
+  $("#networkJoinTab").onclick=()=>{
+    $("#networkOverlay").classList.add("hidden"); $("#networkCreateOverlay")?.classList.add("hidden"); $("#networkJoinOverlay")?.classList.remove("hidden");
+    setTimeout(()=>$("#networkJoinCode")?.focus(),0);
+  };
   $("#networkCreateBtn").onclick=createOnlineRoom;
   $("#networkJoinBtn").onclick=joinOnlineRoom;
-  $("#networkHostContinue").onclick=()=>{selectedFaction="living";openPathPicker("player");};
   $("#networkBackBtn").onclick=()=>returnToModeMenu();
+  $("#networkCreateBackBtn").onclick=()=>returnToOnlineChoice();
+  $("#networkJoinBackBtn").onclick=()=>returnToOnlineChoice();
   $("#networkJoinCode")?.addEventListener("input",e=>{ e.target.value=e.target.value.toUpperCase().replace(/[^A-Z2-9]/g,"").slice(0,6); });
 
   window.addEventListener("resize",()=>{ if(state) requestAnimationFrame(fitHandLayout); }, {passive:true});
