@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>BLEACH: Soul Clash v304 — Mobile Scale Cleanup</title>
+<title>BLEACH: Soul Clash v305 — Unified Touch Landscape</title>
 <style>
   :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -8386,6 +8386,560 @@ html.phone-device.phone-landscape .round-turn-indicator.opponent.active{transfor
 html.phone-device.phone-landscape .round-turn-indicator.local.active{transform:translate(-50%,34px) scale(1.02)!important}
 </style>
 
+
+<style id="v305-unified-touch-landscape">
+/* ===== V305: ONE LANDSCAPE TOUCH SKIN FOR PHONE + TABLET ===== */
+:root{--touch-stage-width:100vw}
+
+/* Use native UI typography on touch devices. No Impact/Georgia fallback soup. */
+html.touch-device.touch-landscape,
+html.touch-device.touch-landscape body,
+html.touch-device.touch-landscape button,
+html.touch-device.touch-landscape input,
+html.touch-device.touch-landscape .modal,
+html.touch-device.touch-landscape .modal *,
+html.touch-device.touch-landscape .topbar,
+html.touch-device.touch-landscape .side,
+html.touch-device.touch-landscape .rightbar,
+html.touch-device.touch-landscape .toast{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  -webkit-text-size-adjust:100%!important;
+  text-size-adjust:100%!important;
+  font-kerning:normal!important;
+}
+html.touch-device.touch-landscape .modal,
+html.touch-device.touch-landscape .modal p,
+html.touch-device.touch-landscape .modal span,
+html.touch-device.touch-landscape .modal b,
+html.touch-device.touch-landscape .modal button,
+html.touch-device.touch-landscape .topbar,
+html.touch-device.touch-landscape .leader-ui-name,
+html.touch-device.touch-landscape .leader-ui-ability,
+html.touch-device.touch-landscape .round-turn-indicator{
+  letter-spacing:0!important;
+  word-spacing:normal!important;
+}
+html.touch-device.touch-landscape .modal h1,
+html.touch-device.touch-landscape .deck-builder-title,
+html.touch-device.touch-landscape .mulligan-title,
+html.touch-device.touch-landscape #choiceOverlay .choice-heading h1,
+html.touch-device.touch-landscape .result-title,
+html.touch-device.touch-landscape .rotate-device-title{
+  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif!important;
+  font-weight:900!important;
+  letter-spacing:-.025em!important;
+}
+
+/* One stage for every touch landscape. Long phones keep black side bars. */
+html.touch-device.touch-landscape,
+html.touch-device.touch-landscape body{width:100%!important;height:var(--app-height,100dvh)!important;overflow:hidden!important;background:#000!important}
+html.touch-device.touch-landscape .app{
+  width:var(--touch-stage-width)!important;
+  max-width:var(--touch-stage-width)!important;
+  height:var(--app-height,100dvh)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:0!important;
+  grid-template-columns:96px minmax(0,1fr) 68px!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  border-left:1px solid #171717!important;
+  border-right:1px solid #171717!important;
+  overflow:hidden!important;
+  background:#060606!important;
+}
+
+/* LEFT RAIL — remove obsolete parchment/banner leader plaques completely. */
+html.touch-device.touch-landscape .side{
+  grid-column:1!important;grid-row:1!important;
+  width:96px!important;height:100%!important;min-height:0!important;
+  padding:4px!important;gap:3px!important;
+  display:flex!important;flex-direction:column!important;
+  overflow:hidden!important;background:#090909!important;
+  border-right:1px solid #232323!important;
+}
+html.touch-device.touch-landscape .battle-brand{display:none!important}
+html.touch-device.touch-landscape #enemyLeader,
+html.touch-device.touch-landscape #playerLeaderWrap{width:100%!important;min-width:0!important;margin:0!important;transform:none!important}
+html.touch-device.touch-landscape #playerLeaderWrap{margin-top:auto!important;margin-bottom:3px!important;flex:0 0 auto!important}
+html.touch-device.touch-landscape #enemyLeader.leader-art-ui,
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui{
+  padding:0!important;margin:0!important;
+  border:0!important;border-left:2px solid var(--e)!important;
+  background:#0b0b0b!important;box-shadow:none!important;clip-path:none!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui{border-left-color:var(--p)!important}
+html.touch-device.touch-landscape .leader-ui-shell{gap:2px!important}
+html.touch-device.touch-landscape .leader-ui-epithet{display:none!important}
+html.touch-device.touch-landscape .leader-ui-name{
+  order:1!important;min-height:18px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:3px 4px!important;margin:0!important;
+  border:0!important;border-bottom:1px solid #272727!important;
+  background:#111!important;color:#f2eee7!important;
+  clip-path:none!important;box-shadow:none!important;
+  font-size:8.5px!important;font-weight:800!important;line-height:1.05!important;
+  white-space:normal!important;text-align:center!important;
+}
+html.touch-device.touch-landscape .leader-ui-art{order:2!important;margin:0!important;border:0!important;background:#080808!important;box-shadow:none!important}
+html.touch-device.touch-landscape #enemyLeader.leader-art-ui .leader-ui-art{height:60px!important}
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui .leader-ui-art{height:64px!important}
+html.touch-device.touch-landscape .leader-ui-art .leader-score{
+  width:22px!important;height:22px!important;right:2px!important;bottom:2px!important;
+  border:1px solid #111!important;border-radius:50%!important;
+  font-size:12px!important;line-height:1!important;
+  background:#eeeae1!important;color:#080808!important;
+  box-shadow:0 0 0 1px var(--p)!important;
+}
+html.touch-device.touch-landscape .leader-card.enemy .leader-ui-art .leader-score{box-shadow:0 0 0 1px var(--e)!important}
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui .leader-ui-ability{
+  order:3!important;display:block!important;min-height:0!important;
+  margin:0!important;padding:3px 4px 4px!important;
+  border:0!important;border-top:1px solid #272727!important;border-left:2px solid var(--p)!important;
+  background:#101010!important;color:#ddd!important;
+  clip-path:none!important;box-shadow:none!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-title{
+  margin:0 0 2px!important;padding:0!important;border:0!important;
+  color:#ff8559!important;font-size:6.5px!important;font-weight:800!important;line-height:1.05!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{
+  min-height:0!important;max-height:22px!important;padding:0!important;
+  color:#c9c9c9!important;font-size:5.3px!important;line-height:1.12!important;overflow:hidden!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-use{
+  height:17px!important;min-height:17px!important;margin:3px 0 0!important;padding:0 3px!important;
+  border:0!important;border-bottom:2px solid var(--p)!important;
+  background:#202020!important;color:#fff!important;
+  font-size:5.8px!important;font-weight:800!important;clip-path:none!important;box-shadow:none!important;
+}
+
+/* Round score keeps labels detached from leader flow. */
+html.touch-device.touch-landscape .round-outcome.round-series-score{
+  position:relative!important;flex:0 0 26px!important;width:100%!important;height:26px!important;
+  min-height:26px!important;max-height:26px!important;margin:3px 0!important;padding:0!important;
+  display:grid!important;place-items:center!important;overflow:visible!important;gap:0!important;transform:none!important;
+}
+html.touch-device.touch-landscape .round-series-score-value{font-size:23px!important;line-height:26px!important;font-weight:900!important}
+html.touch-device.touch-landscape .round-turn-indicator{
+  position:absolute!important;left:50%!important;width:max-content!important;max-width:92px!important;
+  margin:0!important;padding:0!important;font-size:8.5px!important;font-weight:900!important;line-height:1!important;
+  color:#7b7b7b!important;opacity:.72!important;white-space:nowrap!important;
+}
+html.touch-device.touch-landscape .round-turn-indicator.opponent{top:50%!important;transform:translate(-50%,-35px)!important}
+html.touch-device.touch-landscape .round-turn-indicator.local{top:50%!important;transform:translate(-50%,28px)!important}
+html.touch-device.touch-landscape .round-turn-indicator.opponent.active{transform:translate(-50%,-35px) scale(1.02)!important;color:#eee!important;opacity:1!important}
+html.touch-device.touch-landscape .round-turn-indicator.local.active{transform:translate(-50%,28px) scale(1.02)!important;color:var(--p)!important;opacity:1!important}
+
+/* CENTER FIELD — substantially smaller than v304. */
+html.touch-device.touch-landscape .board-shell{
+  grid-column:2!important;grid-row:1!important;width:100%!important;height:100%!important;
+  min-width:0!important;min-height:0!important;
+  grid-template-rows:23px minmax(0,1fr) 70px!important;overflow:hidden!important;border:0!important;
+}
+html.touch-device.touch-landscape .topbar{
+  min-height:23px!important;height:23px!important;padding:0 6px!important;
+  font-size:7px!important;background:#e8e4db!important;color:#111!important;border-bottom:2px solid #111!important;
+}
+html.touch-device.touch-landscape .topbar #roundLabel{font-size:7px!important;font-weight:700!important}
+html.touch-device.touch-landscape .turn{font-size:9px!important;font-weight:900!important}
+html.touch-device.touch-landscape .tiny-btn{
+  height:18px!important;min-height:18px!important;padding:0 6px!important;
+  font-size:5.8px!important;border:0!important;border-bottom:2px solid var(--p)!important;
+  background:#111!important;color:#eee!important;clip-path:none!important;
+}
+html.touch-device.touch-landscape .board-shell:before{inset:23px 0 70px!important}
+html.touch-device.touch-landscape .board{
+  width:100%!important;height:100%!important;min-height:0!important;
+  padding:1px 2px!important;grid-template-rows:repeat(3,minmax(28px,1fr)) 2px repeat(3,minmax(28px,1fr))!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape .board .row{grid-template-columns:34px minmax(0,1fr) 22px!important;min-height:0!important}
+html.touch-device.touch-landscape .row-label{padding:0!important}
+html.touch-device.touch-landscape .row-label strong{font-size:10px!important;line-height:1!important;font-family:Georgia,"Times New Roman",serif!important}
+html.touch-device.touch-landscape .row-label .pressure-tag,
+html.touch-device.touch-landscape .row-label .hogyoku-tag,
+html.touch-device.touch-landscape .row-label .row-effect-tag{font-size:4px!important;line-height:1!important;letter-spacing:0!important;margin-top:1px!important}
+html.touch-device.touch-landscape .row-cards{gap:1px!important;padding:1px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}
+html.touch-device.touch-landscape .row-cards::-webkit-scrollbar{display:none!important}
+html.touch-device.touch-landscape .row-cards .card{
+  flex:0 0 27px!important;width:27px!important;min-width:27px!important;max-width:27px!important;
+  height:36px!important;max-height:calc(100% - 1px)!important;box-shadow:1px 1px 0 #000!important;
+}
+html.touch-device.touch-landscape .row-cards .card .power{width:12px!important;height:12px!important;font-size:7px!important;top:1px!important;left:1px!important;border-width:1px!important}
+html.touch-device.touch-landscape .row-cards .card .ability-icon{min-width:8px!important;height:8px!important;font-size:5px!important;right:1px!important;top:1px!important;padding:0 1px!important}
+html.touch-device.touch-landscape .row-cards .card .name{font-size:3.5px!important;padding:3px 1px 1px!important}
+html.touch-device.touch-landscape .row-score{font-size:11px!important}
+html.touch-device.touch-landscape .divider{height:2px!important}
+
+/* Hand: smaller cards, native swipe only, no obsolete range slider. */
+html.touch-device.touch-landscape .hand-wrap{
+  width:100%!important;height:70px!important;min-height:70px!important;max-height:70px!important;
+  grid-template-columns:minmax(0,1fr) 44px!important;overflow:hidden!important;
+}
+html.touch-device.touch-landscape .hand-scroll-dock{display:none!important}
+html.touch-device.touch-landscape .hand{
+  width:100%!important;height:100%!important;justify-content:flex-start!important;align-items:flex-end!important;
+  gap:2px!important;padding:3px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;
+}
+html.touch-device.touch-landscape .hand::-webkit-scrollbar{display:none!important}
+html.touch-device.touch-landscape .hand .card,
+html.touch-device.touch-landscape .hand.hand-expanded .card{
+  flex:0 0 41px!important;width:41px!important;min-width:41px!important;max-width:41px!important;
+  height:60px!important;max-height:60px!important;
+}
+html.touch-device.touch-landscape .hand .card .power{width:16px!important;height:16px!important;font-size:9px!important}
+html.touch-device.touch-landscape .hand .card .ability-icon{min-width:11px!important;height:11px!important;font-size:6px!important;padding:0 1px!important}
+html.touch-device.touch-landscape .hand .card .name{font-size:4.3px!important;padding:5px 1px 2px!important}
+html.touch-device.touch-landscape .hand-actions{padding:2px!important;border-left:1px solid #242424!important}
+html.touch-device.touch-landscape .pass-btn{
+  width:38px!important;height:34px!important;margin:auto!important;padding:0 2px!important;
+  border:0!important;border-radius:0!important;clip-path:none!important;transform:none!important;
+  background:#111!important;color:#f4f0e8!important;box-shadow:inset 0 -3px 0 var(--p)!important;
+  font-size:5.8px!important;line-height:.95!important;font-weight:900!important;
+}
+html.touch-device.touch-landscape .pass-btn:hover{transform:none!important;background:#222!important}
+
+/* RIGHT RAIL */
+html.touch-device.touch-landscape .rightbar{
+  grid-column:3!important;grid-row:1!important;position:relative!important;inset:auto!important;
+  width:68px!important;height:100%!important;min-width:0!important;min-height:0!important;
+  display:grid!important;grid-template-rows:40px minmax(0,1fr) 40px!important;gap:2px!important;
+  padding:3px!important;border-left:1px solid #232323!important;background:#090909!important;overflow:hidden!important;
+}
+html.touch-device.touch-landscape .pile-zone{width:100%!important;height:40px!important;min-height:40px!important;max-height:40px!important;padding:1px!important;overflow:hidden!important}
+html.touch-device.touch-landscape .pile-inner{height:100%!important;gap:2px!important;padding:1px!important;transform:scale(.42)!important;transform-origin:top left!important;width:150px!important}
+html.touch-device.touch-landscape .rightbar .detail{position:relative!important;inset:auto!important;width:100%!important;min-height:0!important;max-height:none!important;padding:2px!important;overflow:auto!important;background:#0c0c0c!important;border:1px solid #262626!important;box-shadow:none!important}
+html.touch-device.touch-landscape .detail-preview{width:50px!important;max-width:50px!important;margin:0 auto 2px!important}
+html.touch-device.touch-landscape .detail-preview .card{width:50px!important;max-width:50px!important}
+html.touch-device.touch-landscape .ability-block{padding:2px!important;border-left-width:1px!important}
+html.touch-device.touch-landscape .ability-block .ability-title{font-size:5px!important;margin-bottom:1px!important}
+html.touch-device.touch-landscape .ability-block .ability-text{font-size:5.5px!important;line-height:1.1!important}
+
+/* TOASTS — replace the obsolete giant tilted white plaque. */
+html.touch-device.touch-landscape .toast{
+  left:50%!important;top:10px!important;bottom:auto!important;
+  width:auto!important;max-width:min(430px,calc(100vw - 24px))!important;
+  min-width:0!important;margin:0!important;padding:7px 11px!important;
+  transform:translateX(-50%)!important;
+  border:1px solid #3a3a3a!important;border-left:4px solid var(--p)!important;border-radius:0!important;
+  background:rgba(12,12,12,.96)!important;color:#f2eee7!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.55)!important;
+  font-size:10px!important;font-weight:800!important;line-height:1.2!important;letter-spacing:0!important;
+  text-align:center!important;white-space:normal!important;clip-path:none!important;
+}
+html.touch-device.touch-landscape .toast.show{opacity:1!important;transform:translateX(-50%)!important}
+
+/* OVERLAYS / MENUS — one compact language for phone and tablet. */
+html.touch-device.touch-landscape .overlay{
+  padding:6px!important;overflow:auto!important;align-items:center!important;justify-items:center!important;
+  background:rgba(0,0,0,.9)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+html.touch-device.touch-landscape .modal,
+html.touch-device.touch-landscape .mode-modal,
+html.touch-device.touch-landscape .faction-modal,
+html.touch-device.touch-landscape .network-modal,
+html.touch-device.touch-landscape .deck-builder-modal,
+html.touch-device.touch-landscape .mulligan-modal,
+html.touch-device.touch-landscape .choice-modal,
+html.touch-device.touch-landscape .soul-suicide-modal{
+  width:min(820px,calc(var(--touch-stage-width) - 14px))!important;
+  max-width:calc(var(--touch-stage-width) - 14px)!important;
+  max-height:calc(var(--app-height,100dvh) - 12px)!important;
+  padding:10px 12px!important;
+  border:2px solid #fff!important;border-radius:0!important;clip-path:none!important;
+  background:#ece8dd!important;color:#101010!important;box-shadow:6px 6px 0 #000!important;
+}
+html.touch-device.touch-landscape .modal h1{font-size:20px!important;line-height:1!important;margin:0!important}
+html.touch-device.touch-landscape .modal p{font-size:8px!important;line-height:1.2!important;color:#4d4d4d!important}
+
+/* Mode choices are compact buttons, never giant cards. */
+html.touch-device.touch-landscape .mode-modal{width:min(720px,calc(var(--touch-stage-width) - 18px))!important}
+html.touch-device.touch-landscape .mode-sub{font-size:8px!important;line-height:1.18!important;margin:4px auto 8px!important;max-width:610px!important}
+html.touch-device.touch-landscape .mode-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+html.touch-device.touch-landscape .mode-card{
+  min-height:54px!important;height:54px!important;padding:7px 8px!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  border:0!important;border-left:4px solid #777!important;border-radius:0!important;clip-path:none!important;
+  background:#d9d4ca!important;color:#111!important;box-shadow:inset 0 -3px 0 #777!important;text-align:left!important;
+}
+html.touch-device.touch-landscape .mode-card b{font-size:12px!important;line-height:1!important;margin:0 0 4px!important;font-family:inherit!important;font-weight:900!important}
+html.touch-device.touch-landscape .mode-card span{font-size:7.3px!important;line-height:1.15!important;color:#555!important}
+html.touch-device.touch-landscape #modeOnlineBtn.mode-card{background:#111!important;color:#fff!important;border-left-color:var(--p)!important;box-shadow:inset 0 -3px 0 var(--p)!important}
+html.touch-device.touch-landscape #modeOnlineBtn.mode-card span{color:#bbb!important}
+@media (max-width:720px){html.touch-device.touch-landscape .mode-grid{grid-template-columns:1fr!important}.touch-device.touch-landscape .mode-card{height:44px!important;min-height:44px!important;display:grid!important;grid-template-columns:120px minmax(0,1fr)!important;align-items:center!important}.touch-device.touch-landscape .mode-card b{margin:0!important}}
+
+/* Factions */
+html.touch-device.touch-landscape .faction-modal{width:min(800px,calc(var(--touch-stage-width) - 14px))!important}
+html.touch-device.touch-landscape #startOverlay .setup-title-line>h1{font-size:19px!important}
+html.touch-device.touch-landscape #startOverlay .setup-player-label{font-size:8px!important;font-weight:800!important;letter-spacing:0!important}
+html.touch-device.touch-landscape .faction-modal .factions{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;margin:7px 0!important}
+html.touch-device.touch-landscape .faction-modal .faction{min-height:64px!important;border-width:1px!important;clip-path:none!important}
+html.touch-device.touch-landscape .faction-modal .faction-copy{padding:5px!important}
+html.touch-device.touch-landscape .faction-modal .faction b{font-size:10px!important;font-family:inherit!important;font-weight:900!important}
+html.touch-device.touch-landscape .faction-modal .faction span{font-size:6.5px!important;line-height:1.1!important}
+html.touch-device.touch-landscape #startOverlay .network-actions{gap:5px!important}
+html.touch-device.touch-landscape #startOverlay .network-actions button{height:32px!important;min-height:32px!important;font-size:7.5px!important}
+
+/* Online */
+html.touch-device.touch-landscape .network-choice-modal,
+html.touch-device.touch-landscape .network-role-modal{width:min(520px,calc(var(--touch-stage-width) - 22px))!important}
+html.touch-device.touch-landscape #networkOverlay .network-choice-grid{gap:6px!important;margin:8px 0 6px!important}
+html.touch-device.touch-landscape #networkOverlay .network-choice-grid .start-btn,
+html.touch-device.touch-landscape .network-role-actions .start-btn{height:34px!important;min-height:34px!important;font-size:8px!important}
+html.touch-device.touch-landscape .network-flow-back{height:31px!important;min-height:31px!important;font-size:7px!important;margin-top:5px!important}
+html.touch-device.touch-landscape .network-status{font-size:7.5px!important;line-height:1.16!important;min-height:30px!important;margin:5px 0!important;padding:5px 7px!important}
+html.touch-device.touch-landscape .network-room-code{font-size:24px!important;margin:5px 0!important}
+html.touch-device.touch-landscape .network-field label{font-size:7px!important}
+html.touch-device.touch-landscape .network-field input{height:32px!important;min-height:32px!important;font-size:15px!important}
+
+/* Deck builder */
+html.touch-device.touch-landscape #deckBuilderOverlay{padding:5px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-modal{
+  width:min(860px,calc(var(--touch-stage-width) - 10px))!important;
+  height:calc(var(--app-height,100dvh) - 10px)!important;max-height:none!important;
+  padding:8px 9px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-title{font-size:18px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-sub{font-size:7px!important;line-height:1.15!important;margin:4px 0 5px!important;max-height:32px!important;overflow:auto!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-scroll-content{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;padding:1px!important}
+@media (max-width:760px){html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 68px!important;gap:4px!important;padding-top:4px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button{height:31px!important;min-height:31px!important;font-size:7px!important;padding:0 5px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{height:31px!important;min-height:31px!important;max-height:31px!important;font-size:14px!important;padding:0 3px!important}
+
+/* Mulligan */
+html.touch-device.touch-landscape #mulliganOverlay{padding:5px!important}
+html.touch-device.touch-landscape .mulligan-modal{width:min(860px,calc(var(--touch-stage-width) - 10px))!important;height:calc(var(--app-height,100dvh) - 10px)!important;padding:8px 9px!important}
+html.touch-device.touch-landscape .mulligan-title{font-size:18px!important}
+html.touch-device.touch-landscape .mulligan-count{font-size:14px!important;font-weight:900!important}
+html.touch-device.touch-landscape .mulligan-instruction{font-size:7px!important;line-height:1.14!important;margin:2px auto 4px!important}
+html.touch-device.touch-landscape .mulligan-grid{gap:5px!important;padding:3px 2px 5px!important;align-items:center!important;overflow-x:auto!important}
+html.touch-device.touch-landscape .mulligan-card-wrap{flex:0 0 66px!important;width:66px!important;min-width:66px!important;max-width:66px!important}
+html.touch-device.touch-landscape .mulligan-grid .card{width:66px!important;min-width:66px!important;max-width:66px!important;height:96px!important;max-height:96px!important}
+html.touch-device.touch-landscape .mulligan-actions .start-btn{height:31px!important;min-height:31px!important;font-size:7.5px!important}
+
+/* Choice */
+html.touch-device.touch-landscape .choice-modal{width:min(860px,calc(var(--touch-stage-width) - 10px))!important;height:calc(var(--app-height,100dvh) - 10px)!important;padding:8px 9px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-heading h1{font-size:18px!important}
+html.touch-device.touch-landscape #choiceOverlay #choiceSub{font-size:7px!important;line-height:1.14!important;padding:2px 24px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-grid{padding:4px 26px!important;gap:5px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{flex-basis:68px!important;width:68px!important;padding:2px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-text-btn{flex-basis:160px!important;min-height:64px!important;font-size:7.5px!important;padding:6px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-cancel{font-size:7px!important;padding:4px 7px!important}
+
+/* Confirmation */
+html.touch-device.touch-landscape .soul-suicide-modal{width:min(430px,calc(var(--touch-stage-width) - 28px))!important;padding:12px 14px!important}
+html.touch-device.touch-landscape .soul-suicide-kicker{font-size:7px!important;margin-bottom:4px!important}
+html.touch-device.touch-landscape .soul-suicide-modal h1{font-size:19px!important}
+html.touch-device.touch-landscape .soul-suicide-modal p{font-size:8px!important;line-height:1.18!important;margin:6px auto 9px!important}
+html.touch-device.touch-landscape .soul-suicide-actions{gap:5px!important}
+html.touch-device.touch-landscape .soul-suicide-actions button{height:31px!important;min-height:31px!important;font-size:7.5px!important}
+</style>
+
+
+<style id="v306-remove-old-touch-ui">
+/* ===== V306: remove remaining old touch UI language entirely ===== */
+html.touch-device.touch-landscape,
+html.touch-device.touch-landscape body,
+html.touch-device.touch-landscape .app,
+html.touch-device.touch-landscape .side,
+html.touch-device.touch-landscape .board-shell,
+html.touch-device.touch-landscape .rightbar,
+html.touch-device.touch-landscape .overlay,
+html.touch-device.touch-landscape .modal,
+html.touch-device.touch-landscape .topbar,
+html.touch-device.touch-landscape .leader-ui-name,
+html.touch-device.touch-landscape .leader-ui-ability,
+html.touch-device.touch-landscape .network-status,
+html.touch-device.touch-landscape .mode-card,
+html.touch-device.touch-landscape .faction,
+html.touch-device.touch-landscape .deck-builder-sub,
+html.touch-device.touch-landscape .mulligan-instruction,
+html.touch-device.touch-landscape #choiceSub,
+html.touch-device.touch-landscape .ability-text,
+html.touch-device.touch-landscape .leader-ui-ability-text,
+html.touch-device.touch-landscape .row-label,
+html.touch-device.touch-landscape .row-score,
+html.touch-device.touch-landscape .pass-btn,
+html.touch-device.touch-landscape .tiny-btn,
+html.touch-device.touch-landscape .toast,
+html.touch-device.touch-landscape .soul-suicide-modal{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  letter-spacing:0!important;
+  word-spacing:normal!important;
+  text-transform:none!important;
+}
+html.touch-device.touch-landscape .modal h1,
+html.touch-device.touch-landscape .deck-builder-title,
+html.touch-device.touch-landscape .mulligan-title,
+html.touch-device.touch-landscape #choiceOverlay .choice-heading h1,
+html.touch-device.touch-landscape .soul-suicide-modal h1,
+html.touch-device.touch-landscape .mode-card b,
+html.touch-device.touch-landscape .faction b,
+html.touch-device.touch-landscape .turn,
+html.touch-device.touch-landscape .leader-ui-name{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-weight:900!important;
+  letter-spacing:-.01em!important;
+}
+
+/* Overall stage slightly smaller and cleaner */
+html.touch-device.touch-landscape .app{
+  grid-template-columns:88px minmax(0,1fr) 62px!important;
+  border-left:0!important;border-right:0!important;
+  background:#050505!important;
+}
+html.touch-device.touch-landscape .side{width:88px!important;padding:3px!important;gap:2px!important}
+html.touch-device.touch-landscape .rightbar{width:62px!important;grid-template-rows:36px minmax(0,1fr) 36px!important;padding:2px!important;gap:2px!important}
+html.touch-device.touch-landscape .pile-zone{height:36px!important;min-height:36px!important;max-height:36px!important}
+html.touch-device.touch-landscape .pile-inner{transform:scale(.38)!important;width:145px!important}
+html.touch-device.touch-landscape .detail-preview{width:46px!important;max-width:46px!important}
+html.touch-device.touch-landscape .detail-preview .card{width:46px!important;max-width:46px!important}
+
+/* Leaders: flat compact blocks only */
+html.touch-device.touch-landscape #enemyLeader.leader-art-ui,
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui{
+  border-left-width:2px!important;background:#0a0a0a!important;
+}
+html.touch-device.touch-landscape .leader-ui-shell{gap:1px!important}
+html.touch-device.touch-landscape .leader-ui-name{
+  min-height:16px!important;padding:2px 3px!important;font-size:7.5px!important;line-height:1.02!important;
+  background:#121212!important;border-bottom:1px solid #242424!important;color:#f1eee8!important;
+}
+html.touch-device.touch-landscape #enemyLeader.leader-art-ui .leader-ui-art{height:54px!important}
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui .leader-ui-art{height:58px!important}
+html.touch-device.touch-landscape .leader-ui-art .leader-score{width:20px!important;height:20px!important;font-size:11px!important}
+html.touch-device.touch-landscape #playerLeaderPanel.leader-art-ui .leader-ui-ability{padding:2px 3px 3px!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-title{font-size:6px!important;margin-bottom:1px!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{max-height:18px!important;font-size:4.8px!important;line-height:1.08!important}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-use{height:15px!important;min-height:15px!important;font-size:5.3px!important;margin-top:2px!important}
+
+/* Round score / turn labels */
+html.touch-device.touch-landscape .round-outcome.round-series-score{flex:0 0 24px!important;height:24px!important;min-height:24px!important;max-height:24px!important;margin:2px 0!important}
+html.touch-device.touch-landscape .round-series-score-value{font-size:21px!important;line-height:24px!important}
+html.touch-device.touch-landscape .round-turn-indicator{font-size:7.5px!important;max-width:84px!important}
+html.touch-device.touch-landscape .round-turn-indicator.opponent{transform:translate(-50%,-31px)!important}
+html.touch-device.touch-landscape .round-turn-indicator.local{transform:translate(-50%,24px)!important}
+html.touch-device.touch-landscape .round-turn-indicator.opponent.active{transform:translate(-50%,-31px) scale(1.02)!important}
+html.touch-device.touch-landscape .round-turn-indicator.local.active{transform:translate(-50%,24px) scale(1.02)!important}
+
+/* REMOVE the old white top battle plaque entirely; replace with flat dark touch header */
+html.touch-device.touch-landscape .board-shell{grid-template-rows:22px minmax(0,1fr) 66px!important}
+html.touch-device.touch-landscape .board-shell:before{inset:22px 0 66px!important}
+html.touch-device.touch-landscape .topbar,
+html.touch-device.touch-landscape .topbar:after{background:none!important;content:none!important}
+html.touch-device.touch-landscape .topbar{
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto auto!important;align-items:center!important;gap:6px!important;
+  min-height:22px!important;height:22px!important;padding:0 6px!important;
+  background:#0e0e0e!important;color:#f1eee8!important;border-bottom:1px solid #272727!important;
+}
+html.touch-device.touch-landscape .topbar > div:first-child{display:flex!important;align-items:center!important;gap:4px!important;min-width:0!important;overflow:hidden!important}
+html.touch-device.touch-landscape .topbar #roundLabel{font-size:6.5px!important;font-weight:700!important;color:#b9b4ab!important;white-space:nowrap!important}
+html.touch-device.touch-landscape .topbar .turn{display:inline-flex!important;align-items:center!important;height:14px!important;padding:0 5px!important;background:#181818!important;border-left:3px solid var(--p)!important;color:#fff!important;font-size:7px!important;line-height:1!important;white-space:nowrap!important}
+html.touch-device.touch-landscape .tiny-btn{height:16px!important;min-height:16px!important;padding:0 5px!important;border:1px solid #2a2a2a!important;border-bottom:2px solid var(--p)!important;background:#111!important;color:#ece8df!important;font-size:5.2px!important}
+
+/* Smaller battle area */
+html.touch-device.touch-landscape .board{padding:1px!important;grid-template-rows:repeat(3,minmax(24px,1fr)) 2px repeat(3,minmax(24px,1fr))!important}
+html.touch-device.touch-landscape .board .row{grid-template-columns:28px minmax(0,1fr) 20px!important}
+html.touch-device.touch-landscape .row-label strong{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;font-size:8.5px!important;font-weight:900!important;line-height:1!important}
+html.touch-device.touch-landscape .row-label .pressure-tag,
+html.touch-device.touch-landscape .row-label .hogyoku-tag,
+html.touch-device.touch-landscape .row-label .row-effect-tag{font-size:3.7px!important;line-height:1!important}
+html.touch-device.touch-landscape .row-cards .card{flex:0 0 24px!important;width:24px!important;min-width:24px!important;max-width:24px!important;height:32px!important}
+html.touch-device.touch-landscape .row-cards .card .power{width:10px!important;height:10px!important;font-size:6px!important}
+html.touch-device.touch-landscape .row-cards .card .ability-icon{min-width:7px!important;height:7px!important;font-size:4px!important}
+html.touch-device.touch-landscape .row-score{font-size:10px!important}
+
+html.touch-device.touch-landscape .hand-wrap{height:66px!important;min-height:66px!important;max-height:66px!important;grid-template-columns:minmax(0,1fr) 38px!important}
+html.touch-device.touch-landscape .hand{gap:2px!important;padding:2px!important}
+html.touch-device.touch-landscape .hand .card,
+html.touch-device.touch-landscape .hand.hand-expanded .card{flex:0 0 38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;height:55px!important;max-height:55px!important}
+html.touch-device.touch-landscape .hand .card .power{width:14px!important;height:14px!important;font-size:8px!important}
+html.touch-device.touch-landscape .hand .card .ability-icon{min-width:10px!important;height:10px!important;font-size:5px!important}
+html.touch-device.touch-landscape .pass-btn{width:33px!important;height:30px!important;font-size:5.1px!important}
+
+/* Replace remaining oversized helper/toast visuals with a tiny banner */
+html.touch-device.touch-landscape .toast{
+  top:8px!important;max-width:min(330px,calc(100vw - 18px))!important;padding:6px 9px!important;
+  background:rgba(10,10,10,.96)!important;border:1px solid #2f2f2f!important;border-left:3px solid var(--p)!important;
+  box-shadow:0 6px 16px rgba(0,0,0,.5)!important;font-size:8px!important;line-height:1.15!important;
+}
+
+/* Overlays: use same clean small scale, no oversized text/cards */
+html.touch-device.touch-landscape .overlay{padding:5px!important}
+html.touch-device.touch-landscape .modal,
+html.touch-device.touch-landscape .mode-modal,
+html.touch-device.touch-landscape .faction-modal,
+html.touch-device.touch-landscape .network-modal,
+html.touch-device.touch-landscape .deck-builder-modal,
+html.touch-device.touch-landscape .mulligan-modal,
+html.touch-device.touch-landscape .choice-modal,
+html.touch-device.touch-landscape .soul-suicide-modal{padding:8px 10px!important;box-shadow:4px 4px 0 #000!important}
+html.touch-device.touch-landscape .modal h1{font-size:17px!important}
+html.touch-device.touch-landscape .modal p{font-size:7px!important;line-height:1.12!important}
+
+html.touch-device.touch-landscape .mode-modal{width:min(650px,calc(var(--touch-stage-width) - 14px))!important}
+html.touch-device.touch-landscape .mode-sub{font-size:7px!important;line-height:1.12!important;margin:3px auto 6px!important;max-width:560px!important}
+html.touch-device.touch-landscape .mode-grid{gap:5px!important}
+html.touch-device.touch-landscape .mode-card{min-height:42px!important;height:42px!important;padding:5px 7px!important}
+html.touch-device.touch-landscape .mode-card b{font-size:10px!important;margin-bottom:2px!important}
+html.touch-device.touch-landscape .mode-card span{font-size:6.4px!important;line-height:1.08!important}
+@media (max-width:720px){html.touch-device.touch-landscape .mode-card{grid-template-columns:108px minmax(0,1fr)!important;height:38px!important;min-height:38px!important}}
+
+html.touch-device.touch-landscape .faction-modal{width:min(760px,calc(var(--touch-stage-width) - 12px))!important}
+html.touch-device.touch-landscape #startOverlay .setup-title-line>h1{font-size:17px!important}
+html.touch-device.touch-landscape .faction-modal .factions{gap:4px!important;margin:6px 0!important}
+html.touch-device.touch-landscape .faction-modal .faction{min-height:58px!important}
+html.touch-device.touch-landscape .faction-modal .faction b{font-size:8.8px!important}
+html.touch-device.touch-landscape .faction-modal .faction span{font-size:6px!important;line-height:1.05!important}
+html.touch-device.touch-landscape #startOverlay .network-actions button{height:28px!important;min-height:28px!important;font-size:7px!important}
+
+html.touch-device.touch-landscape .network-choice-modal,
+html.touch-device.touch-landscape .network-role-modal{width:min(480px,calc(var(--touch-stage-width) - 18px))!important}
+html.touch-device.touch-landscape #networkOverlay .network-choice-grid{gap:5px!important;margin:7px 0 5px!important}
+html.touch-device.touch-landscape #networkOverlay .network-choice-grid .start-btn,
+html.touch-device.touch-landscape .network-role-actions .start-btn{height:30px!important;min-height:30px!important;font-size:7.5px!important}
+html.touch-device.touch-landscape .network-status{font-size:7px!important;line-height:1.12!important;min-height:26px!important;padding:4px 6px!important}
+html.touch-device.touch-landscape .network-room-code{font-size:20px!important}
+html.touch-device.touch-landscape .network-field input{height:30px!important;min-height:30px!important;font-size:14px!important}
+
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-modal{width:min(820px,calc(var(--touch-stage-width) - 8px))!important;height:calc(var(--app-height,100dvh) - 8px)!important;padding:7px 8px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-title{font-size:16px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-sub{font-size:6.4px!important;line-height:1.08!important;margin:3px 0 4px!important;max-height:24px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:3px!important}
+@media (max-width:760px){html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 62px!important;gap:3px!important;padding-top:3px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button{height:28px!important;min-height:28px!important;font-size:6.5px!important;padding:0 4px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{height:28px!important;min-height:28px!important;max-height:28px!important;font-size:12px!important}
+
+html.touch-device.touch-landscape .mulligan-modal,
+html.touch-device.touch-landscape .choice-modal{width:min(820px,calc(var(--touch-stage-width) - 8px))!important;height:calc(var(--app-height,100dvh) - 8px)!important;padding:7px 8px!important}
+html.touch-device.touch-landscape .mulligan-title,
+html.touch-device.touch-landscape #choiceOverlay .choice-heading h1{font-size:16px!important}
+html.touch-device.touch-landscape .mulligan-count{font-size:12px!important}
+html.touch-device.touch-landscape .mulligan-instruction,
+html.touch-device.touch-landscape #choiceOverlay #choiceSub{font-size:6.5px!important;line-height:1.08!important;margin:2px auto 3px!important;padding:2px 14px!important}
+html.touch-device.touch-landscape .mulligan-grid{gap:4px!important;padding:2px 1px 4px!important}
+html.touch-device.touch-landscape .mulligan-card-wrap{flex:0 0 60px!important;width:60px!important;min-width:60px!important;max-width:60px!important}
+html.touch-device.touch-landscape .mulligan-grid .card{width:60px!important;min-width:60px!important;max-width:60px!important;height:87px!important;max-height:87px!important}
+html.touch-device.touch-landscape .mulligan-actions .start-btn{height:28px!important;min-height:28px!important;font-size:7px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-grid{padding:3px 16px!important;gap:4px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{flex-basis:62px!important;width:62px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-text-btn{flex-basis:138px!important;min-height:56px!important;font-size:6.8px!important;padding:5px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-cancel{font-size:6.4px!important;padding:3px 6px!important}
+
+html.touch-device.touch-landscape .soul-suicide-modal{width:min(390px,calc(var(--touch-stage-width) - 22px))!important;padding:10px 12px!important}
+html.touch-device.touch-landscape .soul-suicide-kicker{font-size:6px!important}
+html.touch-device.touch-landscape .soul-suicide-modal h1{font-size:17px!important}
+html.touch-device.touch-landscape .soul-suicide-modal p{font-size:7px!important;line-height:1.12!important;margin:5px auto 8px!important}
+html.touch-device.touch-landscape .soul-suicide-actions button{height:28px!important;min-height:28px!important;font-size:7px!important}
+</style>
+
 </head>
 <body>
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -8576,6 +9130,7 @@ html.phone-device.phone-landscape .round-turn-indicator.local.active{transform:t
     if(w) root.style.setProperty("--app-width",`${w}px`);
     if(h&&w){
       root.style.setProperty("--phone-stage-width",`${Math.min(w,Math.round(h*16/9))}px`);
+      root.style.setProperty("--touch-stage-width",`${Math.min(w,Math.round(h*2.06))}px`);
       root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
     }
     const coarse=(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches)||(navigator.maxTouchPoints||0)>0;
@@ -8589,6 +9144,7 @@ html.phone-device.phone-landscape .round-turn-indicator.local.active{transform:t
     root.classList.toggle("tablet-device",tablet);
     root.classList.toggle("phone-portrait",phone&&portrait);
     root.classList.toggle("phone-landscape",phone&&!portrait);
+    root.classList.toggle("touch-landscape",!!coarse&&!portrait);
   }
   syncResponsiveDevice();
   window.addEventListener("resize",syncResponsiveDevice,{passive:true});
