@@ -3,9 +3,16 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="mobile-web-app-capable" content="yes" />
-<title>BLEACH: Soul Clash v310 — Fullscreen API</title>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#050505">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Soul Clash">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<title>BLEACH: Soul Clash v312 — PWA</title>
 <style>
   :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -9287,22 +9294,6 @@ html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card{
 </style>
 
 
-<style id="v310-fullscreen-api-ui">
-.rotate-fullscreen-btn{
-  width:100%;min-height:42px;margin-top:15px;
-  border:1px solid rgba(255,255,255,.58);border-bottom:4px solid var(--p);border-radius:0;
-  background:#f0ece4;color:#111;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  font-size:12px;font-weight:900;letter-spacing:.02em;cursor:pointer;
-}
-.rotate-fullscreen-btn:active{transform:translateY(1px)}
-.rotate-fullscreen-status{min-height:15px;margin-top:8px;color:#bcb6ae;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:9px;line-height:1.25;text-align:center}
-html.phone-device.phone-portrait .rotate-fullscreen-btn{min-height:40px!important;margin-top:12px!important;font-size:11px!important}
-html.phone-device.phone-portrait .rotate-fullscreen-status{font-size:9px!important}
-html.bsc-fullscreen,html.bsc-fullscreen body{width:100%!important;height:100%!important;min-height:100%!important;background:#000!important;overflow:hidden!important}
-</style>
-
-
 <style id="v311-mobile-battle-rebuild">
 /* ===== V311: deterministic compact mobile battle layout =====
    Fixes rail overflow, oversized hand/rows/sidebar and inconsistent battle scale. */
@@ -9600,6 +9591,20 @@ html.touch-device.touch-landscape .row,
 html.touch-device.touch-landscape .row-cards{max-height:100%!important}
 </style>
 
+
+<style id="v312-pwa-standalone">
+:root{--standalone-safe-top:env(safe-area-inset-top,0px);--standalone-safe-right:env(safe-area-inset-right,0px);--standalone-safe-bottom:env(safe-area-inset-bottom,0px);--standalone-safe-left:env(safe-area-inset-left,0px)}
+html.pwa-standalone,html.pwa-standalone body{width:100%;height:100%;min-height:100%;background:#000;overflow:hidden}
+html.pwa-standalone body{padding:0!important}
+html.pwa-standalone .app{max-height:100dvh!important}
+html.pwa-standalone.phone-device.phone-landscape .app,html.pwa-standalone.touch-device.touch-landscape .app{height:100dvh!important}
+.pwa-install-hint{display:none;position:fixed;z-index:65000;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(420px,calc(100vw - 28px));padding:10px 12px;background:rgba(12,12,12,.96);color:#eee;border:1px solid #444;border-left:4px solid var(--p,#ff5b18);box-shadow:0 8px 24px rgba(0,0,0,.45);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:11px;line-height:1.35;text-align:left}
+.pwa-install-hint b{display:block;margin-bottom:3px;font-size:12px}
+.pwa-install-hint button{float:right;margin-left:10px;border:0;background:#2b2b2b;color:#fff;padding:4px 8px;font:inherit;font-weight:800}
+html.pwa-browser-ios .pwa-install-hint{display:block}
+@media (orientation:landscape){html.pwa-browser-ios .pwa-install-hint{font-size:9px;width:min(390px,calc(100vw - 22px));padding:7px 9px}}
+</style>
+
 </head>
 <body>
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -9608,8 +9613,6 @@ html.touch-device.touch-landscape .row-cards{max-height:100%!important}
     <div class="rotate-device-kicker">MOBILE MODE</div>
     <div class="rotate-device-title">ПОВЕРНИТЕ ТЕЛЕФОН</div>
     <p>BLEACH: SOUL CLASH рассчитан на горизонтальный экран. Для максимальной площади попробуйте полноэкранный режим, затем поверните устройство на бок.</p>
-    <button id="mobileFullscreenBtn" class="rotate-fullscreen-btn" type="button">ПОЛНЫЙ ЭКРАН</button>
-    <div id="mobileFullscreenStatus" class="rotate-fullscreen-status" aria-live="polite"></div>
   </div>
 </div>
 
@@ -16541,85 +16544,25 @@ ${template.desc}`:""}`;
 </script>
 
 
-<script id="v310-fullscreen-api">
-(()=>{
+
+<div id="pwaInstallHint" class="pwa-install-hint" role="status">
+  <button id="pwaInstallHintClose" type="button" aria-label="Закрыть">×</button>
+  <b>ПОЛНОЭКРАННЫЙ РЕЖИМ НА iPHONE</b>
+  Нажмите «Поделиться» → «На экран Домой», затем запускайте игру с иконки. Safari-панели исчезнут.
+</div>
+
+
+<script id="v312-pwa-runtime">
+(() => {
   const root=document.documentElement;
-  const btn=document.getElementById('mobileFullscreenBtn');
-  const status=document.getElementById('mobileFullscreenStatus');
-  let autoTried=false;
-  const isFullscreen=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
-  const fullscreenCapable=()=>!!(root.requestFullscreen||root.webkitRequestFullscreen);
-  const isTouch=()=>((navigator.maxTouchPoints||0)>0)||(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches);
-  function syncViewport(){
-    const vv=window.visualViewport;
-    const w=Math.round(vv?.width||window.innerWidth||document.documentElement.clientWidth||0);
-    const h=Math.round(vv?.height||window.innerHeight||document.documentElement.clientHeight||0);
-    if(w) root.style.setProperty('--app-width',w+'px');
-    if(h) root.style.setProperty('--app-height',h+'px');
-    if(w&&h){
-      root.style.setProperty('--phone-stage-width',Math.min(w,Math.round(h*16/9))+'px');
-      root.style.setProperty('--touch-stage-width',Math.min(w,Math.round(h*16/9))+'px');
-    }
+  const standalone=window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  root.classList.toggle('pwa-standalone',!!standalone);
+  root.classList.toggle('pwa-browser-ios',!!isIOS&&!standalone);
+  document.getElementById('pwaInstallHintClose')?.addEventListener('click',()=>root.classList.remove('pwa-browser-ios'));
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(err=>console.debug('[PWA] service worker:',err?.message||err));},{once:true});
   }
-  async function lockLandscape(){
-    try{ if(screen.orientation&&typeof screen.orientation.lock==='function') await screen.orientation.lock('landscape'); }
-    catch(err){ console.debug('[Fullscreen] orientation lock unavailable:',err?.message||err); }
-  }
-  async function enterFullscreen(source='button'){
-    if(isFullscreen()){
-      if(status) status.textContent='Полноэкранный режим уже включён.';
-      return true;
-    }
-    if(!fullscreenCapable()){
-      if(status) status.textContent='Этот браузер не предоставляет Fullscreen API для страницы.';
-      console.warn('[Fullscreen] API unavailable');
-      return false;
-    }
-    try{
-      let result;
-      if(typeof root.requestFullscreen==='function'){
-        try{ result=root.requestFullscreen({navigationUI:'hide'}); }
-        catch(_err){ result=root.requestFullscreen(); }
-      }else if(typeof root.webkitRequestFullscreen==='function'){
-        result=root.webkitRequestFullscreen();
-      }
-      if(result&&typeof result.then==='function') await result;
-      root.classList.add('bsc-fullscreen');
-      if(status) status.textContent='Полноэкранный режим включён. Поверните телефон на бок.';
-      await lockLandscape();
-      setTimeout(syncViewport,60);
-      setTimeout(syncViewport,250);
-      console.info('[Fullscreen] entered from',source);
-      return true;
-    }catch(err){
-      console.warn('[Fullscreen] request rejected:',err);
-      if(status) status.textContent='Fullscreen отклонён браузером. Поверните телефон вручную и продолжайте в Safari.';
-      return false;
-    }
-  }
-  function onFullscreenChange(){
-    root.classList.toggle('bsc-fullscreen',isFullscreen());
-    if(btn) btn.textContent=isFullscreen()?'ПОЛНЫЙ ЭКРАН ВКЛЮЧЁН':'ПОЛНЫЙ ЭКРАН';
-    syncViewport();
-  }
-  btn?.addEventListener('click',event=>{
-    event.preventDefault();
-    event.stopPropagation();
-    enterFullscreen('rotate-button');
-  });
-  document.addEventListener('pointerup',event=>{
-    if(autoTried||!isTouch()||isFullscreen()) return;
-    if(event.target?.closest?.('#mobileFullscreenBtn')) return;
-    const landscape=(window.innerWidth||0)>(window.innerHeight||0);
-    if(!landscape) return;
-    autoTried=true;
-    enterFullscreen('first-landscape-gesture');
-  },{capture:true,passive:true});
-  document.addEventListener('fullscreenchange',onFullscreenChange);
-  document.addEventListener('webkitfullscreenchange',onFullscreenChange);
-  window.addEventListener('resize',syncViewport,{passive:true});
-  window.visualViewport?.addEventListener('resize',syncViewport,{passive:true});
-  syncViewport();
 })();
 </script>
 
