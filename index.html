@@ -8940,6 +8940,221 @@ html.touch-device.touch-landscape .soul-suicide-modal p{font-size:7px!important;
 html.touch-device.touch-landscape .soul-suicide-actions button{height:28px!important;min-height:28px!important;font-size:7px!important}
 </style>
 
+
+<style id="v307-mobile-mulligan-battle-cleanup">
+/* ===== V307: phone/mobile cleanup ===== */
+
+/* Portrait rotate screen: cleaner font and calmer hierarchy */
+html.phone-device.phone-portrait .rotate-device-card{
+  width:min(342px,86vw)!important;
+  padding:20px 18px 18px!important;
+  border-width:2px!important;
+}
+html.phone-device.phone-portrait .rotate-device-kicker,
+html.phone-device.phone-portrait .rotate-device-title,
+html.phone-device.phone-portrait .rotate-device-card p{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  letter-spacing:0!important;
+  word-spacing:0!important;
+}
+html.phone-device.phone-portrait .rotate-device-kicker{
+  font-size:8px!important;
+  font-weight:800!important;
+  letter-spacing:.08em!important;
+}
+html.phone-device.phone-portrait .rotate-device-title{
+  font-size:24px!important;
+  line-height:.98!important;
+  font-weight:900!important;
+}
+html.phone-device.phone-portrait .rotate-device-card p{
+  font-size:10px!important;
+  line-height:1.28!important;
+  max-width:270px!important;
+}
+html.phone-device.phone-portrait .rotate-device-symbol{width:60px!important;height:38px!important}
+
+/* Mobile battle: remove extra turn labels around 0:0 */
+html.phone-device.phone-landscape .round-turn-indicator{display:none!important}
+
+/* Mobile battle: compact scale everywhere */
+html.phone-device.phone-landscape .app{
+  grid-template-columns:84px minmax(0,1fr) 58px!important;
+  border-left:0!important;border-right:0!important;
+}
+html.phone-device.phone-landscape .side{
+  width:84px!important;padding:2px!important;gap:2px!important;
+}
+html.phone-device.phone-landscape #enemyLeader.leader-art-ui,
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui{
+  border-left-width:2px!important;box-shadow:none!important;clip-path:none!important;
+}
+html.phone-device.phone-landscape .leader-ui-shell{gap:1px!important}
+html.phone-device.phone-landscape .leader-ui-name{
+  min-height:16px!important;padding:2px 3px!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:7.4px!important;line-height:1!important;font-weight:900!important;
+  background:#121212!important;color:#f1eee7!important;border-bottom:1px solid #282828!important;
+}
+html.phone-device.phone-landscape #enemyLeader.leader-art-ui .leader-ui-art{height:52px!important}
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui .leader-ui-art{height:56px!important}
+html.phone-device.phone-landscape .leader-ui-art .leader-score{
+  width:20px!important;height:20px!important;font-size:11px!important;right:2px!important;bottom:2px!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability{
+  padding:2px 3px 3px!important;border-left-width:2px!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-title{
+  font-size:5.8px!important;line-height:1!important;margin-bottom:1px!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{
+  max-height:18px!important;font-size:4.8px!important;line-height:1.08!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-use{
+  height:15px!important;min-height:15px!important;font-size:5.1px!important;margin-top:2px!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape .round-outcome.round-series-score{
+  flex:0 0 22px!important;width:100%!important;height:22px!important;min-height:22px!important;max-height:22px!important;
+  margin:2px 0!important;
+}
+html.phone-device.phone-landscape .round-series-score-value{font-size:20px!important;line-height:22px!important}
+
+html.phone-device.phone-landscape .rightbar{
+  width:58px!important;grid-template-rows:34px minmax(0,1fr) 34px!important;padding:2px!important;gap:2px!important;
+}
+html.phone-device.phone-landscape .pile-zone{height:34px!important;min-height:34px!important;max-height:34px!important}
+html.phone-device.phone-landscape .pile-inner{transform:scale(.36)!important;transform-origin:top left!important;width:145px!important}
+html.phone-device.phone-landscape .detail-preview{width:42px!important;max-width:42px!important;margin:0 auto 2px!important}
+html.phone-device.phone-landscape .detail-preview .card{width:42px!important;max-width:42px!important}
+html.phone-device.phone-landscape .ability-block{padding:2px!important}
+html.phone-device.phone-landscape .ability-block .ability-title{font-size:4.8px!important;margin-bottom:1px!important}
+html.phone-device.phone-landscape .ability-block .ability-text{font-size:5.2px!important;line-height:1.08!important}
+
+html.phone-device.phone-landscape .board-shell{
+  grid-template-rows:21px minmax(0,1fr) 63px!important;
+}
+html.phone-device.phone-landscape .board-shell:before{inset:21px 0 63px!important}
+html.phone-device.phone-landscape .topbar{
+  min-height:21px!important;height:21px!important;padding:0 5px!important;
+  background:#0f0f0f!important;color:#ece8df!important;border-bottom:1px solid #2b2b2b!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape .topbar:after{display:none!important}
+html.phone-device.phone-landscape .topbar #roundLabel{font-size:6.2px!important;letter-spacing:0!important;color:#bfb8ae!important}
+html.phone-device.phone-landscape .turn{
+  display:inline-flex!important;align-items:center!important;height:13px!important;padding:0 4px!important;
+  background:#181818!important;border-left:3px solid var(--p)!important;color:#fff!important;
+  font-size:6.8px!important;font-weight:900!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape .tiny-btn{
+  height:15px!important;min-height:15px!important;padding:0 4px!important;font-size:4.8px!important;
+  border:1px solid #2b2b2b!important;border-bottom:2px solid var(--p)!important;clip-path:none!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape .board{
+  padding:1px!important;grid-template-rows:repeat(3,minmax(23px,1fr)) 2px repeat(3,minmax(23px,1fr))!important;
+}
+html.phone-device.phone-landscape .board .row{grid-template-columns:28px minmax(0,1fr) 19px!important}
+html.phone-device.phone-landscape .row-label strong{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:8px!important;font-weight:900!important;line-height:1!important;
+}
+html.phone-device.phone-landscape .row-label .pressure-tag,
+html.phone-device.phone-landscape .row-label .hogyoku-tag,
+html.phone-device.phone-landscape .row-label .row-effect-tag{
+  font-size:3.6px!important;line-height:1!important;letter-spacing:0!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape .row-cards{gap:1px!important;padding:1px!important}
+html.phone-device.phone-landscape .row-cards .card{
+  flex:0 0 23px!important;width:23px!important;min-width:23px!important;max-width:23px!important;height:31px!important;
+}
+html.phone-device.phone-landscape .row-cards .card .power{width:10px!important;height:10px!important;font-size:6px!important}
+html.phone-device.phone-landscape .row-cards .card .ability-icon{min-width:7px!important;height:7px!important;font-size:4px!important;padding:0 1px!important}
+html.phone-device.phone-landscape .row-cards .card .name{font-size:3.2px!important;padding:3px 1px 1px!important}
+html.phone-device.phone-landscape .row-score{font-size:10px!important}
+
+html.phone-device.phone-landscape .hand-wrap{
+  height:63px!important;min-height:63px!important;max-height:63px!important;grid-template-columns:minmax(0,1fr) 37px!important;
+}
+html.phone-device.phone-landscape .hand-wrap:before{display:none!important}
+html.phone-device.phone-landscape .hand{gap:2px!important;padding:2px!important}
+html.phone-device.phone-landscape .hand .card,
+html.phone-device.phone-landscape .hand.hand-expanded .card{
+  flex:0 0 37px!important;width:37px!important;min-width:37px!important;max-width:37px!important;height:54px!important;max-height:54px!important;
+}
+html.phone-device.phone-landscape .hand .card .power{width:14px!important;height:14px!important;font-size:8px!important}
+html.phone-device.phone-landscape .hand .card .ability-icon{min-width:10px!important;height:10px!important;font-size:5px!important;padding:0 1px!important}
+html.phone-device.phone-landscape .hand .card .name{font-size:4px!important;padding:4px 1px 2px!important}
+html.phone-device.phone-landscape .hand-actions{padding:2px!important}
+html.phone-device.phone-landscape .pass-btn{
+  width:32px!important;height:30px!important;font-size:5px!important;line-height:.95!important;margin:auto!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+
+/* CHOOSE YOUR SOUL: 2 rows, smaller cards, no name plaques */
+html.phone-device.phone-landscape #mulliganOverlay{padding:5px!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-modal{
+  width:min(740px,calc(var(--phone-stage-width) - 18px))!important;
+  height:calc(var(--app-height,100dvh) - 10px)!important;max-height:none!important;
+  padding:9px 11px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-head{align-items:flex-start!important;gap:10px!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-title{
+  font-size:18px!important;line-height:.98!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;font-weight:900!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-count{font-size:14px!important;text-shadow:none!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-instruction{
+  font-size:6.5px!important;line-height:1.1!important;margin:2px auto 4px!important;padding:0!important;max-width:620px!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid{
+  flex:1 1 auto!important;min-height:0!important;width:100%!important;
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;
+  gap:5px!important;padding:4px 0 6px!important;overflow:auto!important;align-content:start!important;justify-items:center!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap{
+  width:100%!important;min-width:0!important;max-width:none!important;display:flex!important;justify-content:center!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card{
+  width:72px!important;min-width:72px!important;max-width:72px!important;height:104px!important;max-height:104px!important;margin:0!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .name,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .name,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .card-info-panel,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-info-panel{
+  display:none!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace .card-face::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace .card-face::after{
+  font-size:6px!important;padding:2px 3px!important;inset:auto 4px 22px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions{margin-top:4px!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions .start-btn{height:29px!important;min-height:29px!important;font-size:6.8px!important}
+
+/* Tablet / touch landscape mulligan: same 2-row cleanup */
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;
+  gap:5px!important;padding:4px 0 6px!important;overflow:auto!important;align-content:start!important;justify-items:center!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap{width:100%!important;min-width:0!important;max-width:none!important;display:flex!important;justify-content:center!important}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card{width:68px!important;min-width:68px!important;max-width:68px!important;height:98px!important;max-height:98px!important;margin:0!important}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .name,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .name,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .card-info-panel,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-info-panel{display:none!important}
+</style>
+
 </head>
 <body>
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
