@@ -51,7 +51,7 @@
   root.classList.add('responsive-booted');
 })();
 </script>
-<title>BLEACH: Soul Clash v318 — PWA</title>
+<title>BLEACH: Soul Clash v320 — Supabase Realtime</title>
 <style>
   :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -9786,6 +9786,160 @@ html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card{
 }
 </style>
 
+
+<style id="v319-mobile-battle-zone-rebalanced">
+/* ===== V319: narrower battlefield, wider leader + preview rails =====
+   Applies to both ordinary mobile browser and standalone/PWA. */
+html.touch-device.touch-landscape .app{
+  grid-template-columns:120px minmax(0,1fr) 100px!important;
+}
+
+/* LEFT: spend reclaimed width on the leaders instead of empty row space. */
+html.touch-device.touch-landscape .side{
+  width:120px!important;
+  padding:3px!important;
+  gap:2px!important;
+  grid-template-rows:minmax(0,.92fr) 24px minmax(0,1.08fr)!important;
+}
+html.touch-device.touch-landscape .round-outcome.round-series-score{
+  height:24px!important;min-height:24px!important;max-height:24px!important;
+}
+html.touch-device.touch-landscape .round-series-score-value{
+  font-size:20px!important;line-height:24px!important;
+}
+html.touch-device.touch-landscape #enemyLeader .leader-ui-shell{
+  grid-template-rows:18px minmax(0,1fr)!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-shell{
+  grid-template-rows:18px minmax(0,1fr) 52px!important;
+}
+html.touch-device.touch-landscape .leader-ui-name{
+  height:18px!important;min-height:18px!important;max-height:18px!important;
+  padding:2px 4px!important;
+  font-size:8px!important;line-height:1!important;
+}
+html.touch-device.touch-landscape .leader-ui-art .leader-score{
+  width:22px!important;height:22px!important;right:3px!important;bottom:3px!important;
+  font-size:11px!important;line-height:22px!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability{
+  height:52px!important;min-height:52px!important;max-height:52px!important;
+  padding:3px 5px!important;
+  grid-template-rows:9px minmax(0,1fr) 14px!important;
+  gap:1px!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-title{
+  font-size:6.2px!important;line-height:9px!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{
+  font-size:5.7px!important;line-height:1.1!important;
+}
+html.touch-device.touch-landscape #playerLeaderPanel .leader-ui-use{
+  height:14px!important;min-height:14px!important;max-height:14px!important;
+  font-size:5.5px!important;line-height:12px!important;
+}
+
+/* CENTER: intentionally narrower. Cards are larger, rows horizontally scroll when needed. */
+html.touch-device.touch-landscape .board-shell{
+  grid-template-rows:22px minmax(0,1fr) 64px!important;
+}
+html.touch-device.touch-landscape .board-shell:before{inset:22px 0 64px!important}
+html.touch-device.touch-landscape .board .row{
+  grid-template-columns:23px minmax(0,1fr) 18px!important;
+}
+html.touch-device.touch-landscape .row-label strong{font-size:8px!important}
+html.touch-device.touch-landscape .row-score{
+  width:18px!important;min-width:18px!important;max-width:18px!important;
+  font-size:9.5px!important;
+}
+html.touch-device.touch-landscape .row-cards{
+  gap:2px!important;padding:2px!important;
+}
+html.touch-device.touch-landscape .row-cards .card{
+  flex:0 0 28px!important;width:28px!important;min-width:28px!important;max-width:28px!important;
+  height:40px!important;max-height:calc(100% - 2px)!important;
+}
+html.touch-device.touch-landscape .row-cards .card .power{
+  width:12px!important;height:12px!important;font-size:7px!important;
+}
+html.touch-device.touch-landscape .row-cards .card .ability-icon{
+  min-width:8px!important;height:8px!important;font-size:4.6px!important;
+}
+html.touch-device.touch-landscape .row-cards .card .name{
+  font-size:3.7px!important;padding:3px 1px 1px!important;
+}
+
+/* HAND: still compact, but no longer postage-stamp sized. */
+html.touch-device.touch-landscape .hand-wrap{
+  height:64px!important;min-height:64px!important;max-height:64px!important;
+  grid-template-columns:minmax(0,1fr) 40px!important;
+}
+html.touch-device.touch-landscape .hand{
+  gap:2px!important;padding:3px!important;
+}
+html.touch-device.touch-landscape .hand .card,
+html.touch-device.touch-landscape .hand.hand-expanded .card{
+  flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
+  height:58px!important;max-height:58px!important;
+}
+html.touch-device.touch-landscape .hand .card .power{
+  width:15px!important;height:15px!important;font-size:9px!important;
+}
+html.touch-device.touch-landscape .hand .card .ability-icon{
+  min-width:10px!important;height:10px!important;font-size:5.5px!important;
+}
+html.touch-device.touch-landscape .hand .card .name{
+  font-size:4.4px!important;padding:5px 1px 1px!important;
+}
+html.touch-device.touch-landscape .hand-actions{
+  width:40px!important;height:64px!important;min-width:40px!important;
+}
+html.touch-device.touch-landscape .pass-btn{
+  width:34px!important;height:33px!important;min-width:34px!important;min-height:33px!important;
+  font-size:5.2px!important;
+}
+
+/* RIGHT: preview now gets meaningful width and readable text. */
+html.touch-device.touch-landscape .rightbar{
+  width:100px!important;
+  grid-template-rows:40px minmax(0,1fr) 40px!important;
+  gap:3px!important;padding:3px!important;
+}
+html.touch-device.touch-landscape .pile-zone{
+  height:40px!important;min-height:40px!important;max-height:40px!important;
+}
+html.touch-device.touch-landscape .pile-inner{
+  width:150px!important;height:72px!important;
+  transform:scale(.55)!important;transform-origin:top left!important;
+}
+html.touch-device.touch-landscape .rightbar .detail{
+  padding:4px!important;
+}
+html.touch-device.touch-landscape .detail-preview{
+  width:86px!important;max-width:86px!important;margin:0 auto 4px!important;
+}
+html.touch-device.touch-landscape .detail-preview .card{
+  width:86px!important;max-width:86px!important;
+}
+html.touch-device.touch-landscape .ability-block{
+  padding:4px!important;border-left-width:2px!important;
+}
+html.touch-device.touch-landscape .ability-block .ability-title{
+  margin-bottom:2px!important;font-size:6px!important;
+}
+html.touch-device.touch-landscape .ability-block .ability-text{
+  font-size:6.5px!important;line-height:1.12!important;
+}
+
+/* Explicitly keep identical proportions in installed PWA. */
+html.pwa-standalone.touch-device.touch-landscape .app,
+html.pwa-standalone.phone-device.phone-landscape .app{
+  grid-template-columns:120px minmax(0,1fr) 100px!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -9967,8 +10121,7 @@ html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card{
 </div>
 <div id="toast" class="toast"></div>
 
-<script src="https://unpkg.com/mqtt@5.15.2/dist/mqtt.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js" integrity="sha512-XEKeWX+mI3Ov+tg2evDlVQFzVOIp4T8J3cNcCEPaEUGpxJV3eZaN8rHuvnFPvQpGJBHPmrozJDMpm2xcDvtmyQ==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
 <script>
 (() => {
   // ===== V293: clean mobile/tablet device layer =====
@@ -10300,15 +10453,16 @@ html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card{
   let networkApplyingState=false;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="318";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v318-";
-  // V295: ONLINE DUEL uses a broker-relayed WSS transport instead of WebRTC.
-  // E/H is encoded as the first room-code character so Guest always selects
-  // the exact same public broker that HOST successfully connected to.
-  const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
+  const ONLINE_GAME_VERSION="320";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v320-";
+  // V320: ONLINE DUEL uses Supabase Realtime Broadcast + Presence.
+  // The supplied publishable key is browser-safe; no secret/service_role key is embedded.
+  const SUPABASE_URL="https://dtevbelpawkjcyhezatc.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY="sb_publishable_YU8UhLU3sAw9ObVawLzZKw_oYg_x5bL";
+  const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v320";
+  // Kept under the old broker variable name to minimize changes to the proven room/handshake code.
   const ONLINE_MQTT_BROKERS=[
-    {key:"E",name:"EMQX Relay",url:"wss://broker.emqx.io:8084/mqtt"},
-    {key:"H",name:"HiveMQ Relay",url:"wss://broker.hivemq.com:8884/mqtt"}
+    {key:"S",name:"Supabase Realtime",url:SUPABASE_URL}
   ];
 
   // V294: resilient ICE stack. PeerJS Cloud is signalling only; actual WebRTC
@@ -16148,7 +16302,7 @@ ${template.desc}`:""}`;
     destroyNetworkPeer(false);
     Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null,linkSuspended:false,hostSetupStarted:false,pregameUiStarted:false,guestDisconnectTimer:null,hostDisconnectTimer:null});
   }
-  function mqttAvailable(){ return !!globalThis.mqtt?.connect; }
+  function mqttAvailable(){ return !!globalThis.supabase?.createClient; }
   function mqttBrokerByKey(key){ return ONLINE_MQTT_BROKERS.find(b=>b.key===String(key||"").toUpperCase())||null; }
   function mqttTopics(code,role){
     const root=`${ONLINE_MQTT_TOPIC_PREFIX}/${code}`;
@@ -16156,7 +16310,7 @@ ${template.desc}`:""}`;
   }
   function makeMqttClientId(role,code){
     const rand=()=>Math.random().toString(36).slice(2,8);
-    return `bsc295_${role}_${code}_${rand()}_${Date.now().toString(36).slice(-5)}`.slice(0,62);
+    return `bsc320_${role}_${code}_${rand()}_${Date.now().toString(36).slice(-5)}`.slice(0,62);
   }
   function generateRelayRoomCode(brokerKey){
     const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -16201,7 +16355,7 @@ ${template.desc}`:""}`;
     networkSession.linkSuspended=false;
     networkSession.roomClosed=false;
     if(status) status.textContent=`Игрок 2 подключён через ${networkSession.mqttBroker?.name||"WSS relay"}. Переходим к созданию колоды…`;
-    onlineDiagLog("MQTT Guest accepted",{roomCode:networkSession.roomCode,guestId,broker:networkSession.mqttBroker?.name||null});
+    onlineDiagLog("Supabase Guest accepted",{roomCode:networkSession.roomCode,guestId,broker:networkSession.mqttBroker?.name||null});
     mqttPublishTo(guestId,"hello",{role:"host",roomCode:networkSession.roomCode},{senderRole:"host"});
     if(networkSession.localSetup) sendNetworkEvent("setup",networkSession.localSetup);
     await handleNetworkEvent({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"hello",payload:{role:"guest",roomCode:networkSession.roomCode},senderRole:"guest",senderId:guestId,roomCode:networkSession.roomCode});
@@ -16248,71 +16402,107 @@ ${template.desc}`:""}`;
   }
   function connectMqttTransport(broker,role,code,statusEl){
     return new Promise((resolve,reject)=>{
-      if(!mqttAvailable()){ reject(makeOnlineDiagError("relay-unavailable","MQTT.js не загрузился. Для ONLINE DUEL нужен интернет.")); return; }
+      if(!mqttAvailable()){
+        reject(makeOnlineDiagError("relay-unavailable","Supabase Realtime SDK не загрузился. Для ONLINE DUEL нужен интернет."));
+        return;
+      }
       const topics=mqttTopics(code,role);
       const clientId=makeMqttClientId(role,code);
-      const willType=role==="host"?"host_closed":"guest_left";
-      const willPacket={protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:willType,payload:{},senderRole:role,senderId:clientId,targetId:null,roomCode:code,messageId:`${clientId}:will`,ts:Date.now()};
-      let settled=false;
-      let client;
+      const roomTopic=`${ONLINE_MQTT_TOPIC_PREFIX}/${code}`;
+      let settled=false, closing=false, subscribedOnce=false;
+      let sb=null, channel=null;
       try{
-        client=globalThis.mqtt.connect(broker.url,{
-          clientId,clean:true,keepalive:20,reconnectPeriod:1500,connectTimeout:10000,protocolVersion:4,resubscribe:true,
-          will:{topic:topics.out,payload:JSON.stringify(willPacket),qos:1,retain:false}
+        sb=globalThis.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
+          auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}
         });
-      }catch(err){ reject(makeOnlineDiagError("relay-unavailable",err?.message||String(err),{cause:err})); return; }
-      const timer=setTimeout(()=>{
-        if(settled) return; settled=true;
-        try{client.end(true);}catch(_e){}
-        reject(makeOnlineDiagError("relay-unavailable",`${broker.name} не ответил за 10 секунд`));
-      },10000);
-      client.on("message",handleMqttMessage);
-      client.on("connect",()=>{
-        if(settled && networkSession.mqtt!==client){ try{client.end(true);}catch(_e){} return; }
-        client.subscribe(topics.in,{qos:1},err=>{
-          if(err){
-            if(!settled){ settled=true; clearTimeout(timer); reject(makeOnlineDiagError("relay-unavailable",`не удалось подписаться на комнату: ${err.message||err}`)); }
+        channel=sb.channel(roomTopic,{
+          config:{broadcast:{ack:true,self:false},presence:{key:clientId}}
+        });
+      }catch(err){
+        reject(makeOnlineDiagError("relay-unavailable",err?.message||String(err),{cause:err}));
+        return;
+      }
+      const adapter={
+        connected:false,
+        publish(_topic,raw,_opts,cb){
+          if(!this.connected){ cb?.(new Error("Supabase channel is not connected")); return; }
+          const str=typeof raw==="string"?raw:JSON.stringify(raw);
+          const bytes=typeof TextEncoder!=="undefined"?new TextEncoder().encode(str).length:str.length;
+          if(bytes>250*1024){
+            const err=new Error(`Supabase Broadcast payload too large: ${bytes} bytes`);
+            onlineDiagWarn("Supabase payload too large",{bytes}); cb?.(err); return;
+          }
+          Promise.resolve(channel.send({type:"broadcast",event:"bsc",payload:{raw:str}}))
+            .then(result=>{
+              if(result==="ok") cb?.(null);
+              else cb?.(new Error(`Supabase Broadcast: ${result||"unknown error"}`));
+            })
+            .catch(err=>cb?.(err));
+        },
+        end(_force){
+          closing=true; this.connected=false;
+          try{ channel?.untrack?.(); }catch(_e){}
+          try{ Promise.resolve(sb?.removeChannel?.(channel)).catch(()=>{}); }catch(_e){}
+        }
+      };
+      const failInitial=(message,err=null)=>{
+        if(settled) return;
+        settled=true; clearTimeout(timer); closing=true; adapter.connected=false;
+        try{ Promise.resolve(sb?.removeChannel?.(channel)).catch(()=>{}); }catch(_e){}
+        reject(makeOnlineDiagError("relay-unavailable",message,{cause:err||undefined}));
+      };
+      const timer=setTimeout(()=>failInitial(`${broker.name} не ответил за 12 секунд`),12000);
+
+      channel
+        .on("broadcast",{event:"bsc"},msg=>{
+          const raw=msg?.payload?.raw;
+          if(typeof raw!=="string") return;
+          handleMqttMessage(roomTopic,raw);
+        })
+        .on("presence",{event:"leave"},({key})=>{
+          if(closing||networkSession.closing) return;
+          if(!key || key!==networkSession.remoteId) return;
+          onlineDiagWarn("Supabase remote presence left",{roomCode:code,remoteId:key,role:networkSession.role});
+          if(networkSession.role==="guest") handleHostClosed(); else handleGuestClosed();
+        })
+        .subscribe(async (status,err)=>{
+          if(closing) return;
+          if(status==="SUBSCRIBED"){
+            adapter.connected=true;
+            networkSession.transport="mqtt"; // compatibility name; transport is Supabase Realtime in v320
+            networkSession.mqtt=adapter;
+            networkSession.mqttBroker=broker;
+            networkSession.mqttClientId=clientId;
+            networkSession.mqttTopicIn=topics.in;
+            networkSession.mqttTopicOut=topics.out;
+            networkSession.peerReady=true;
+            try{ await channel.track({clientId,role,gameVersion:ONLINE_GAME_VERSION,onlineAt:new Date().toISOString()}); }
+            catch(trackErr){ onlineDiagWarn("Supabase presence track failed",{message:trackErr?.message||String(trackErr)}); }
+            const wasConnectedBefore=subscribedOnce||networkSession.mqttWasConnected;
+            subscribedOnce=true; networkSession.mqttWasConnected=true;
+            if(!settled){
+              settled=true; clearTimeout(timer); resolve(adapter);
+            }else if(wasConnectedBefore && networkSession.remoteId){
+              networkSession.linkSuspended=true;
+              if(networkSession.role==="guest"){
+                sendRawNetworkEnvelope({type:"join_request",payload:{roomCode:networkSession.roomCode},senderRole:"guest",targetId:networkSession.remoteId});
+              }else{
+                sendRawNetworkEnvelope({type:"hello",payload:{role:"host",roomCode:networkSession.roomCode},senderRole:"host",targetId:networkSession.remoteId});
+                if(networkSession.pregameFinalized && state) setTimeout(()=>resendCanonicalState("supabase-reconnect"),60);
+              }
+            }
+            if(statusEl) statusEl.textContent=`${broker.name}: подключено`;
             return;
           }
-          networkSession.transport="mqtt";
-          networkSession.mqtt=client;
-          networkSession.mqttBroker=broker;
-          networkSession.mqttClientId=clientId;
-          networkSession.mqttTopicIn=topics.in;
-          networkSession.mqttTopicOut=topics.out;
-          networkSession.peerReady=true;
-          const wasConnectedBefore=networkSession.mqttWasConnected;
-          networkSession.mqttWasConnected=true;
-          if(!settled){
-            settled=true; clearTimeout(timer); resolve(client);
-          } else if(networkSession.remoteId){
-            // After a broker reconnect, re-run the application handshake rather than
-            // continuing gameplay on an unverified link. Guest re-announces JOIN so HOST
-            // can cancel its disconnect grace timer; HOST answers with HELLO/state.
-            if(networkSession.role==="guest"){
-              sendRawNetworkEnvelope({type:"join_request",payload:{roomCode:networkSession.roomCode},senderRole:"guest",targetId:networkSession.remoteId});
-            } else {
-              sendRawNetworkEnvelope({type:"hello",payload:{role:"host",roomCode:networkSession.roomCode},senderRole:"host",targetId:networkSession.remoteId});
-            }
+          if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"||status==="CLOSED"){
+            adapter.connected=false;
+            if(!settled){ failInitial(`${broker.name}: ${err?.message||status}`,err); return; }
+            networkSession.linkSuspended=true;
+            onlineDiagWarn("Supabase Realtime channel state",{status,message:err?.message||null,roomCode:code});
+            if(statusEl) statusEl.textContent=`${broker.name}: связь потеряна, переподключаемся…`;
+            if(gameMode==="online" && networkSession.connected) showNetworkWaiting("Связь с Supabase потеряна. Восстанавливаем соединение…");
           }
-          if(wasConnectedBefore && gameMode==="online") networkSession.linkSuspended=true;
         });
-      });
-      client.on("reconnect",()=>{
-        if(networkSession.closing) return;
-        networkSession.linkSuspended=true;
-        if(statusEl) statusEl.textContent=`${broker.name}: переподключение…`;
-      });
-      client.on("offline",()=>{
-        if(networkSession.closing) return;
-        networkSession.linkSuspended=true;
-        if(statusEl) statusEl.textContent=`${broker.name}: связь потеряна, переподключаемся…`;
-        if(gameMode==="online" && networkSession.connected) showNetworkWaiting("Связь с relay потеряна. Восстанавливаем соединение…");
-      });
-      client.on("error",err=>{
-        onlineDiagWarn("MQTT relay error",{broker:broker.name,message:err?.message||String(err)});
-        if(!settled){ settled=true; clearTimeout(timer); try{client.end(true);}catch(_e){} reject(makeOnlineDiagError("relay-unavailable",`${broker.name}: ${err?.message||err}`)); }
-      });
     });
   }
   function waitForMqttHost(status,code){
@@ -16385,7 +16575,7 @@ ${template.desc}`:""}`;
       gameMode="online"; setupSideKey="player"; pendingSetup={player:null,enemy:null}; state=null; localViewSide="player";
       $("#networkRoomCode").textContent=code;
       if(status) status.textContent=`${networkSession.mqttBroker.name} подключён → комната ${code} готова → ждём Игрока 2`;
-      onlineDiagLog("HOST relay room ready",{roomCode:code,broker:networkSession.mqttBroker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
+      onlineDiagLog("HOST Supabase room ready",{roomCode:code,broker:networkSession.mqttBroker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
       return true;
     }catch(err){
       resetNetworkSession();
@@ -16480,14 +16670,14 @@ ${template.desc}`:""}`;
     $("#networkJoinCode").value=code;
     if(code.length!==6){ if(status) status.textContent="Введите полный шестизначный код комнаты."; return false; }
     const broker=mqttBrokerByKey(code[0]);
-    if(!broker){ if(status) status.textContent="Этот код комнаты создан старой версией. HOST должен создать новую комнату в v295."; return false; }
+    if(!broker){ if(status) status.textContent="Этот код комнаты создан старой версией. HOST должен создать новую комнату в v320."; return false; }
     if(btn) btn.disabled=true;
     try{
       resetNetworkSession();
       Object.assign(networkSession,{role:"guest",localSide:"enemy",roomCode:code,closing:false,roomClosed:false});
       resetDiagStatus(status,`connecting to ${broker.name}`);
       await connectMqttTransport(broker,"guest",code,status);
-      onlineDiagLog("Guest relay ready",{roomCode:code,broker:broker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
+      onlineDiagLog("Guest Supabase relay ready",{roomCode:code,broker:broker.name,clientId:networkSession.mqttClientId,topic:networkSession.mqttTopicIn});
       await waitForMqttHost(status,code);
       gameMode="online"; setupSideKey="enemy"; pendingSetup={player:null,enemy:null}; state=null; localViewSide="enemy";
       appendDiagStatus(status,"ONLINE DUEL ready");
