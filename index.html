@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="mobile-web-app-capable" content="yes" />
-<title>BLEACH: Soul Clash v297 — Turn Indicator</title>
+<title>BLEACH: Soul Clash v304 — Mobile Scale Cleanup</title>
 <style>
   :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -8150,6 +8150,242 @@ html.phone-device.phone-landscape #playerLeaderWrap{
 }
 </style>
 
+
+<style id="v303-online-vfx-pass-rematch">
+/* ===== V303: SOUL SUICIDE confirmation + persistent-room rematch ===== */
+.soul-suicide-modal{width:min(590px,92vw)!important;text-align:center!important;padding:30px 32px 28px!important}
+.soul-suicide-kicker{font-size:10px;font-weight:1000;letter-spacing:.20em;color:#8d1919;text-transform:uppercase;margin-bottom:8px}
+.soul-suicide-modal h1{margin:0!important;font-size:42px!important;line-height:1!important}
+.soul-suicide-modal p{margin:15px auto 22px!important;max-width:430px!important;color:#333!important;font-size:16px!important;line-height:1.35!important;font-weight:800!important}
+.soul-suicide-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.soul-suicide-actions button{min-height:48px!important;font-size:13px!important;font-weight:1000!important}
+#soulSuicideNo{border:0!important;background:#d8d4ca!important;color:#111!important;box-shadow:inset 0 -4px 0 #777!important}
+#soulSuicideYes{background:#111!important;color:#fff!important;box-shadow:inset 0 -4px 0 #b82718!important}
+.online-rematch-status{margin:0 auto 13px;max-width:560px;padding:9px 11px;border-left:4px solid var(--p);background:rgba(0,0,0,.08);color:#333;font-size:11px;font-weight:900;line-height:1.3;text-align:center}
+#againBtn:disabled{opacity:.62!important;cursor:wait!important}
+html.phone-device.phone-landscape .soul-suicide-modal{width:min(620px,calc(var(--phone-stage-width) - 24px))!important;padding:18px 22px!important}
+html.phone-device.phone-landscape .soul-suicide-modal h1{font-size:29px!important}
+html.phone-device.phone-landscape .soul-suicide-modal p{font-size:12px!important;line-height:1.3!important;margin:10px auto 14px!important}
+html.phone-device.phone-landscape .soul-suicide-actions button{min-height:42px!important;font-size:11px!important}
+html.phone-device.phone-landscape .online-rematch-status{font-size:10px!important;margin-bottom:9px!important;padding:7px 9px!important}
+</style>
+
+
+<style id="v304-mobile-scale-cleanup">
+/* ===== V304: coherent PHONE LANDSCAPE scale + remove obsolete mobile plaques ===== */
+html.phone-device.phone-landscape,
+html.phone-device.phone-landscape body{
+  -webkit-text-size-adjust:100%!important;
+  text-size-adjust:100%!important;
+}
+
+/* One restrained typography system for every phone-landscape overlay. */
+html.phone-device.phone-landscape .modal,
+html.phone-device.phone-landscape .modal p,
+html.phone-device.phone-landscape .mode-sub,
+html.phone-device.phone-landscape .mode-card span,
+html.phone-device.phone-landscape .network-status,
+html.phone-device.phone-landscape .deck-builder-sub,
+html.phone-device.phone-landscape .mulligan-instruction,
+html.phone-device.phone-landscape #choiceSub,
+html.phone-device.phone-landscape .choice-text-btn,
+html.phone-device.phone-landscape .faction span,
+html.phone-device.phone-landscape .soul-suicide-modal p,
+html.phone-device.phone-landscape .online-rematch-status{
+  letter-spacing:0!important;
+  word-spacing:0!important;
+  font-kerning:normal!important;
+}
+html.phone-device.phone-landscape .overlay{padding:7px!important}
+html.phone-device.phone-landscape .modal,
+html.phone-device.phone-landscape .mode-modal,
+html.phone-device.phone-landscape .faction-modal,
+html.phone-device.phone-landscape .network-modal,
+html.phone-device.phone-landscape .mulligan-modal,
+html.phone-device.phone-landscape .choice-modal,
+html.phone-device.phone-landscape .soul-suicide-modal{
+  width:min(760px,calc(var(--phone-stage-width) - 18px))!important;
+  max-width:calc(var(--phone-stage-width) - 18px)!important;
+  max-height:calc(var(--app-height,100dvh) - 14px)!important;
+  padding:12px 14px!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  box-shadow:7px 7px 0 rgba(0,0,0,.82)!important;
+}
+html.phone-device.phone-landscape .modal h1{font-size:24px!important;line-height:.96!important;letter-spacing:.01em!important}
+html.phone-device.phone-landscape .modal p{font-size:9px!important;line-height:1.22!important}
+
+/* Portrait instruction: still prominent, no giant poster typography. */
+html.phone-device.phone-portrait .rotate-device-card{width:min(360px,88vw)!important;padding:22px 18px 20px!important}
+html.phone-device.phone-portrait .rotate-device-title{font-size:28px!important;line-height:.98!important;letter-spacing:.01em!important}
+html.phone-device.phone-portrait .rotate-device-kicker{font-size:9px!important;letter-spacing:.12em!important}
+html.phone-device.phone-portrait .rotate-device-card p{font-size:11px!important;line-height:1.35!important;letter-spacing:0!important;max-width:290px!important}
+html.phone-device.phone-portrait .rotate-device-symbol{width:66px!important;height:42px!important}
+
+/* CHOOSE YOUR BATTLE: obsolete giant plaque cards are removed on phone. */
+html.phone-device.phone-landscape .mode-modal{width:min(680px,calc(var(--phone-stage-width) - 22px))!important;padding:13px 15px 15px!important}
+.phone-device.phone-landscape .mode-modal h1{font-size:25px!important;margin:0 0 5px!important}
+.phone-device.phone-landscape .mode-sub{font-size:9px!important;line-height:1.2!important;margin:0 auto 9px!important;max-width:590px!important;color:#555!important}
+.phone-device.phone-landscape .mode-grid{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:6px!important;
+}
+.phone-device.phone-landscape .mode-card{
+  min-height:50px!important;
+  height:auto!important;
+  padding:8px 11px!important;
+  display:grid!important;
+  grid-template-columns:138px minmax(0,1fr)!important;
+  align-items:center!important;
+  text-align:left!important;
+  border:0!important;
+  border-left:5px solid #777!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:#ddd8ce!important;
+  color:#111!important;
+  box-shadow:inset 0 -3px 0 #777!important;
+}
+.phone-device.phone-landscape .mode-card:hover,.phone-device.phone-landscape .mode-card:focus-visible{transform:none!important;background:#d0cbc1!important}
+.phone-device.phone-landscape .mode-card b{font-size:16px!important;line-height:1!important;margin:0!important;letter-spacing:.02em!important}
+.phone-device.phone-landscape .mode-card span{font-size:9px!important;line-height:1.18!important;color:#535353!important;margin:0!important}
+.phone-device.phone-landscape #modeOnlineBtn.mode-card{background:#111!important;color:#f5f1e9!important;border-left-color:var(--p)!important;box-shadow:inset 0 -3px 0 var(--p)!important}
+.phone-device.phone-landscape #modeOnlineBtn.mode-card span{color:#bbb!important}
+
+/* Faction screen stays image-based, but no oversized tiles. */
+html.phone-device.phone-landscape .faction-modal{width:min(760px,calc(var(--phone-stage-width) - 18px))!important}
+.phone-device.phone-landscape #startOverlay .setup-title-line>h1{font-size:23px!important}
+.phone-device.phone-landscape #startOverlay .setup-player-label{font-size:9px!important;letter-spacing:.03em!important}
+.phone-device.phone-landscape .faction-modal .factions{gap:6px!important;margin:8px 0!important}
+.phone-device.phone-landscape .faction-modal .faction{min-height:76px!important}
+.phone-device.phone-landscape .faction-modal .faction-copy{padding:6px!important}
+.phone-device.phone-landscape .faction-modal .faction b{font-size:12px!important;line-height:1!important}
+.phone-device.phone-landscape .faction-modal .faction span{font-size:7.5px!important;line-height:1.15!important}
+.phone-device.phone-landscape #startOverlay .network-actions button{min-height:36px!important;height:36px!important;font-size:9px!important}
+
+/* ONLINE panels use the same current flat button language. */
+html.phone-device.phone-landscape .network-choice-modal,
+html.phone-device.phone-landscape .network-role-modal{width:min(540px,calc(var(--phone-stage-width) - 24px))!important;padding:13px 15px!important}
+.phone-device.phone-landscape #networkOverlay .network-choice-grid{gap:7px!important;margin:10px 0 7px!important}
+.phone-device.phone-landscape #networkOverlay .network-choice-grid .start-btn,
+.phone-device.phone-landscape .network-role-actions .start-btn{min-height:38px!important;height:38px!important;font-size:10px!important}
+.phone-device.phone-landscape .network-flow-back{min-height:36px!important;height:36px!important;font-size:9px!important;margin-top:6px!important}
+.phone-device.phone-landscape .network-status{font-size:9px!important;line-height:1.2!important;min-height:34px!important;padding:6px 8px!important;margin:7px 0!important}
+.phone-device.phone-landscape .network-room-code{font-size:28px!important;margin:6px 0!important}
+.phone-device.phone-landscape .network-field label{font-size:8px!important;letter-spacing:.04em!important}
+.phone-device.phone-landscape .network-field input{min-height:36px!important;height:36px!important;font-size:17px!important}
+
+/* SOUL SUICIDE confirmation: current flat modal, not an old decorative plaque. */
+html.phone-device.phone-landscape .soul-suicide-modal{width:min(480px,calc(var(--phone-stage-width) - 36px))!important;padding:15px 17px!important;border:2px solid #111!important;background:#ece8dd!important}
+.phone-device.phone-landscape .soul-suicide-kicker{font-size:8px!important;letter-spacing:.08em!important;margin-bottom:5px!important}
+.phone-device.phone-landscape .soul-suicide-modal h1{font-size:25px!important}
+.phone-device.phone-landscape .soul-suicide-modal p{font-size:10px!important;line-height:1.25!important;margin:8px auto 12px!important}
+.phone-device.phone-landscape .soul-suicide-actions{gap:7px!important}
+.phone-device.phone-landscape .soul-suicide-actions button{min-height:36px!important;height:36px!important;font-size:9px!important}
+
+/* ASSEMBLE: smaller cards, less copy, more deck on screen. */
+html.phone-device.phone-landscape #deckBuilderOverlay{padding:6px!important}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-modal{
+  width:min(790px,calc(var(--phone-stage-width) - 12px))!important;
+  height:calc(var(--app-height,100dvh) - 12px)!important;
+  padding:9px 11px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-title{font-size:21px!important;line-height:1!important;margin:0!important}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-sub{font-size:8.5px!important;line-height:1.18!important;margin:5px 0 7px!important;max-height:42px!important;overflow:auto!important}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-scroll-content{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;padding:2px!important;align-content:start!important}
+@media (min-width:820px){html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 78px!important;gap:5px!important;padding-top:5px!important}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions>button{height:36px!important;min-height:36px!important;padding:0 6px!important;font-size:8.5px!important}
+.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-counter{height:36px!important;min-height:36px!important;max-height:36px!important;font-size:16px!important;padding:2px 4px!important}
+
+/* CHOOSE YOUR SOUL: no giant cards. */
+html.phone-device.phone-landscape #mulliganOverlay{padding:6px!important}
+.phone-device.phone-landscape .mulligan-modal{width:min(790px,calc(var(--phone-stage-width) - 12px))!important;height:calc(var(--app-height,100dvh) - 12px)!important;padding:9px 11px!important}
+.phone-device.phone-landscape .mulligan-title{font-size:21px!important}
+.phone-device.phone-landscape .mulligan-count{font-size:16px!important}
+.phone-device.phone-landscape .mulligan-instruction{font-size:8.5px!important;line-height:1.18!important;margin:2px auto 5px!important;max-width:94%!important;text-align:center!important}
+.phone-device.phone-landscape .mulligan-grid{gap:6px!important;padding:4px 2px 6px!important;align-items:center!important;overflow-x:auto!important}
+.phone-device.phone-landscape .mulligan-card-wrap{flex:0 0 78px!important;width:78px!important;min-width:78px!important;max-width:78px!important}
+.phone-device.phone-landscape .mulligan-grid .card{width:78px!important;min-width:78px!important;max-width:78px!important;height:113px!important;max-height:113px!important}
+.phone-device.phone-landscape .mulligan-actions .start-btn{min-height:34px!important;height:34px!important;font-size:9px!important}
+
+/* Target/choice cards follow the same small-card scale. */
+html.phone-device.phone-landscape .choice-modal{width:min(790px,calc(var(--phone-stage-width) - 12px))!important;height:calc(var(--app-height,100dvh) - 12px)!important;padding:9px 11px!important}
+.phone-device.phone-landscape #choiceOverlay .choice-heading h1{font-size:21px!important}
+.phone-device.phone-landscape #choiceOverlay #choiceSub{font-size:8.5px!important;line-height:1.18!important;padding:2px 28px 3px!important}
+.phone-device.phone-landscape #choiceOverlay .choice-grid{padding:5px 30px!important;gap:6px!important;align-content:flex-start!important}
+.phone-device.phone-landscape #choiceOverlay .choice-card-btn{flex-basis:82px!important;width:82px!important;padding:3px!important}
+.phone-device.phone-landscape #choiceOverlay .choice-text-btn{flex-basis:180px!important;min-height:76px!important;font-size:9px!important;padding:7px!important}
+.phone-device.phone-landscape #choiceOverlay .choice-cancel{font-size:8px!important;padding:5px 9px!important}
+
+/* GAMEPLAY: one deterministic scale instead of three unrelated ones. */
+html.phone-device.phone-landscape .app{grid-template-columns:116px minmax(0,1fr) 82px!important}
+html.phone-device.phone-landscape .side{width:116px!important;padding:4px!important;gap:3px!important}
+html.phone-device.phone-landscape #enemyLeader.leader-art-ui,
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui{padding:3px!important}
+html.phone-device.phone-landscape .leader-ui-shell{gap:2px!important}
+html.phone-device.phone-landscape .leader-ui-epithet{font-size:5.5px!important;padding:1px 3px!important}
+html.phone-device.phone-landscape .leader-ui-name{min-height:18px!important;padding:2px 3px!important;font-size:9.5px!important;line-height:1!important}
+html.phone-device.phone-landscape #enemyLeader.leader-art-ui .leader-ui-art{height:68px!important}
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui .leader-ui-art{height:72px!important}
+html.phone-device.phone-landscape .leader-ui-art .leader-score{width:24px!important;height:24px!important;font-size:13px!important;right:2px!important;bottom:2px!important}
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui .leader-ui-ability{padding:3px!important}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-title{font-size:6.5px!important;margin:0 0 1px!important;padding:0 0 1px!important}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{max-height:24px!important;font-size:5.5px!important;line-height:1.12!important}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-use{min-height:19px!important;height:19px!important;margin-top:2px!important;font-size:6px!important;padding:1px!important}
+html.phone-device.phone-landscape #playerLeaderWrap{margin-top:auto!important;margin-bottom:3px!important;transform:none!important}
+
+html.phone-device.phone-landscape .board-shell{grid-template-rows:27px minmax(0,1fr) 84px!important}
+html.phone-device.phone-landscape .topbar{min-height:27px!important;height:27px!important;padding:0 6px!important;font-size:7px!important}
+html.phone-device.phone-landscape .topbar #roundLabel{font-size:8px!important;letter-spacing:.04em!important}
+html.phone-device.phone-landscape .turn{font-size:10px!important}
+html.phone-device.phone-landscape .tiny-btn{padding:3px 5px!important;font-size:6px!important}
+html.phone-device.phone-landscape .board-shell:before{inset:27px 0 84px!important}
+html.phone-device.phone-landscape .board{padding:2px!important;grid-template-rows:repeat(3,minmax(32px,1fr)) 2px repeat(3,minmax(32px,1fr))!important}
+html.phone-device.phone-landscape .board .row{grid-template-columns:43px minmax(0,1fr) 25px!important}
+html.phone-device.phone-landscape .row-label strong{font-size:12px!important}
+html.phone-device.phone-landscape .row-label .pressure-tag,
+html.phone-device.phone-landscape .row-label .hogyoku-tag,
+html.phone-device.phone-landscape .row-label .row-effect-tag{font-size:4.8px!important;line-height:1!important;margin-top:1px!important}
+html.phone-device.phone-landscape .row-cards{gap:2px!important;padding:1px!important}
+html.phone-device.phone-landscape .row-cards .card{flex:0 0 33px!important;width:33px!important;min-width:33px!important;max-width:33px!important;height:44px!important;max-height:calc(100% - 1px)!important}
+html.phone-device.phone-landscape .row-cards .card .power{width:14px!important;height:14px!important;font-size:8px!important}
+html.phone-device.phone-landscape .row-cards .card .name{font-size:4px!important}
+html.phone-device.phone-landscape .row-score{font-size:13px!important}
+html.phone-device.phone-landscape .hand-wrap{height:84px!important;min-height:84px!important;max-height:84px!important;grid-template-columns:minmax(0,1fr) 48px!important}
+html.phone-device.phone-landscape .hand{gap:2px!important;padding:3px!important}
+html.phone-device.phone-landscape .hand .card,
+html.phone-device.phone-landscape .hand.hand-expanded .card{flex:0 0 49px!important;width:49px!important;min-width:49px!important;max-width:49px!important;height:71px!important;max-height:71px!important}
+html.phone-device.phone-landscape .hand .card .power{width:18px!important;height:18px!important;font-size:10px!important}
+html.phone-device.phone-landscape .hand .card .name{font-size:5px!important;padding:6px 1px 2px!important}
+html.phone-device.phone-landscape .pass-btn{width:38px!important;height:38px!important;font-size:7.5px!important}
+
+html.phone-device.phone-landscape .rightbar{width:82px!important;grid-template-rows:48px minmax(0,1fr) 48px!important;padding:3px!important;gap:2px!important}
+html.phone-device.phone-landscape .pile-zone{height:48px!important;min-height:48px!important;max-height:48px!important}
+html.phone-device.phone-landscape .rightbar .detail{padding:3px!important}
+html.phone-device.phone-landscape .detail-preview{width:64px!important;max-width:64px!important;margin:0 auto 2px!important}
+html.phone-device.phone-landscape .detail-preview .card{width:64px!important;max-width:64px!important}
+html.phone-device.phone-landscape .ability-block{padding:3px!important}
+html.phone-device.phone-landscape .ability-block .ability-title{font-size:5.5px!important}
+html.phone-device.phone-landscape .ability-block .ability-text{font-size:6.5px!important;line-height:1.14!important}
+
+/* Turn labels remain detached from leader flow, but fit the smaller combat rail. */
+html.phone-device.phone-landscape .round-outcome.round-series-score{position:relative!important;flex:0 0 31px!important;width:100%!important;height:31px!important;min-height:31px!important;max-height:31px!important;margin:2px 0!important;display:grid!important;place-items:center!important;overflow:visible!important;gap:0!important}
+html.phone-device.phone-landscape .round-series-score-value{font-size:27px!important;line-height:31px!important}
+html.phone-device.phone-landscape .round-turn-indicator{font-size:10.5px!important;letter-spacing:.025em!important;max-width:114px!important}
+html.phone-device.phone-landscape .round-turn-indicator.opponent{transform:translate(-50%,-43px)!important}
+html.phone-device.phone-landscape .round-turn-indicator.local{transform:translate(-50%,34px)!important}
+html.phone-device.phone-landscape .round-turn-indicator.opponent.active{transform:translate(-50%,-43px) scale(1.02)!important}
+html.phone-device.phone-landscape .round-turn-indicator.local.active{transform:translate(-50%,34px) scale(1.02)!important}
+</style>
+
 </head>
 <body>
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -8303,10 +8539,23 @@ html.phone-device.phone-landscape #playerLeaderWrap{
   </div>
 </div>
 
+<div id="soulSuicideOverlay" class="overlay hidden">
+  <div class="modal soul-suicide-modal" role="dialog" aria-modal="true" aria-labelledby="soulSuicideTitle">
+    <div class="soul-suicide-kicker">SOUL SUICIDE</div>
+    <h1 id="soulSuicideTitle">ВЫ УВЕРЕНЫ?</h1>
+    <p>Это действие приведёт к поражению в раунде.</p>
+    <div class="soul-suicide-actions">
+      <button id="soulSuicideNo" type="button" class="deck-builder-back">НЕТ</button>
+      <button id="soulSuicideYes" type="button" class="start-btn">ДА</button>
+    </div>
+  </div>
+</div>
+
 <div id="resultOverlay" class="overlay hidden">
   <div class="modal">
     <div id="resultTitle" class="result-title">ПОБЕДА</div>
     <div id="resultSub" class="result-sub"></div>
+    <div id="onlineRematchStatus" class="online-rematch-status" hidden></div>
     <button id="againBtn" class="start-btn">СЫГРАТЬ ЕЩЁ</button>
   </div>
 </div>
@@ -8637,8 +8886,8 @@ html.phone-device.phone-landscape #playerLeaderWrap{
   let networkApplyingState=false;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="295";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v295-";
+  const ONLINE_GAME_VERSION="304";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v304-";
   // V295: ONLINE DUEL uses a broker-relayed WSS transport instead of WebRTC.
   // E/H is encoded as the first room-code character so Guest always selects
   // the exact same public broker that HOST successfully connected to.
@@ -8680,6 +8929,7 @@ html.phone-device.phone-landscape #playerLeaderWrap{
     mqttSeq:0, mqttSeen:new Set(), mqttJoinResolve:null, mqttJoinReject:null, mqttWasConnected:false,
     localSetup:null, peerSetup:null, roomClosed:false, lastError:null,
     localPreparedSide:null, peerPreparedSide:null, localMulliganReady:false, peerMulliganReady:false, pregameFinalized:false,
+    localRematchReady:false, peerRematchReady:false, rematchStarting:false,
     revision:0, awaitingCanonical:false, lastAcceptedReason:null
   };
 
@@ -10218,7 +10468,31 @@ html.phone-device.phone-landscape #playerLeaderWrap{
       }
       return;
     }
+    if(ev.type==="vfx"){
+      enqueueNetworkVfx(ev.payload||{});
+      return;
+    }
+    if(ev.type==="rematch_ready"){
+      networkSession.peerRematchReady=true;
+      updateOnlineRematchUi();
+      if(networkSession.role==="host"){
+        await sendNetworkEvent("rematch_status",{hostReady:networkSession.localRematchReady,guestReady:true});
+        await maybeStartOnlineRematch();
+      }
+      return;
+    }
+    if(ev.type==="rematch_status"){
+      if(networkSession.role!=="guest") return;
+      networkSession.peerRematchReady=!!ev.payload?.hostReady;
+      updateOnlineRematchUi();
+      return;
+    }
+    if(ev.type==="rematch_start"){
+      await beginOnlineRematchInSameRoom();
+      return;
+    }
     if(ev.type==="state" && ev.payload?.state){
+      await waitForNetworkVfx();
       // Only HOST is allowed to publish canonical snapshots in protocol v2.
       if(ev.senderRole!=="host" || networkSession.role!=="guest") return;
       const revision=Number(ev.payload.revision)||0;
@@ -10231,13 +10505,14 @@ html.phone-device.phone-landscape #playerLeaderWrap{
         networkSession.lastAcceptedReason=ev.payload.reason||"state";
         hideHandoff();
         $("#mulliganOverlay")?.classList.add("hidden");
-        render();
+        if(state.gameOver) finishMatch(getMatchOutcome()); else render();
       } finally { networkApplyingState=false; }
       await processOnlinePhase();
       return;
     }
     if(ev.type==="state_proposal" && ev.payload?.state){
       if(networkSession.role!=="host" || ev.senderRole!=="guest") return;
+      await waitForNetworkVfx();
       const baseRevision=Number(ev.payload.baseRevision)||0;
       if(baseRevision!==networkSession.revision || !guestProposalAllowed(ev.payload.state)){
         await resendCanonicalState(baseRevision!==networkSession.revision?"resync-stale":"resync-rejected");
@@ -10248,7 +10523,7 @@ html.phone-device.phone-landscape #playerLeaderWrap{
         applyCanonicalSnapshot(ev.payload.state);
         hideHandoff();
         $("#mulliganOverlay")?.classList.add("hidden");
-        render();
+        if(state.gameOver) finishMatch(getMatchOutcome()); else render();
       } finally { networkApplyingState=false; }
       // HOST promotes exactly one accepted guest proposal to the next canonical revision.
       await broadcastCanonicalState(`accepted:${ev.payload.reason||"guest-action"}`,true);
@@ -14014,6 +14289,7 @@ html.phone-device.phone-landscape #playerLeaderWrap{
     const summary=[`Победы ${pWins}:${eWins}`]; if(draws) summary.push(`ничьи ${draws}`);
     $("#resultSub").textContent=`${summary.join(" · ")}. ${FACTIONS[state.player.faction].name} против ${FACTIONS[state.enemy.faction].name}.`;
     $("#resultOverlay").classList.remove("hidden");
+    updateOnlineRematchUi();
     if(gameMode==="online" && !networkApplyingState) sendNetworkState("match-end");
   }
 
@@ -14322,6 +14598,7 @@ ${template.desc}`:""}`;
     if(gameMode!=="online"||networkSession.role!=="host"||!networkSession.connected||networkSession.pregameFinalized) return false;
     if(!networkSession.localMulliganReady||!networkSession.peerMulliganReady||!networkSession.localPreparedSide||!networkSession.peerPreparedSide) return false;
     networkSession.pregameFinalized=true;
+    networkSession.localRematchReady=false; networkSession.peerRematchReady=false; networkSession.rematchStarting=false;
     const playerSide=restorePreparedSideOwners(networkSession.localPreparedSide,"player");
     const enemySide=restorePreparedSideOwners(networkSession.peerPreparedSide,"enemy");
     state=buildDuelPregameState(playerSide,enemySide,null);
@@ -14348,7 +14625,7 @@ ${template.desc}`:""}`;
   }
   function resetNetworkSession(){
     destroyNetworkPeer(false);
-    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null});
+    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null});
   }
   function mqttAvailable(){ return !!globalThis.mqtt?.connect; }
   function mqttBrokerByKey(key){ return ONLINE_MQTT_BROKERS.find(b=>b.key===String(key||"").toUpperCase())||null; }
@@ -14683,7 +14960,7 @@ ${template.desc}`:""}`;
     if(networkSession.role==='host') await closeHostedRoom();
     resetNetworkSession(); state=null; gameMode="ai"; setupSideKey="player"; localViewSide="player"; pendingSetup={player:null,enemy:null}; duelPreparedSides={player:null,enemy:null}; duelInitiativeChoice={player:null,enemy:null}; selectedFaction="living";
     hideHandoff(); resetInterfaceForFactionPicker();
-    ["#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#resultOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+    ["#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#soulSuicideOverlay","#resultOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
     if($("#networkRoomCode")) $("#networkRoomCode").textContent="------";
     if($("#networkCreateStatus")) $("#networkCreateStatus").textContent="Создайте комнату. Игра выдаст шестизначный код для Игрока 2.";
     if($("#networkJoinStatus")) $("#networkJoinStatus").textContent="Введите шестизначный код, который показан у HOST.";
@@ -14694,12 +14971,230 @@ ${template.desc}`:""}`;
     if(networkSession.role==="host") await closeHostedRoom();
     resetNetworkSession(); state=null; gameMode="online"; setupSideKey="player"; localViewSide="player"; pendingSetup={player:null,enemy:null}; selectedFaction="living";
     hideHandoff();
-    ["#networkCreateOverlay","#networkJoinOverlay","#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+    ["#networkCreateOverlay","#networkJoinOverlay","#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#soulSuicideOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
     if($("#networkRoomCode")) $("#networkRoomCode").textContent="------";
     if($("#networkCreateStatus")) $("#networkCreateStatus").textContent="Создайте комнату. Игра выдаст шестизначный код для Игрока 2.";
     if($("#networkJoinStatus")) $("#networkJoinStatus").textContent="Введите шестизначный код, который показан у HOST.";
     if($("#networkJoinCode")) $("#networkJoinCode").value="";
     $("#networkOverlay")?.classList.remove("hidden");
+  }
+
+  // ===== V303: shared ONLINE visual events =====
+  let networkVfxReplayDepth=0;
+  let networkVfxChain=Promise.resolve();
+  function shouldBroadcastNetworkVfx(){
+    return gameMode==="online" && networkSession.connected && !networkSession.roomClosed && !networkApplyingState && networkVfxReplayDepth===0;
+  }
+  function safeNetworkClone(value){
+    try{return JSON.parse(JSON.stringify(value));}catch(_e){return null;}
+  }
+  function broadcastNetworkVfx(kind,payload={}){
+    if(!shouldBroadcastNetworkVfx()) return false;
+    return sendNetworkEvent("vfx",{kind,...payload});
+  }
+  function inferNetworkRowTarget(rect){
+    if(!rect) return null;
+    const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+    let best=null,bestD=Infinity;
+    document.querySelectorAll('.row[data-side][data-row]').forEach(el=>{
+      const r=el.getBoundingClientRect();
+      if(!r.width||!r.height) return;
+      const ex=Math.max(r.left,Math.min(cx,r.right));
+      const ey=Math.max(r.top,Math.min(cy,r.bottom));
+      const d=(cx-ex)*(cx-ex)+(cy-ey)*(cy-ey);
+      if(d<bestD){bestD=d;best={sideKey:el.dataset.side,row:el.dataset.row};}
+    });
+    return best;
+  }
+  function networkCardStartRect(actor,card){
+    const view=activeViewSide();
+    if(actor===view) return previewFlightStartRect(card);
+    const enemyArt=document.querySelector('#enemyLeader .leader-ui-art')||document.getElementById('enemyLeader');
+    const r=visibleRect(enemyArt);
+    if(r){
+      const width=Math.max(42,Math.min(112,r.width*.56));
+      const height=width*1.5;
+      return {left:r.left+(r.width-width)/2,top:r.top+(r.height-height)/2,width,height};
+    }
+    return previewFlightStartRect(card);
+  }
+  async function replayNetworkCardFlight(payload){
+    const card=payload.card; if(!card) return;
+    const target=measureCardLandingRect(payload.targetSide,payload.row,card);
+    const start=networkCardStartRect(payload.actor,card);
+    if(!target||!start) return;
+    const flyer=renderCard(card,false,payload.targetSide,false,false);
+    flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
+    flyer.classList.add('card-flight','compact-card');
+    flyer.querySelector('.card-info-panel')?.remove();
+    document.body.appendChild(flyer); document.body.classList.add('card-flight-active');
+    try{
+      const arc=Math.min(118,Math.max(48,Math.abs(target.left-start.left)*.08+Math.abs(target.top-start.top)*.055));
+      await runPhysicalCardFlight(flyer,start,target,{duration:CARD_FLIGHT_MS,arc,fadeFrom:1});
+      spawnLandingImpact(card.uid);
+    } finally { flyer.remove(); document.body.classList.remove('card-flight-active'); }
+  }
+
+  const v303Original={
+    animateCardToField,
+    animateCardFromDeckToField,
+    v242AnimateEffectCardTableCast,
+    v242AnimateReiatsuPressure,
+    animateLeaderRowEffect,
+    v242AnimateHogyoku,
+    v242AnimateCeroHit,
+    v242AnimateHollowification,
+    v242AnimateVacuumIce,
+    v242AnimateKamikake,
+    v254AnimateGetsugaTensho,
+    animateLeaderActivation,
+    animateReturnSmoke,
+    animateHellGatesTargets,
+    animateBladeCutTargets,
+    v250AnimateTransformationFlight,
+    v261AnimateAizenHogyokuMetamorphosis
+  };
+
+  animateCardToField=async function(card,row,targetSide){
+    broadcastNetworkVfx("card-flight",{actor:card?._ownerKey||localControlledSide(),targetSide,row,card:safeNetworkClone(card)});
+    return v303Original.animateCardToField(card,row,targetSide);
+  };
+  animateCardFromDeckToField=async function(card,row,targetSide,ownerKey){
+    broadcastNetworkVfx("deck-flight",{ownerKey,targetSide,row,card:safeNetworkClone(card)});
+    return v303Original.animateCardFromDeckToField(card,row,targetSide,ownerKey);
+  };
+  v242AnimateEffectCardTableCast=async function(card,targetRect,effectKind='generic'){
+    const target=inferNetworkRowTarget(targetRect);
+    broadcastNetworkVfx("effect-cast",{effectKind,target,card:safeNetworkClone(card)});
+    return v303Original.v242AnimateEffectCardTableCast(card,targetRect,effectKind);
+  };
+  v242AnimateReiatsuPressure=async function(sideKey,row){
+    broadcastNetworkVfx("reiatsu-pressure",{sideKey,row});
+    return v303Original.v242AnimateReiatsuPressure(sideKey,row);
+  };
+  animateLeaderRowEffect=async function(sideKey,row,effectKind="generic"){
+    broadcastNetworkVfx("leader-row",{sideKey,row,effectKind});
+    return v303Original.animateLeaderRowEffect(sideKey,row,effectKind);
+  };
+  v242AnimateHogyoku=async function(sideKey,row,charge=1){broadcastNetworkVfx("hogyoku",{sideKey,row,charge});return v303Original.v242AnimateHogyoku(sideKey,row,charge);};
+  v242AnimateCeroHit=async function(target){broadcastNetworkVfx("cero",{sideKey:target?.sideKey,row:target?.row,uid:target?.card?.uid});return v303Original.v242AnimateCeroHit(target);};
+  v242AnimateHollowification=async function(sideKey){broadcastNetworkVfx("hollowification",{sideKey});return v303Original.v242AnimateHollowification(sideKey);};
+  v242AnimateVacuumIce=async function(sideKey,row){broadcastNetworkVfx("vacuum-ice",{sideKey,row});return v303Original.v242AnimateVacuumIce(sideKey,row);};
+  v242AnimateKamikake=async function(sideKey,row,uid){broadcastNetworkVfx("kamikake",{sideKey,row,uid});return v303Original.v242AnimateKamikake(sideKey,row,uid);};
+  v254AnimateGetsugaTensho=async function(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid,opts={}){
+    broadcastNetworkVfx("getsuga",{sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid});
+    return v303Original.v254AnimateGetsugaTensho(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid,opts);
+  };
+  animateLeaderActivation=async function(sideKey,faction){broadcastNetworkVfx("leader-activation",{sideKey,faction});return v303Original.animateLeaderActivation(sideKey,faction);};
+  animateReturnSmoke=async function(sideKey,row,card){broadcastNetworkVfx("return-smoke",{sideKey,row,card:safeNetworkClone(card)});return v303Original.animateReturnSmoke(sideKey,row,card);};
+  animateHellGatesTargets=async function(entries){
+    broadcastNetworkVfx("hell-gates",{entries:(entries||[]).map(e=>({sideKey:e.sideKey,row:e.row,card:safeNetworkClone(e.card)}))});
+    return v303Original.animateHellGatesTargets(entries);
+  };
+  animateBladeCutTargets=async function(entries,opts={}){
+    broadcastNetworkVfx("blade-cut",{entries:(entries||[]).map(e=>({sideKey:e.sideKey,row:e.row,card:safeNetworkClone(e.card)})),opts:{duration:opts.duration,startY:opts.startY,endY:opts.endY,reverseDiagonal:opts.reverseDiagonal}});
+    return v303Original.animateBladeCutTargets(entries,opts);
+  };
+  v250AnimateTransformationFlight=async function(cardTemplate,sideKey,row,targetUid){
+    broadcastNetworkVfx("transform-flight",{card:safeNetworkClone(cardTemplate),sideKey,row,targetUid});
+    return v303Original.v250AnimateTransformationFlight(cardTemplate,sideKey,row,targetUid);
+  };
+  v261AnimateAizenHogyokuMetamorphosis=async function(sideKey,row,uid){
+    broadcastNetworkVfx("aizen-metamorphosis",{sideKey,row,uid});
+    return v303Original.v261AnimateAizenHogyokuMetamorphosis(sideKey,row,uid);
+  };
+
+  async function replayNetworkVfx(payload){
+    if(!payload?.kind||!state) return;
+    networkVfxReplayDepth++;
+    try{
+      if(payload.kind==="card-flight") return await replayNetworkCardFlight(payload);
+      if(payload.kind==="deck-flight") return await v303Original.animateCardFromDeckToField(payload.card,payload.row,payload.targetSide,payload.ownerKey);
+      if(payload.kind==="effect-cast"){
+        const t=payload.target;
+        const rect=t?.sideKey&&t?.row ? (v243RowStartRect(t.sideKey,t.row)||v243DefaultEffectRowStart(t.sideKey)) : v242BoardRect();
+        return await v303Original.v242AnimateEffectCardTableCast(payload.card,rect,payload.effectKind||"generic");
+      }
+      if(payload.kind==="reiatsu-pressure") return await v303Original.v242AnimateReiatsuPressure(payload.sideKey,payload.row);
+      if(payload.kind==="leader-row") return await v303Original.animateLeaderRowEffect(payload.sideKey,payload.row,payload.effectKind||"generic");
+      if(payload.kind==="hogyoku") return await v303Original.v242AnimateHogyoku(payload.sideKey,payload.row,payload.charge||1);
+      if(payload.kind==="cero"){
+        const loc=locateFieldCard(payload.sideKey,payload.uid); if(loc) return await v303Original.v242AnimateCeroHit(loc);
+      }
+      if(payload.kind==="hollowification") return await v303Original.v242AnimateHollowification(payload.sideKey);
+      if(payload.kind==="vacuum-ice") return await v303Original.v242AnimateVacuumIce(payload.sideKey,payload.row);
+      if(payload.kind==="kamikake") return await v303Original.v242AnimateKamikake(payload.sideKey,payload.row,payload.uid);
+      if(payload.kind==="getsuga") return await v303Original.v254AnimateGetsugaTensho(payload.sourceSideKey,payload.sourceRow,payload.sourceUid,payload.targetSideKey,payload.targetRow,payload.targetUid,{});
+      if(payload.kind==="leader-activation") return await v303Original.animateLeaderActivation(payload.sideKey,payload.faction);
+      if(payload.kind==="return-smoke") return await v303Original.animateReturnSmoke(payload.sideKey,payload.row,payload.card);
+      if(payload.kind==="hell-gates") return await v303Original.animateHellGatesTargets(payload.entries||[]);
+      if(payload.kind==="blade-cut") return await v303Original.animateBladeCutTargets(payload.entries||[],payload.opts||{});
+      if(payload.kind==="transform-flight") return await v303Original.v250AnimateTransformationFlight(payload.card,payload.sideKey,payload.row,payload.targetUid);
+      if(payload.kind==="aizen-metamorphosis") return await v303Original.v261AnimateAizenHogyokuMetamorphosis(payload.sideKey,payload.row,payload.uid);
+    }catch(err){ console.warn("ONLINE VFX replay:",payload?.kind,err); }
+    finally{ networkVfxReplayDepth=Math.max(0,networkVfxReplayDepth-1); }
+  }
+  function enqueueNetworkVfx(payload){
+    networkVfxChain=networkVfxChain.then(()=>replayNetworkVfx(payload)).catch(err=>console.warn("ONLINE VFX queue:",err));
+    return networkVfxChain;
+  }
+  async function waitForNetworkVfx(){ try{await networkVfxChain;}catch(_e){} }
+
+  // ===== V303: SOUL SUICIDE confirmation =====
+  function hideSoulSuicideConfirm(){ $("#soulSuicideOverlay")?.classList.add("hidden"); }
+  function requestSoulSuicideConfirm(){
+    const actor=localControlledSide();
+    if(!canLocalSideAct()||state?.turn!==actor) return;
+    $("#soulSuicideOverlay")?.classList.remove("hidden");
+  }
+
+  // ===== V303: persistent-room online rematch =====
+  function updateOnlineRematchUi(){
+    const status=$("#onlineRematchStatus"), btn=$("#againBtn");
+    if(!status||!btn) return;
+    if(gameMode!=="online"||!networkSession.connected){ status.hidden=true; btn.disabled=false; btn.textContent="СЫГРАТЬ ЕЩЁ"; return; }
+    status.hidden=false;
+    const room=networkSession.roomCode?` · КОМНАТА ${networkSession.roomCode}`:"";
+    if(networkSession.rematchStarting){ status.textContent=`Оба игрока готовы${room}. Запускаем следующий матч…`; btn.disabled=true; btn.textContent="ЗАПУСК…"; }
+    else if(networkSession.localRematchReady && networkSession.peerRematchReady){ status.textContent=`Оба игрока готовы${room}.`; btn.disabled=true; btn.textContent="ЗАПУСК…"; }
+    else if(networkSession.localRematchReady){ status.textContent=`Вы готовы к следующему матчу${room}. Ожидание соперника…`; btn.disabled=true; btn.textContent="ОЖИДАНИЕ СОПЕРНИКА"; }
+    else if(networkSession.peerRematchReady){ status.textContent=`Соперник уже готов к следующему матчу${room}.`; btn.disabled=false; btn.textContent="СЫГРАТЬ ЕЩЁ В ЭТОЙ КОМНАТЕ"; }
+    else { status.textContent=`Relay-соединение сохранено${room}. Новый код не нужен.`; btn.disabled=false; btn.textContent="СЫГРАТЬ ЕЩЁ В ЭТОЙ КОМНАТЕ"; }
+  }
+  async function requestOnlineRematch(){
+    if(gameMode!=="online"||!networkSession.connected||!state?.gameOver){ await returnToModeMenu(); return; }
+    if(networkSession.localRematchReady) return;
+    networkSession.localRematchReady=true;
+    updateOnlineRematchUi();
+    await sendNetworkEvent("rematch_ready",{});
+    if(networkSession.role==="host"){
+      await sendNetworkEvent("rematch_status",{hostReady:true,guestReady:networkSession.peerRematchReady});
+      await maybeStartOnlineRematch();
+    }
+  }
+  async function maybeStartOnlineRematch(){
+    if(gameMode!=="online"||networkSession.role!=="host"||!networkSession.connected||networkSession.rematchStarting) return false;
+    if(!networkSession.localRematchReady||!networkSession.peerRematchReady) return false;
+    networkSession.rematchStarting=true; updateOnlineRematchUi();
+    await sendNetworkEvent("rematch_start",{roomCode:networkSession.roomCode});
+    await beginOnlineRematchInSameRoom();
+    return true;
+  }
+  async function beginOnlineRematchInSameRoom(){
+    if(gameMode!=="online"||!networkSession.connected) return false;
+    networkSession.rematchStarting=false;
+    networkSession.localRematchReady=false; networkSession.peerRematchReady=false;
+    networkSession.localSetup=null; networkSession.peerSetup=null;
+    networkSession.localPreparedSide=null; networkSession.peerPreparedSide=null;
+    networkSession.localMulliganReady=false; networkSession.peerMulliganReady=false;
+    networkSession.pregameFinalized=false; networkSession.revision=0; networkSession.awaitingCanonical=false; networkSession.lastAcceptedReason=null;
+    state=null; pendingSetup={player:null,enemy:null}; selectedFaction="living";
+    setupSideKey=networkSession.localSide||"player"; localViewSide=setupSideKey;
+    hideHandoff(); hideSoulSuicideConfirm(); resetInterfaceForFactionPicker();
+    ["#resultOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
+    $("#onlineRematchStatus")?.setAttribute("hidden","");
+    openPathPicker(setupSideKey);
+    return true;
   }
 
   function buildFactionPicker(){
@@ -14715,7 +15210,9 @@ ${template.desc}`:""}`;
     });
   }
 
-  $("#passBtn").onclick=localPass;
+  $("#passBtn").onclick=requestSoulSuicideConfirm;
+  $("#soulSuicideNo").onclick=hideSoulSuicideConfirm;
+  $("#soulSuicideYes").onclick=()=>{ hideSoulSuicideConfirm(); localPass(); };
   $("#mulliganConfirmBtn").onclick=resolveMulligan;
   const handScrollRange=$("#handScrollRange");
   const handScrollPrev=$("#handScrollPrev");
@@ -14767,7 +15264,7 @@ ${template.desc}`:""}`;
     if(deckBuilderSelection.size<30){ toast("МИНИМУМ 30 КАРТ"); return; }
     startWithDeckSelection(deckBuilderSelection);
   };
-  $("#againBtn").onclick=()=>returnToModeMenu();
+  $("#againBtn").onclick=()=>gameMode==="online"?requestOnlineRematch():returnToModeMenu();
 
   $("#modeAiBtn").onclick=()=>{
     gameMode="ai"; setupSideKey="player"; selectedFaction="living"; pendingSetup={player:null,enemy:null}; duelPreparedSides={player:null,enemy:null}; duelInitiativeChoice={player:null,enemy:null}; state=null;
