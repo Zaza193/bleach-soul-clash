@@ -31,12 +31,11 @@
   if(h) root.style.setProperty("--app-height",`${h}px`);
   if(w) root.style.setProperty("--app-width",`${w}px`);
   if(h&&w){
-    const browserPhoneStage=Math.min(w,Math.round(h*16/9));
-    const standalonePhoneStage=Math.min(browserPhoneStage,760);
-    const touchStage=(standalone&&phone)
-      ? standalonePhoneStage
-      : Math.min(w,Math.round(h*2.06));
-    root.style.setProperty("--phone-stage-width",`${standalone&&phone?standalonePhoneStage:browserPhoneStage}px`);
+    // V333: browser and installed PWA use exactly the same phone stage.
+    // One 16:9-ish, max-760px stage prevents browser/PWA size drift.
+    const phoneStage=Math.min(w,Math.round(h*16/9),760);
+    const touchStage=phone ? phoneStage : Math.min(w,1180);
+    root.style.setProperty("--phone-stage-width",`${phoneStage}px`);
     root.style.setProperty("--touch-stage-width",`${touchStage}px`);
     root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
   }
@@ -51,7 +50,7 @@
   root.classList.add('responsive-booted');
 })();
 </script>
-<title>BLEACH: Soul Clash v322 — WSS Relay</title>
+<title>BLEACH: Soul Clash v333 — Mobile UI Overhaul</title>
 <style>
   :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -9944,7 +9943,7 @@ html.pwa-standalone.phone-device.phone-landscape .app{
 <style id="v327-mobile-only-ui-repairs">
 /* V327: the v321 sizing patch was intended for phone/touch landscape only.
    Keep it away from desktop so the original desktop geometry wins again. */
-@media (hover:none) and (pointer:coarse) and (orientation:landscape){
+@media (min-width:99999px){
 
 /* ===== V321: final browser + PWA UI repairs ===== */
 
@@ -10842,6 +10841,812 @@ html.touch-device.touch-landscape .top-score-label{
 }
 </style>
 
+<style id="v333-mobile-layout-overhaul">
+/* ===== V333: consolidated phone/touch landscape layout =====
+   This is the single final authority for phone-sized landscape UI.
+   It intentionally overrides the accumulated v293-v330 mobile sizing layers. */
+
+html.phone-device.phone-landscape,
+html.touch-device.touch-landscape:not(.tablet-device){
+  --v333-left:128px;
+  --v333-right:108px;
+  --v333-top:30px;
+  --v333-hand:72px;
+  background:#000!important;
+  overflow:hidden!important;
+  -webkit-text-size-adjust:100%!important;
+  text-size-adjust:100%!important;
+}
+html.phone-device.phone-landscape body,
+html.touch-device.touch-landscape:not(.tablet-device) body{
+  width:100%!important;
+  height:var(--app-height,100dvh)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  background:#000!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+
+/* Same centered width-limited stage in Safari browser and installed PWA. */
+html.phone-device.phone-landscape .app,
+html.touch-device.touch-landscape:not(.tablet-device) .app,
+html.pwa-standalone.phone-device.phone-landscape .app{
+  width:var(--phone-stage-width)!important;
+  max-width:760px!important;
+  height:var(--app-height,100dvh)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  grid-template-columns:var(--v333-left) minmax(0,1fr) var(--v333-right)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  overflow:hidden!important;
+  border-left:1px solid #171717!important;
+  border-right:1px solid #171717!important;
+  background:#060606!important;
+}
+
+/* -------- LEFT RAIL --------
+   Old mobile 0:0 and detached turn labels are gone. Only opponent leader,
+   opponent hand count, and local leader remain in the rail. */
+html.phone-device.phone-landscape .side,
+html.touch-device.touch-landscape:not(.tablet-device) .side{
+  width:var(--v333-left)!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  padding:4px!important;
+  margin:0!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,.84fr) 28px minmax(0,1.16fr)!important;
+  gap:3px!important;
+  align-items:stretch!important;
+  overflow:hidden!important;
+  background:#090909!important;
+  border-right:1px solid #222!important;
+}
+html.phone-device.phone-landscape .battle-brand,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-brand{display:none!important}
+html.phone-device.phone-landscape #enemyLeader,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader{
+  grid-row:1!important;
+  width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;overflow:hidden!important;transform:none!important;
+}
+html.phone-device.phone-landscape .battle-status,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status{
+  grid-row:2!important;
+  width:100%!important;height:28px!important;min-height:28px!important;max-height:28px!important;
+  margin:0!important;padding:0!important;
+  display:block!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .battle-status .round-outcome,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .round-outcome{
+  display:none!important;
+}
+html.phone-device.phone-landscape #playerLeaderWrap,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderWrap{
+  grid-row:3!important;
+  width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;transform:none!important;
+}
+
+/* Opponent hand count gets its own narrow rail row. */
+html.phone-device.phone-landscape .battle-status .opponent-hand-panel,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-panel{
+  width:100%!important;height:28px!important;min-height:28px!important;max-height:28px!important;
+  margin:0!important;padding:3px 5px!important;
+  display:grid!important;
+  grid-template-columns:22px minmax(0,1fr) auto!important;
+  gap:4px!important;
+  align-items:center!important;
+  border:1px solid #262626!important;
+  border-left:2px solid var(--e)!important;
+  background:#101010!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-icon{width:20px!important;height:17px!important}
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-icon i{width:10px!important;height:15px!important;top:1px!important}
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i:nth-child(1),
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-icon i:nth-child(1){left:0!important}
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i:nth-child(2),
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-icon i:nth-child(2){left:4px!important;top:0!important}
+html.phone-device.phone-landscape .battle-status .opponent-hand-icon i:nth-child(3),
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-icon i:nth-child(3){left:8px!important}
+html.phone-device.phone-landscape .battle-status .opponent-hand-copy b,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-copy b{
+  font-size:6.3px!important;line-height:1!important;letter-spacing:.035em!important;white-space:nowrap!important;
+}
+html.phone-device.phone-landscape .battle-status .opponent-hand-value,
+html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-value{
+  min-width:18px!important;padding-left:4px!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:17px!important;font-weight:1000!important;line-height:1!important;text-shadow:none!important;
+}
+
+/* Leaders: fixed grid, no flex overflow, no clipped ability plaque. */
+html.phone-device.phone-landscape #enemyLeader.leader-art-ui,
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader.leader-art-ui,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel.leader-art-ui{
+  width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;padding:3px!important;overflow:hidden!important;
+  border:0!important;border-left:2px solid var(--e)!important;
+  clip-path:none!important;box-shadow:none!important;background:#0a0a0a!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel.leader-art-ui,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel.leader-art-ui{border-left-color:var(--p)!important}
+html.phone-device.phone-landscape #enemyLeader .leader-ui-shell,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-shell{
+  width:100%!important;height:100%!important;min-height:0!important;
+  display:grid!important;grid-template-rows:20px minmax(0,1fr)!important;
+  gap:2px!important;margin:0!important;padding:0!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-shell,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-shell{
+  width:100%!important;height:100%!important;min-height:0!important;
+  display:grid!important;grid-template-rows:20px minmax(0,1fr) 78px!important;
+  gap:2px!important;margin:0!important;padding:0!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape .leader-ui-epithet,
+html.touch-device.touch-landscape:not(.tablet-device) .leader-ui-epithet{display:none!important}
+html.phone-device.phone-landscape #enemyLeader .leader-ui-name,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-name,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-name,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-name{
+  height:20px!important;min-height:20px!important;max-height:20px!important;
+  margin:0!important;padding:2px 3px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;border:0!important;border-bottom:1px solid #242424!important;
+  background:#111!important;color:#eeeae2!important;
+  font-size:8.3px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important;
+  text-align:center!important;white-space:normal!important;word-break:normal!important;
+}
+html.phone-device.phone-landscape #enemyLeader .leader-ui-art,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-art,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-art,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-art{
+  width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;
+  flex:none!important;margin:0!important;border:0!important;overflow:hidden!important;background:#080808!important;
+}
+html.phone-device.phone-landscape .leader-ui-art .leader-portrait,
+html.touch-device.touch-landscape:not(.tablet-device) .leader-ui-art .leader-portrait{
+  width:100%!important;height:100%!important;background-size:cover!important;
+}
+html.phone-device.phone-landscape #enemyLeader .leader-score,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-score,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-score,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-score{
+  top:auto!important;right:3px!important;bottom:3px!important;
+  width:27px!important;height:27px!important;min-width:27px!important;min-height:27px!important;
+  font-size:14px!important;line-height:27px!important;border-width:1px!important;
+}
+html.phone-device.phone-landscape #enemyLeader .leader-ui-ability,
+html.phone-device.phone-landscape #enemyLeader .leader-ui-use,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-ability,
+html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-use{display:none!important}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability{
+  width:100%!important;height:78px!important;min-height:78px!important;max-height:78px!important;
+  margin:0!important;padding:4px 5px!important;overflow:hidden!important;
+  display:grid!important;grid-template-rows:10px minmax(0,1fr) 20px!important;gap:2px!important;
+  border:0!important;border-top:1px solid #292929!important;background:#101010!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-title,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability-title{
+  margin:0!important;padding:0!important;border:0!important;overflow:hidden!important;
+  font-size:6.5px!important;font-weight:900!important;line-height:10px!important;color:#ff8052!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text.leader-text-dense,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability-text,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability-text.leader-text-long,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability-text.leader-text-dense{
+  min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;overflow:hidden!important;
+  font-size:7px!important;line-height:1.12!important;color:#d2d2d2!important;
+}
+html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-use,
+html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-use{
+  display:block!important;width:100%!important;height:20px!important;min-height:20px!important;max-height:20px!important;
+  margin:0!important;padding:0 3px!important;border:1px solid #333!important;border-bottom:2px solid var(--p)!important;
+  background:#181818!important;color:#fff!important;clip-path:none!important;border-radius:0!important;box-shadow:none!important;
+  font-size:6.4px!important;font-weight:900!important;line-height:17px!important;
+}
+
+/* -------- TOP HUD: round + turn + score, same information model as desktop -------- */
+html.phone-device.phone-landscape .board-shell,
+html.touch-device.touch-landscape:not(.tablet-device) .board-shell{
+  width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;
+  grid-template-rows:var(--v333-top) minmax(0,1fr) var(--v333-hand)!important;
+  overflow:hidden!important;border:0!important;
+}
+html.phone-device.phone-landscape .board-shell:before,
+html.touch-device.touch-landscape:not(.tablet-device) .board-shell:before{
+  inset:var(--v333-top) 0 var(--v333-hand)!important;
+}
+html.phone-device.phone-landscape .topbar,
+html.touch-device.touch-landscape:not(.tablet-device) .topbar{
+  height:var(--v333-top)!important;min-height:var(--v333-top)!important;max-height:var(--v333-top)!important;
+  margin:0!important;padding:0 5px!important;
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:4px!important;
+  overflow:hidden!important;background:#0e0e0e!important;color:#eeeae2!important;
+  border:0!important;border-bottom:1px solid #292929!important;box-shadow:inset 0 -1px 0 #050505!important;
+}
+html.phone-device.phone-landscape .topbar:after,
+html.touch-device.touch-landscape:not(.tablet-device) .topbar:after{display:none!important;content:none!important}
+html.phone-device.phone-landscape .topbar>div:first-child,
+html.touch-device.touch-landscape:not(.tablet-device) .topbar>div:first-child{
+  min-width:0!important;display:flex!important;align-items:center!important;gap:4px!important;overflow:hidden!important;white-space:nowrap!important;
+}
+html.phone-device.phone-landscape #roundLabel,
+html.touch-device.touch-landscape:not(.tablet-device) #roundLabel,
+html.phone-device.phone-landscape #turnLabel,
+html.touch-device.touch-landscape:not(.tablet-device) #turnLabel{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  height:20px!important;min-height:20px!important;padding:0 6px!important;margin:0!important;
+  border:1px solid #2f2f2f!important;border-left:2px solid #777!important;
+  background:#171717!important;color:#eeeae2!important;
+  font-size:7.3px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important;
+  text-transform:uppercase!important;
+}
+html.phone-device.phone-landscape #roundLabel,
+html.touch-device.touch-landscape:not(.tablet-device) #roundLabel{border-left-color:#aaa!important;color:#c7c2b9!important}
+html.phone-device.phone-landscape #turnLabel.turn.player,
+html.touch-device.touch-landscape:not(.tablet-device) #turnLabel.turn.player{border-left-color:var(--p)!important;color:#fff!important}
+html.phone-device.phone-landscape #turnLabel.turn.enemy,
+html.touch-device.touch-landscape:not(.tablet-device) #turnLabel.turn.enemy{border-left-color:var(--e)!important;color:#fff!important}
+
+/* Re-enable the desktop score module on phones, but in compact form. */
+html.phone-device.phone-landscape #topScoreLabel,
+html.touch-device.touch-landscape:not(.tablet-device) #topScoreLabel{
+  display:inline-grid!important;
+  grid-template-columns:minmax(32px,1fr) 12px minmax(45px,1fr)!important;
+  align-items:stretch!important;
+  height:22px!important;min-height:22px!important;min-width:108px!important;max-width:128px!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  border:1px solid #373737!important;border-left:2px solid #d4cec2!important;
+  background:#0c0c0c!important;box-shadow:none!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  text-transform:none!important;letter-spacing:0!important;
+}
+html.phone-device.phone-landscape #topScoreLabel .score-side,
+html.touch-device.touch-landscape:not(.tablet-device) #topScoreLabel .score-side{
+  min-width:0!important;display:grid!important;grid-template-columns:auto 1fr!important;align-items:center!important;gap:3px!important;
+  padding:0 4px!important;background:#151515!important;
+}
+html.phone-device.phone-landscape #topScoreLabel .score-side.foe,
+html.touch-device.touch-landscape:not(.tablet-device) #topScoreLabel .score-side.foe{grid-template-columns:1fr auto!important}
+html.phone-device.phone-landscape #topScoreLabel small,
+html.touch-device.touch-landscape:not(.tablet-device) #topScoreLabel small{
+  color:#979189!important;font-size:5.2px!important;font-weight:900!important;line-height:1!important;letter-spacing:.02em!important;white-space:nowrap!important;
+}
+html.phone-device.phone-landscape #topScoreLabel b,
+html.touch-device.touch-landscape:not(.tablet-device) #topScoreLabel b{
+  color:#fff!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:15px!important;font-weight:1000!important;line-height:1!important;text-align:center!important;text-shadow:none!important;
+}
+html.phone-device.phone-landscape #topScoreLabel .score-colon,
+html.touch-device.touch-landscape:not(.tablet-device) #topScoreLabel .score-colon{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:#070707!important;color:#817b72!important;border-left:1px solid #292929!important;border-right:1px solid #292929!important;
+  font-size:12px!important;font-weight:900!important;font-style:normal!important;line-height:1!important;
+}
+html.phone-device.phone-landscape .topbar .top-controls,
+html.touch-device.touch-landscape:not(.tablet-device) .topbar .top-controls{display:flex!important;align-items:center!important;gap:3px!important}
+html.phone-device.phone-landscape .topbar .tiny-btn,
+html.touch-device.touch-landscape:not(.tablet-device) .topbar .tiny-btn{
+  height:20px!important;min-height:20px!important;max-height:20px!important;padding:0 5px!important;margin:0!important;
+  border:1px solid #303030!important;border-bottom:2px solid var(--p)!important;background:#141414!important;color:#ddd8cf!important;
+  font-size:5.5px!important;font-weight:900!important;line-height:17px!important;letter-spacing:0!important;clip-path:none!important;border-radius:0!important;
+}
+
+/* -------- BATTLEFIELD -------- */
+html.phone-device.phone-landscape .board,
+html.touch-device.touch-landscape:not(.tablet-device) .board{
+  width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;
+  padding:2px!important;overflow:hidden!important;
+  grid-template-rows:repeat(3,minmax(42px,1fr)) 2px repeat(3,minmax(42px,1fr))!important;
+  gap:0!important;
+}
+html.phone-device.phone-landscape .board .row,
+html.touch-device.touch-landscape:not(.tablet-device) .board .row{
+  min-width:0!important;min-height:0!important;
+  grid-template-columns:28px minmax(0,1fr) 24px!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .row-label,
+html.touch-device.touch-landscape:not(.tablet-device) .row-label{padding:2px!important;overflow:hidden!important}
+html.phone-device.phone-landscape .row-label strong,
+html.touch-device.touch-landscape:not(.tablet-device) .row-label strong{
+  font-size:10px!important;font-weight:1000!important;line-height:1!important;letter-spacing:0!important;
+}
+html.phone-device.phone-landscape .row-label .pressure-tag,
+html.phone-device.phone-landscape .row-label .hogyoku-tag,
+html.phone-device.phone-landscape .row-label .row-effect-tag,
+html.touch-device.touch-landscape:not(.tablet-device) .row-label .pressure-tag,
+html.touch-device.touch-landscape:not(.tablet-device) .row-label .hogyoku-tag,
+html.touch-device.touch-landscape:not(.tablet-device) .row-label .row-effect-tag{
+  margin-top:1px!important;font-size:4.3px!important;line-height:1!important;letter-spacing:0!important;
+}
+html.phone-device.phone-landscape .row-score,
+html.touch-device.touch-landscape:not(.tablet-device) .row-score{
+  width:24px!important;min-width:24px!important;max-width:24px!important;
+  font-size:12px!important;font-weight:1000!important;line-height:1!important;
+}
+html.phone-device.phone-landscape .row-cards,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards{
+  min-width:0!important;gap:2px!important;padding:2px!important;
+  overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;touch-action:pan-x!important;
+}
+html.phone-device.phone-landscape .row-cards::-webkit-scrollbar,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards::-webkit-scrollbar{display:none!important}
+html.phone-device.phone-landscape .row-cards .card,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
+  flex:0 0 32px!important;width:32px!important;min-width:32px!important;max-width:32px!important;
+  height:46px!important;min-height:46px!important;max-height:46px!important;
+  margin:0!important;transform:none!important;
+}
+html.phone-device.phone-landscape .row-cards .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
+  left:50%!important;right:auto!important;top:auto!important;bottom:1px!important;transform:translateX(-50%)!important;
+  width:18px!important;min-width:18px!important;max-width:18px!important;
+  height:10px!important;min-height:10px!important;max-height:10px!important;
+  padding:1px 0 0!important;border:1px solid var(--card-frame)!important;border-bottom:0!important;border-radius:18px 18px 0 0!important;
+  background:#050608!important;color:#f7f5ef!important;font-size:8px!important;font-weight:1000!important;line-height:1!important;box-shadow:none!important;
+}
+html.phone-device.phone-landscape .row-cards .card .ability-icon,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .ability-icon{
+  min-width:8px!important;width:auto!important;height:8px!important;padding:0 1px!important;font-size:4.3px!important;line-height:8px!important;
+}
+html.phone-device.phone-landscape .row-cards .card .name,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .name{
+  font-size:4px!important;line-height:1!important;padding:3px 1px 1px!important;
+}
+
+/* -------- HAND -------- */
+html.phone-device.phone-landscape .hand-wrap,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+  width:100%!important;height:var(--v333-hand)!important;min-height:var(--v333-hand)!important;max-height:var(--v333-hand)!important;
+  grid-template-columns:minmax(0,1fr) 44px!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape .hand-wrap:before,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-wrap:before,
+html.phone-device.phone-landscape .hand-scroll-dock,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-scroll-dock{display:none!important}
+html.phone-device.phone-landscape .hand,
+html.touch-device.touch-landscape:not(.tablet-device) .hand{
+  width:100%!important;height:100%!important;min-width:0!important;
+  justify-content:flex-start!important;align-items:flex-end!important;
+  gap:3px!important;padding:3px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;touch-action:pan-x!important;
+}
+html.phone-device.phone-landscape .hand::-webkit-scrollbar,
+html.touch-device.touch-landscape:not(.tablet-device) .hand::-webkit-scrollbar{display:none!important}
+html.phone-device.phone-landscape #hand .card,
+html.phone-device.phone-landscape #hand.hand-expanded .card,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card,
+html.touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
+  flex:0 0 45px!important;width:45px!important;min-width:45px!important;max-width:45px!important;
+  height:65px!important;min-height:65px!important;max-height:65px!important;
+  margin:0!important;
+}
+html.phone-device.phone-landscape #hand .card:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card:hover{transform:none!important}
+html.phone-device.phone-landscape #hand .card.selected,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card.selected{transform:translateY(-2px) scale(1.015)!important}
+html.phone-device.phone-landscape #hand .card .power,
+html.phone-device.phone-landscape #hand.hand-expanded .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card .power{
+  left:50%!important;right:auto!important;top:auto!important;bottom:1px!important;transform:translateX(-50%)!important;
+  width:23px!important;min-width:23px!important;max-width:23px!important;
+  height:12px!important;min-height:12px!important;max-height:12px!important;
+  padding:1px 0 0!important;border:1px solid var(--card-frame)!important;border-bottom:0!important;border-radius:23px 23px 0 0!important;
+  background:#050608!important;color:#f7f5ef!important;font-size:10px!important;font-weight:1000!important;line-height:1!important;box-shadow:none!important;
+}
+html.phone-device.phone-landscape #hand .card .ability-icon,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .ability-icon{
+  min-width:10px!important;height:10px!important;padding:0 1px!important;font-size:5.2px!important;line-height:10px!important;
+}
+html.phone-device.phone-landscape #hand .card .name,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .name{
+  font-size:4.8px!important;line-height:1!important;padding:5px 1px 1px!important;
+}
+html.phone-device.phone-landscape .hand-actions,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-actions{
+  width:44px!important;height:var(--v333-hand)!important;min-width:44px!important;padding:2px!important;
+}
+html.phone-device.phone-landscape .pass-btn,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn{
+  width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;
+  margin:auto!important;padding:0!important;transform:none!important;clip-path:none!important;border-radius:0!important;
+  border:1px solid #d7d2c7!important;border-bottom:3px solid var(--p)!important;background:#111!important;color:#f2eee7!important;
+  box-shadow:none!important;font-size:6.2px!important;font-weight:1000!important;line-height:.92!important;letter-spacing:.02em!important;
+}
+html.phone-device.phone-landscape .pass-btn:before,
+html.phone-device.phone-landscape .pass-btn:after,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:before,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:after{display:none!important;content:none!important}
+
+/* -------- RIGHT PREVIEW RAIL -------- */
+html.phone-device.phone-landscape .rightbar,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar{
+  width:var(--v333-right)!important;height:100%!important;min-height:0!important;
+  grid-template-rows:36px minmax(0,1fr) 36px!important;gap:3px!important;padding:3px!important;
+  overflow:hidden!important;background:#090909!important;border-left:1px solid #222!important;
+}
+html.phone-device.phone-landscape .pile-zone,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-zone{
+  height:36px!important;min-height:36px!important;max-height:36px!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape .pile-inner,
+html.touch-device.touch-landscape:not(.tablet-device) .pile-inner{
+  width:145px!important;height:70px!important;transform:scale(.44)!important;transform-origin:top left!important;
+}
+html.phone-device.phone-landscape .rightbar .detail,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail{
+  min-height:0!important;padding:4px!important;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:none!important;
+}
+html.phone-device.phone-landscape .rightbar .detail::-webkit-scrollbar,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail::-webkit-scrollbar{display:none!important}
+html.phone-device.phone-landscape .detail-preview,
+html.touch-device.touch-landscape:not(.tablet-device) .detail-preview{
+  width:88px!important;max-width:88px!important;margin:0 auto 4px!important;
+}
+html.phone-device.phone-landscape .detail-preview .card,
+html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
+  width:88px!important;min-width:88px!important;max-width:88px!important;height:auto!important;max-height:none!important;aspect-ratio:2 / 3!important;
+}
+html.phone-device.phone-landscape .detail-preview .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card .power{
+  width:25px!important;height:13px!important;min-width:25px!important;min-height:13px!important;max-width:25px!important;max-height:13px!important;
+  left:50%!important;right:auto!important;top:auto!important;bottom:2px!important;transform:translateX(-50%)!important;
+  padding:1px 0 0!important;border:1px solid var(--card-frame)!important;border-bottom:0!important;border-radius:25px 25px 0 0!important;
+  font-size:11px!important;line-height:1!important;
+}
+html.phone-device.phone-landscape .detail h3,
+html.touch-device.touch-landscape:not(.tablet-device) .detail h3{font-size:9px!important;line-height:1.05!important;margin:2px 0!important}
+html.phone-device.phone-landscape .detail .meta,
+html.touch-device.touch-landscape:not(.tablet-device) .detail .meta{font-size:5.5px!important;line-height:1.1!important}
+html.phone-device.phone-landscape .ability-block,
+html.touch-device.touch-landscape:not(.tablet-device) .ability-block{
+  padding:4px!important;border-left-width:2px!important;
+}
+html.phone-device.phone-landscape .ability-block .ability-title,
+html.touch-device.touch-landscape:not(.tablet-device) .ability-block .ability-title{
+  margin:0 0 2px!important;font-size:6.2px!important;line-height:1.05!important;
+}
+html.phone-device.phone-landscape .ability-block .ability-text,
+html.phone-device.phone-landscape .detail .desc,
+html.touch-device.touch-landscape:not(.tablet-device) .ability-block .ability-text,
+html.touch-device.touch-landscape:not(.tablet-device) .detail .desc{
+  font-size:6.5px!important;line-height:1.16!important;
+}
+
+/* -------- ALL PHONE OVERLAYS -------- */
+html.phone-device.phone-landscape .overlay,
+html.touch-device.touch-landscape:not(.tablet-device) .overlay,
+html.pwa-standalone.phone-device.phone-landscape .overlay{
+  width:var(--phone-stage-width)!important;max-width:760px!important;
+  height:var(--app-height,100dvh)!important;
+  inset:0 auto 0 50%!important;transform:translateX(-50%)!important;
+  padding:5px!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape .modal,
+html.phone-device.phone-landscape .mode-modal,
+html.phone-device.phone-landscape .faction-modal,
+html.phone-device.phone-landscape .network-modal,
+html.phone-device.phone-landscape .mulligan-modal,
+html.phone-device.phone-landscape .choice-modal,
+html.phone-device.phone-landscape .soul-suicide-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .modal,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .network-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .mulligan-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .choice-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .soul-suicide-modal{
+  max-width:calc(var(--phone-stage-width) - 10px)!important;
+  max-height:calc(var(--app-height,100dvh) - 10px)!important;
+  box-sizing:border-box!important;border-radius:0!important;clip-path:none!important;
+  padding:10px 12px!important;box-shadow:5px 5px 0 rgba(0,0,0,.84)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html.phone-device.phone-landscape .modal h1,
+html.touch-device.touch-landscape:not(.tablet-device) .modal h1{
+  font-size:22px!important;line-height:1!important;letter-spacing:.01em!important;
+}
+html.phone-device.phone-landscape .modal p,
+html.touch-device.touch-landscape:not(.tablet-device) .modal p{
+  font-size:9.5px!important;line-height:1.25!important;letter-spacing:0!important;
+}
+
+/* Mode menu. */
+html.phone-device.phone-landscape .mode-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-modal{width:min(640px,calc(var(--phone-stage-width) - 16px))!important;padding:11px 13px!important}
+html.phone-device.phone-landscape .mode-modal h1,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-modal h1{font-size:24px!important;margin:0 0 4px!important}
+html.phone-device.phone-landscape .mode-sub,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-sub{font-size:9.2px!important;line-height:1.2!important;margin:0 auto 7px!important;max-width:590px!important}
+html.phone-device.phone-landscape .mode-grid,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-grid{display:grid!important;grid-template-columns:1fr!important;gap:5px!important}
+html.phone-device.phone-landscape .mode-card,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-card{
+  min-height:48px!important;height:auto!important;padding:7px 10px!important;
+  display:grid!important;grid-template-columns:132px minmax(0,1fr)!important;align-items:center!important;
+  text-align:left!important;border:0!important;border-left:4px solid #777!important;border-radius:0!important;clip-path:none!important;box-shadow:inset 0 -2px 0 #777!important;
+}
+html.phone-device.phone-landscape .mode-card b,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-card b{font-size:15px!important;line-height:1!important;margin:0!important}
+html.phone-device.phone-landscape .mode-card span,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-card span{font-size:8.6px!important;line-height:1.18!important;margin:0!important}
+
+/* Faction picker: clear 2 x 2 cards. */
+html.phone-device.phone-landscape .faction-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal{width:min(730px,calc(var(--phone-stage-width) - 10px))!important;padding:9px 11px!important}
+html.phone-device.phone-landscape #startOverlay .setup-title-line,
+html.touch-device.touch-landscape:not(.tablet-device) #startOverlay .setup-title-line{display:flex!important;align-items:baseline!important;gap:7px!important;flex-wrap:nowrap!important}
+html.phone-device.phone-landscape #startOverlay .setup-title-line>h1,
+html.touch-device.touch-landscape:not(.tablet-device) #startOverlay .setup-title-line>h1{font-size:21px!important;white-space:nowrap!important}
+html.phone-device.phone-landscape #startOverlay .setup-player-label,
+html.touch-device.touch-landscape:not(.tablet-device) #startOverlay .setup-player-label{font-size:7.5px!important;letter-spacing:.03em!important;white-space:nowrap!important}
+html.phone-device.phone-landscape .faction-modal .factions,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal .factions{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(2,1fr)!important;
+  gap:6px!important;margin:7px 0!important;
+}
+html.phone-device.phone-landscape .faction-modal .faction,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal .faction{height:104px!important;min-height:104px!important;max-height:104px!important;overflow:hidden!important}
+html.phone-device.phone-landscape .faction-modal .faction-copy,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal .faction-copy{padding:6px 7px!important}
+html.phone-device.phone-landscape .faction-modal .faction b,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal .faction b{font-size:12px!important;line-height:1!important}
+html.phone-device.phone-landscape .faction-modal .faction span,
+html.touch-device.touch-landscape:not(.tablet-device) .faction-modal .faction span{font-size:7.6px!important;line-height:1.14!important}
+html.phone-device.phone-landscape #startOverlay .network-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #startOverlay .network-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}
+html.phone-device.phone-landscape #startOverlay .network-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) #startOverlay .network-actions button{height:34px!important;min-height:34px!important;padding:0 8px!important;font-size:8px!important}
+
+/* ONLINE create/join. */
+html.phone-device.phone-landscape .network-choice-modal,
+html.phone-device.phone-landscape .network-role-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .network-choice-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .network-role-modal{width:min(520px,calc(var(--phone-stage-width) - 20px))!important;padding:11px 13px!important}
+html.phone-device.phone-landscape .network-vpn-note,
+html.touch-device.touch-landscape:not(.tablet-device) .network-vpn-note{margin:5px auto!important;padding:0 4px!important;font-size:8.5px!important;line-height:1.2!important}
+html.phone-device.phone-landscape .network-status,
+html.touch-device.touch-landscape:not(.tablet-device) .network-status{min-height:32px!important;margin:6px 0!important;padding:6px 8px!important;font-size:8.5px!important;line-height:1.2!important}
+html.phone-device.phone-landscape .network-room-code,
+html.touch-device.touch-landscape:not(.tablet-device) .network-room-code{font-size:27px!important;line-height:1!important;margin:6px 0!important}
+html.phone-device.phone-landscape .network-field,
+html.touch-device.touch-landscape:not(.tablet-device) .network-field{margin:6px 0!important}
+html.phone-device.phone-landscape .network-field label,
+html.touch-device.touch-landscape:not(.tablet-device) .network-field label{font-size:7px!important}
+html.phone-device.phone-landscape .network-field input,
+html.touch-device.touch-landscape:not(.tablet-device) .network-field input{height:34px!important;min-height:34px!important;font-size:16px!important}
+html.phone-device.phone-landscape #networkOverlay .network-choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #networkOverlay .network-choice-grid{gap:6px!important;margin:8px 0 6px!important}
+html.phone-device.phone-landscape #networkOverlay .start-btn,
+html.phone-device.phone-landscape .network-role-actions .start-btn,
+html.touch-device.touch-landscape:not(.tablet-device) #networkOverlay .start-btn,
+html.touch-device.touch-landscape:not(.tablet-device) .network-role-actions .start-btn{height:36px!important;min-height:36px!important;font-size:9px!important}
+html.phone-device.phone-landscape .network-flow-back,
+html.touch-device.touch-landscape:not(.tablet-device) .network-flow-back{height:32px!important;min-height:32px!important;margin-top:5px!important;font-size:8px!important}
+
+/* ASSEMBLE: five readable columns, scrollable content, compact footer. */
+html.phone-device.phone-landscape #deckBuilderOverlay,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay{padding:4px!important}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-modal,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-modal{
+  width:calc(var(--phone-stage-width) - 8px)!important;height:calc(var(--app-height,100dvh) - 8px)!important;max-width:none!important;max-height:none!important;
+  padding:8px 9px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-title,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-title{font-size:21px!important;line-height:1!important;margin:0!important}
+html.phone-device.phone-landscape #deckBuilderSub,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderSub{
+  flex:0 0 auto!important;margin:4px 0 6px!important;font-size:10px!important;line-height:1.24!important;color:#333!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-scroll-content,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-scroll-content{
+  flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-grid{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;padding:2px!important;align-content:start!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item{width:100%!important;min-width:0!important}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .card-face{width:100%!important;height:auto!important;aspect-ratio:2 / 3!important}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .card-info-panel{
+  flex:0 0 76px!important;height:76px!important;min-height:76px!important;max-height:76px!important;margin-top:3px!important;padding:5px 6px!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .card-info-name,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .card-info-name{
+  font-size:8.5px!important;line-height:1.05!important;padding:0 0 3px!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .card-info-desc,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .card-info-desc{
+  font-size:8.8px!important;line-height:1.17!important;font-weight:700!important;padding:0!important;-webkit-line-clamp:5!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .power{
+  width:25px!important;height:13px!important;min-width:25px!important;min-height:13px!important;max-width:25px!important;max-height:13px!important;
+  left:50%!important;right:auto!important;top:auto!important;bottom:2px!important;transform:translateX(-50%)!important;
+  padding:1px 0 0!important;border-radius:25px 25px 0 0!important;border:1px solid var(--card-frame)!important;border-bottom:0!important;font-size:11px!important;line-height:1!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions{
+  flex:0 0 auto!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 78px!important;gap:6px!important;padding:6px 0 0!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions button{
+  height:36px!important;min-height:36px!important;max-height:36px!important;padding:0 8px!important;font-size:8.5px!important;line-height:1!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-counter,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-counter{
+  height:36px!important;min-height:36px!important;max-height:36px!important;padding:0 4px!important;font-size:15px!important;line-height:36px!important;
+}
+
+/* CHOOSE YOUR SOUL: exact 6 x 2, no horizontal third-row drift. */
+html.phone-device.phone-landscape #mulliganOverlay,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{padding:4px!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+  width:calc(var(--phone-stage-width) - 8px)!important;height:calc(var(--app-height,100dvh) - 8px)!important;max-width:none!important;max-height:none!important;
+  padding:8px 10px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-head,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-head{flex:0 0 auto!important;align-items:flex-start!important;gap:8px!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-title,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-title{font-size:21px!important;line-height:1!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-count,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-count{font-size:14px!important;line-height:1!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-instruction,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-instruction{
+  flex:0 0 auto!important;margin:3px auto 5px!important;padding:0!important;max-width:94%!important;
+  font-size:9.2px!important;line-height:1.2!important;text-align:center!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid{
+  flex:1 1 auto!important;min-height:0!important;width:100%!important;
+  display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;grid-auto-rows:0!important;gap:5px 6px!important;
+  padding:3px 2px 5px!important;align-content:center!important;align-items:center!important;justify-items:center!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap{
+  width:100%!important;min-width:0!important;max-width:none!important;height:100%!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-nameplate,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-nameplate{display:none!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+  width:min(74px,100%)!important;min-width:0!important;max-width:74px!important;
+  height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:2 / 3!important;margin:0 auto!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power{
+  width:24px!important;height:12px!important;min-width:24px!important;min-height:12px!important;max-width:24px!important;max-height:12px!important;
+  left:50%!important;right:auto!important;top:auto!important;bottom:2px!important;transform:translateX(-50%)!important;
+  padding:1px 0 0!important;border-radius:24px 24px 0 0!important;border:1px solid var(--card-frame)!important;border-bottom:0!important;font-size:10px!important;line-height:1!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions{flex:0 0 auto!important;margin-top:4px!important;padding:0!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
+  height:36px!important;min-height:36px!important;max-height:36px!important;padding:0 10px!important;font-size:8.5px!important;
+}
+
+/* Target / Medic / initiative choices. */
+html.phone-device.phone-landscape .choice-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .choice-modal{
+  width:calc(var(--phone-stage-width) - 8px)!important;height:calc(var(--app-height,100dvh) - 8px)!important;max-width:none!important;max-height:none!important;
+  padding:8px 10px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-heading,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-heading{position:relative!important;top:auto!important;left:auto!important;width:100%!important;transform:none!important;flex:0 0 auto!important}
+html.phone-device.phone-landscape #choiceOverlay .choice-heading h1,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-heading h1{font-size:20px!important;line-height:1!important}
+html.phone-device.phone-landscape #choiceOverlay #choiceSub,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay #choiceSub{
+  flex:0 0 auto!important;width:100%!important;margin:3px auto!important;padding:0 30px 3px!important;font-size:9px!important;line-height:1.2!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-grid{
+  flex:1 1 auto!important;min-height:0!important;width:100%!important;padding:5px 28px!important;gap:6px!important;overflow:auto!important;align-content:flex-start!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-btn,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{flex-basis:78px!important;width:78px!important;padding:3px!important;gap:3px!important}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-btn .card,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn .card{width:68px!important;min-width:68px!important;max-width:68px!important;height:auto!important;aspect-ratio:2/3!important}
+html.phone-device.phone-landscape #choiceOverlay .choice-text-btn,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-text-btn{flex-basis:170px!important;min-height:68px!important;padding:7px!important;font-size:9px!important;line-height:1.15!important}
+html.phone-device.phone-landscape #choiceOverlay .choice-cancel,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-cancel{bottom:4px!important;padding:5px 8px!important;font-size:7.5px!important}
+
+/* Confirmation/result/waiting screens. */
+html.phone-device.phone-landscape .soul-suicide-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .soul-suicide-modal{width:min(430px,calc(var(--phone-stage-width) - 28px))!important;padding:12px 14px!important}
+html.phone-device.phone-landscape .soul-suicide-modal h1,
+html.touch-device.touch-landscape:not(.tablet-device) .soul-suicide-modal h1{font-size:25px!important}
+html.phone-device.phone-landscape .soul-suicide-modal p,
+html.touch-device.touch-landscape:not(.tablet-device) .soul-suicide-modal p{font-size:10px!important;line-height:1.25!important;margin:8px auto 11px!important}
+html.phone-device.phone-landscape .soul-suicide-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) .soul-suicide-actions button{height:36px!important;min-height:36px!important;font-size:9px!important}
+html.phone-device.phone-landscape .result-title,
+html.touch-device.touch-landscape:not(.tablet-device) .result-title{font-size:32px!important;line-height:1!important}
+html.phone-device.phone-landscape .result-sub,
+html.touch-device.touch-landscape:not(.tablet-device) .result-sub,
+html.phone-device.phone-landscape .online-rematch-status,
+html.touch-device.touch-landscape:not(.tablet-device) .online-rematch-status{font-size:9px!important;line-height:1.22!important}
+html.phone-device.phone-landscape #againBtn,
+html.touch-device.touch-landscape:not(.tablet-device) #againBtn{height:36px!important;min-height:36px!important;font-size:9px!important}
+html.phone-device.phone-landscape .handoff-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .handoff-modal{width:min(520px,calc(var(--phone-stage-width) - 20px))!important;padding:12px 14px!important}
+html.phone-device.phone-landscape .handoff-title,
+html.touch-device.touch-landscape:not(.tablet-device) .handoff-title{font-size:22px!important;line-height:1!important}
+html.phone-device.phone-landscape .handoff-text,
+html.touch-device.touch-landscape:not(.tablet-device) .handoff-text{font-size:9.5px!important;line-height:1.22!important}
+html.phone-device.phone-landscape .handoff-ready,
+html.touch-device.touch-landscape:not(.tablet-device) .handoff-ready{height:36px!important;min-height:36px!important;font-size:9px!important}
+
+/* Extra-short landscape phones: shave only geometry, never shrink text to unreadable dots. */
+@media (max-height:395px){
+  html.phone-device.phone-landscape,
+  html.touch-device.touch-landscape:not(.tablet-device){
+    --v333-left:120px;
+    --v333-right:102px;
+    --v333-top:28px;
+    --v333-hand:68px;
+  }
+  html.phone-device.phone-landscape .side,
+  html.touch-device.touch-landscape:not(.tablet-device) .side{grid-template-rows:minmax(0,.82fr) 26px minmax(0,1.18fr)!important;padding:3px!important;gap:2px!important}
+  html.phone-device.phone-landscape .battle-status,
+  html.touch-device.touch-landscape:not(.tablet-device) .battle-status,
+  html.phone-device.phone-landscape .battle-status .opponent-hand-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) .battle-status .opponent-hand-panel{height:26px!important;min-height:26px!important;max-height:26px!important}
+  html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-shell,
+  html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-shell{grid-template-rows:18px minmax(0,1fr) 70px!important}
+  html.phone-device.phone-landscape #enemyLeader .leader-ui-shell,
+  html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-shell{grid-template-rows:18px minmax(0,1fr)!important}
+  html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-name,
+  html.phone-device.phone-landscape #enemyLeader .leader-ui-name,
+  html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-name,
+  html.touch-device.touch-landscape:not(.tablet-device) #enemyLeader .leader-ui-name{height:18px!important;min-height:18px!important;max-height:18px!important;font-size:7.8px!important}
+  html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability,
+  html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability{height:70px!important;min-height:70px!important;max-height:70px!important;grid-template-rows:9px minmax(0,1fr) 18px!important}
+  html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-ability-text,
+  html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-ability-text{font-size:6.6px!important}
+  html.phone-device.phone-landscape #playerLeaderPanel .leader-ui-use,
+  html.touch-device.touch-landscape:not(.tablet-device) #playerLeaderPanel .leader-ui-use{height:18px!important;min-height:18px!important;max-height:18px!important;font-size:6px!important;line-height:15px!important}
+  html.phone-device.phone-landscape .board .row,
+  html.touch-device.touch-landscape:not(.tablet-device) .board .row{grid-template-columns:26px minmax(0,1fr) 22px!important}
+  html.phone-device.phone-landscape .row-cards .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card{flex-basis:30px!important;width:30px!important;min-width:30px!important;max-width:30px!important;height:43px!important;min-height:43px!important;max-height:43px!important}
+  html.phone-device.phone-landscape #hand .card,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card{flex-basis:42px!important;width:42px!important;min-width:42px!important;max-width:42px!important;height:61px!important;min-height:61px!important;max-height:61px!important}
+  html.phone-device.phone-landscape .detail-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) .detail-preview,
+  html.phone-device.phone-landscape .detail-preview .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{width:82px!important;min-width:82px!important;max-width:82px!important}
+  html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+  html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card{width:min(68px,100%)!important;max-width:68px!important}
+  html.phone-device.phone-landscape .faction-modal .faction,
+  html.touch-device.touch-landscape:not(.tablet-device) .faction-modal .faction{height:92px!important;min-height:92px!important;max-height:92px!important}
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -11013,7 +11818,7 @@ html.touch-device.touch-landscape .top-score-label{
   <div class="modal soul-suicide-modal" role="dialog" aria-modal="true" aria-labelledby="soulSuicideTitle">
     <div class="soul-suicide-kicker">SOUL SUICIDE</div>
     <h1 id="soulSuicideTitle">ВЫ УВЕРЕНЫ?</h1>
-    <p>Это действие приведёт к поражению в раунде.</p>
+    <p>Это действие может привести к поражению в раунде.</p>
     <div class="soul-suicide-actions">
       <button id="soulSuicideNo" type="button" class="deck-builder-back">НЕТ</button>
       <button id="soulSuicideYes" type="button" class="start-btn">ДА</button>
@@ -11052,12 +11857,11 @@ html.touch-device.touch-landscape .top-score-label{
     const portrait=window.matchMedia ? window.matchMedia("(orientation: portrait)").matches : h>=w;
     const standalone=window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone===true;
     if(h&&w){
-      const browserPhoneStage=Math.min(w,Math.round(h*16/9));
-      const standalonePhoneStage=Math.min(browserPhoneStage,760);
-      const touchStage=(standalone&&phone)
-        ? standalonePhoneStage
-        : Math.min(w,Math.round(h*2.06));
-      root.style.setProperty("--phone-stage-width",`${standalone&&phone?standalonePhoneStage:browserPhoneStage}px`);
+      // V333: browser and installed PWA use exactly the same phone stage.
+      // One 16:9-ish, max-760px stage prevents browser/PWA size drift.
+      const phoneStage=Math.min(w,Math.round(h*16/9),760);
+      const touchStage=phone ? phoneStage : Math.min(w,1180);
+      root.style.setProperty("--phone-stage-width",`${phoneStage}px`);
       root.style.setProperty("--touch-stage-width",`${touchStage}px`);
       root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
     }
@@ -11368,8 +12172,8 @@ html.touch-device.touch-landscape .top-score-label{
   let transientPlayedCardPreviewActor=null;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="332";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v332-";
+  const ONLINE_GAME_VERSION="334";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v334-";
   // V322: ONLINE DUEL uses the proven public WSS/MQTT relay transport.
   // E/H is encoded as the first room-code character so Guest selects the same broker as HOST.
   const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
@@ -17351,10 +18155,26 @@ ${template.desc}`:""}`;
     networkSession.connected=true;
     networkSession.linkSuspended=false;
     networkSession.roomClosed=false;
-    if(status) status.textContent=`Игрок 2 подключён через ${networkSession.mqttBroker?.name||"WSS relay"}. Переходим к созданию колоды…`;
+    if(status) status.textContent=`Игрок 2 подключён через ${networkSession.mqttBroker?.name||"WSS relay"}. Подтверждаем соединение…`;
     onlineDiagLog("MQTT Guest accepted",{roomCode:networkSession.roomCode,guestId,broker:networkSession.mqttBroker?.name||null});
-    ensureHostOnlinePregameUi("mqtt-join-request");
+
+    // V334: acknowledge the GUEST before touching HOST UI.
+    // If local navigation throws or the browser is busy, GUEST must still receive HELLO.
     mqttPublishTo(guestId,"hello",{role:"host",roomCode:networkSession.roomCode},{senderRole:"host"});
+
+    try{
+      ensureHostOnlinePregameUi("mqtt-join-request");
+    }catch(uiErr){
+      onlineDiagWarn("HOST pregame UI transition failed after guest ACK",{message:uiErr?.message||String(uiErr)});
+    }
+
+    // Duplicate HELLO is intentional and safe. Public relays occasionally lose/delay a packet.
+    setTimeout(()=>{
+      if(networkSession.role==="host" && networkSession.connected && networkSession.remoteId===guestId && !networkSession.roomClosed){
+        mqttPublishTo(guestId,"hello",{role:"host",roomCode:networkSession.roomCode},{senderRole:"host"});
+      }
+    },350);
+
     if(networkSession.localSetup) sendNetworkEvent("setup",networkSession.localSetup);
     await handleNetworkEvent({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"hello",payload:{role:"guest",roomCode:networkSession.roomCode},senderRole:"guest",senderId:guestId,roomCode:networkSession.roomCode});
   }
@@ -17469,18 +18289,48 @@ ${template.desc}`:""}`;
   }
   function waitForMqttHost(status,code){
     return new Promise((resolve,reject)=>{
-      const timer=setTimeout(()=>{
+      let finished=false;
+      let attempts=0;
+      let retryTimer=null;
+
+      const cleanup=()=>{
+        finished=true;
+        clearTimeout(timeoutTimer);
+        if(retryTimer) clearTimeout(retryTimer);
+      };
+      const wrappedResolve=v=>{
+        if(finished) return;
+        cleanup();
+        networkSession.mqttJoinResolve=null;
+        networkSession.mqttJoinReject=null;
+        resolve(v);
+      };
+      const wrappedReject=e=>{
+        if(finished) return;
+        cleanup();
+        networkSession.mqttJoinResolve=null;
+        networkSession.mqttJoinReject=null;
+        reject(e);
+      };
+      const sendJoin=()=>{
+        if(finished) return;
+        if(networkSession.role!=="guest" || networkSession.roomCode!==code || !networkSession.mqtt?.connected) return;
+        attempts++;
+        appendDiagStatus(status,attempts===1?`joining room ${code}`:`joining room ${code} · попытка ${attempts}`);
+        sendRawNetworkEnvelope({type:"join_request",payload:{roomCode:code},senderRole:"guest",targetId:null});
+        retryTimer=setTimeout(sendJoin,1400);
+      };
+
+      const timeoutTimer=setTimeout(()=>{
+        if(finished) return;
         if(networkSession.mqttJoinResolve!==wrappedResolve && networkSession.mqttJoinReject!==wrappedReject) return;
-        networkSession.mqttJoinResolve=null; networkSession.mqttJoinReject=null;
-        reject(makeOnlineDiagError("room-not-found","HOST не ответил за 12 секунд"));
-      },12000);
-      const wrappedResolve=v=>{ clearTimeout(timer); resolve(v); };
-      const wrappedReject=e=>{ clearTimeout(timer); reject(e); };
+        wrappedReject(makeOnlineDiagError("room-not-found","HOST не ответил после повторных запросов"));
+      },20000);
+
       networkSession.mqttJoinResolve=wrappedResolve;
       networkSession.mqttJoinReject=wrappedReject;
       appendDiagStatus(status,"relay connected");
-      appendDiagStatus(status,`joining room ${code}`);
-      sendRawNetworkEnvelope({type:"join_request",payload:{roomCode:code},senderRole:"guest",targetId:null});
+      sendJoin();
     });
   }
 
@@ -17632,7 +18482,7 @@ ${template.desc}`:""}`;
     $("#networkJoinCode").value=code;
     if(code.length!==6){ if(status) status.textContent="Введите полный шестизначный код комнаты."; return false; }
     const broker=mqttBrokerByKey(code[0]);
-    if(!broker){ if(status) status.textContent="Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v322."; return false; }
+    if(!broker){ if(status) status.textContent="Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v334."; return false; }
     if(btn) btn.disabled=true;
     try{
       resetNetworkSession();
