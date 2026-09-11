@@ -11962,6 +11962,569 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
 }
 </style>
 
+
+<style id="v341-mobile-roman-marks">
+/* V341 — one compact Roman-mark language for PHONE browser + PWA.
+   Old Unicode Roman numeral glyphs are visually replaced by plain I / II / III
+   so mobile browsers cannot fall back to the oversized serif glyph model. */
+
+/* Battlefield row labels. Keep the original text in DOM for accessibility,
+   but paint a controlled mobile mark through ::before. */
+html.phone-device.phone-landscape .board .row-label strong,
+html.touch-device.touch-landscape:not(.tablet-device) .board .row-label strong{
+  font-size:0!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  word-spacing:0!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+  color:transparent!important;
+  font-family:Arial,"Helvetica Neue",sans-serif!important;
+  font-weight:900!important;
+}
+html.phone-device.phone-landscape .board .row-label strong::before,
+html.touch-device.touch-landscape:not(.tablet-device) .board .row-label strong::before{
+  display:inline-block!important;
+  color:#fff!important;
+  font-family:Arial,"Helvetica Neue",sans-serif!important;
+  font-size:8px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  letter-spacing:-.08em!important;
+  -webkit-text-stroke:.35px #000!important;
+  paint-order:stroke fill!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.95)!important;
+}
+html.phone-device.phone-landscape .board .row[data-row="melee"] .row-label strong::before,
+html.touch-device.touch-landscape:not(.tablet-device) .board .row[data-row="melee"] .row-label strong::before{content:"I"!important}
+html.phone-device.phone-landscape .board .row[data-row="ranged"] .row-label strong::before,
+html.touch-device.touch-landscape:not(.tablet-device) .board .row[data-row="ranged"] .row-label strong::before{content:"II"!important}
+html.phone-device.phone-landscape .board .row[data-row="support"] .row-label strong::before,
+html.touch-device.touch-landscape:not(.tablet-device) .board .row[data-row="support"] .row-label strong::before{content:"III"!important}
+
+/* Every battle-card placement badge uses the ASCII mobile rendering stored in
+   data-mobile-mark. This covers hand and right-side preview consistently. */
+html.phone-device.phone-landscape .app .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .app .card .row-badge{
+  font-size:0!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  word-spacing:0!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+  color:transparent!important;
+  font-family:Arial,"Helvetica Neue",sans-serif!important;
+}
+html.phone-device.phone-landscape .app .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) .app .card .row-badge::after{
+  content:attr(data-mobile-mark)!important;
+  display:inline-block!important;
+  color:#fff!important;
+  font-family:Arial,"Helvetica Neue",sans-serif!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  line-height:.95!important;
+  letter-spacing:-.07em!important;
+  white-space:nowrap!important;
+  -webkit-text-stroke:.4px #000!important;
+  paint-order:stroke fill!important;
+  text-shadow:0 1px 1px rgba(0,0,0,.95)!important;
+}
+
+/* Hand is the smallest card presentation. */
+html.phone-device.phone-landscape #hand .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::after{
+  font-size:8px!important;
+}
+
+/* Preview is larger, but must use the same model rather than the old giant I. */
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge{
+  top:3px!important;
+  right:3px!important;
+}
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge::after{
+  font-size:11px!important;
+}
+
+/* Medic/grave picker is the intentional exception where row placement marks are visible. */
+html.phone-device.phone-landscape #choiceOverlay .show-row-placement .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .show-row-placement .row-badge::after{
+  font-size:10px!important;
+}
+
+@media (max-height:395px){
+  html.phone-device.phone-landscape .board .row-label strong::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .board .row-label strong::before{
+    font-size:7px!important;
+  }
+  html.phone-device.phone-landscape #hand .card .row-badge::after,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::after{
+    font-size:7px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge::after{
+    font-size:9px!important;
+  }
+}
+</style>
+
+
+<style id="v342-battlefield-frame-refresh">
+/* V342 — current straight/angular frame language for cards already on the battlefield. */
+.row-cards .card .card-face{
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.15cqw var(--card-ink),
+    0 0 0 2.15cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.4cqw 4.2cqw rgba(0,0,0,.46),
+    0 0 3.6cqw var(--card-frame-glow)!important;
+}
+.row-cards .card .card-face::before{
+  inset:2.25cqw!important;
+  border-radius:0!important;
+  border:.72cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .5cqw rgba(0,0,0,.9)!important;
+}
+.row-cards .card .card-face>.art{
+  border-radius:0!important;
+  clip-path:none!important;
+}
+.row-cards .card .frame{
+  border-radius:0!important;
+  clip-path:none!important;
+}
+</style>
+
+
+<style id="v347-flight-uses-current-frame">
+/* V347 — cards keep the same current straight/angular frame while flying.
+   Prevent the temporary flight layer from falling back to the old rounded frame model. */
+.card-flight .card-face{
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.15cqw var(--card-ink),
+    0 0 0 2.15cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.4cqw 4.2cqw rgba(0,0,0,.46),
+    0 0 3.6cqw var(--card-frame-glow)!important;
+}
+.card-flight .card-face::before{
+  inset:2.25cqw!important;
+  border-radius:0!important;
+  border:.72cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .5cqw rgba(0,0,0,.9)!important;
+}
+.card-flight .card-face>.art,
+.card-flight .frame{
+  border-radius:0!important;
+  clip-path:none!important;
+}
+</style>
+
+<style id="v343-mobile-setup-lock-and-footer-balance">
+/* ===== V343: PWA/mobile setup polish =====
+   1) smaller locks on ASSEMBLE + CHOOSE YOUR SOUL for phone/mobile touch landscape;
+   2) cleaner, explicit semicircle on CHOOSE YOUR SOUL;
+   3) more compact footer buttons on ASSEMBLE + CHOOSE. */
+
+/* ---------- CHOOSE YOUR SOUL: smaller lock overlay ---------- */
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-lock-overlay .legacy-lock-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-lock-overlay .legacy-lock-badge{
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  min-height:32px!important;
+  border-width:1.5px!important;
+  font-size:18px!important;
+  box-shadow:0 2px 0 #000,0 0 0 2px rgba(255,90,22,.68),0 0 12px rgba(255,90,22,.28)!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-lock-overlay,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-lock-overlay{
+  background:rgba(5,7,10,.12)!important;
+}
+
+/* ---------- ASSEMBLE YOUR SOUL: smaller lock overlay ---------- */
+html.phone-device.phone-landscape #deckBuilderOverlay .assemble-lock-overlay .legacy-lock-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .assemble-lock-overlay .legacy-lock-badge{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  min-height:34px!important;
+  border-width:1.5px!important;
+  font-size:19px!important;
+  box-shadow:0 2px 0 #000,0 0 0 2px rgba(255,90,22,.68),0 0 13px rgba(255,90,22,.28)!important;
+}
+
+/* ---------- CHOOSE YOUR SOUL: stable small semicircle on mobile/PWA ---------- */
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:1px!important;
+  transform:translateX(-50%)!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  padding-top:1px!important;
+  background:#050608!important;
+  color:#f6f3ea!important;
+  border:1px solid var(--card-frame)!important;
+  border-bottom:0!important;
+  border-radius:999px 999px 0 0!important;
+  line-height:1!important;
+  box-shadow:0 1px 1px rgba(0,0,0,.28), inset 0 0 0 1px var(--card-ink)!important;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power{
+  width:24px!important;
+  height:12px!important;
+  min-width:24px!important;
+  min-height:12px!important;
+  max-width:24px!important;
+  max-height:12px!important;
+  font-size:9.5px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power{
+  width:20px!important;
+  height:10px!important;
+  min-width:20px!important;
+  min-height:10px!important;
+  max-width:20px!important;
+  max-height:10px!important;
+  font-size:8px!important;
+}
+
+/* ---------- ASSEMBLE footer: buttons were still too tall ---------- */
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) 64px!important;
+  gap:4px!important;
+  padding:3px 0 0!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions>button,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions>button{
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  line-height:22px!important;
+  padding:0 6px!important;
+  font-size:6.9px!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-counter,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-counter{
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  line-height:22px!important;
+  padding:0 2px!important;
+  font-size:12px!important;
+}
+
+/* ---------- CHOOSE footer: confirm button a bit shorter ---------- */
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions{
+  margin-top:3px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  padding:0 10px!important;
+  font-size:8px!important;
+  line-height:30px!important;
+}
+
+@media (max-height:390px){
+  html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-actions>button,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-actions>button{
+    height:21px!important;min-height:21px!important;max-height:21px!important;line-height:21px!important;
+  }
+  html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-counter,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-counter{
+    height:21px!important;min-height:21px!important;max-height:21px!important;line-height:21px!important;
+  }
+  html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
+  html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
+    height:28px!important;min-height:28px!important;max-height:28px!important;line-height:28px!important;
+  }
+}
+</style>
+
+
+<style id="v344-online-vfx-rematch-fixes">
+/* V344 — online landing ghosts live INSIDE the battlefield row.
+   This gives them the exact final battlefield frame / large semicircle immediately
+   and makes consecutive summons occupy different slots before canonical state arrives. */
+.row-cards .network-landing-ghost{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:auto!important;
+  height:auto!important;
+  margin:0!important;
+  transform:none!important;
+  opacity:1!important;
+  pointer-events:none!important;
+  z-index:6!important;
+  animation:none!important;
+}
+.network-pending-destroy{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+/* Undo ONLY the accidental v343 CHOOSE YOUR SOUL button reduction.
+   Restore the exact v342 mobile/PWA button geometry. */
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
+  height:36px!important;
+  min-height:36px!important;
+  max-height:36px!important;
+  padding:0 10px!important;
+  font-size:8.5px!important;
+  line-height:36px!important;
+}
+@media (max-height:390px){
+  html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
+  html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
+    height:36px!important;
+    min-height:36px!important;
+    max-height:36px!important;
+    line-height:36px!important;
+  }
+}
+</style>
+
+
+<style id="v345-desktop-mulligan-restore">
+/* V345 — desktop-only restore. Mobile/PWA CHOOSE YOUR SOUL stays exactly as v344. */
+@media (min-width:900px){
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-hover-info{
+    display:flex!important;
+    opacity:0!important;
+    visibility:visible!important;
+    transform:none!important;
+    pointer-events:none!important;
+  }
+
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):hover,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):focus-within,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-grid .card:not(.replace):hover,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-grid .card:not(.replace):focus-within{
+    transform:translateY(-4px) scale(1.04)!important;
+    filter:none!important;
+    box-shadow:none!important;
+    z-index:40!important;
+  }
+
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):hover .mulligan-hover-info,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):focus-within .mulligan-hover-info,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-grid .card:not(.replace):hover .mulligan-hover-info,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-grid .card:not(.replace):focus-within .mulligan-hover-info{
+    display:flex!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+
+  /* Locked/replacement cards remain locked and do not reveal their ability. */
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card.replace .mulligan-hover-info,
+  html:not(.phone-device):not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace .mulligan-hover-info{
+    display:none!important;
+    opacity:0!important;
+    visibility:hidden!important;
+  }
+}
+</style>
+
+
+<style id="v348-landing-return-board-polish">
+/* ===== V348: LANDING IMPACT + RETURN-TARGET PLAY + BATTLEFIELD GEOMETRY ===== */
+
+/* 1. Landing impact: low, weighty table hit. No giant blurry blob. */
+.landing-impact{
+  position:fixed!important;
+  z-index:10035!important;
+  width:var(--impact-w,126px)!important;
+  height:var(--impact-h,62px)!important;
+  left:var(--impact-x,0px)!important;
+  top:var(--impact-y,0px)!important;
+  transform:translate(-50%,-58%)!important;
+  pointer-events:none!important;
+  overflow:visible!important;
+  filter:none!important;
+}
+.landing-impact .impact-shadow{
+  position:absolute;left:50%;bottom:5%;width:54%;height:18%;
+  transform:translateX(-50%) scale(.55,.55);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(0,0,0,.56) 0 28%,rgba(0,0,0,.24) 55%,transparent 76%);
+  opacity:0;
+  animation:v348ImpactShadow .48s cubic-bezier(.14,.75,.2,1) forwards;
+}
+.landing-impact .impact-flash{
+  position:absolute;left:50%;bottom:19%;width:56%;height:2px;
+  transform:translateX(-50%) scaleX(.08);
+  transform-origin:center;
+  background:linear-gradient(90deg,transparent,rgba(255,250,231,.92) 26%,#fff 50%,rgba(255,233,189,.86) 72%,transparent);
+  box-shadow:0 0 6px rgba(255,239,199,.34);
+  opacity:0;
+  animation:v348ImpactFlash .28s ease-out forwards;
+}
+.landing-impact .impact-wave{
+  position:absolute;left:50%;bottom:9%;width:34%;height:20%;
+  transform:translateX(-50%) scale(.45,.55);
+  border:1px solid rgba(226,215,190,.55);
+  border-radius:50%;
+  opacity:0;
+  animation:v348ImpactWave .52s cubic-bezier(.12,.72,.18,1) forwards;
+}
+.landing-impact .landing-smoke-puff{
+  position:absolute;left:50%;bottom:12%;
+  width:var(--s,24px);height:calc(var(--s,24px) * .72);
+  margin-left:calc(var(--s,24px) * -.5);
+  border-radius:50%;
+  background:radial-gradient(ellipse at 50% 62%,rgba(232,225,207,.72) 0 18%,rgba(171,159,138,.48) 42%,rgba(91,83,71,.18) 66%,transparent 78%);
+  filter:blur(var(--blur,.7px));
+  opacity:0;
+  transform:translate(0,0) scale(.34);
+  animation:v348LandingSmoke var(--dur,560ms) cubic-bezier(.14,.67,.18,1) forwards;
+  animation-delay:var(--delay,0ms);
+}
+.landing-impact .impact-chip{
+  position:absolute;left:50%;bottom:18%;
+  width:var(--cw,3px);height:var(--ch,5px);
+  margin-left:-1px;
+  background:rgba(218,201,170,.78);
+  clip-path:polygon(50% 0,100% 35%,74% 100%,14% 80%,0 30%);
+  opacity:0;
+  transform:translate(0,0) rotate(0deg);
+  animation:v348ImpactChip var(--dur,470ms) cubic-bezier(.1,.66,.18,1) forwards;
+  animation-delay:var(--delay,0ms);
+}
+@keyframes v348ImpactShadow{
+  0%{opacity:0;transform:translateX(-50%) scale(.45,.45)}
+  18%{opacity:.72;transform:translateX(-50%) scale(.86,.72)}
+  100%{opacity:0;transform:translateX(-50%) scale(1.35,1.05)}
+}
+@keyframes v348ImpactFlash{
+  0%{opacity:0;transform:translateX(-50%) scaleX(.08)}
+  16%{opacity:1;transform:translateX(-50%) scaleX(.72)}
+  45%{opacity:.58;transform:translateX(-50%) scaleX(1.08)}
+  100%{opacity:0;transform:translateX(-50%) scaleX(1.32)}
+}
+@keyframes v348ImpactWave{
+  0%{opacity:0;transform:translateX(-50%) scale(.38,.5)}
+  18%{opacity:.62}
+  100%{opacity:0;transform:translateX(-50%) scale(2.5,1.38)}
+}
+@keyframes v348LandingSmoke{
+  0%{opacity:0;transform:translate(0,2px) scale(.28)}
+  16%{opacity:.68;transform:translate(calc(var(--dx) * .18),calc(var(--dy) * .12)) scale(.72)}
+  58%{opacity:.42;transform:translate(calc(var(--dx) * .66),calc(var(--dy) * .62)) scale(1.08)}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.38)}
+}
+@keyframes v348ImpactChip{
+  0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.7)}
+  14%{opacity:.9}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.88)}
+}
+.card.landed-impact{
+  animation:v348CardTableHit .34s cubic-bezier(.16,.78,.2,1) both!important;
+  transform-origin:center bottom!important;
+  filter:none!important;
+}
+@keyframes v348CardTableHit{
+  0%{transform:translateY(-1.5px) scale(1.012,1.018)}
+  24%{transform:translateY(1.2px) scale(.992,.978)}
+  48%{transform:translateY(-.45px) scale(1.003,1.006)}
+  72%{transform:translateY(.15px) scale(.999,.998)}
+  100%{transform:none}
+}
+
+/* A target being returned is hidden in the replacement render while its old DOM
+   is still used by the smoke overlay. The incoming card therefore occupies the
+   exact target slot instead of briefly sitting beside it. */
+.row-cards .card.returning-hidden{display:none!important}
+
+/* 3. Battlefield geometry: exact 2:3 faces, vertical centering, breathing room
+   around the frame so the lower edge is never clipped. */
+@media (min-width:900px){
+  html:not(.phone-device):not(.tablet-device) .row-cards{
+    align-items:center!important;
+    gap:4px!important;
+    padding:3px 5px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .row-cards .card{
+    flex:0 0 50px!important;
+    width:50px!important;min-width:50px!important;max-width:50px!important;
+    height:75px!important;min-height:75px!important;max-height:75px!important;
+    margin:0!important;
+    align-self:center!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .row-cards .card .card-face{
+    width:50px!important;height:75px!important;min-height:75px!important;max-height:75px!important;
+    aspect-ratio:auto!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .row-cards .card .power{
+    width:28px!important;min-width:28px!important;max-width:28px!important;
+    height:15px!important;min-height:15px!important;max-height:15px!important;
+    border-radius:28px 28px 0 0!important;
+    font-size:16px!important;padding-top:1px!important;bottom:2px!important;
+  }
+}
+html.phone-device.phone-landscape .row-cards,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards{
+  align-items:center!important;
+  padding:0 2px!important;
+  gap:2px!important;
+}
+html.phone-device.phone-landscape .row-cards .card,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
+  flex:0 0 27px!important;
+  width:27px!important;min-width:27px!important;max-width:27px!important;
+  height:40.5px!important;min-height:40.5px!important;max-height:40.5px!important;
+  margin:0!important;align-self:center!important;
+}
+html.phone-device.phone-landscape .row-cards .card .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .card-face{
+  width:27px!important;height:40.5px!important;min-height:40.5px!important;max-height:40.5px!important;
+  aspect-ratio:auto!important;
+}
+html.phone-device.phone-landscape .row-cards .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
+  width:15px!important;min-width:15px!important;max-width:15px!important;
+  height:8px!important;min-height:8px!important;max-height:8px!important;
+  border-radius:15px 15px 0 0!important;
+  font-size:7px!important;padding-top:0!important;bottom:1px!important;
+}
+@media (max-height:395px){
+  html.phone-device.phone-landscape .row-cards .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
+    flex-basis:26px!important;width:26px!important;min-width:26px!important;max-width:26px!important;
+    height:39px!important;min-height:39px!important;max-height:39px!important;
+  }
+  html.phone-device.phone-landscape .row-cards .card .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .card-face{
+    width:26px!important;height:39px!important;min-height:39px!important;max-height:39px!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -12283,7 +12846,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
   const CARD_POOL = [
     // Living — v128 approved Living World patch.
     C("l_urahara","Кисукэ Урахара","living",10,"support","uraharaReflect","Герой. Щит из крови: первое негативное вражеское воздействие за каждое пребывание Урахары на поле отражается, а если зеркально применить его нельзя — отменяется.",true),
-    C("l_yoruichi","Йоруичи Шихоин — Кошка","living",5,"support","yoruichiShunpo","Герой. Шунпо: верните одного своего обычного бойца с поля в руку. Героя вернуть нельзя.",true),
+    C("l_yoruichi","Йоруичи Шихоин — Кошка","living",5,"support","yoruichiShunpo","Герой. Шунпо: выберите своего обычного бойца на поле; Йоруичи приземляется прямо на него, возвращает его в руку и занимает его ряд. Привязки к ряду нет. Героя вернуть нельзя.",true),
     C("l_ginjo","Куго Гиндзё","living",10,"melee","fullbringerAura","Герой. Лидер Fullbringer: пока Гиндзё активен на вашей стороне, все ваши Fullbringer получают +2 силы.",true),
     C("l_ichigo","Ичиго Куросаки","living",10,"melee","battleSpirit","Fullbringer. Боевой дух: все остальные обычные бойцы 1-го ряда получают +2 силы. Получает бонус Лидера Fullbringer Гиндзё.",true),
     C("vh_shinji","Хирако Синдзи","living",10,"ranged","shinjiMasks","Герой. Если до его выхода на вашей стороне уже был другой Вайзард, выберите Sakanade или Пустофикацию Вайзардов. Иначе Sakanade срабатывает автоматически.",true),
@@ -12324,10 +12887,10 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     C("s_ukitake","Дзюсиро Укитакэ","soul",7,"ranged","soulUkitakeKamikake","Два капитана: +2 при наличии Сюнсуя. После успешного выхода создаёт бесплатную карту Камикаке, превращающую Укитакэ в Мимихаги."),
     C("s_unohana","Рэцу Унохана","soul",10,"support","soulRetsuMedic","Герой. Медик: возвращает из собственного кладбища в руку обычного бойца или Героя; возвращённая карта не разыгрывается автоматически.",true),
     C("s_unohana_yachiru","Ятиру Унохана","soul",10,"melee","soulUnohanaBloodlust","Герой. Minazuki — Bloodlust: при выходе можно отметить до 3 разных обычных врагов текущей силы 0–6. После каждого завершённого активного хода владельца уничтожает одну оставшуюся цель; за каждое уничтожение получает +1. Silence ставит таймер на паузу.",true),
-    C("s_byakuya","Бякуя Кучики","soul",10,"ranged","soulByakuyaShunpo","Герой. Шунпо: при выходе вручную вернуть одного своего обычного бойца с поля в руку; Героя вернуть нельзя.",true,true),
+    C("s_byakuya","Бякуя Кучики","soul",10,"ranged","soulByakuyaShunpo","Герой. Шунпо: выберите своего обычного бойца; Бякуя приземляется прямо на него, возвращает его в руку и занимает его ряд. Привязки к ряду нет; Героя вернуть нельзя.",true,true),
     C("s_byakuya_royal","Byakuya Kuchiki — Post Royal Guard Training","soul",12,"ranged","soulByakuyaIkkaSenjinka","Герой. Ikka Senjinka: при выходе выбрать режим — либо до 3 разных обычных врагов 0–6 в одном ряду получают −3 (минимум 1), либо один обычный враг 0–8 получает −6 (минимум 1).",true,true),
     C("s_soifon","Сой Фон","soul",6,"melee","soulNigeki","Nigeki Kessatsu: при выходе выберите обычного врага и наложите метку. Если Сой Фон остаётся активна до следующего своего завершённого хода, цель уничтожается."),
-    C("s_omaeda","Марэтиё Омаэда","soul",3,"melee","omaedaShunpoGuard","Шунпо: при выходе верните одного своего обычного бойца с поля в руку; Героя вернуть нельзя. Телохранитель: первое уничтожение Сой Фон, пока Омаэда активен на поле, перенаправляется на Омаэду — он погибает вместо неё."),
+    C("s_omaeda","Марэтиё Омаэда","soul",3,"melee","omaedaShunpoGuard","Шунпо: выберите своего обычного бойца; Омаэда приземляется прямо на него, возвращает его в руку и занимает его ряд. Привязки к ряду нет; Героя вернуть нельзя. Телохранитель: первое уничтожение Сой Фон, пока Омаэда активен на поле, перенаправляется на Омаэду — он погибает вместо неё."),
     C("s_renji","Рэндзи Абарай — Zabimaru","soul",5,"melee","soulRenjiZabimaru","При выходе случайно уничтожает одного обычного врага текущей силой 0–4. Герои недоступны."),
     C("s_renji_soo","Рэндзи Абарай — Soo Zabimaru","soul",8,"melee","soulRenjiSooZabimaru","При выходе вручную выбрать одного обычного врага текущей силой 0–8 и уничтожить его. Герои недоступны."),
     C("s_komamura","Садзин Комамура — Kokujō Tengen Myō'ō","soul",8,"melee","soulKomamuraBankai","При выходе вручную выбрать одного обычного вражеского бойца текущей силы 0–6 и уничтожить его. Герои недоступны."),
@@ -12384,7 +12947,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     C("h_ulquiorra","Улькиорра Сифер","hueco",8,"melee","none","Герой. Может быть заменён условной формой Segunda Etapa.",true),
     C("h_nnoitra","Ннойтора Джилга","hueco",8,"melee","huecoComeback","Если вы отстаёте в момент розыгрыша, получает +2 (8 → 10). Узы Ннойторы и Теслы: пока оба находятся на поле, Ннойтора дополнительно получает +4."),
     C("h_grimmjow","Гриммджоу Джагерджак","hueco",6,"melee","huecoComeback","Если вы отстаёте в момент розыгрыша, получает +2. Король Стаи: считается дополнительным участником Прочной связи своих фрасьонов, но сам множитель не получает; конфликтует с Луппи."),
-    C("h_zommari","Зоммари Руро","hueco",5,"support","gemelosSonido","Gemelos Sonído: вручную верните одного обычного бойца со своей стороны поля в руку. Вражеский Шпион на вашей стороне тоже допустим."),
+    C("h_zommari","Зоммари Руро","hueco",5,"support","gemelosSonido","Gemelos Sonído: выберите обычного бойца на своей стороне поля; Зоммари приземляется прямо на него, возвращает его в руку и занимает его ряд. Привязки к ряду нет. Вражеский Шпион на вашей стороне тоже допустим."),
     C("h_szayel","Сзаэльапорро Гранц","hueco",5,"support","medic","Медик: вручную возвращает только обычного бойца из своего кладбища в руку; Герои недоступны. Вместе с Фрасьонами Сзаэльапорро открывает бесплатную Resurrección."),
     C("h_aaroniero","Аарониро Арруруэри","hueco",3,"support","glotoneria","Glotonería: случайно поглощает из своего кладбища обычную карту базовой силой 0–5 и получает её базовую силу."),
     C("h_luppi","Луппи Антенор","hueco",6,"ranged","none","Если одновременно с Гриммджоу на одной стороне, оба получают −2."),
@@ -12487,8 +13050,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
   let transientPlayedCardPreviewActor=null;
   // v135 runtime-startup fix: gameplay/network rules remain v134-compatible.
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="340";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v340-";
+  const ONLINE_GAME_VERSION="348";
+  const ONLINE_PEER_PREFIX="bleach-soul-clash-v348-";
   // V322: ONLINE DUEL uses the proven public WSS/MQTT relay transport.
   // E/H is encoded as the first room-code character so Guest selects the same broker as HOST.
   const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
@@ -14258,6 +14821,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     if(ev.type==="rematch_ready"){
       networkSession.peerRematchReady=true;
       updateOnlineRematchUi();
+      if(state && !state.gameOver && !networkSession.localRematchReady){
+        toast("СОПЕРНИК ПРЕДЛАГАЕТ НОВУЮ ИГРУ — НАЖМИТЕ «НОВАЯ ИГРА»");
+      }
       if(networkSession.role==="host"){
         await sendNetworkEvent("rematch_status",{hostReady:networkSession.localRematchReady,guestReady:true});
         await maybeStartOnlineRematch();
@@ -14697,14 +15263,24 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     if(typeof clearResolvedNetworkLandingGhosts==="function") clearResolvedNetworkLandingGhosts();
     if(state.justPlayed){ setTimeout(()=>{ if(state){ state.justPlayed=null; state.justPlayedRow=null; state.justPlayedSide=null; } },520); }
   }
+  const TARGET_RETURN_LANDING_ABILITIES=new Set(["yoruichiShunpo","omaedaShunpoGuard","soulByakuyaShunpo","gemelosSonido"]);
+  function isTargetReturnLandingCard(card){ return !!card && TARGET_RETURN_LANDING_ABILITIES.has(card.ability); }
+  function returnLandingTargetFromPlan(sideKey,plan){
+    const record=(plan?.choices||[]).find(x=>x?.kind==="card");
+    if(!record?.uid) return null;
+    const loc=findBoardCardByUid(record.uid);
+    return loc && loc.sideKey===sideKey ? loc : null;
+  }
+
   function renderRow(sideKey,row,viewSide=activeViewSide()){
     const side=state[sideKey]; const el=document.createElement("div");
     const actor=localControlledSide();
     const playable = canLocalSideAct();
     const isUnit=state.selected && !state.selected.special;
     const unitReady = isUnit && canPlayUnit(actor,state.selected);
-    const isValid = playable && unitReady && sideKey===actor && validRows(state.selected).includes(row) && state.selected.ability!=="spy";
-    const spyValid = playable && unitReady && state.selected && state.selected.ability==="spy" && sideKey===enemyOf(actor) && validRows(state.selected).includes(row);
+    const targetReturnSelected=isTargetReturnLandingCard(state.selected);
+    const isValid = playable && unitReady && !targetReturnSelected && sideKey===actor && validRows(state.selected).includes(row) && state.selected.ability!=="spy";
+    const spyValid = playable && unitReady && !targetReturnSelected && state.selected && state.selected.ability==="spy" && sideKey===enemyOf(actor) && validRows(state.selected).includes(row);
     const rowTarget=state.rowTargeting;
     const leaderRowValid=!!rowTarget && rowTarget.targetSideKey===sideKey && rowTarget.rows.includes(row);
     const targetKind=leaderRowValid?`row-target-${rowTarget.effectKind||"generic"}`:"";
@@ -14716,11 +15292,11 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();finishBoardRowChoice(row);},true);
     } else if(isValid||spyValid) el.addEventListener("click",()=>playSelected(row));
     el.addEventListener("dragover",e=>{
-      const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || !playable || !canPlayUnit(actor,c)) return;
+      const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || isTargetReturnLandingCard(c) || !playable || !canPlayUnit(actor,c)) return;
       const targetSide=c.ability==="spy"?enemyOf(actor):actor; if(sideKey===targetSide && validRows(c).includes(row)){ e.preventDefault(); el.classList.add("drop-target"); }
     });
     el.addEventListener("dragleave",()=>el.classList.remove("drop-target"));
-    el.addEventListener("drop",e=>{ e.preventDefault(); el.classList.remove("drop-target"); const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special) return; state.selected=c; playSelected(row); });
+    el.addEventListener("drop",e=>{ e.preventDefault(); el.classList.remove("drop-target"); const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || isTargetReturnLandingCard(c)) return; state.selected=c; playSelected(row); });
     const [name,sub]=ROW_META[row];
     const scoreClass = state.justPlayedRow===row && state.justPlayedSide===sideKey ? "row-score pulse" : "row-score";
     const pressureTag=isRowPressured(sideKey,row)?'<em class="pressure-tag">REIATSU</em>':'';
@@ -14735,7 +15311,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
   }
 
   function renderCard(card,inHand=false,sideKey="player",enableDetail=true,showInfoPanel=false){
-    const el=document.createElement("div"); el.className=`card ${showInfoPanel?"with-info":"compact-card"} ${card.hero?"hero":""} ${card.silenced?"silenced":""} ${card.special?"special-unit-card":""} ${isTransformationCard(card)?"transformation-card":""}`;
+    const el=document.createElement("div"); el.className=`card ${showInfoPanel?"with-info":"compact-card"} ${card.hero?"hero":""} ${card.silenced?"silenced":""} ${card.special?"special-unit-card":""} ${isTransformationCard(card)?"transformation-card":""} ${card._returningHidden?"returning-hidden":""}`;
     el.dataset.uid=card.uid;
     if(!inHand && state.justPlayed===card.uid && state.flightLandedUid!==card.uid) el.classList.add("enter");
     if(!inHand && state.flightLandedUid===card.uid) el.classList.add("landed-impact");
@@ -14743,7 +15319,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     const f=FACTIONS[card.faction]||FACTIONS.neutral, fs=f.style; el.style.setProperty("--art1",fs[0]);el.style.setProperty("--art2",fs[1]);
     const shown=shownCardPower(card,sideKey,inHand);
     const infoPanel=showInfoPanel ? `<div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>` : "";
-    const rowBadge=!card.special ? `<div class="row-badge" data-rows="${validRows(card).length}" aria-label="Допустимые ряды: ${rowPlacementLabel(card)}">${rowPlacementLabel(card)}</div>` : "";
+    const rowPlacement=rowPlacementLabel(card);
+    const mobileRowPlacement=rowPlacement.replaceAll("Ⅰ","I").replaceAll("\u200a","");
+    const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}">${rowPlacement}</div>` : "";
     el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${shown}</div>${rowBadge}${inHand&&isFreeTransformationCard(card)?`<div class="transform-badge">FREE</div>`:""}</div>${infoPanel}`;
     applyCardArtElement(el.querySelector(".art"),card);
     if(enableDetail && inHand) el.addEventListener("mouseenter",()=>{});
@@ -14758,10 +15336,15 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       }
       if(inHand && canLocalSideAct() && sideKey===actor){
         if(card.special){ state.lastDetail=card; executeSpecialTurn(actor,card,0); return; }
+        if(isTargetReturnLandingCard(card)){
+          state.selected=card; state.lastDetail=card; render();
+          requestAnimationFrame(()=>{ if(state?.selected?.uid===card.uid && !isActionLocked()) playSelected(null); });
+          return;
+        }
         state.selected = state.selected?.uid===card.uid?null:card; state.lastDetail=card; render();
       }
     });
-    if(inHand && !card.special && !IS_TOUCH_UI && canLocalSideAct() && sideKey===localControlledSide()){
+    if(inHand && !card.special && !isTargetReturnLandingCard(card) && !IS_TOUCH_UI && canLocalSideAct() && sideKey===localControlledSide()){
       el.draggable=true;
       el.addEventListener("dragstart",e=>{ state.draggingUid=card.uid; state.selected=card; e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",card.uid); requestAnimationFrame(()=>el.classList.add("dragging")); });
       el.addEventListener("dragend",()=>{ state.draggingUid=null; el.classList.remove("dragging"); document.querySelectorAll(".drop-target").forEach(x=>x.classList.remove("drop-target")); });
@@ -15413,7 +15996,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     if(isTransformationCard(card)) return transformationCondition(sideKey,card.id);
     return true;
   }
-  function validRows(card){ if(card.special) return []; if(card.id==="h_aizen"||card.id==="h_aizen_butterfly") return [...ROWS]; return card.flexible ? Array.from(new Set([card.row, card.row==="melee"?"ranged":"melee"])) : [card.row]; }
+  function validRows(card){ if(card.special) return []; if(isTargetReturnLandingCard(card)) return [...ROWS]; if(card.id==="h_aizen"||card.id==="h_aizen_butterfly") return [...ROWS]; return card.flexible ? Array.from(new Set([card.row, card.row==="melee"?"ranged":"melee"])) : [card.row]; }
   function rowPlacementLabel(card){
     if(!card || card.special) return "";
     const allowed=new Set(validRows(card));
@@ -15585,11 +16168,16 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
   function renderSide(){ /* side metrics handled in render */ }
 
   const CARD_FLIGHT_MS=720;
-  const LANDING_IMPACT_MS=760;
+  const LANDING_IMPACT_MS=620;
   const ENEMY_REVEAL_MS=1000;
   function waitForMs(ms){ return new Promise(resolve=>setTimeout(resolve,ms)); }
 
-  function measureCardLandingRect(targetSide,row,card=null){
+  function measureCardLandingRect(targetSide,row,card=null,opts={}){
+    if(opts?.targetUid){
+      const targetCard=document.querySelector(`.row[data-side="${targetSide}"][data-row="${row}"] .card[data-uid="${opts.targetUid}"]`);
+      const direct=visibleRect(targetCard?.querySelector('.card-face'))||visibleRect(targetCard);
+      if(direct) return direct;
+    }
     const rowCards=document.querySelector(`.row[data-side="${targetSide}"][data-row="${row}"] .row-cards`);
     if(!rowCards) return null;
     const ghost=card ? renderCard(card,false,targetSide,false,false) : document.createElement("div");
@@ -15695,18 +16283,30 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     });
   }
 
-  async function animateCardToField(card,row,targetSide){
-    const target=measureCardLandingRect(targetSide,row,card);
+  async function animateCardToField(card,row,targetSide,opts={}){
+    const target=measureCardLandingRect(targetSide,row,card,opts);
     const start=previewFlightStartRect(card);
     if(!target||!start) return;
 
     const detailCard=detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`)
       || detailEl?.querySelector('.detail-preview .card');
     const handCard=handEl?.querySelector(`.card[data-uid="${card.uid}"]`);
+    const previewRowBadge=detailCard?.querySelector('.row-badge')||null;
+    const oldPreviewBadgeVisibility=previewRowBadge?.style.visibility??"";
+
+    // V342: inspecting keeps the row mark. A committed play removes only the
+    // row mark first, paints that state, then starts the card flight.
+    if(previewRowBadge){
+      previewRowBadge.style.setProperty('visibility','hidden','important');
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      await waitForMs(55);
+    }
+
     const flyer=renderCard(card,false,targetSide,false,false);
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
     flyer.classList.add('card-flight','compact-card');
     flyer.querySelector('.card-info-panel')?.remove();
+    flyer.querySelector('.row-badge')?.remove();
     document.body.appendChild(flyer);
 
     const hidden=[];
@@ -15718,6 +16318,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     try{
       const arc=Math.min(118,Math.max(48,Math.abs(target.left-start.left)*.08+Math.abs(target.top-start.top)*.055));
       await runPhysicalCardFlight(flyer,start,target,{duration:CARD_FLIGHT_MS,arc,fadeFrom:1});
+      spawnLandingImpactAtRect(target);
       landed=true;
     } finally {
       if(landed){
@@ -15726,6 +16327,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       } else {
         flyer.remove();
         hidden.forEach(([el,visibility])=>{ if(el&&el.isConnected) el.style.visibility=visibility; });
+        if(previewRowBadge?.isConnected) previewRowBadge.style.visibility=oldPreviewBadgeVisibility;
       }
       document.body.classList.remove('card-flight-active');
     }
@@ -15747,6 +16349,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     try{
       const arc=Math.min(112,Math.max(46,Math.abs(target.left-start.left)*.07+Math.abs(target.top-start.top)*.04));
       await runPhysicalCardFlight(flyer,start,target,{duration:640,arc,fadeFrom:.35});
+      spawnLandingImpactAtRect(target);
       landed=true;
     } finally {
       if(landed){
@@ -15830,28 +16433,43 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     const impact=document.createElement('div');
     impact.className='landing-impact';
     impact.style.setProperty('--impact-x',`${r.left+r.width/2}px`);
-    impact.style.setProperty('--impact-y',`${r.top+r.height-2}px`);
-    impact.style.setProperty('--impact-w',`${Math.max(96,r.width*2.05)}px`);
-    impact.style.setProperty('--impact-h',`${Math.max(38,r.height*.52)}px`);
-    impact.innerHTML='<div class="dust-core"></div><div class="dust-ring"></div>';
+    impact.style.setProperty('--impact-y',`${r.top+r.height-1}px`);
+    impact.style.setProperty('--impact-w',`${Math.max(104,r.width*2.35)}px`);
+    impact.style.setProperty('--impact-h',`${Math.max(50,r.height*.76)}px`);
+    impact.innerHTML='<div class="impact-shadow"></div><div class="impact-flash"></div><div class="impact-wave"></div>';
 
-    const count=12;
-    for(let i=0;i<count;i++){
-      const p=document.createElement('i');
-      p.className='dust-streak';
-      const side=i%2===0?-1:1;
-      const spread=.35+Math.random()*.95;
-      const dx=side*(18+Math.random()*42)*spread;
-      const dy=-(5+Math.random()*26)-(i%3)*3;
-      p.style.setProperty('--dx',`${dx.toFixed(1)}px`);
-      p.style.setProperty('--dy',`${dy.toFixed(1)}px`);
-      p.style.setProperty('--s',`${(2.5+Math.random()*4.2).toFixed(1)}px`);
-      p.style.setProperty('--d',`${(470+Math.random()*210).toFixed(0)}ms`);
-      p.style.setProperty('--delay',`${Math.floor(Math.random()*65)}ms`);
-      impact.appendChild(p);
+    const smoke=[
+      [-.44,-.34,.82,18],[-.28,-.55,1.05,0],[-.10,-.72,1.18,26],
+      [.12,-.70,1.12,12],[.30,-.52,.98,34],[.46,-.30,.78,22],
+      [0,-.44,1.28,48]
+    ];
+    for(const [nx,ny,scale,delay] of smoke){
+      const puff=document.createElement('i');
+      puff.className='landing-smoke-puff';
+      const base=Math.max(18,Math.min(34,r.width*.58))*scale;
+      puff.style.setProperty('--s',`${base.toFixed(1)}px`);
+      puff.style.setProperty('--dx',`${(nx*Math.max(54,r.width*1.25)).toFixed(1)}px`);
+      puff.style.setProperty('--dy',`${(ny*Math.max(34,r.height*.62)).toFixed(1)}px`);
+      puff.style.setProperty('--delay',`${delay}ms`);
+      puff.style.setProperty('--dur',`${500+Math.round(scale*70)}ms`);
+      puff.style.setProperty('--blur',`${(.45+scale*.26).toFixed(2)}px`);
+      impact.appendChild(puff);
     }
+    const chips=[[-.78,-.56],[-.61,-.82],[-.38,-1.02],[-.18,-.74],[.22,-.78],[.43,-1.0],[.64,-.78],[.80,-.52]];
+    chips.forEach(([nx,ny],i)=>{
+      const chip=document.createElement('b');
+      chip.className='impact-chip';
+      chip.style.setProperty('--dx',`${(nx*(26+Math.min(22,r.width*.34))).toFixed(1)}px`);
+      chip.style.setProperty('--dy',`${(ny*(18+Math.min(20,r.height*.28))).toFixed(1)}px`);
+      chip.style.setProperty('--rot',`${(nx<0?-1:1)*(75+i*23)}deg`);
+      chip.style.setProperty('--cw',`${2+(i%3)}px`);
+      chip.style.setProperty('--ch',`${4+(i%2)*2}px`);
+      chip.style.setProperty('--delay',`${i*8}ms`);
+      chip.style.setProperty('--dur',`${420+(i%4)*34}ms`);
+      impact.appendChild(chip);
+    });
     document.body.appendChild(impact);
-    setTimeout(()=>impact.remove(),760);
+    setTimeout(()=>impact.remove(),720);
   }
   function spawnLandingImpact(uid){
     const cardEl=document.querySelector(`.row-cards .card[data-uid="${uid}"]`);
@@ -15899,7 +16517,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     if(!c || !canLocalSideAct() || state.turn!==actor) return;
     if(!canPlayUnit(actor,c)){ toast("УСЛОВИЯ ФОРМЫ НЕ ВЫПОЛНЕНЫ"); return; }
     const targetSide = c.ability==="spy" ? enemyOf(actor) : actor;
-    if(!validRows(c).includes(row)) return;
+    const targetReturn=isTargetReturnLandingCard(c);
+    if(!targetReturn && !validRows(c).includes(row)) return;
+    const preflightRow=targetReturn ? (ROWS.includes(c.row)?c.row:ROWS[0]) : row;
 
     const cancelSnapshot=makeGameplayActionSnapshot();
     const actionState=state;
@@ -15909,19 +16529,30 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     render();
 
     try{
-      const preflightPlan=await collectCardPreflightChoicePlan(actor,targetSide,c,row);
+      const preflightPlan=await collectCardPreflightChoicePlan(actor,targetSide,c,preflightRow);
       if(preflightPlan) cardChoicePreflightPlans.set(c.uid,preflightPlan);
-      await animateCardToField(c,row,targetSide);
+      let resolvedRow=preflightRow;
+      let returnTarget=null;
+      if(targetReturn){
+        returnTarget=returnLandingTargetFromPlan(actor,preflightPlan);
+        if(!returnTarget){
+          restoreGameplayActionSnapshot(cancelSnapshot,"НЕТ ПОДХОДЯЩЕЙ КАРТЫ ДЛЯ ВОЗВРАТА");
+          return false;
+        }
+        resolvedRow=returnTarget.row;
+        const targetIndex=state[actor].board[resolvedRow].findIndex(x=>x.uid===returnTarget.card.uid);
+        c._targetLandingInsertIndex=Math.max(0,targetIndex);
+      }
+      await animateCardToField(c,resolvedRow,targetSide,returnTarget?{targetUid:returnTarget.card.uid}:{});
       if(state!==actionState || state.gameOver) return;
 
       state[actor].hand=state[actor].hand.filter(x=>x.uid!==c.uid);
       state.selected=null;
       state.previewCard=null;
       state.flightLandedUid=c.uid;
-      const abilityPromise=placeCard(actor,targetSide,c,row);
+      const abilityPromise=placeCard(actor,targetSide,c,resolvedRow);
       state.lastDetail=c;
       render();
-      spawnLandingImpact(c.uid);
 
       await Promise.all([waitForMs(LANDING_IMPACT_MS),Promise.resolve(abilityPromise)]);
       if(state!==actionState) return;
@@ -15980,7 +16611,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     // A linked source leaving the field releases/breaks its maintained effects.
     breakLinkedEffectsFromSource(card);
     // Silence never follows a card into hand/grave/new field stay.
-    delete card._permanentSilenced; delete card._silenceSources; card.silenced=false;
+    delete card._permanentSilenced; delete card._silenceSources; delete card._returningHidden; card.silenced=false;
     delete card._sodeFreezeSourceUid; delete card._dollhouseSourceUid; delete card._ichimonjiSourceUid; delete card._hakkaSourceUid; delete card._shunsuiKageoniSourceUid;
     if(card._ichigoAuraBonus){ card.currentPower=Math.max(0,card.currentPower-2); delete card._ichigoAuraBonus; }
     if(card._fullbringLeaderBonus){ card.currentPower=Math.max(0,card.currentPower-card._fullbringLeaderBonus); delete card._fullbringLeaderBonus; }
@@ -16215,7 +16846,13 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     if(card.ability==="spy" && targetSideKey!==ownerKey && consumeAizenShield(targetSideKey,ownerKey,"Шпиона")){
       moveToOwnerGrave(card,ownerKey); addLog(`<b>${card.name}</b> не смог закрепиться на стороне Айзена.`); return;
     }
-    const target=state[targetSideKey]; target.board[row].push(card); prepareRoundRowEffectMarks(targetSideKey,row,card); state.justPlayed=card.uid; state.justPlayedRow=row; state.justPlayedSide=targetSideKey;
+    const target=state[targetSideKey];
+    if(Number.isInteger(card._targetLandingInsertIndex)){
+      const at=Math.max(0,Math.min(card._targetLandingInsertIndex,target.board[row].length));
+      target.board[row].splice(at,0,card);
+      delete card._targetLandingInsertIndex;
+    }else target.board[row].push(card);
+    prepareRoundRowEffectMarks(targetSideKey,row,card); state.justPlayed=card.uid; state.justPlayedRow=row; state.justPlayedSide=targetSideKey;
     if(card.id==="s_iba") activateIbaInheritance(targetSideKey);
     if(owner?.faction==="soul"){
       const flags=soulFlags(ownerKey);
@@ -16281,11 +16918,12 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       case "soulByakuyaShunpo": {
         const target=await chooseFieldTarget(ownerKey,ownerKey,c=>isReturnableBoardCard(c,card.uid),"ШУНПО","Верните одного своего обычного бойца с поля в руку. Героя вернуть нельзя.");
         if(target){
+          target.card._returningHidden=true;
           await animateReturnSmoke(ownerKey,target.row,target.card);
           removeCardFromBoard(ownerKey,target.card);
           target.card.currentPower=target.card.power; target.card.silenced=false; target.card._ownerKey=ownerKey;
           addCardToHand(ownerKey,target.card);
-          const shunpoUser=card.id==="s_omaeda"?"Омаэды":"Юруичи";
+          const shunpoUser=card.id==="s_omaeda"?"Омаэды":card.id==="s_byakuya"?"Бякуи":"Йоруичи";
           addLog(`<b>${target.card.name}</b> возвращён в руку Шунпо ${shunpoUser}.`);
         }
         break;
@@ -16681,7 +17319,13 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       case "huecoComeback": if(card._prePlayBehind) card.currentPower+=2; break;
       case "gemelosSonido": {
         const target=await chooseFieldTarget(ownerKey,ownerKey,c=>isReturnableBoardCard(c,card.uid),"GEMELOS SONÍDO","Выберите обычного бойца со своей стороны поля и верните его в руку. Вражеский Шпион на вашей стороне тоже доступен.");
-        if(target){ removeCardFromBoard(ownerKey,target.card); target.card.currentPower=target.card.power; target.card.silenced=false; target.card._ownerKey=ownerKey; addCardToHand(ownerKey,target.card); }
+        if(target){
+          target.card._returningHidden=true;
+          await animateReturnSmoke(ownerKey,target.row,target.card);
+          removeCardFromBoard(ownerKey,target.card);
+          target.card.currentPower=target.card.power; target.card.silenced=false; target.card._ownerKey=ownerKey;
+          addCardToHand(ownerKey,target.card);
+        }
         break;
       }
       case "szayelAbsorb": {
@@ -16909,7 +17553,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       if(!state||state.gameOver) return;
       state.flightLandedUid=c.uid;
       const nested=placeCard(sideKey,sideKey,c,c.row,true);
-      state.lastDetail=c; render(); spawnLandingImpact(c.uid);
+      state.lastDetail=c; render();
       await Promise.all([waitForMs(LANDING_IMPACT_MS),Promise.resolve(nested)]);
       state.flightLandedUid=null; render(); await waitForMs(70);
     }
@@ -16929,7 +17573,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       await animateCardFromDeckToField(c,row,sideKey,sideKey);
       state.flightLandedUid=c.uid;
       await placeCard(sideKey,sideKey,c,row,true);
-      state.lastDetail=c; render(); spawnLandingImpact(c.uid);
+      state.lastDetail=c; render();
       await waitForMs(LANDING_IMPACT_MS);
       state.flightLandedUid=null; render();
     }
@@ -17926,7 +18570,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       if(!e.hand.length){ markSidePassed("enemy","empty"); addLog(`У противника нет карт — <b>ПАС</b>.`); tickCompletedTurnPassives(); if(checkRoundEnd()) return; state.turn="player";render();return; }
 
       const playable=e.hand.filter(c=>!c.special || canPlaySpecial("enemy",c));
-      const units=playable.filter(c=>!c.special&&canPlayUnit("enemy",c));
+      const units=playable.filter(c=>!c.special&&canPlayUnit("enemy",c) && (!isTargetReturnLandingCard(c) || fieldTargetOptions("enemy",x=>isReturnableBoardCard(x,c.uid)).length>0));
       const specials=playable.filter(c=>c.special);
       const freeTransforms=units.filter(isFreeTransformationCard);
       let card=freeTransforms.length ? [...freeTransforms].sort((a,b)=>b.power-a.power)[0] : null;
@@ -17949,7 +18593,19 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       if(card.special){ await executeSpecialTurn("enemy",card,ENEMY_REVEAL_MS); return; }
 
       const targetSide=card.ability==="spy"?"player":"enemy";
-      const rows=validRows(card); const row=rows[randomIndex(rows.length)];
+      let returnTarget=null;
+      let row;
+      if(isTargetReturnLandingCard(card)){
+        const opts=fieldTargetOptions("enemy",x=>isReturnableBoardCard(x,card.uid));
+        returnTarget=[...opts].sort((a,b)=>fieldPower("enemy",b.row,b.card)-fieldPower("enemy",a.row,a.card))[0]||null;
+        if(!returnTarget){ markSidePassed("enemy","blocked"); tickCompletedTurnPassives(); if(checkRoundEnd()) return; state.turn="player"; render(); return; }
+        row=returnTarget.row;
+        cardChoicePreflightPlans.set(card.uid,{choices:[serializePreflightChoice(returnTarget)],randoms:[]});
+        const targetIndex=state.enemy.board[row].findIndex(x=>x.uid===returnTarget.card.uid);
+        card._targetLandingInsertIndex=Math.max(0,targetIndex);
+      }else{
+        const rows=validRows(card); row=rows[randomIndex(rows.length)];
+      }
       const actionState=state;
       const actionToken=beginTurnAction("enemy","play-card");
       if(!actionToken) return;
@@ -17962,7 +18618,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
         await waitForMs(ENEMY_REVEAL_MS);
         if(state!==actionState || state.gameOver) return;
 
-        await animateCardToField(card,row,targetSide);
+        await animateCardToField(card,row,targetSide,returnTarget?{targetUid:returnTarget.card.uid}:{});
         if(state!==actionState || state.gameOver) return;
 
         e.hand=e.hand.filter(x=>x.uid!==card.uid);
@@ -17971,7 +18627,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
         const abilityPromise=placeCard("enemy",targetSide,card,row);
         state.lastDetail=card;
         render();
-        spawnLandingImpact(card.uid);
 
         await Promise.all([waitForMs(LANDING_IMPACT_MS),Promise.resolve(abilityPromise)]);
         if(state!==actionState) return;
@@ -18282,9 +18937,14 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
       const wrap=document.createElement("div");
       wrap.className="mulligan-card-wrap";
       const el=renderCard(c,false,sideKey,false,false);
-      // V336: CHOOSE YOUR SOUL is selection-only on touch screens.
-      // Ability hover/focus overlays were unreliable in both PWA and mobile Safari,
-      // so this screen intentionally renders only the card face and selection state.
+
+      // V346: restore the actual hover-description DOM that desktop used before V336.
+      // Mobile/PWA still hide this block through the touch-only CSS rules.
+      const hover=document.createElement("div");
+      hover.className="mulligan-hover-info";
+      hover.innerHTML=`<b>${abilityName(c.ability)}</b><span>${c.desc||"Без особой способности."}</span>`;
+      (el.querySelector(".card-face")||el).appendChild(hover);
+
       const name=document.createElement("div");
       name.className="mulligan-nameplate";
       name.textContent=c.name;
@@ -18436,7 +19096,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
     el.className=`card with-info ${card.hero?"hero":""} ${card.special?"special-unit-card":""} ${isTransformationCard(card)?"transformation-card":""}`;
     const f=FACTIONS[card.faction]||FACTIONS.neutral, fs=f.style;
     el.style.setProperty("--art1",fs[0]); el.style.setProperty("--art2",fs[1]);
-    const rowBadge=!card.special ? `<div class="row-badge" data-rows="${validRows(card).length}" aria-label="Допустимые ряды: ${rowPlacementLabel(card)}">${rowPlacementLabel(card)}</div>` : "";
+    const rowPlacement=rowPlacementLabel(card);
+    const mobileRowPlacement=rowPlacement.replaceAll("Ⅰ","I").replaceAll("\u200a","");
+    const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}">${rowPlacement}</div>` : "";
     el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${card.special?"✦":card.power}</div>${rowBadge}<div class="assemble-lock-overlay" aria-hidden="true"><span class="legacy-lock-badge">🔒</span></div></div><div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>${copyCount>1?`<div class="deck-copy-badge">×${copyCount}</div>`:""}`;
     applyCardArtElement(el.querySelector(".art"),card);
     return el;
@@ -19101,60 +19763,108 @@ ${template.desc}`:""}`;
     }
     return null;
   }
-  function createNetworkLandingGhost(card,targetSide,target){
-    if(!card||!target) return null;
+  function createNetworkLandingGhost(card,targetSide,row,target=null,targetUid=null){
+    if(!card||!row) return null;
+    const rowCards=document.querySelector(`.row[data-side="${targetSide}"][data-row="${row}"] .row-cards`);
+    if(!rowCards) return null;
+    // Put the temporary card into the real row layout instead of keeping a fixed overlay.
+    // Result: it instantly gets the same frame + big semicircle as the canonical board card,
+    // and the next summoned card measures the next free slot rather than the same slot.
     const ghost=renderCard(card,false,targetSide,false,false);
-    ghost.classList.remove('selected','enter','landed-impact','dragging','with-info');
-    ghost.classList.add('card-flight','compact-card','network-landing-ghost');
+    ghost.classList.remove('selected','enter','landed-impact','dragging','with-info','card-flight','local-landing-hold');
+    ghost.classList.add('compact-card','network-landing-ghost');
+    ghost.dataset.networkLandingGhost='1';
     ghost.querySelector('.card-info-panel')?.remove();
-    ghost.style.setProperty('left',`${target.left}px`,'important');
-    ghost.style.setProperty('top',`${target.top}px`,'important');
-    ghost.style.setProperty('width',`${target.width}px`,'important');
-    ghost.style.setProperty('height',`${target.height}px`,'important');
-    ghost.style.setProperty('transform','none','important');
-    ghost.style.setProperty('opacity','1','important');
-    document.body.appendChild(ghost);
+    ghost.querySelector('.row-badge')?.remove();
+    const targetEl=targetUid ? rowCards.querySelector(`.card[data-uid="${targetUid}"]`) : null;
+    if(targetEl) rowCards.insertBefore(ghost,targetEl); else rowCards.appendChild(ghost);
     setTimeout(()=>ghost.remove(),8000);
     return ghost;
   }
   function clearResolvedNetworkLandingGhosts(){
-    document.querySelectorAll('.network-landing-ghost[data-uid]').forEach(ghost=>{
+    // render() rebuilds boardEl, so in-row ghosts disappear atomically when canonical state lands.
+    // Keep this only as a safety net for any legacy fixed ghosts from an interrupted animation.
+    document.querySelectorAll('body > .network-landing-ghost[data-uid]').forEach(ghost=>{
       const uid=ghost.dataset.uid;
       if(!uid) return;
-      const real=document.querySelector(`.row-cards .card[data-uid="${uid}"]`);
-      if(real) requestAnimationFrame(()=>requestAnimationFrame(()=>ghost.remove()));
+      const real=document.querySelector(`.row-cards .card[data-uid="${uid}"]:not(.network-landing-ghost)`);
+      if(real) ghost.remove();
     });
   }
 
   async function replayNetworkCardFlight(payload){
     const card=payload.card; if(!card) return;
     const previewShown=await showRemotePlayedCardPreview(card,payload.actor,520);
-    const target=measureCardLandingRect(payload.targetSide,payload.row,card);
+    const target=measureCardLandingRect(payload.targetSide,payload.row,card,{targetUid:payload.targetUid||null});
     const start=networkCardStartRect(payload.actor,card);
     if(!target||!start){ if(previewShown) clearRemotePlayedCardPreview(card); return; }
     const previewCard=previewShown ? detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`) : null;
+    const previewRowBadge=previewCard?.querySelector('.row-badge')||null;
+    const oldBadgeVisibility=previewRowBadge?.style.visibility??"";
     const oldVisibility=previewCard?.style.visibility??null;
+
+    if(previewRowBadge){
+      previewRowBadge.style.setProperty('visibility','hidden','important');
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      await waitForMs(55);
+    }
+
     if(previewCard) previewCard.style.visibility='hidden';
     const flyer=renderCard(card,false,payload.targetSide,false,false);
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
     flyer.classList.add('card-flight','compact-card');
     flyer.querySelector('.card-info-panel')?.remove();
+    flyer.querySelector('.row-badge')?.remove();
     document.body.appendChild(flyer); document.body.classList.add('card-flight-active');
-    let landed=false;
+    let landingGhost=null;
     try{
       const arc=Math.min(118,Math.max(48,Math.abs(target.left-start.left)*.08+Math.abs(target.top-start.top)*.055));
       await runPhysicalCardFlight(flyer,start,target,{duration:CARD_FLIGHT_MS,arc,fadeFrom:1});
-      landed=true;
-      spawnLandingImpactAtRect(target);
+      // Swap to the FINAL battlefield visual in the same frame as impact.
+      landingGhost=createNetworkLandingGhost(card,payload.targetSide,payload.row,target,payload.targetUid||null);
+      const impactRect=visibleRect(landingGhost)||target;
+      spawnLandingImpactAtRect(impactRect);
     } finally {
-      if(landed){
-        flyer.classList.add('network-landing-ghost');
-        flyer.style.setProperty('transform','none','important');
-        setTimeout(()=>flyer.remove(),8000);
-      } else flyer.remove();
+      flyer.remove();
       if(previewCard?.isConnected) previewCard.style.visibility=oldVisibility||'';
+      if(previewRowBadge?.isConnected) previewRowBadge.style.visibility=oldBadgeVisibility;
       if(previewShown) clearRemotePlayedCardPreview(card);
       document.body.classList.remove('card-flight-active');
+    }
+  }
+
+  async function replayNetworkDeckFlight(payload){
+    const card=payload.card; if(!card) return;
+    // Because previous summon ghosts are real children of .row-cards, each subsequent
+    // summon is measured into the next slot even before canonical state arrives.
+    const target=measureCardLandingRect(payload.targetSide,payload.row,card);
+    if(!target) return;
+    const start=deckFlightStartRect(payload.ownerKey,target);
+    if(!start) return;
+    const flyer=renderCard(card,false,payload.targetSide,false,false);
+    flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
+    flyer.classList.add('card-flight','deck-summon-flight','compact-card');
+    flyer.querySelector('.card-info-panel')?.remove();
+    flyer.querySelector('.row-badge')?.remove();
+    document.body.appendChild(flyer);
+    document.body.classList.add('card-flight-active');
+    try{
+      const arc=Math.min(112,Math.max(46,Math.abs(target.left-start.left)*.07+Math.abs(target.top-start.top)*.04));
+      await runPhysicalCardFlight(flyer,start,target,{duration:640,arc,fadeFrom:.35});
+      const ghost=createNetworkLandingGhost(card,payload.targetSide,payload.row,target);
+      spawnLandingImpactAtRect(visibleRect(ghost)||target);
+    } finally {
+      flyer.remove();
+      document.body.classList.remove('card-flight-active');
+    }
+  }
+
+  function hideNetworkDestroyedTargets(entries=[]){
+    for(const entry of entries){
+      const uid=entry?.card?.uid||entry?.uid;
+      if(!uid) continue;
+      const el=document.querySelector(`.row[data-side="${entry.sideKey}"][data-row="${entry.row}"] .card[data-uid="${uid}"]`);
+      if(el) el.classList.add('network-pending-destroy');
     }
   }
 
@@ -19179,9 +19889,9 @@ ${template.desc}`:""}`;
     v261AnimateAizenHogyokuMetamorphosis
   };
 
-  animateCardToField=async function(card,row,targetSide){
-    broadcastNetworkVfx("card-flight",{actor:card?._ownerKey||localControlledSide(),targetSide,row,card:safeNetworkClone(card)});
-    return v303Original.animateCardToField(card,row,targetSide);
+  animateCardToField=async function(card,row,targetSide,opts={}){
+    broadcastNetworkVfx("card-flight",{actor:card?._ownerKey||localControlledSide(),targetSide,row,targetUid:opts?.targetUid||null,card:safeNetworkClone(card)});
+    return v303Original.animateCardToField(card,row,targetSide,opts);
   };
   animateCardFromDeckToField=async function(card,row,targetSide,ownerKey){
     broadcastNetworkVfx("deck-flight",{ownerKey,targetSide,row,card:safeNetworkClone(card)});
@@ -19239,12 +19949,7 @@ ${template.desc}`:""}`;
     networkVfxReplayDepth++;
     try{
       if(payload.kind==="card-flight") return await replayNetworkCardFlight(payload);
-      if(payload.kind==="deck-flight"){
-        const target=measureCardLandingRect(payload.targetSide,payload.row,payload.card);
-        await v303Original.animateCardFromDeckToField(payload.card,payload.row,payload.targetSide,payload.ownerKey);
-        if(target){ spawnLandingImpactAtRect(target); createNetworkLandingGhost(payload.card,payload.targetSide,target); }
-        return;
-      }
+      if(payload.kind==="deck-flight") return await replayNetworkDeckFlight(payload);
       if(payload.kind==="special-cast"){
         const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,420);
         try{return await v303Original.animateSpecialCardCast(payload.effectKind||"generic");}
@@ -19268,8 +19973,23 @@ ${template.desc}`:""}`;
       if(payload.kind==="kamikake") return await v303Original.v242AnimateKamikake(payload.sideKey,payload.row,payload.uid);
       if(payload.kind==="getsuga") return await v303Original.v254AnimateGetsugaTensho(payload.sourceSideKey,payload.sourceRow,payload.sourceUid,payload.targetSideKey,payload.targetRow,payload.targetUid,{});
       if(payload.kind==="leader-activation") return await v303Original.animateLeaderActivation(payload.sideKey,payload.faction);
-      if(payload.kind==="return-smoke") return await v303Original.animateReturnSmoke(payload.sideKey,payload.row,payload.card);
-      if(payload.kind==="hell-gates") return await v303Original.animateHellGatesTargets(payload.entries||[]);
+      if(payload.kind==="return-smoke"){
+        const result=await v303Original.animateReturnSmoke(payload.sideKey,payload.row,payload.card);
+        const uid=payload.card?.uid;
+        if(uid){
+          const el=document.querySelector(`.row[data-side="${payload.sideKey}"][data-row="${payload.row}"] .card[data-uid="${uid}"]`);
+          if(el) el.classList.add('network-pending-destroy');
+        }
+        return result;
+      }
+      if(payload.kind==="hell-gates"){
+        const entries=payload.entries||[];
+        await v303Original.animateHellGatesTargets(entries);
+        // Do not let the old canonical DOM flash back between the burn animation
+        // and the state snapshot that actually removes the victims.
+        hideNetworkDestroyedTargets(entries);
+        return;
+      }
       if(payload.kind==="blade-cut") return await v303Original.animateBladeCutTargets(payload.entries||[],payload.opts||{});
       if(payload.kind==="transform-flight") return await v303Original.v250AnimateTransformationFlight(payload.card,payload.sideKey,payload.row,payload.targetUid);
       if(payload.kind==="aizen-metamorphosis") return await v303Original.v261AnimateAizenHogyokuMetamorphosis(payload.sideKey,payload.row,payload.uid);
@@ -19303,16 +20023,23 @@ ${template.desc}`:""}`;
     else if(networkSession.peerRematchReady){ status.textContent=`Соперник уже готов к следующему матчу${room}.`; btn.disabled=false; btn.textContent="СЫГРАТЬ ЕЩЁ В ЭТОЙ КОМНАТЕ"; }
     else { status.textContent=`Relay-соединение сохранено${room}. Новый код не нужен.`; btn.disabled=false; btn.textContent="СЫГРАТЬ ЕЩЁ В ЭТОЙ КОМНАТЕ"; }
   }
-  async function requestOnlineRematch(){
-    if(gameMode!=="online"||!networkSession.connected||!state?.gameOver){ await returnToModeMenu(); return; }
-    if(networkSession.localRematchReady) return;
+  async function requestOnlineRematch({allowActive=false}={}){
+    if(gameMode!=="online"||!networkSession.connected){ await returnToModeMenu(); return false; }
+    if(!state) return false;
+    if(!state.gameOver && !allowActive) return false;
+    if(networkSession.localRematchReady) return true;
     networkSession.localRematchReady=true;
     updateOnlineRematchUi();
-    await sendNetworkEvent("rematch_ready",{});
+    if(!state.gameOver && allowActive){
+      const room=networkSession.roomCode?` ${networkSession.roomCode}`:"";
+      showNetworkWaiting(`НОВАЯ ИГРА В КОМНАТЕ${room}. Ожидание согласия соперника…`);
+    }
+    await sendNetworkEvent("rematch_ready",{activeRestart:!state.gameOver});
     if(networkSession.role==="host"){
       await sendNetworkEvent("rematch_status",{hostReady:true,guestReady:networkSession.peerRematchReady});
       await maybeStartOnlineRematch();
     }
+    return true;
   }
   async function maybeStartOnlineRematch(){
     if(gameMode!=="online"||networkSession.role!=="host"||!networkSession.connected||networkSession.rematchStarting) return false;
@@ -19399,7 +20126,7 @@ ${template.desc}`:""}`;
     document.getElementById("handScrollPrev")?.setAttribute("disabled","");
     document.getElementById("handScrollNext")?.setAttribute("disabled","");
   }
-  $("#restartBtn").onclick=()=>returnToModeMenu();
+  $("#restartBtn").onclick=()=>gameMode==="online"?requestOnlineRematch({allowActive:true}):returnToModeMenu();
   $("#pathBackBtn").onclick=()=>returnToModeMenu();
   $("#startBtn").onclick=()=>openDeckBuilder();
   $("#deckBuilderBack").onclick=()=>closeDeckBuilderToPaths();
