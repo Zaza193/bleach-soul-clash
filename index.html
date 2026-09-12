@@ -13665,6 +13665,545 @@ html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-name
 }
 </style>
 
+
+<style id="v64-mobile-browser-hand-and-mulligan-fix">
+/* V64 — browser hand closer to PWA, and stricter mulligan geometry for browser/PWA. */
+
+/* 1) Mobile browser battle hand: larger card box, closer to PWA. */
+html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+  height:62px!important;
+  min-height:62px!important;
+  max-height:62px!important;
+  grid-template-columns:minmax(0,1fr) 38px!important;
+  overflow:hidden!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
+  height:62px!important;
+  min-height:62px!important;
+  max-height:62px!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  gap:1px!important;
+  padding:3px 2px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+  touch-action:pan-x!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand::-webkit-scrollbar,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
+  flex:0 0 36px!important;
+  width:36px!important;
+  min-width:36px!important;
+  max-width:36px!important;
+  height:53px!important;
+  min-height:53px!important;
+  max-height:53px!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  overflow:visible!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .card-face{
+  width:36px!important;
+  min-width:36px!important;
+  max-width:36px!important;
+  height:53px!important;
+  min-height:53px!important;
+  max-height:53px!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:0!important;
+  transform:translateX(-50%)!important;
+  width:13px!important;
+  min-width:13px!important;
+  max-width:13px!important;
+  height:13px!important;
+  min-height:13px!important;
+  max-height:13px!important;
+  border-radius:13px!important;
+  padding:0!important;
+  font-size:7.2px!important;
+  line-height:13px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .ability-icon,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .ability-icon{
+  min-width:9px!important;
+  width:auto!important;
+  height:9px!important;
+  padding:0 1px!important;
+  font-size:4.8px!important;
+  line-height:9px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge{top:1px!important;right:1px!important}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge-mobile,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge-mobile{font-size:6px!important;-webkit-text-stroke:.14px #000!important}
+html:not(.pwa-standalone).phone-device.phone-landscape .hand-actions,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-actions{
+  width:38px!important;
+  min-width:38px!important;
+  height:62px!important;
+  min-height:62px!important;
+  max-height:62px!important;
+  padding:2px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape .pass-btn,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass-btn{
+  width:33px!important;
+  height:31px!important;
+  min-width:33px!important;
+  min-height:31px!important;
+  font-size:5px!important;
+  line-height:.92!important;
+  padding:0 1px!important;
+  margin:0!important;
+}
+
+/* 2) CHOOSE YOUR SOUL — browser smaller, PWA slightly larger, no overlap, attached power. */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v64-mulligan-w:60px;
+  --v64-mulligan-h:90px;
+  --v64-mulligan-power-w:22px;
+  --v64-mulligan-power-h:11px;
+  --v64-mulligan-col-gap:6px;
+  --v64-mulligan-row-gap:6px;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v64-mulligan-w:68px;
+  --v64-mulligan-h:102px;
+  --v64-mulligan-power-w:25px;
+  --v64-mulligan-power-h:12px;
+  --v64-mulligan-col-gap:7px;
+  --v64-mulligan-row-gap:7px;
+}
+@media (max-height:370px){
+  html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v64-mulligan-w:56px;
+    --v64-mulligan-h:84px;
+    --v64-mulligan-power-w:21px;
+    --v64-mulligan-power-h:10px;
+    --v64-mulligan-col-gap:5px;
+    --v64-mulligan-row-gap:5px;
+  }
+  html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+  html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v64-mulligan-w:62px;
+    --v64-mulligan-h:93px;
+    --v64-mulligan-power-w:23px;
+    --v64-mulligan-power-h:11px;
+    --v64-mulligan-col-gap:6px;
+    --v64-mulligan-row-gap:6px;
+  }
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,var(--v64-mulligan-w))!important;
+  grid-template-rows:repeat(2,var(--v64-mulligan-h))!important;
+  grid-auto-flow:row!important;
+  grid-auto-rows:var(--v64-mulligan-h)!important;
+  column-gap:var(--v64-mulligan-col-gap)!important;
+  row-gap:var(--v64-mulligan-row-gap)!important;
+  padding:4px 2px 6px!important;
+  align-content:center!important;
+  justify-content:center!important;
+  align-items:center!important;
+  justify-items:center!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap{
+  width:var(--v64-mulligan-w)!important;
+  min-width:var(--v64-mulligan-w)!important;
+  max-width:var(--v64-mulligan-w)!important;
+  height:var(--v64-mulligan-h)!important;
+  min-height:var(--v64-mulligan-h)!important;
+  max-height:var(--v64-mulligan-h)!important;
+  display:block!important;
+  align-self:center!important;
+  justify-self:center!important;
+  overflow:visible!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card{
+  box-sizing:border-box!important;
+  width:var(--v64-mulligan-w)!important;
+  min-width:var(--v64-mulligan-w)!important;
+  max-width:var(--v64-mulligan-w)!important;
+  height:var(--v64-mulligan-h)!important;
+  min-height:var(--v64-mulligan-h)!important;
+  max-height:var(--v64-mulligan-h)!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  overflow:visible!important;
+  position:relative!important;
+  transform:none!important;
+  z-index:1!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .card-face,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .card-face{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:0!important;
+  transform:translateX(-50%)!important;
+  width:var(--v64-mulligan-power-w)!important;
+  min-width:var(--v64-mulligan-power-w)!important;
+  max-width:var(--v64-mulligan-power-w)!important;
+  height:var(--v64-mulligan-power-h)!important;
+  min-height:var(--v64-mulligan-power-h)!important;
+  max-height:var(--v64-mulligan-power-h)!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  padding:0 0 1px!important;
+  border-radius:999px 999px 0 0!important;
+  border:1px solid #f6f3ea!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f6f3ea!important;
+  font-size:8px!important;
+  line-height:calc(var(--v64-mulligan-power-h) - 1px)!important;
+  overflow:hidden!important;
+  z-index:4!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge{
+  top:2px!important;
+  right:2px!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge-mobile{font-size:8px!important;-webkit-text-stroke:.18px #000!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card.replace,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace:hover,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card.replace:hover,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace:focus-within,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace:focus-within,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace:focus-within,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card.replace:focus-within{
+  transform:none!important;
+  box-shadow:0 0 0 2px var(--danger)!important;
+  z-index:3!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card:not(.replace):hover,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card:not(.replace):hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):hover{
+  transform:none!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace::after,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace::after,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card.replace::after{
+  inset:auto 4px 14px!important;
+  font-size:6px!important;
+  line-height:1.05!important;
+  padding:2px 2px!important;
+  z-index:5!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace .card-face::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace .card-face::after,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace .card-face::after,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card.replace .card-face::after{
+  inset:0!important;
+  z-index:2!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-nameplate,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-nameplate{display:none!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions{margin-top:4px!important}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  line-height:30px!important;
+  font-size:8px!important;
+  padding:0 8px!important;
+}
+</style>
+
+
+<style id="v65-mobile-mulligan-authoritative-fix">
+/*
+ V65 — final authoritative mobile mulligan geometry.
+ The card face and the power badge no longer share the same box.
+ A reserved power gutter is part of every grid cell, so the semicircle
+ cannot overlap the next row or be clipped inside the artwork.
+*/
+
+/* ---------- presets ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v65-w:60px;
+  --v65-face-h:82px;
+  --v65-power-w:23px;
+  --v65-power-h:12px;
+  --v65-col-gap:6px;
+  --v65-row-gap:7px;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v65-w:68px;
+  --v65-face-h:93px;
+  --v65-power-w:26px;
+  --v65-power-h:13px;
+  --v65-col-gap:7px;
+  --v65-row-gap:8px;
+}
+
+@media (max-height:370px){
+  html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v65-w:56px;
+    --v65-face-h:76px;
+    --v65-power-w:21px;
+    --v65-power-h:11px;
+    --v65-col-gap:5px;
+    --v65-row-gap:6px;
+  }
+  html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+  html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v65-w:62px;
+    --v65-face-h:84px;
+    --v65-power-w:23px;
+    --v65-power-h:12px;
+    --v65-col-gap:6px;
+    --v65-row-gap:7px;
+  }
+}
+
+/* ---------- grid: explicit browser + PWA selectors beat all legacy layers ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid{
+  display:grid!important;
+  width:100%!important;
+  min-height:0!important;
+  flex:1 1 auto!important;
+
+  grid-template-columns:repeat(6,var(--v65-w))!important;
+  grid-template-rows:repeat(2,calc(var(--v65-face-h) + var(--v65-power-h) - 1px))!important;
+  grid-auto-rows:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+  grid-auto-flow:row!important;
+
+  column-gap:var(--v65-col-gap)!important;
+  row-gap:var(--v65-row-gap)!important;
+
+  align-content:center!important;
+  justify-content:center!important;
+  align-items:start!important;
+  justify-items:center!important;
+
+  padding:4px 2px 6px!important;
+  overflow:hidden!important;
+}
+
+/* ---------- wrapper ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap{
+  width:var(--v65-w)!important;
+  min-width:var(--v65-w)!important;
+  max-width:var(--v65-w)!important;
+
+  height:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+  min-height:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+  max-height:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+
+  display:block!important;
+  margin:0!important;
+  overflow:visible!important;
+  align-self:start!important;
+  justify-self:center!important;
+  box-sizing:border-box!important;
+}
+
+/* ---------- card outer box includes the power gutter ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card{
+  width:var(--v65-w)!important;
+  min-width:var(--v65-w)!important;
+  max-width:var(--v65-w)!important;
+
+  height:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+  min-height:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+  max-height:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
+
+  aspect-ratio:auto!important;
+  position:relative!important;
+  margin:0!important;
+  overflow:visible!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+  z-index:1!important;
+}
+
+/* ---------- rectangular artwork box only ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face{
+  width:var(--v65-w)!important;
+  min-width:var(--v65-w)!important;
+  max-width:var(--v65-w)!important;
+
+  height:var(--v65-face-h)!important;
+  min-height:var(--v65-face-h)!important;
+  max-height:var(--v65-face-h)!important;
+
+  aspect-ratio:auto!important;
+  position:relative!important;
+  box-sizing:border-box!important;
+
+  /* Required: the power badge occupies the reserved gutter below this face. */
+  overflow:visible!important;
+}
+
+/* Artwork/frame themselves never spill into the gutter. */
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card>.card-face>.art,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card>.card-face>.art,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card>.card-face>.frame,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card>.card-face>.frame{
+  overflow:hidden!important;
+}
+
+/* ---------- power: true semicircle BELOW the artwork ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power{
+  position:absolute!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+
+  /* Safari-safe syntax: one-pixel seam overlap, rest lives in reserved gutter. */
+  bottom:calc(1px - var(--v65-power-h))!important;
+  transform:translateX(-50%)!important;
+
+  width:var(--v65-power-w)!important;
+  min-width:var(--v65-power-w)!important;
+  max-width:var(--v65-power-w)!important;
+
+  height:var(--v65-power-h)!important;
+  min-height:var(--v65-power-h)!important;
+  max-height:var(--v65-power-h)!important;
+
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:0 0 1px!important;
+
+  background:#050608!important;
+  color:#f6f3ea!important;
+
+  border:1px solid #f6f3ea!important;
+  border-bottom:0!important;
+  border-radius:999px 999px 0 0!important;
+
+  outline:0!important;
+  clip-path:none!important;
+  box-shadow:0 -1px 0 #050608!important;
+
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:9px!important;
+  font-weight:400!important;
+  line-height:calc(var(--v65-power-h) - 2px)!important;
+  text-align:center!important;
+
+  overflow:hidden!important;
+  z-index:30!important;
+}
+
+/* ---------- selected / locked cards: visual state only, never geometry ---------- */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace:hover,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace:focus-within,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace:focus-within{
+  transform:none!important;
+  translate:none!important;
+  rotate:none!important;
+  margin:0!important;
+  z-index:3!important;
+}
+
+/* Keep power above the lock/red selection treatment. */
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace>.card-face>.power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace>.card-face>.power{
+  opacity:1!important;
+  visibility:visible!important;
+  z-index:40!important;
+}
+
+/* No touch hover movement on mulligan cards. */
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card:hover{
+  transform:none!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
