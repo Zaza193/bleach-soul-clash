@@ -14630,6 +14630,83 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand
 }
 </style>
 
+
+<style id="v69-browser-custom-swipe-hand">
+/*
+ V69 EXPERIMENTAL — mobile browser only.
+ Replace native horizontal scrolling in the hand with a translated inner track.
+ PWA is intentionally untouched.
+*/
+
+html:not(.pwa-standalone).phone-device.phone-landscape #hand,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
+  display:block!important;
+  position:relative!important;
+  overflow:hidden!important;
+  overflow-x:hidden!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+  -webkit-overflow-scrolling:auto!important;
+  touch-action:none!important;
+  overscroll-behavior:none!important;
+  padding:3px 2px!important;
+}
+
+html:not(.pwa-standalone).phone-device.phone-landscape #hand::-webkit-scrollbar,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+}
+
+/* Cards are moved here at runtime. */
+html:not(.pwa-standalone).phone-device.phone-landscape #hand>.v69-hand-track,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand>.v69-hand-track{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  gap:1px!important;
+
+  width:max-content!important;
+  min-width:max-content!important;
+  height:100%!important;
+  min-height:0!important;
+
+  margin:0!important;
+  padding:0!important;
+
+  transform:translate3d(0,0,0);
+  transform-origin:0 50%!important;
+  will-change:transform;
+  contain:layout style;
+
+  user-select:none!important;
+  -webkit-user-select:none!important;
+  -webkit-touch-callout:none!important;
+}
+
+/* Avoid native image/card dragging while preserving ordinary taps. */
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card *,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card *{
+  -webkit-user-drag:none!important;
+}
+
+/* The old custom dock must never be revived in browser mode. */
+html:not(.pwa-standalone).phone-device.phone-landscape #handScrollDock,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #handScrollDock,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-scroll-needed + #handScrollDock.hand-scroll-dock,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-scroll-needed + #handScrollDock.hand-scroll-dock{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -23469,5 +23546,247 @@ ${template.desc}`:""}`;
   const dismiss=()=>root.classList.remove('pwa-browser-ios');
   ['modeAiBtn','modeDuelBtn','modeOnlineBtn'].forEach(id=>document.getElementById(id)?.addEventListener('click',dismiss,{once:true}));
 })();</script>
+
+<script id="v69-browser-custom-swipe-hand-runtime">
+(() => {
+  const root = document.documentElement;
+  const hand = document.getElementById("hand");
+  if(!hand) return;
+
+  const isBrowserTouchLandscape = () =>
+    !root.classList.contains("pwa-standalone") &&
+    root.classList.contains("touch-device") &&
+    root.classList.contains("touch-landscape") &&
+    !root.classList.contains("tablet-device");
+
+  let track = null;
+  let offset = 0;
+  let maxOffset = 0;
+
+  let pointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let startOffset = 0;
+  let lastX = 0;
+  let lastT = 0;
+  let velocity = 0;
+  let dragging = false;
+  let moved = false;
+  let suppressClickUntil = 0;
+  let inertiaRaf = 0;
+  let wrapping = false;
+
+  const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
+
+  function stopInertia(){
+    if(inertiaRaf){
+      cancelAnimationFrame(inertiaRaf);
+      inertiaRaf = 0;
+    }
+  }
+
+  function applyOffset(v){
+    offset = clamp(v,0,maxOffset);
+    if(track) track.style.transform = `translate3d(${-offset}px,0,0)`;
+  }
+
+  function measure(){
+    if(!isBrowserTouchLandscape() || !track){
+      maxOffset = 0;
+      applyOffset(0);
+      return;
+    }
+
+    const cs = getComputedStyle(hand);
+    const innerWidth = Math.max(
+      0,
+      hand.clientWidth -
+      (parseFloat(cs.paddingLeft)||0) -
+      (parseFloat(cs.paddingRight)||0)
+    );
+
+    maxOffset = Math.max(0, track.scrollWidth - innerWidth);
+    applyOffset(offset);
+
+    hand.classList.toggle("v69-custom-overflow", maxOffset > 1);
+  }
+
+  function ensureTrack(){
+    if(wrapping || !isBrowserTouchLandscape()) return;
+    wrapping = true;
+    try{
+      let current = hand.querySelector(":scope > .v69-hand-track");
+
+      if(!current){
+        const cards = Array.from(hand.children).filter(el => el.classList?.contains("card"));
+        if(cards.length){
+          current = document.createElement("div");
+          current.className = "v69-hand-track";
+          current.setAttribute("aria-hidden","false");
+          hand.insertBefore(current, cards[0]);
+          cards.forEach(card => current.appendChild(card));
+
+          // A newly-rendered hand should start from its beginning.
+          offset = 0;
+        }
+      } else {
+        // renderHand may append fresh cards directly to #hand on later renders.
+        Array.from(hand.children)
+          .filter(el => el !== current && el.classList?.contains("card"))
+          .forEach(card => current.appendChild(card));
+      }
+
+      track = current || null;
+
+      if(track){
+        track.querySelectorAll(".card[draggable='true']").forEach(card => {
+          card.setAttribute("draggable","false");
+        });
+      }
+
+      requestAnimationFrame(measure);
+    } finally {
+      wrapping = false;
+    }
+  }
+
+  // renderHand() empties/rebuilds #hand, so recreate the track after every hand render.
+  const observer = new MutationObserver(() => {
+    if(!isBrowserTouchLandscape()) return;
+    ensureTrack();
+  });
+  observer.observe(hand,{childList:true});
+
+  function beginDrag(ev){
+    if(!isBrowserTouchLandscape()) return;
+    ensureTrack();
+    measure();
+    if(!track || maxOffset <= 1) return;
+
+    stopInertia();
+
+    pointerId = ev.pointerId;
+    startX = lastX = ev.clientX;
+    startY = ev.clientY;
+    startOffset = offset;
+    lastT = performance.now();
+    velocity = 0;
+    dragging = false;
+    moved = false;
+
+    try{ hand.setPointerCapture(pointerId); }catch(_){}
+  }
+
+  function moveDrag(ev){
+    if(pointerId == null || ev.pointerId !== pointerId || !track) return;
+
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+
+    if(!dragging){
+      // Keep ordinary card taps intact. Start hand dragging only for a clear horizontal gesture.
+      if(Math.abs(dx) < 6) return;
+      if(Math.abs(dx) < Math.abs(dy)) return;
+      dragging = true;
+    }
+
+    moved = true;
+    ev.preventDefault();
+
+    const now = performance.now();
+    const desired = startOffset - dx;
+    const next = clamp(desired,0,maxOffset);
+
+    const dt = Math.max(1, now-lastT);
+    const instantaneous = (next-offset)/dt;
+    velocity = velocity*.72 + instantaneous*.28;
+
+    applyOffset(next);
+    lastX = ev.clientX;
+    lastT = now;
+  }
+
+  function endDrag(ev){
+    if(pointerId == null || ev.pointerId !== pointerId) return;
+
+    try{ hand.releasePointerCapture(pointerId); }catch(_){}
+    pointerId = null;
+
+    if(moved){
+      suppressClickUntil = performance.now()+260;
+      ev.preventDefault();
+
+      // Small inertial coast, fully custom — still no native scroll container.
+      let v = velocity;
+      let prev = performance.now();
+
+      const tick = now => {
+        const dt = Math.min(32, Math.max(1, now-prev));
+        prev = now;
+
+        v *= Math.pow(.91, dt/16);
+        const before = offset;
+        applyOffset(offset + v*dt);
+
+        if(Math.abs(v) < .015 || Math.abs(offset-before) < .01 ||
+           (offset <= 0 && v < 0) || (offset >= maxOffset && v > 0)){
+          inertiaRaf = 0;
+          return;
+        }
+        inertiaRaf = requestAnimationFrame(tick);
+      };
+
+      if(Math.abs(v) >= .015) inertiaRaf = requestAnimationFrame(tick);
+    }
+
+    dragging = false;
+    moved = false;
+  }
+
+  hand.addEventListener("pointerdown",beginDrag,{passive:true});
+  hand.addEventListener("pointermove",moveDrag,{passive:false});
+  hand.addEventListener("pointerup",endDrag,{passive:false});
+  hand.addEventListener("pointercancel",endDrag,{passive:false});
+
+  // Do not let a swipe accidentally play/select the card that was under the finger.
+  hand.addEventListener("click",ev => {
+    if(performance.now() < suppressClickUntil){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+    }
+  },true);
+
+  const sync = () => {
+    if(isBrowserTouchLandscape()){
+      // Native scroll is never used in this mode.
+      if(hand.scrollLeft) hand.scrollLeft = 0;
+      ensureTrack();
+      requestAnimationFrame(measure);
+    }else{
+      stopInertia();
+      offset = 0;
+      maxOffset = 0;
+      if(track) track.style.transform = "translate3d(0,0,0)";
+    }
+  };
+
+  window.addEventListener("resize",sync,{passive:true});
+  window.addEventListener("orientationchange",()=>setTimeout(sync,80),{passive:true});
+  window.visualViewport?.addEventListener("resize",sync,{passive:true});
+
+  // Keep bounds correct if cards resize because of responsive CSS.
+  if("ResizeObserver" in window){
+    new ResizeObserver(() => requestAnimationFrame(measure)).observe(hand);
+  }
+
+  // Initial pass.
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded",sync,{once:true});
+  }else{
+    sync();
+  }
+})();
+</script>
+
 </body>
 </html>
