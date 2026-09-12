@@ -1904,35 +1904,6 @@
     color:#242424 !important;
   }
 
-  .hellfire-overlay{
-    position:fixed; z-index:10120; pointer-events:none; overflow:visible;
-    clip-path:polygon(0 0,92% 0,100% 7%,100% 100%,8% 100%,0 93%);
-    filter:drop-shadow(0 0 8px rgba(255,74,0,.72));
-  }
-  .hellfire-overlay .hell-heat{
-    position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(255,150,24,.05),rgba(255,66,0,.20) 58%,rgba(255,214,91,.46) 100%);
-    box-shadow:inset 0 -12px 20px rgba(255,78,0,.42);
-    animation:hellHeatPulse .82s ease-out forwards;
-  }
-  .hellfire-overlay .hell-flame{
-    position:absolute;left:var(--x,50%);bottom:-6%;width:var(--w,22%);height:var(--h,70%);
-    transform:translateX(-50%) rotate(var(--lean,0deg)) scaleY(.3);transform-origin:50% 100%;
-    border-radius:58% 42% 55% 45% / 72% 72% 28% 28%;
-    background:radial-gradient(ellipse at 50% 88%,#fff6aa 0 12%,#ffc329 24%,#ff5a00 53%,rgba(183,20,0,.78) 72%,rgba(75,0,0,0) 82%);
-    opacity:0;filter:blur(.25px) saturate(1.25);
-    animation:hellFlameRise .68s cubic-bezier(.18,.72,.25,1) forwards;animation-delay:var(--delay,0ms);
-  }
-  .hellfire-overlay .hell-ember{
-    position:absolute;left:50%;bottom:9%;width:var(--size,3px);height:var(--size,3px);border-radius:50%;
-    background:#ffd65d;box-shadow:0 0 5px #ff5a00;opacity:0;
-    animation:hellEmberFly .62s ease-out forwards;animation-delay:var(--delay,0ms);
-  }
-  .card.hell-gates-burning{animation:hellCardTremor .82s ease-in both!important;filter:saturate(1.2) contrast(1.08)!important;}
-  @keyframes hellHeatPulse{0%{opacity:0}20%{opacity:.8}72%{opacity:1}100%{opacity:.16}}
-  @keyframes hellFlameRise{0%{opacity:0;transform:translateX(-50%) rotate(var(--lean,0deg)) scale(.52,.22)}20%{opacity:.95}58%{opacity:1;transform:translateX(-50%) rotate(calc(var(--lean,0deg) * -.6)) scale(.88,1.05)}100%{opacity:0;transform:translateX(-50%) translateY(-28%) rotate(var(--lean,0deg)) scale(.58,1.34)}}
-  @keyframes hellEmberFly{0%{opacity:0;transform:translate(0,0) scale(.6)}18%{opacity:1}100%{opacity:0;transform:translate(var(--ex,0),var(--ey,-55px)) scale(.2)}}
-  @keyframes hellCardTremor{0%, 100%{transform:none}22%{transform:translate(-1px,1px) rotate(-.35deg)}38%{transform:translate(1px,-1px) rotate(.32deg)}55%{transform:translate(-.7px,0) rotate(-.2deg)}75%{transform:translate(.5px,.5px)}}
 
   .return-smoke-overlay{
     position:fixed;z-index:10125;left:var(--smoke-x);top:var(--smoke-y);width:var(--smoke-w);height:var(--smoke-h);
@@ -5133,27 +5104,6 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
 @keyframes v242TableShock{0%{opacity:.9;transform:translate(-50%,-50%) scale(.2,.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.6,1.1)}}
 @keyframes v242TableFlash{0%{opacity:.95;transform:translate(-50%,-50%) scale(.35)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.7)}}
 
-.card.v242-burning-away{z-index:80!important;pointer-events:none!important;animation:v242CardAshAway 1.08s cubic-bezier(.22,.64,.3,1) forwards!important;transform-origin:50% 82%!important}
-.card.v242-burning-away .art{animation:v242ArtChar 1.08s ease-in forwards!important}
-.card.v242-burning-away .card-face::before{
-  content:""!important;display:block!important;position:absolute!important;inset:-8%!important;z-index:35!important;pointer-events:none!important;
-  background:
-    radial-gradient(ellipse at 50% 95%,rgba(255,246,171,.98) 0 3%,rgba(255,147,25,.9) 8%,rgba(210,45,0,.56) 17%,transparent 31%),
-    linear-gradient(0deg,rgba(14,5,1,.92) 0 12%,rgba(112,28,2,.64) 23%,transparent 42%);
-  mix-blend-mode:screen;animation:v242BurnFront 1.08s ease-in forwards!important;
-}
-@keyframes v242CardAshAway{
-  0%{opacity:1;filter:none;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:none}
-  38%{opacity:1;filter:contrast(1.12) saturate(.78);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);transform:translateY(-1px)}
-  67%{opacity:.95;filter:grayscale(.78) brightness(.54) contrast(1.5);clip-path:polygon(0 0,100% 0,100% 76%,91% 70%,82% 77%,68% 69%,56% 75%,44% 68%,31% 76%,17% 69%,0 74%);transform:translateY(-2px) scale(.995)}
-  84%{opacity:.7;filter:grayscale(1) brightness(.28) contrast(1.85);clip-path:polygon(0 0,100% 0,100% 45%,88% 39%,76% 47%,61% 38%,49% 45%,34% 37%,20% 46%,0 40%);transform:translateY(-5px) scale(.97)}
-  100%{opacity:0;filter:grayscale(1) brightness(.12) blur(1.5px);clip-path:polygon(0 0,100% 0,100% 9%,84% 4%,68% 10%,52% 3%,37% 9%,20% 4%,0 8%);transform:translateY(-14px) scale(.89)}
-}
-@keyframes v242ArtChar{0%,28%{filter:none}62%{filter:sepia(.45) saturate(.7) brightness(.62) contrast(1.28)}100%{filter:grayscale(1) brightness(.14) contrast(1.9)}}
-@keyframes v242BurnFront{0%{opacity:0;transform:translateY(55%)}25%{opacity:.95}72%{opacity:1;transform:translateY(-8%)}100%{opacity:0;transform:translateY(-54%)}}
-.v242-ash-field{position:fixed;z-index:10135;left:0;top:0;width:0;height:0;pointer-events:none}
-.v242-ash-bit{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);background:var(--c,#6f6258);opacity:0;box-shadow:0 0 3px rgba(255,101,18,.18);animation:v242AshFly var(--d) cubic-bezier(.12,.62,.18,1) var(--delay) forwards}
-@keyframes v242AshFly{0%{opacity:0;transform:translate(0,0) rotate(0) scale(.45)}18%{opacity:.88}72%{opacity:.58}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.12)}}
 
 .row.v242-reiatsu-crushed{z-index:30!important;animation:v242RowCrush .92s cubic-bezier(.18,.73,.22,1) both!important;transform-origin:center!important}
 .row.v242-reiatsu-crushed .row-cards .card{animation:v242ReiatsuCardCrush .92s cubic-bezier(.18,.73,.22,1) both!important}
@@ -5209,15 +5159,13 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
 @keyframes v242KamikakeTarget{0%,100%{transform:none;filter:none}30%{transform:scale(.97);filter:grayscale(1) brightness(.55)}55%{transform:scale(1.05);filter:brightness(2) contrast(1.4)}76%{transform:scale(1.01);filter:grayscale(.4) brightness(1.2)}}
 
 @media (prefers-reduced-motion:reduce){html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .effect-card-table-cast .card-face,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v242-burning-away,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .row.v242-reiatsu-crushed,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .row.v242-reiatsu-crushed .card,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .row.v242-hogyoku-channel .card,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v242-cero-target,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v242-hollowify-pulse,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .row.v242-vacuum-freeze .card,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v242-kamikake-target{animation-duration:.01ms!important;animation-iteration-count:1!important}html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-ash-bit,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-table-impact::before,
+  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v242-kamikake-target{animation-duration:.01ms!important;animation-iteration-count:1!important}html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-table-impact::before,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-table-impact::after,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-reiatsu-overlay,
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-reiatsu-overlay::before,
@@ -5232,76 +5180,7 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v242-freeze-overlay{animation-duration:.01ms!important}
 }
 
-.v243-hell-burn-clone{
-  position:fixed!important;
-  z-index:10230!important;
-  margin:0!important;
-  pointer-events:none!important;
-  transform-origin:50% 88%!important;
-  will-change:transform,filter,opacity,clip-path!important;
-  overflow:visible!important;
-  animation:none!important;
-  box-shadow:0 8px 22px rgba(0,0,0,.7)!important;
-}
-.v243-hell-burn-clone.v243-burn-active{
-  animation:v243HellCardDisintegrate 1.36s cubic-bezier(.18,.67,.22,1) forwards!important;
-}
-.v243-hell-burn-clone .v243-hell-char{
-  position:absolute;inset:0;z-index:70;pointer-events:none;opacity:0;
-  background:
-    linear-gradient(0deg,rgba(0,0,0,.96) 0 8%,rgba(29,11,4,.9) 18%,rgba(88,25,3,.68) 29%,transparent 47%),
-    repeating-linear-gradient(73deg,transparent 0 12px,rgba(255,93,18,.16) 13px 14px,transparent 15px 27px);
-  mix-blend-mode:multiply;
-}
-.v243-hell-burn-clone.v243-burn-active .v243-hell-char{animation:v243HellChar 1.32s ease-in forwards!important}
-.v243-hell-burn-clone .v243-hell-burnline{
-  position:absolute;z-index:85;left:-10%;bottom:-18%;width:120%;height:42%;pointer-events:none;opacity:0;
-  background:
-    radial-gradient(ellipse at 8% 92%,#fff8b9 0 3%,#ffc22e 7%,#ff5b0b 15%,rgba(177,21,0,.72) 25%,transparent 38%),
-    radial-gradient(ellipse at 28% 84%,#fff3a3 0 3%,#ffb91d 8%,#ff4f08 17%,rgba(166,17,0,.7) 27%,transparent 40%),
-    radial-gradient(ellipse at 49% 96%,#fffac9 0 4%,#ffc52b 9%,#ff5d0c 18%,rgba(174,18,0,.72) 28%,transparent 42%),
-    radial-gradient(ellipse at 70% 82%,#fff4aa 0 3%,#ffb51d 8%,#ff4a08 17%,rgba(154,14,0,.7) 28%,transparent 41%),
-    radial-gradient(ellipse at 91% 93%,#fff7b8 0 3%,#ffc12a 8%,#ff590b 17%,rgba(170,18,0,.7) 28%,transparent 40%);
-  filter:drop-shadow(0 -4px 8px rgba(255,81,8,.8)) blur(.15px);
-  transform:translateY(0) scaleY(.78);
-}
-.v243-hell-burn-clone.v243-burn-active .v243-hell-burnline{animation:v243HellBurnLine 1.18s cubic-bezier(.12,.68,.19,1) .08s forwards!important}
-.v243-hell-ash-field{position:fixed;z-index:10240;inset:0;pointer-events:none;overflow:hidden}
-.v243-hell-ash{
-  position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);opacity:0;
-  background:var(--c);border-radius:var(--round,0);box-shadow:0 0 var(--glow,0px) rgba(255,92,15,.7);
-  animation:v243HellAshFly var(--d) cubic-bezier(.12,.62,.18,1) var(--delay) forwards!important;
-}
-@keyframes v243HellCardDisintegrate{
-  0%{opacity:1;filter:brightness(1) saturate(1);transform:none;clip-path:polygon(0 0,100% 0,100% 100%,90% 100%,80% 100%,70% 100%,60% 100%,50% 100%,40% 100%,30% 100%,20% 100%,10% 100%,0 100%)}
-  16%{opacity:1;filter:brightness(1.32) saturate(1.24) contrast(1.05);transform:translateY(-1px) scale(1.01);clip-path:polygon(0 0,100% 0,100% 100%,90% 100%,80% 100%,70% 100%,60% 100%,50% 100%,40% 100%,30% 100%,20% 100%,10% 100%,0 100%)}
-  38%{opacity:1;filter:sepia(.25) brightness(.82) saturate(.78) contrast(1.18);transform:translateY(-2px);clip-path:polygon(0 0,100% 0,100% 84%,90% 80%,80% 86%,70% 79%,60% 84%,50% 78%,40% 85%,30% 80%,20% 86%,10% 79%,0 83%)}
-  60%{opacity:.98;filter:sepia(.55) grayscale(.35) brightness(.55) saturate(.55) contrast(1.38);transform:translateY(-4px) scale(.995);clip-path:polygon(0 0,100% 0,100% 61%,90% 55%,80% 63%,70% 56%,60% 62%,50% 54%,40% 61%,30% 55%,20% 63%,10% 56%,0 60%)}
-  78%{opacity:.9;filter:grayscale(.82) brightness(.32) contrast(1.65);transform:translateY(-7px) scale(.98);clip-path:polygon(0 0,100% 0,100% 37%,90% 31%,80% 39%,70% 30%,60% 36%,50% 29%,40% 38%,30% 31%,20% 39%,10% 30%,0 35%)}
-  92%{opacity:.62;filter:grayscale(1) brightness(.18) contrast(1.9) blur(.35px);transform:translateY(-11px) scale(.94);clip-path:polygon(0 0,100% 0,100% 16%,90% 11%,80% 18%,70% 10%,60% 16%,50% 9%,40% 17%,30% 11%,20% 18%,10% 10%,0 15%)}
-  100%{opacity:0;filter:grayscale(1) brightness(.08) contrast(2) blur(1.4px);transform:translateY(-18px) scale(.88);clip-path:polygon(0 0,100% 0,100% 2%,90% 0,80% 3%,70% 0,60% 2%,50% 0,40% 3%,30% 0,20% 2%,10% 0,0 2%)}
-}
-@keyframes v243HellChar{
-  0%,10%{opacity:0;transform:translateY(64%)}
-  30%{opacity:.5}
-  67%{opacity:.93;transform:translateY(5%)}
-  100%{opacity:1;transform:translateY(-58%)}
-}
-@keyframes v243HellBurnLine{
-  0%{opacity:0;transform:translateY(8%) scaleY(.52)}
-  12%{opacity:1}
-  44%{opacity:1;transform:translateY(-96%) scaleY(1.02)}
-  82%{opacity:.95;transform:translateY(-212%) scaleY(.9)}
-  100%{opacity:0;transform:translateY(-292%) scaleY(.58)}
-}
-@keyframes v243HellAshFly{
-  0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.55)}
-  12%{opacity:.92}
-  58%{opacity:.72}
-  100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(.1)}
-}
-
-.v244-hell-stage{
+.v57-burn-stage{
   position:fixed!important;
   z-index:10245!important;
   margin:0!important;
@@ -5312,7 +5191,7 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   transform:translateZ(0)!important;
   filter:none!important;
 }
-.v244-hell-stage::before{
+.v57-burn-stage::before{
   content:"";
   position:absolute;
   inset:-16%;
@@ -5322,8 +5201,8 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   background:radial-gradient(ellipse at 50% 82%,rgba(255,100,20,.42),rgba(122,24,0,.18) 34%,transparent 69%);
   filter:blur(7px);
 }
-.v244-hell-stage.v244-active::before{animation:v244HellHeatHalo 1.05s ease-out both!important}
-.v244-hell-slice{
+.v57-burn-stage.v57-burn-active::before{animation:v57BurnHeatHalo 1.05s ease-out both!important}
+.v57-burn-slice{
   position:absolute!important;
   inset:0!important;
   width:100%!important;
@@ -5342,10 +5221,10 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   will-change:transform,opacity,filter!important;
   animation:none!important;
 }
-.v244-hell-stage.v244-active .v244-hell-slice{
-  animation:v244HellSliceBurn 620ms cubic-bezier(.18,.64,.18,1) var(--delay,0ms) both!important;
+.v57-burn-stage.v57-burn-active .v57-burn-slice{
+  animation:v57BurnSliceBurn 620ms cubic-bezier(.18,.64,.18,1) var(--delay,0ms) both!important;
 }
-.v244-hell-front{
+.v57-burn-front{
   position:absolute;
   z-index:80;
   left:-11%;
@@ -5365,8 +5244,8 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   filter:drop-shadow(0 -2px 4px rgba(255,117,35,.95)) drop-shadow(0 -8px 9px rgba(255,60,0,.46));
   mix-blend-mode:screen;
 }
-.v244-hell-stage.v244-active .v244-hell-front{animation:v244HellFrontRise 1.34s cubic-bezier(.15,.66,.18,1) 90ms both!important}
-.v244-hell-flame{
+.v57-burn-stage.v57-burn-active .v57-burn-front{animation:v57BurnFrontRise 1.34s cubic-bezier(.15,.66,.18,1) 90ms both!important}
+.v57-burn-flame{
   position:absolute;
   z-index:82;
   left:var(--fx,50%);
@@ -5380,17 +5259,17 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   transform:translateX(-50%) rotate(var(--lean,0deg)) scale(.55,.22);
   transform-origin:50% 100%;
 }
-.v244-hell-stage.v244-active .v244-hell-flame{
-  animation:v244HellFlameFlicker var(--fd,390ms) ease-in-out var(--fdelay,0ms) infinite alternate!important;
+.v57-burn-stage.v57-burn-active .v57-burn-flame{
+  animation:v57BurnFlameFlicker var(--fd,390ms) ease-in-out var(--fdelay,0ms) infinite alternate!important;
 }
-.v244-hell-ash,.v244-hell-ember,.v244-hell-smoke{
+.v57-burn-ash,.v57-burn-ember,.v57-burn-smoke{
   position:absolute;
   pointer-events:none;
   opacity:0;
   left:var(--x,50%);
   top:var(--y,80%);
 }
-.v244-hell-ash{
+.v57-burn-ash{
   z-index:92;
   width:var(--s,3px);
   height:var(--s,3px);
@@ -5399,10 +5278,10 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   box-shadow:0 0 1px rgba(255,255,255,.05);
   transform:rotate(var(--r0,0deg));
 }
-.v244-hell-stage.v244-active .v244-hell-ash{
-  animation:v244HellAshDrift var(--d,900ms) cubic-bezier(.12,.58,.22,1) var(--delay,0ms) both!important;
+.v57-burn-stage.v57-burn-active .v57-burn-ash{
+  animation:v57BurnAshDrift var(--d,900ms) cubic-bezier(.12,.58,.22,1) var(--delay,0ms) both!important;
 }
-.v244-hell-ember{
+.v57-burn-ember{
   z-index:93;
   width:var(--s,2px);
   height:var(--s,2px);
@@ -5410,10 +5289,10 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   background:#ffb52b;
   box-shadow:0 0 4px #ff5b0b,0 0 8px rgba(255,55,0,.55);
 }
-.v244-hell-stage.v244-active .v244-hell-ember{
-  animation:v244HellEmberLift var(--d,620ms) ease-out var(--delay,0ms) both!important;
+.v57-burn-stage.v57-burn-active .v57-burn-ember{
+  animation:v57BurnEmberLift var(--d,620ms) ease-out var(--delay,0ms) both!important;
 }
-.v244-hell-smoke{
+.v57-burn-smoke{
   z-index:74;
   width:var(--sw,24px);
   height:var(--sh,36px);
@@ -5422,16 +5301,16 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   background:radial-gradient(ellipse at 48% 58%,rgba(44,41,39,.58) 0 24%,rgba(30,28,27,.35) 45%,rgba(18,17,16,.12) 67%,transparent 76%);
   filter:blur(var(--blur,3px));
 }
-.v244-hell-stage.v244-active .v244-hell-smoke{
-  animation:v244HellSmokeRise var(--d,1100ms) ease-out var(--delay,0ms) both!important;
+.v57-burn-stage.v57-burn-active .v57-burn-smoke{
+  animation:v57BurnSmokeRise var(--d,1100ms) ease-out var(--delay,0ms) both!important;
 }
-@keyframes v244HellHeatHalo{
+@keyframes v57BurnHeatHalo{
   0%{opacity:0;transform:scale(.8)}
   18%{opacity:.92;transform:scale(1.03)}
   55%{opacity:.48;transform:scale(1.08)}
   100%{opacity:0;transform:scale(1.16)}
 }
-@keyframes v244HellSliceBurn{
+@keyframes v57BurnSliceBurn{
   0%{opacity:1;filter:none;transform:none}
   13%{opacity:1;filter:brightness(1.22) saturate(1.22) contrast(1.03);transform:translateY(-.2px)}
   28%{opacity:1;filter:sepia(.18) brightness(.92) saturate(.92) contrast(1.12);transform:translateY(-.5px)}
@@ -5440,7 +5319,7 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   86%{opacity:.62;filter:grayscale(1) brightness(.16) contrast(1.9) blur(.35px);transform:translate(var(--drift3,0px),-6px) rotate(var(--rot2,0deg)) scale(.985,.80)}
   100%{opacity:0;filter:grayscale(1) brightness(.08) contrast(2.1) blur(1.1px);transform:translate(var(--drift4,0px),var(--rise,-12px)) rotate(var(--rot3,0deg)) scale(.95,.62)}
 }
-@keyframes v244HellFrontRise{
+@keyframes v57BurnFrontRise{
   0%{opacity:0;transform:translateY(0) scaleY(.52)}
   8%{opacity:.96}
   20%{transform:translateY(-76%) scaleY(.92) skewX(-1deg)}
@@ -5449,31 +5328,32 @@ body:has(#mulliganOverlay:not(.hidden)) #handScrollDock{
   88%{opacity:.82;transform:translateY(-475%) scaleY(.77)}
   100%{opacity:0;transform:translateY(-535%) scaleY(.48)}
 }
-@keyframes v244HellFlameFlicker{
+@keyframes v57BurnFlameFlicker{
   0%{opacity:.34;transform:translateX(-50%) rotate(var(--lean,0deg)) scale(.58,.24)}
   45%{opacity:.95;transform:translateX(-50%) translateY(-6%) rotate(calc(var(--lean,0deg) * -.5)) scale(.82,1.03)}
   100%{opacity:.55;transform:translateX(-50%) translateY(-14%) rotate(var(--lean,0deg)) scale(.61,1.24)}
 }
-@keyframes v244HellAshDrift{
+@keyframes v57BurnAshDrift{
   0%{opacity:0;transform:translate(0,0) rotate(var(--r0,0deg)) scale(.72)}
   13%{opacity:.82}
   42%{opacity:.92;transform:translate(calc(var(--dx,0px)*.35),calc(var(--dy,-50px)*.32)) rotate(calc(var(--rot,180deg)*.35)) scale(1)}
   72%{opacity:.66;transform:translate(calc(var(--dx,0px)*.72),calc(var(--dy,-50px)*.72)) rotate(calc(var(--rot,180deg)*.72)) scale(.82)}
   100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-50px)) rotate(var(--rot,180deg)) scale(.34)}
 }
-@keyframes v244HellEmberLift{
+@keyframes v57BurnEmberLift{
   0%{opacity:0;transform:translate(0,0) scale(.65)}
   12%{opacity:1}
   64%{opacity:.9;transform:translate(calc(var(--dx,0px)*.68),calc(var(--dy,-50px)*.68)) scale(.9)}
   100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-50px)) scale(.2)}
 }
-@keyframes v244HellSmokeRise{
+@keyframes v57BurnSmokeRise{
   0%{opacity:0;transform:translate(-50%,0) scale(.45,.3)}
   18%{opacity:.48}
   58%{opacity:.34;transform:translate(calc(-50% + var(--dx,0px)*.55),calc(var(--dy,-60px)*.55)) scale(1.05,.88)}
   100%{opacity:0;transform:translate(calc(-50% + var(--dx,0px)),var(--dy,-60px)) scale(1.55,1.25)}
 }
-@media (prefers-reduced-motion:reduce){html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v244-hell-stage *{animation-duration:.01ms!important;animation-delay:0ms!important}
+@media (prefers-reduced-motion:reduce){
+  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v57-burn-stage *{animation-duration:.01ms!important;animation-delay:0ms!important}
 }
 
 .v246-cut-stage{
@@ -11871,7 +11751,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
 
 
 <style id="v11-preview-semicircle-only">
-/* V11 — keep UI tweaks while restoring original Shunpo and Hell Gates visuals. */
+/* V11 — retained UI compatibility tweaks. */
 @media (min-width:900px){
   html:not(.phone-device):not(.tablet-device) .row-cards .card .power{
     width:45px!important;min-width:45px!important;max-width:45px!important;
@@ -12098,17 +11978,13 @@ html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::af
 
 /* 5) Temporary destruction/flight clones are outside .app, so desktop-sized row badges used to flash.
       Never show row placement marks on those temporary cards on phone/PWA. */
-html.phone-device.phone-landscape .v244-hell-slice .row-badge,
+html.phone-device.phone-landscape .v57-burn-slice .row-badge,
 html.phone-device.phone-landscape .v246-cut-half .row-badge,
-html.phone-device.phone-landscape .v243-hell-burn-clone .row-badge,
-html.phone-device.phone-landscape .card.v242-burning-away .row-badge,
 html.phone-device.phone-landscape .card-flight .row-badge,
 html.phone-device.phone-landscape .local-landing-hold .row-badge,
 html.phone-device.phone-landscape .network-landing-ghost .row-badge,
-html.touch-device.touch-landscape:not(.tablet-device) .v244-hell-slice .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .v57-burn-slice .row-badge,
 html.touch-device.touch-landscape:not(.tablet-device) .v246-cut-half .row-badge,
-html.touch-device.touch-landscape:not(.tablet-device) .v243-hell-burn-clone .row-badge,
-html.touch-device.touch-landscape:not(.tablet-device) .card.v242-burning-away .row-badge,
 html.touch-device.touch-landscape:not(.tablet-device) .card-flight .row-badge,
 html.touch-device.touch-landscape:not(.tablet-device) .local-landing-hold .row-badge,
 html.touch-device.touch-landscape:not(.tablet-device) .network-landing-ghost .row-badge{
@@ -12682,9 +12558,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
 .v36-riruka-hit{animation:v36RirukaTargetPulse 900ms ease-out both!important}
 /* never show row-badge on temporary VFX / destruction clones */
 .effect-card-table-cast .row-badge,
-.card.v242-burning-away .row-badge,
-.v243-hell-burn-clone .row-badge,
-.v244-hell-stage .row-badge,
+.v57-burn-stage .row-badge,
 .v254-getsuga-stage .row-badge,
 .v260-getsuga-stage .row-badge,
 .v32-book-stage .row-badge,
@@ -12700,7 +12574,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
 .v31-hero-shunpo-stage .row-badge,
 .v243-flight-card .row-badge,
 .v243-landing-card .row-badge,
-.v244-hell-front .row-badge{display:none!important;visibility:hidden!important;opacity:0!important;text-shadow:none!important;-webkit-text-fill-color:transparent!important;}
+.v57-burn-front .row-badge{display:none!important;visibility:hidden!important;opacity:0!important;text-shadow:none!important;-webkit-text-fill-color:transparent!important;}
 </style>
 
 
@@ -12842,6 +12716,187 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
 <style id="v52-vfx-compat-notes">
 /* V52: ability VFX remain animated on touch/mobile/PWA even when the OS exposes reduced-motion.
    Desktop/browser reduced-motion behavior remains intact. Fixed/body VFX layers stay outside scaled .app containers. */
+</style>
+
+
+<style id="v58-v27-hell-gates-exact">
+.v244-hell-stage{
+  position:fixed!important;
+  z-index:10245!important;
+  margin:0!important;
+  padding:0!important;
+  pointer-events:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+  transform:translateZ(0)!important;
+  filter:none!important;
+}
+.v244-hell-stage::before{
+  content:"";
+  position:absolute;
+  inset:-16%;
+  z-index:-2;
+  pointer-events:none;
+  opacity:0;
+  background:radial-gradient(ellipse at 50% 82%,rgba(255,100,20,.42),rgba(122,24,0,.18) 34%,transparent 69%);
+  filter:blur(7px);
+}
+.v244-hell-stage.v244-active::before{animation:v244HellHeatHalo 1.05s ease-out both!important}
+.v244-hell-slice .row-badge{display:none!important;visibility:hidden!important;opacity:0!important}
+.v244-hell-slice .row-badge::before,.v244-hell-slice .row-badge::after{content:none!important;display:none!important}
+.v244-hell-slice{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:100%!important;
+  min-height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  pointer-events:none!important;
+  overflow:visible!important;
+  clip-path:var(--slice-clip)!important;
+  box-shadow:none!important;
+  transform-origin:50% var(--slice-origin,50%)!important;
+  will-change:transform,opacity,filter!important;
+  animation:none!important;
+}
+.v244-hell-stage.v244-active .v244-hell-slice{
+  animation:v244HellSliceBurn 620ms cubic-bezier(.18,.64,.18,1) var(--delay,0ms) both!important;
+}
+.v244-hell-front{
+  position:absolute;
+  z-index:80;
+  left:-11%;
+  bottom:-10%;
+  width:122%;
+  height:21%;
+  opacity:0;
+  pointer-events:none;
+  transform-origin:50% 100%;
+  background:
+    radial-gradient(ellipse at 7% 76%,rgba(255,250,202,.95) 0 2%,#ffc93f 5%,#ff5d13 10%,rgba(145,19,0,.72) 19%,transparent 31%),
+    radial-gradient(ellipse at 25% 91%,rgba(255,247,190,.96) 0 2%,#ffd04a 6%,#ff6214 12%,rgba(155,20,0,.75) 22%,transparent 34%),
+    radial-gradient(ellipse at 46% 73%,rgba(255,252,210,.96) 0 3%,#ffc63a 7%,#ff5510 13%,rgba(158,17,0,.75) 23%,transparent 35%),
+    radial-gradient(ellipse at 66% 94%,rgba(255,249,196,.95) 0 2%,#ffd046 6%,#ff6013 12%,rgba(150,18,0,.72) 22%,transparent 34%),
+    radial-gradient(ellipse at 88% 77%,rgba(255,251,207,.95) 0 2%,#ffc83c 6%,#ff5710 12%,rgba(148,17,0,.72) 22%,transparent 34%),
+    linear-gradient(180deg,transparent 0 46%,rgba(255,79,12,.55) 66%,rgba(35,7,1,.85) 88%,transparent 100%);
+  filter:drop-shadow(0 -2px 4px rgba(255,117,35,.95)) drop-shadow(0 -8px 9px rgba(255,60,0,.46));
+  mix-blend-mode:screen;
+}
+.v244-hell-stage.v244-active .v244-hell-front{animation:v244HellFrontRise 1.34s cubic-bezier(.15,.66,.18,1) 90ms both!important}
+.v244-hell-flame{
+  position:absolute;
+  z-index:82;
+  left:var(--fx,50%);
+  bottom:9%;
+  width:var(--fw,9%);
+  height:var(--fh,115%);
+  opacity:0;
+  border-radius:58% 42% 56% 44% / 72% 68% 32% 28%;
+  background:radial-gradient(ellipse at 50% 86%,#fff7b0 0 9%,#ffc432 21%,#ff5a0c 48%,rgba(130,14,0,.74) 69%,transparent 80%);
+  filter:blur(.2px) drop-shadow(0 0 3px rgba(255,79,12,.72));
+  transform:translateX(-50%) rotate(var(--lean,0deg)) scale(.55,.22);
+  transform-origin:50% 100%;
+}
+.v244-hell-stage.v244-active .v244-hell-flame{
+  animation:v244HellFlameFlicker var(--fd,390ms) ease-in-out var(--fdelay,0ms) infinite alternate!important;
+}
+.v244-hell-ash,.v244-hell-ember,.v244-hell-smoke{
+  position:absolute;
+  pointer-events:none;
+  opacity:0;
+  left:var(--x,50%);
+  top:var(--y,80%);
+}
+.v244-hell-ash{
+  z-index:92;
+  width:var(--s,3px);
+  height:var(--s,3px);
+  background:var(--c,#2b2927);
+  border-radius:var(--r,18% 55% 30% 62%);
+  box-shadow:0 0 1px rgba(255,255,255,.05);
+  transform:rotate(var(--r0,0deg));
+}
+.v244-hell-stage.v244-active .v244-hell-ash{
+  animation:v244HellAshDrift var(--d,900ms) cubic-bezier(.12,.58,.22,1) var(--delay,0ms) both!important;
+}
+.v244-hell-ember{
+  z-index:93;
+  width:var(--s,2px);
+  height:var(--s,2px);
+  border-radius:50%;
+  background:#ffb52b;
+  box-shadow:0 0 4px #ff5b0b,0 0 8px rgba(255,55,0,.55);
+}
+.v244-hell-stage.v244-active .v244-hell-ember{
+  animation:v244HellEmberLift var(--d,620ms) ease-out var(--delay,0ms) both!important;
+}
+.v244-hell-smoke{
+  z-index:74;
+  width:var(--sw,24px);
+  height:var(--sh,36px);
+  margin-left:calc(var(--sw,24px)*-.5);
+  border-radius:50%;
+  background:radial-gradient(ellipse at 48% 58%,rgba(44,41,39,.58) 0 24%,rgba(30,28,27,.35) 45%,rgba(18,17,16,.12) 67%,transparent 76%);
+  filter:blur(var(--blur,3px));
+}
+.v244-hell-stage.v244-active .v244-hell-smoke{
+  animation:v244HellSmokeRise var(--d,1100ms) ease-out var(--delay,0ms) both!important;
+}
+@keyframes v244HellHeatHalo{
+  0%{opacity:0;transform:scale(.8)}
+  18%{opacity:.92;transform:scale(1.03)}
+  55%{opacity:.48;transform:scale(1.08)}
+  100%{opacity:0;transform:scale(1.16)}
+}
+@keyframes v244HellSliceBurn{
+  0%{opacity:1;filter:none;transform:none}
+  13%{opacity:1;filter:brightness(1.22) saturate(1.22) contrast(1.03);transform:translateY(-.2px)}
+  28%{opacity:1;filter:sepia(.18) brightness(.92) saturate(.92) contrast(1.12);transform:translateY(-.5px)}
+  47%{opacity:.98;filter:sepia(.58) grayscale(.22) brightness(.52) saturate(.55) contrast(1.4);transform:translate(var(--drift1,0px),-1px) skewX(var(--skew,0deg))}
+  70%{opacity:.92;filter:grayscale(.82) sepia(.28) brightness(.27) contrast(1.7);transform:translate(var(--drift2,0px),-3px) rotate(var(--rot1,0deg)) scaleY(.92)}
+  86%{opacity:.62;filter:grayscale(1) brightness(.16) contrast(1.9) blur(.35px);transform:translate(var(--drift3,0px),-6px) rotate(var(--rot2,0deg)) scale(.985,.80)}
+  100%{opacity:0;filter:grayscale(1) brightness(.08) contrast(2.1) blur(1.1px);transform:translate(var(--drift4,0px),var(--rise,-12px)) rotate(var(--rot3,0deg)) scale(.95,.62)}
+}
+@keyframes v244HellFrontRise{
+  0%{opacity:0;transform:translateY(0) scaleY(.52)}
+  8%{opacity:.96}
+  20%{transform:translateY(-76%) scaleY(.92) skewX(-1deg)}
+  43%{opacity:1;transform:translateY(-224%) scaleY(1.04) skewX(1deg)}
+  68%{opacity:.96;transform:translateY(-365%) scaleY(.92) skewX(-.6deg)}
+  88%{opacity:.82;transform:translateY(-475%) scaleY(.77)}
+  100%{opacity:0;transform:translateY(-535%) scaleY(.48)}
+}
+@keyframes v244HellFlameFlicker{
+  0%{opacity:.34;transform:translateX(-50%) rotate(var(--lean,0deg)) scale(.58,.24)}
+  45%{opacity:.95;transform:translateX(-50%) translateY(-6%) rotate(calc(var(--lean,0deg) * -.5)) scale(.82,1.03)}
+  100%{opacity:.55;transform:translateX(-50%) translateY(-14%) rotate(var(--lean,0deg)) scale(.61,1.24)}
+}
+@keyframes v244HellAshDrift{
+  0%{opacity:0;transform:translate(0,0) rotate(var(--r0,0deg)) scale(.72)}
+  13%{opacity:.82}
+  42%{opacity:.92;transform:translate(calc(var(--dx,0px)*.35),calc(var(--dy,-50px)*.32)) rotate(calc(var(--rot,180deg)*.35)) scale(1)}
+  72%{opacity:.66;transform:translate(calc(var(--dx,0px)*.72),calc(var(--dy,-50px)*.72)) rotate(calc(var(--rot,180deg)*.72)) scale(.82)}
+  100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-50px)) rotate(var(--rot,180deg)) scale(.34)}
+}
+@keyframes v244HellEmberLift{
+  0%{opacity:0;transform:translate(0,0) scale(.65)}
+  12%{opacity:1}
+  64%{opacity:.9;transform:translate(calc(var(--dx,0px)*.68),calc(var(--dy,-50px)*.68)) scale(.9)}
+  100%{opacity:0;transform:translate(var(--dx,0px),var(--dy,-50px)) scale(.2)}
+}
+@keyframes v244HellSmokeRise{
+  0%{opacity:0;transform:translate(-50%,0) scale(.45,.3)}
+  18%{opacity:.48}
+  58%{opacity:.34;transform:translate(calc(-50% + var(--dx,0px)*.55),calc(var(--dy,-60px)*.55)) scale(1.05,.88)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx,0px)),var(--dy,-60px)) scale(1.55,1.25)}
+}
+@media (prefers-reduced-motion:reduce){
+  .v244-hell-stage *{animation-duration:.01ms!important;animation-delay:0ms!important}
+}
 </style>
 
 </head>
@@ -17199,7 +17254,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
     if(!simCard) return null;
 
     const saved={
-      render,toast,waitForMs,animateReturnSmoke,v254AnimateGetsugaTensho,animateHellGatesTargets,animateBladeCutTargets
+      render,toast,waitForMs,animateReturnSmoke,v254AnimateGetsugaTensho,animateBurnDisintegrateTargets,animateBladeCutTargets
     };
     const ctx={phase:"collect",actorKey:ownerKey,choices:[],choiceCursor:0,randoms:[],randomCursor:0,recordingPaused:false};
     cardChoicePreflightContext=ctx;
@@ -17210,13 +17265,13 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
       simulated.selected=null; simulated.previewCard=null; simulated.flightLandedUid=null;
       render=()=>{}; toast=()=>{}; waitForMs=async()=>{};
       animateReturnSmoke=async()=>{}; v254AnimateGetsugaTensho=async()=>{};
-      animateHellGatesTargets=async()=>{}; animateBladeCutTargets=async()=>{};
+      animateBurnDisintegrateTargets=async()=>{}; animateBladeCutTargets=async()=>{};
       await placeCard(ownerKey,targetSideKey,simCard,row);
       return {choices:ctx.choices.map(x=>({...x})),randoms:[...ctx.randoms]};
     } finally {
       render=saved.render; toast=saved.toast; waitForMs=saved.waitForMs;
       animateReturnSmoke=saved.animateReturnSmoke; v254AnimateGetsugaTensho=saved.v254AnimateGetsugaTensho;
-      animateHellGatesTargets=saved.animateHellGatesTargets; animateBladeCutTargets=saved.animateBladeCutTargets;
+      animateBurnDisintegrateTargets=saved.animateBurnDisintegrateTargets; animateBladeCutTargets=saved.animateBladeCutTargets;
       state=liveState;
       cardChoicePreflightContext=null;
       $("#choiceOverlay")?.classList.add("hidden");
@@ -17847,7 +17902,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
           for(const x of [...candidates.filter(x=>x.power===max)]){
             if(destroyCard(foeKey,x.card,"Испепели всё сущее",ownerKey,{bypassShield:true})) burnVictims.push({sideKey:foeKey,row:x.row,uid:x.card.uid,card:x.card});
           }
-          if(burnVictims.length) await animateHellGatesTargets(burnVictims);
+          if(burnVictims.length) await animateBurnDisintegrateTargets(burnVictims);
         }
         break;
       }
@@ -17865,14 +17920,14 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
         for(const r of ROWS) for(const c of state[foeKey].board[r]){ const p=fieldPower(foeKey,r,c); if(!c.hero&&p>=0&&p<=4) candidates.push({card:c,row:r}); }
         if(candidates.length){
           const target=candidates[randomIndex(candidates.length)];
-          if(destroyCard(foeKey,target.card,"Zabimaru",ownerKey)) await animateHellGatesTargets([{sideKey:foeKey,row:target.row,uid:target.card.uid,card:target.card}]);
+          if(destroyCard(foeKey,target.card,"Zabimaru",ownerKey)) await animateBurnDisintegrateTargets([{sideKey:foeKey,row:target.row,uid:target.card.uid,card:target.card}]);
         }
         break;
       }
       case "soulRenjiSooZabimaru": {
         const foeKey=enemyOf(ownerKey);
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=8,"SOO ZABIMARU","Выберите обычного врага текущей силой 0–8 и уничтожьте его.");
-        if(target && destroyCard(foeKey,target.card,"Soo Zabimaru",ownerKey)) await animateHellGatesTargets([{sideKey:foeKey,row:target.row,uid:target.card.uid,card:target.card}]);
+        if(target && destroyCard(foeKey,target.card,"Soo Zabimaru",ownerKey)) await animateBurnDisintegrateTargets([{sideKey:foeKey,row:target.row,uid:target.card.uid,card:target.card}]);
         break;
       }
       case "soulKomamuraBankai": {
@@ -18576,25 +18631,144 @@ function v242CardElement(sideKey,row,uid){
       document.body.classList.remove('card-flight-active');
     }
   }
-  function v242AshBurstForRect(r){
-    if(!r) return;
-    const field=document.createElement('div'); field.className='v242-ash-field'; document.body.appendChild(field);
-    const colors=['#6f6258','#4b433d','#2d2926','#b05b25','#8d3f1d'];
-    for(let i=0;i<34;i++){
-      const p=document.createElement('i'); p.className='v242-ash-bit';
-      const x=r.left+Math.random()*r.width, y=r.top+r.height*(.45+Math.random()*.55);
-      const dx=(-42+Math.random()*84).toFixed(1), dy=(-28-Math.random()*96).toFixed(1);
-      p.style.setProperty('--x',`${x.toFixed(1)}px`); p.style.setProperty('--y',`${y.toFixed(1)}px`);
-      p.style.setProperty('--dx',`${dx}px`); p.style.setProperty('--dy',`${dy}px`);
-      p.style.setProperty('--rot',`${(-160+Math.random()*320).toFixed(0)}deg`);
-      p.style.setProperty('--s',`${(1.2+Math.random()*4.4).toFixed(1)}px`);
-      p.style.setProperty('--d',`${(680+Math.random()*520).toFixed(0)}ms`);
-      p.style.setProperty('--delay',`${Math.floor(Math.random()*250)}ms`);
-      p.style.setProperty('--c',colors[Math.floor(Math.random()*colors.length)]);
-      field.appendChild(p);
+  async function animateBurnDisintegrateTargets(entries){
+    const burns=[];
+    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+    for(const entry of entries){
+      const cardEl=v242CardElement(entry.sideKey,entry.row,entry.card.uid);
+      if(!cardEl) continue;
+      const r=cardEl.getBoundingClientRect();
+      if(!r || r.width<2 || r.height<2) continue;
+
+      const stage=document.createElement('div');
+      stage.className='v57-burn-stage';
+      stage.style.left=`${r.left}px`;
+      stage.style.top=`${r.top}px`;
+      stage.style.width=`${r.width}px`;
+      stage.style.height=`${r.height}px`;
+
+      const sliceCount=clamp(Math.round(r.height/6),12,18);
+      const xs=[0,12.5,25,37.5,50,62.5,75,87.5,100];
+      const boundaries=[];
+      for(let b=0;b<=sliceCount;b++){
+        const base=b*100/sliceCount;
+        boundaries[b]=xs.map(()=>{
+          if(b===0) return 0;
+          if(b===sliceCount) return 100;
+          const band=100/sliceCount;
+          return clamp(base+(-.26+Math.random()*.52)*band,base-band*.30,base+band*.30);
+        });
+      }
+      for(let i=0;i<sliceCount;i++){
+        const slice=cardEl.cloneNode(true);
+        slice.classList.remove('selected','enter','landed-impact','dragging');
+        slice.classList.add('v57-burn-slice');
+        const top=xs.map((x,k)=>`${x}% ${boundaries[i][k].toFixed(2)}%`);
+        const bottom=[...xs].reverse().map((x,rev)=>{
+          const k=xs.length-1-rev;
+          return `${x}% ${boundaries[i+1][k].toFixed(2)}%`;
+        });
+        slice.style.setProperty('--slice-clip',`polygon(${top.concat(bottom).join(',')})`);
+        const fromBottom=(sliceCount-1-i)/(sliceCount-1);
+        const delay=125+Math.round(fromBottom*825+Math.random()*42);
+        const side=(Math.random()<.5?-1:1);
+        slice.style.setProperty('--delay',`${delay}ms`);
+        slice.style.setProperty('--slice-origin',`${((i+.5)*100/sliceCount).toFixed(1)}%`);
+        slice.style.setProperty('--drift1',`${(side*(.2+Math.random()*.6)).toFixed(2)}px`);
+        slice.style.setProperty('--drift2',`${(side*(.5+Math.random()*1.4)).toFixed(2)}px`);
+        slice.style.setProperty('--drift3',`${(side*(1+Math.random()*2.2)).toFixed(2)}px`);
+        slice.style.setProperty('--drift4',`${(side*(2+Math.random()*4.6)).toFixed(2)}px`);
+        slice.style.setProperty('--rise',`${(-6-Math.random()*13).toFixed(1)}px`);
+        slice.style.setProperty('--skew',`${(-.7+Math.random()*1.4).toFixed(2)}deg`);
+        slice.style.setProperty('--rot1',`${(-.3+Math.random()*.6).toFixed(2)}deg`);
+        slice.style.setProperty('--rot2',`${(-1+Math.random()*2).toFixed(2)}deg`);
+        slice.style.setProperty('--rot3',`${(-2.2+Math.random()*4.4).toFixed(2)}deg`);
+        stage.appendChild(slice);
+      }
+
+      const front=document.createElement('div');
+      front.className='v57-burn-front';
+      for(let i=0;i<8;i++){
+        const flame=document.createElement('i');
+        flame.className='v57-burn-flame';
+        flame.style.setProperty('--fx',`${(5+i*13+Math.random()*6).toFixed(1)}%`);
+        flame.style.setProperty('--fw',`${(6+Math.random()*8).toFixed(1)}%`);
+        flame.style.setProperty('--fh',`${(78+Math.random()*92).toFixed(0)}%`);
+        flame.style.setProperty('--lean',`${(-7+Math.random()*14).toFixed(1)}deg`);
+        flame.style.setProperty('--fd',`${(250+Math.random()*210).toFixed(0)}ms`);
+        flame.style.setProperty('--fdelay',`${Math.floor(Math.random()*120)}ms`);
+        front.appendChild(flame);
+      }
+      stage.appendChild(front);
+
+      const ashColors=['#171615','#242220','#34312e','#49433d','#66594e','#7b674f'];
+      const ashCount=clamp(Math.round(r.width*r.height/170),42,72);
+      for(let i=0;i<ashCount;i++){
+        const relY=.08+Math.random()*.92;
+        const p=document.createElement('i');
+        p.className='v57-burn-ash';
+        p.style.setProperty('--x',`${(2+Math.random()*96).toFixed(1)}%`);
+        p.style.setProperty('--y',`${(relY*100).toFixed(1)}%`);
+        const delay=120+Math.round((1-relY)*840+Math.random()*170);
+        const wind=(-1+Math.random()*2)*Math.max(18,r.width*.42);
+        p.style.setProperty('--delay',`${delay}ms`);
+        p.style.setProperty('--d',`${(660+Math.random()*520).toFixed(0)}ms`);
+        p.style.setProperty('--dx',`${wind.toFixed(1)}px`);
+        p.style.setProperty('--dy',`${(-34-Math.random()*Math.max(46,r.height*.8)).toFixed(1)}px`);
+        p.style.setProperty('--rot',`${(-260+Math.random()*520).toFixed(0)}deg`);
+        p.style.setProperty('--r0',`${(-120+Math.random()*240).toFixed(0)}deg`);
+        p.style.setProperty('--s',`${(1.1+Math.random()*3.4).toFixed(1)}px`);
+        p.style.setProperty('--c',ashColors[Math.floor(Math.random()*ashColors.length)]);
+        p.style.setProperty('--r',Math.random()>.65?'50%':'18% 58% 28% 66%');
+        stage.appendChild(p);
+      }
+
+      for(let i=0;i<18;i++){
+        const relY=.18+Math.random()*.78;
+        const e=document.createElement('b');
+        e.className='v57-burn-ember';
+        e.style.setProperty('--x',`${(6+Math.random()*88).toFixed(1)}%`);
+        e.style.setProperty('--y',`${(relY*100).toFixed(1)}%`);
+        e.style.setProperty('--delay',`${(120+Math.round((1-relY)*780+Math.random()*140))}ms`);
+        e.style.setProperty('--d',`${(430+Math.random()*420).toFixed(0)}ms`);
+        e.style.setProperty('--dx',`${(-18+Math.random()*36).toFixed(1)}px`);
+        e.style.setProperty('--dy',`${(-30-Math.random()*68).toFixed(1)}px`);
+        e.style.setProperty('--s',`${(1.1+Math.random()*2.1).toFixed(1)}px`);
+        stage.appendChild(e);
+      }
+
+      for(let i=0;i<11;i++){
+        const relY=.18+Math.random()*.76;
+        const s=document.createElement('span');
+        s.className='v57-burn-smoke';
+        s.style.setProperty('--x',`${(12+Math.random()*76).toFixed(1)}%`);
+        s.style.setProperty('--y',`${(relY*100).toFixed(1)}%`);
+        s.style.setProperty('--delay',`${(180+Math.round((1-relY)*790+Math.random()*180))}ms`);
+        s.style.setProperty('--d',`${(760+Math.random()*520).toFixed(0)}ms`);
+        s.style.setProperty('--dx',`${(-14+Math.random()*28).toFixed(1)}px`);
+        s.style.setProperty('--dy',`${(-40-Math.random()*74).toFixed(1)}px`);
+        s.style.setProperty('--sw',`${(15+Math.random()*24).toFixed(0)}px`);
+        s.style.setProperty('--sh',`${(22+Math.random()*36).toFixed(0)}px`);
+        s.style.setProperty('--blur',`${(2+Math.random()*3).toFixed(1)}px`);
+        stage.appendChild(s);
+      }
+
+      document.body.appendChild(stage);
+      cardEl.style.visibility='hidden';
+      void stage.offsetWidth;
+      requestAnimationFrame(()=>stage.classList.add('v57-burn-active'));
+      burns.push({stage,cardEl});
     }
-    setTimeout(()=>field.remove(),1450);
+    if(!burns.length){ await waitForMs(150); return; }
+    await waitForMs(1740);
+    for(const b of burns){
+      b.stage.remove();
+
+      const live=b.cardEl;
+      setTimeout(()=>{ if(live?.isConnected && live.style.visibility==='hidden') live.style.visibility=''; },110);
+    }
   }
+
   async function animateHellGatesTargets(entries){
     const burns=[];
     const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -18626,8 +18800,8 @@ function v242CardElement(sideKey,row,uid){
       for(let i=0;i<sliceCount;i++){
         const slice=cardEl.cloneNode(true);
         slice.classList.remove('selected','enter','landed-impact','dragging','v242-burning-away','v243-hell-burn-clone','v243-burn-active');
-        slice.classList.add('v244-hell-slice');
         slice.querySelectorAll('.row-badge').forEach(n=>n.remove());
+        slice.classList.add('v244-hell-slice');
         const top=xs.map((x,k)=>`${x}% ${boundaries[i][k].toFixed(2)}%`);
         const bottom=[...xs].reverse().map((x,rev)=>{
           const k=xs.length-1-rev;
@@ -18867,7 +19041,7 @@ function v242CardElement(sideKey,row,uid){
 
       const makeHalf=(kind,clip)=>{
         const half=cardEl.cloneNode(true);
-        half.classList.remove('selected','enter','landed-impact','dragging','with-info','v242-burning-away','v243-hell-burn-clone','v243-burn-active','ability-target-locked','v260-getsuga-target-hit');
+        half.classList.remove('selected','enter','landed-impact','dragging','with-info','ability-target-locked','v260-getsuga-target-hit');
         half.classList.add('v246-cut-half',kind);
         half.querySelectorAll('.row-badge').forEach(n=>n.remove());
         half.style.setProperty('--cut-clip',clip);
@@ -19377,7 +19551,7 @@ function v242CardElement(sideKey,row,uid){
 
     const makeHalf=(kind,clip)=>{
       const half=cardEl.cloneNode(true);
-      half.classList.remove('selected','enter','landed-impact','dragging','with-info','v242-burning-away','v243-hell-burn-clone','v243-burn-active','ability-target-locked','v260-getsuga-target-hit','v32-getsuga-shake');
+      half.classList.remove('selected','enter','landed-impact','dragging','with-info','ability-target-locked','v260-getsuga-target-hit','v32-getsuga-shake');
       half.classList.add('v44-getsuga-half',kind);
       half.querySelectorAll('.row-badge').forEach(n=>n.remove());
       half.style.setProperty('--cut-clip',clip);
@@ -21141,6 +21315,7 @@ ${template.desc}`:""}`;
     animateLeaderActivation,
     animateReturnSmoke,
     animateHellGatesTargets,
+    animateBurnDisintegrateTargets,
     animateBladeCutTargets,
     v250AnimateTransformationFlight,
     v261AnimateAizenHogyokuMetamorphosis,
@@ -21199,6 +21374,10 @@ ${template.desc}`:""}`;
   animateHellGatesTargets=async function(entries){
     broadcastNetworkVfx("hell-gates",{entries:(entries||[]).map(e=>({sideKey:e.sideKey,row:e.row,card:safeNetworkClone(e.card)}))});
     return v303Original.animateHellGatesTargets(entries);
+  };
+  animateBurnDisintegrateTargets=async function(entries){
+    broadcastNetworkVfx("burn-disintegrate",{entries:(entries||[]).map(e=>({sideKey:e.sideKey,row:e.row,card:safeNetworkClone(e.card)}))});
+    return v303Original.animateBurnDisintegrateTargets(entries);
   };
   animateBladeCutTargets=async function(entries,opts={}){
     broadcastNetworkVfx("blade-cut",{entries:(entries||[]).map(e=>({sideKey:e.sideKey,row:e.row,card:safeNetworkClone(e.card)})),opts:{duration:opts.duration,startY:opts.startY,endY:opts.endY,reverseDiagonal:opts.reverseDiagonal}});
@@ -21303,6 +21482,13 @@ ${template.desc}`:""}`;
       if(payload.kind==="hell-gates"){
         const entries=payload.entries||[];
         await v303Original.animateHellGatesTargets(entries);
+
+        hideNetworkDestroyedTargets(entries);
+        return;
+      }
+      if(payload.kind==="burn-disintegrate"){
+        const entries=payload.entries||[];
+        await v303Original.animateBurnDisintegrateTargets(entries);
 
         hideNetworkDestroyedTargets(entries);
         return;
@@ -21442,7 +21628,7 @@ ${template.desc}`:""}`;
     delete document.body.dataset.enemyFaction;
     delete document.body.dataset.viewSide;
     document.body.classList.remove("action-locked","card-flight-active","leader-unleash-active","leader-unleash-living","leader-unleash-hueco","local-handoff-active");
-    document.querySelectorAll(".landing-impact,.hellfire-overlay,.return-smoke-overlay,.leader-unleash-fx,.network-landing-ghost,.local-landing-hold").forEach(el=>el.remove());
+    document.querySelectorAll(".landing-impact,.return-smoke-overlay,.leader-unleash-fx,.network-landing-ghost,.local-landing-hold").forEach(el=>el.remove());
     const range=document.getElementById("handScrollRange");
     if(range){ range.value="0"; range.max="0"; range.disabled=true; range.style.setProperty("--hand-scroll-pct","0%"); }
     if(handEl){
