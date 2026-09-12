@@ -11691,29 +11691,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
 }
 </style>
 
-<style id="v363-unified-shunpo-and-preview-fit">
-/* V363 — one Shunpo visual language for every return technique + larger battlefield power semicircle + flush right preview. */
-@media (min-width:900px){
-  html:not(.phone-device):not(.tablet-device) .row-cards .card .power{
-    width:48px!important;min-width:48px!important;max-width:48px!important;
-    height:26px!important;min-height:26px!important;max-height:26px!important;
-    border-radius:48px 48px 0 0!important;
-    font-size:23px!important;
-    padding:2px 0 0!important;
-    bottom:0!important;
-  }
-}
-html.phone-device.phone-landscape .row-cards .card .power,
-html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
-  width:28px!important;min-width:28px!important;max-width:28px!important;
-  height:15px!important;min-height:15px!important;max-height:15px!important;
-  border-radius:28px 28px 0 0!important;
-  font-size:11px!important;
-  padding:1px 0 0!important;
-  bottom:0!important;
-}
-
-/* Right-side card preview should fit the plaque edge-to-edge instead of floating inside it. */
+<style id="v363-right-preview-fit">
+/* Right-side card preview fits the plaque edge-to-edge. */
 .rightbar .detail{padding:0!important;}
 .rightbar .detail-preview{
   width:100%!important;max-width:100%!important;
@@ -11733,14 +11712,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
   width:100%!important;min-width:100%!important;max-width:100%!important;
   margin:0!important;
 }
-
 </style>
 
-<style id="v367-original-shunpo-restored">
-/* V367 — Original return Shunpo restored for every return technique.
-   All return sources use the original V242 return-card cast, followed by the original target smoke + vanish.
-   Generic enter/landing impact is suppressed for return-technique units. */
-</style>
 
 <style id="v368-live-row-choice-highlights">
 /* V368 — card entry abilities that select rows now do so directly on the battlefield. */
@@ -11856,6 +11829,77 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
 .v10-hogyoku-power-hidden::before,
 .v10-hogyoku-power-hidden::after{opacity:0!important}
 .v10-hogyoku-power-hidden::selection{background:transparent!important;color:transparent!important}
+</style>
+
+
+<style id="v25-ios-browser-hand-compact">
+/* V25 — compact the bottom hand only in iOS browser landscape; keep standalone PWA untouched. */
+html.pwa-browser-ios.phone-device.phone-landscape .hand-wrap{
+  height:72px!important;
+  min-height:72px!important;
+  max-height:72px!important;
+  grid-template-columns:minmax(0,1fr) 44px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .hand{
+  gap:2px!important;
+  padding:3px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .hand .card,
+html.pwa-browser-ios.phone-device.phone-landscape .hand.hand-expanded .card{
+  flex:0 0 42px!important;
+  width:42px!important;
+  min-width:42px!important;
+  max-width:42px!important;
+  height:61px!important;
+  max-height:61px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .hand .card .power,
+html.pwa-browser-ios.phone-device.phone-landscape .hand.hand-expanded .card .power{
+  width:16px!important;
+  height:16px!important;
+  font-size:9px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .hand .card .ability-icon{
+  min-width:11px!important;
+  height:11px!important;
+  font-size:6px!important;
+  padding:0 1px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .hand .card .name,
+html.pwa-browser-ios.phone-device.phone-landscape .hand.hand-expanded .card .name{
+  font-size:4.4px!important;
+  padding:5px 1px 2px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .hand-actions{
+  padding:2px!important;
+}
+html.pwa-browser-ios.phone-device.phone-landscape .pass-btn{
+  width:38px!important;
+  height:34px!important;
+  font-size:6px!important;
+  line-height:.95!important;
+  margin:auto!important;
+  padding:0 2px!important;
+}
+</style>
+
+
+<style id="v26-ability-vfx-pack">
+.v26-fx-card,.v26-fx-row,.v26-fx-beam,.v26-fx-label{position:fixed;pointer-events:none;z-index:16000}
+.v26-fx-card,.v26-fx-row{opacity:0;transform:scale(.92);filter:saturate(1.15);transition:transform .46s cubic-bezier(.18,.84,.2,1),opacity .16s ease}
+.v26-fx-card.v26-on,.v26-fx-row.v26-on{opacity:1;transform:scale(1)}
+.v26-fx-card{border-radius:12px;overflow:visible}.v26-fx-row{border-radius:18px;overflow:visible}
+.v26-fx-card::before,.v26-fx-row::before{content:"";position:absolute;inset:-4px;border-radius:inherit;background:linear-gradient(135deg,var(--v26-a,rgba(255,120,60,.95)),var(--v26-b,rgba(255,240,180,.92)));opacity:.24;box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,0 0 18px var(--v26-a,rgba(255,120,60,.95)),0 0 36px rgba(0,0,0,.22);animation:v26GlowPulse var(--v26-d,560ms) ease both}
+.v26-fx-card::after,.v26-fx-row::after{content:"";position:absolute;left:50%;top:50%;width:20%;height:20%;transform:translate(-50%,-50%) scale(.3);border:2px solid color-mix(in srgb, var(--v26-b, white) 88%, transparent);border-radius:999px;opacity:.9;animation:v26Ring var(--v26-d,560ms) ease-out both}.v26-fx-row::after{width:12%;height:38%}
+.v26-fx-label{left:50%;top:-12px;transform:translate(-50%,-100%);padding:4px 9px;border-radius:999px;font:900 10px/1.05 Inter,system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:#fff;background:linear-gradient(135deg,var(--v26-a,rgba(255,120,60,.95)),var(--v26-b,rgba(255,240,180,.92)));box-shadow:0 6px 18px rgba(0,0,0,.28);text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.v26-fx-shard{position:absolute;left:50%;top:50%;width:var(--s,8px);height:var(--s,8px);margin:-4px 0 0 -4px;border-radius:var(--r,999px);opacity:0;background:var(--c,rgba(255,255,255,.92));box-shadow:0 0 10px var(--c,rgba(255,255,255,.92));animation:v26Shard var(--v26-d,560ms) cubic-bezier(.18,.8,.28,1) forwards;animation-delay:var(--delay,0ms)}
+.v26-fx-beam{height:6px;opacity:0;transform-origin:left center;filter:drop-shadow(0 0 8px var(--v26-a,rgba(255,120,60,.95)))}
+.v26-fx-beam::before,.v26-fx-beam::after{content:"";position:absolute;inset:0;border-radius:999px}.v26-fx-beam::before{background:linear-gradient(90deg,rgba(255,255,255,0),var(--v26-a,rgba(255,120,60,.95)) 16%,var(--v26-b,rgba(255,240,180,.92)) 58%,rgba(255,255,255,0))}.v26-fx-beam::after{inset:-5px 0;background:radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--v26-b, white) 75%, transparent) 0%, transparent 72%);opacity:.65;filter:blur(4px)}
+.v26-fx-beam.v26-on{animation:v26Beam .48s cubic-bezier(.16,.78,.26,1) forwards}
+@keyframes v26GlowPulse{0%{opacity:0;transform:scale(.75)}20%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.16)}}
+@keyframes v26Ring{0%{opacity:.92;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(3.8)}}
+@keyframes v26Shard{0%{opacity:0;transform:translate(0,0) scale(.25) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,0)) scale(1) rotate(var(--rot,140deg))}}
+@keyframes v26Beam{0%{opacity:0;transform:scaleX(.08)}15%{opacity:1}100%{opacity:0;transform:scaleX(1)}}
 </style>
 
 </head>
@@ -12873,6 +12917,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
   function hollowifyVizards(sideKey){
     let count=0;
     for(const card of allBoard(state[sideKey])) if(VIZARD_IDS.includes(card.id) && hollowifyVizardCard(card)) count++;
+    if(count) v26PulseVizards(sideKey);
     if(count && isHumanControlled(sideKey)) toast("ПУСТОФИКАЦИЯ");
     return count;
   }
@@ -13082,6 +13127,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       return true;
     })) return false;
     if(consumeAizenShield(foeKey,sideKey,label)) return false;
+    void v26PulseRow(foeKey,"melee",/respira/i.test(label)?"decay":"strike",String(label||"EXECUTE").toUpperCase());
     for(const c of [...victims]) destroyCard(foeKey,c,label,sideKey,{bypassShield:true});
     return true;
   }
@@ -13200,6 +13246,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       if(card.id==="l_ichigo" && loc) clearIchigoAura(loc.sideKey);
       breakLinkedEffectsFromSource(card);
     }
+    const loc=findBoardCardByUid(card.uid); if(loc) void v26PulseCard(loc.sideKey,loc.row,card.uid,v26ReasonKind(label||"Silence"),label||"SILENCE");
     addLog(`<b>${card.name}</b>: ${label} — способность отключена.`);
     return true;
   }
@@ -13213,6 +13260,11 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       const loc=findBoardCardByUid(target.uid);
       if(target.id==="l_ichigo" && loc) clearIchigoAura(loc.sideKey);
       breakLinkedEffectsFromSource(target);
+    }
+    const sourceLoc=sourceCard?findBoardCardByUid(sourceCard.uid):null; const targetLoc=findBoardCardByUid(target.uid);
+    if(targetLoc){
+      if(sourceLoc) void v26LinkCards(sourceLoc.sideKey,sourceLoc.row,sourceCard.uid,targetLoc.sideKey,targetLoc.row,target.uid,v26ReasonKind(label||"Extinguir"),label||"SILENCE");
+      else void v26PulseCard(targetLoc.sideKey,targetLoc.row,target.uid,v26ReasonKind(label||"Extinguir"),label||"SILENCE");
     }
     return true;
   }
@@ -13276,6 +13328,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         if(blocked>0){ target._bankaiNegationRemaining-=blocked; next+=blocked; addLog(`<b>Bankai Kenpachi:</b> игнорирует ${blocked} отрицательной силы; защита ${target._bankaiNegationRemaining}/5.`); }
       }
     }
+    if(before!==next) v26PlayPowerChangeVfx(targetSideKey,target,before,next,sourceSideKey,label);
     target.currentPower=next; return true;
   }
   function releaseShunsuiKageoniTarget(sourceCard){
@@ -13292,6 +13345,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
   function ensureNanaoBarriers(){ if(!Array.isArray(state?.nanaoBarriers)) state.nanaoBarriers=[]; return state.nanaoBarriers; }
   function sealNanaoBarrier(sourceSide,sourceCard,targetSide,targetCard,row){
     const arr=state[targetSide].board[row]; const idx=arr.findIndex(c=>c.uid===targetCard.uid); if(idx<0) return false;
+    const srcLoc=findBoardCardByUid(sourceCard.uid);
+    if(srcLoc) void v26LinkCards(srcLoc.sideKey,srcLoc.row,sourceCard.uid,targetSide,row,targetCard.uid,"barrier","NANAO");
     arr.splice(idx,1);
     breakLinkedEffectsFromSource(targetCard); detachIncomingLinkedEffects(targetCard);
     ensureNanaoBarriers().push({sourceUid:sourceCard.uid,sourceSide,targetSide,row,captive:targetCard});
@@ -14588,7 +14643,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     const shown=shownCardPower(card,sideKey,inHand);
     const infoPanel=showInfoPanel ? `<div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>` : "";
     const rowPlacement=rowPlacementLabel(card);
-    const mobileRowPlacement=rowPlacement.replaceAll("Ⅰ\u200aⅠ\u200aⅠ","Ⅲ").replaceAll("Ⅰ\u200aⅠ","Ⅱ");
+    const mobileRowPlacement=rowPlacement;
     const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}">${rowPlacement}</div>` : "";
     el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${shown}</div>${rowBadge}${inHand&&isFreeTransformationCard(card)?`<div class="transform-badge">FREE</div>`:""}</div>${infoPanel}`;
     applyCardArtElement(el.querySelector(".art"),card);
@@ -15626,35 +15681,11 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     }
   }
 
-  const v19PendingShunpoCovers=new Map();
-  function v19StorePendingShunpoCover(uid,info){ if(uid&&info) v19PendingShunpoCovers.set(uid,info); }
-  function v19ConsumePendingShunpoCover(uid){ if(!uid) return null; const info=v19PendingShunpoCovers.get(uid)||null; if(info) v19PendingShunpoCovers.delete(uid); return info; }
-
-  function createShunpoOverlayClone(cardEl,r,zIndex='10131'){
-    if(!cardEl || !r) return null;
-    const clone=cardEl.cloneNode(true);
-    clone.classList.remove('selected','enter','landed-impact','dragging','with-info','returning-hidden','shunpo-returning');
-    clone.style.setProperty('position','fixed','important');
-    clone.style.setProperty('left',`${r.left}px`,'important');
-    clone.style.setProperty('top',`${r.top}px`,'important');
-    clone.style.setProperty('width',`${r.width}px`,'important');
-    clone.style.setProperty('height',`${r.height}px`,'important');
-    clone.style.setProperty('margin','0','important');
-    clone.style.setProperty('z-index',String(zIndex),'important');
-    clone.style.setProperty('pointer-events','none','important');
-    clone.style.setProperty('transition','none','important');
-    clone.style.setProperty('will-change','transform,opacity,filter','important');
-    clone.querySelector('.card-info-panel')?.remove();
-    clone.querySelector('.row-badge')?.remove();
-    return clone;
-  }
-
   async function animateReturnSmoke(sideKey,row,card,opts={}){
     const cardEl=document.querySelector(`.row[data-side="${sideKey}"][data-row="${row}"] .card[data-uid="${card.uid}"]`);
     const r=opts?.sourceRect || visibleRect(cardEl?.querySelector('.card-face')) || visibleRect(cardEl);
     if(!r){ await waitForMs(120); return; }
-    const coverClone=opts?.coverClone || null;
-    if(coverClone && !coverClone.isConnected) document.body.appendChild(coverClone);
+    if(cardEl) cardEl.classList.add("shunpo-returning");
     const fx=document.createElement("div");
     fx.className="return-smoke-overlay";
     fx.style.setProperty("--smoke-x",`${r.left+r.width/2}px`);
@@ -15681,11 +15712,11 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     const ring=document.createElement("div"); ring.className="smoke-ring"; fx.appendChild(ring);
     document.body.appendChild(fx);
     await waitForMs(610);
-    coverClone?.remove();
+    cardEl?.classList.remove("shunpo-returning");
     fx.remove();
   }
 
-  async function returnBoardCardToHand(sideKey,target,{animate=true,heroReplacement=false,replacementUid=null,coverBeforeSmoke=false}={}){
+  async function returnBoardCardToHand(sideKey,target,{animate=true,heroReplacement=false,replacementUid=null}={}){
     if(!target?.card || !target?.row || !isReturnableBoardCard(target.card)) return false;
     const returned=target.card;
     const targetEl=document.querySelector(`.row[data-side="${sideKey}"][data-row="${target.row}"] .card[data-uid="${returned.uid}"]`);
@@ -15697,11 +15728,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       const heroEl=replacementUid ? document.querySelector(`.row[data-side="${sideKey}"][data-row="${target.row}"] .card[data-uid="${replacementUid}"]`) : null;
       sourceRect=visibleRect(heroEl?.querySelector('.card-face')) || visibleRect(heroEl) || sourceRect;
-    } else if(coverBeforeSmoke){
-      returned._returningHidden=true;
-      render();
-      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     } else {
+      /* Keep the already-rendered target visible during smoke; the state flag only protects against incidental re-renders. */
       returned._returningHidden=true;
     }
     if(animate) await animateReturnSmoke(sideKey,target.row,returned,{sourceRect});
@@ -16113,10 +16141,14 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     state[graveSideKey].grave.push(card);
   }
   function sacrificeCard(sideKey,card,why="жертвой"){
+    const preLoc=card?findBoardCardByUid(card.uid):null;
+    if(preLoc) v26PlayDestroyVfx(sideKey,card,why,sideKey,preLoc.row);
     const row=removeCardFromBoard(sideKey,card); if(row==null) return false;
     moveToOwnerGrave(card,sideKey); addLog(`<b>${card.name}</b> отправлен в кладбище ${why}.`); return true;
   }
   function removeForTransformation(sideKey,card){
+    const preLoc=card?findBoardCardByUid(card.uid):null;
+    if(preLoc) void v26PulseCard(sideKey,preLoc.row,card.uid,"transform","TRANSFORM");
     const row=removeCardFromBoard(sideKey,card); if(row==null) return false;
     card._transformedAway=true; return true;
   }
@@ -16197,6 +16229,30 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     }
   }
 
+  
+  /* ===== V26: broad non-Wandenreich ability VFX pack ===== */
+  function v26Theme(kind="generic"){
+    const map={generic:{a:"rgba(255,140,72,.95)",b:"rgba(255,245,200,.9)",d:540},strike:{a:"rgba(255,116,64,.98)",b:"rgba(255,224,164,.95)",d:500},fire:{a:"rgba(255,86,42,.98)",b:"rgba(255,210,84,.95)",d:540},freeze:{a:"rgba(110,220,255,.98)",b:"rgba(235,250,255,.96)",d:620},heal:{a:"rgba(94,255,195,.96)",b:"rgba(220,255,243,.92)",d:560},summon:{a:"rgba(255,205,102,.96)",b:"rgba(255,247,196,.94)",d:560},silence:{a:"rgba(142,124,255,.95)",b:"rgba(236,230,255,.92)",d:620},book:{a:"rgba(160,108,255,.96)",b:"rgba(255,220,255,.93)",d:620},doll:{a:"rgba(255,100,182,.97)",b:"rgba(255,216,242,.94)",d:620},mind:{a:"rgba(255,72,132,.97)",b:"rgba(255,231,188,.93)",d:580},poison:{a:"rgba(184,255,86,.97)",b:"rgba(255,244,196,.92)",d:580},barrier:{a:"rgba(120,202,255,.97)",b:"rgba(252,254,255,.95)",d:620},prison:{a:"rgba(66,255,234,.97)",b:"rgba(214,255,250,.95)",d:620},lightning:{a:"rgba(164,206,255,.98)",b:"rgba(255,255,255,.95)",d:520},decay:{a:"rgba(160,110,72,.97)",b:"rgba(230,198,150,.93)",d:620},transform:{a:"rgba(255,168,72,.98)",b:"rgba(255,255,255,.94)",d:660},hollow:{a:"rgba(255,255,255,.97)",b:"rgba(188,252,255,.9)",d:640},music:{a:"rgba(255,92,170,.96)",b:"rgba(239,180,255,.93)",d:660},buff:{a:"rgba(255,202,82,.98)",b:"rgba(255,247,206,.94)",d:540},draw:{a:"rgba(120,170,255,.98)",b:"rgba(240,246,255,.94)",d:520},ink:{a:"rgba(36,36,36,.98)",b:"rgba(230,230,230,.94)",d:620},hotspring:{a:"rgba(122,255,231,.98)",b:"rgba(228,255,250,.94)",d:620}};
+    return map[kind]||map.generic;
+  }
+  function v26CardRect(sideKey,row,uid){ const el=v242CardElement(sideKey,row,uid) || document.querySelector(`.card[data-uid="${uid}"]`); return visibleRect(el?.querySelector?.('.card-face')) || visibleRect(el); }
+  function v26RowRect(sideKey,row){ return visibleRect(v242RowElement(sideKey,row)); }
+  function v26HandRect(){ return visibleRect(document.querySelector('.hand-wrap')) || visibleRect(document.querySelector('.hand')); }
+  function v26ShortLabel(label){ const txt=String(label||"").replace(/<[^>]*>/g,'').trim(); return !txt?"":(txt.length>20?txt.slice(0,20):txt); }
+  function v26BuildStage(rect,kind,label,isRow=false){ if(!rect||rect.width<2||rect.height<2||!document.body) return 0; const t=v26Theme(kind); const host=document.createElement('div'); host.className=isRow?'v26-fx-row':'v26-fx-card'; host.style.left=`${rect.left}px`; host.style.top=`${rect.top}px`; host.style.width=`${rect.width}px`; host.style.height=`${rect.height}px`; host.style.setProperty('--v26-a',t.a); host.style.setProperty('--v26-b',t.b); host.style.setProperty('--v26-d',`${t.d}ms`); const tagText=v26ShortLabel(label); if(tagText){ const tag=document.createElement('div'); tag.className='v26-fx-label'; tag.textContent=tagText; host.appendChild(tag);} const count=isRow?16:10; for(let i=0;i<count;i++){ const s=document.createElement('span'); s.className='v26-fx-shard'; s.style.setProperty('--s',`${(4+Math.random()*(isRow?8:6)).toFixed(1)}px`); s.style.setProperty('--dx',`${(-rect.width*.28+Math.random()*rect.width*.56).toFixed(1)}px`); s.style.setProperty('--dy',`${(-rect.height*.35+Math.random()*rect.height*.7).toFixed(1)}px`); s.style.setProperty('--rot',`${(-140+Math.random()*280).toFixed(0)}deg`); s.style.setProperty('--delay',`${Math.round(Math.random()*120)}ms`); s.style.setProperty('--c',Math.random()>.45?t.a:t.b); s.style.setProperty('--r',Math.random()>.65?'999px':'28% 70% 22% 74%'); host.appendChild(s);} document.body.appendChild(host); requestAnimationFrame(()=>host.classList.add('v26-on')); setTimeout(()=>host.remove(),t.d+120); return t.d; }
+  async function v26PulseRect(rect,kind='generic',label='',isRow=false){ const d=v26BuildStage(rect,kind,label,isRow)||0; if(d) await waitForMs(d*.78); }
+  async function v26PulseCard(sideKey,row,uid,kind='generic',label=''){ await v26PulseRect(v26CardRect(sideKey,row,uid),kind,label,false); }
+  async function v26PulseRow(sideKey,row,kind='generic',label=''){ await v26PulseRect(v26RowRect(sideKey,row),kind,label,true); }
+  async function v26BeamRects(a,b,kind='generic',label=''){ if(!a||!b||!document.body) return; const t=v26Theme(kind); const ax=a.left+a.width/2, ay=a.top+a.height/2, bx=b.left+b.width/2, by=b.top+b.height/2; const dx=bx-ax, dy=by-ay, len=Math.max(10,Math.hypot(dx,dy)), angle=Math.atan2(dy,dx)*180/Math.PI; const beam=document.createElement('div'); beam.className='v26-fx-beam'; beam.style.left=`${ax}px`; beam.style.top=`${ay-3}px`; beam.style.width=`${len}px`; beam.style.transform=`rotate(${angle}deg) scaleX(.08)`; beam.style.setProperty('--v26-a',t.a); beam.style.setProperty('--v26-b',t.b); document.body.appendChild(beam); requestAnimationFrame(()=>beam.classList.add('v26-on')); const tag=v26ShortLabel(label); if(tag){ const cap=document.createElement('div'); cap.className='v26-fx-label'; cap.textContent=tag; beam.appendChild(cap); } setTimeout(()=>beam.remove(), t.d||520); await waitForMs((t.d||520)*.64); }
+  async function v26LinkCards(srcSide,srcRow,srcUid,dstSide,dstRow,dstUid,kind='generic',label=''){ const a=v26CardRect(srcSide,srcRow,srcUid), b=v26CardRect(dstSide,dstRow,dstUid); if(a&&b){ await Promise.all([v26BeamRects(a,b,kind,label),v26PulseRect(b,kind,label,false)]); return; } if(b) await v26PulseRect(b,kind,label,false); }
+  async function v26SwapRows(sideKey,rowA,rowB,kind='mind',label=''){ const a=v26RowRect(sideKey,rowA), b=v26RowRect(sideKey,rowB); if(a) v26PulseRect(a,kind,label,true); if(b) v26PulseRect(b,kind,label,true); if(a&&b) await Promise.all([v26BeamRects(a,b,kind,label),v26BeamRects(b,a,kind,label)]); }
+  async function v26DrawFx(sideKey,count=1,label='DRAW'){ const rect=v26HandRect(); if(!rect) return; await v26PulseRect(rect,'draw',`${label}${count>1?` ×${count}`:''}`,true); }
+  function v26ReasonKind(reason=''){ const txt=String(reason||'').toLowerCase(); if(/гэцуга|mashiro|kick|tengen|jackpot|lanza|саяфуси|удар|уничтож|la muerte|execute/.test(txt)) return 'strike'; if(/tobiume|zanka|yamamoto|огн|плам|ryujin/.test(txt)) return 'fire'; if(/freeze|shirayuki|hyorinmaru|hakka|ice|лёд|замор/.test(txt)) return 'freeze'; if(/doll/.test(txt)) return 'doll'; if(/book/.test(txt)) return 'book'; if(/barrier|nanao|prison/.test(txt)) return 'barrier'; if(/respira|senescencia|decay|старени/.test(txt)) return 'decay'; if(/ichimonji|ink/.test(txt)) return 'ink'; if(/silence|extinguir|подав/.test(txt)) return 'silence'; if(/drug|poison|препарат/.test(txt)) return 'poison'; if(/sakanade|mask|mind|wabisuke/.test(txt)) return 'mind'; return 'generic'; }
+  function v26PlayDestroyVfx(sideKey,card,why,sourceSideKey=null,rowHint=null){ try{ const loc=(card&&findBoardCardByUid(card.uid)) || (card&&rowHint?{sideKey,row:rowHint,card}:null); if(!loc) return; const kind=v26ReasonKind(why); const sourceLoc=(sourceSideKey&&state?.justPlayedSide===sourceSideKey&&state?.justPlayed)?findBoardCardByUid(state.justPlayed):null; if(sourceLoc&&sourceLoc.card?.uid!==card.uid) void v26LinkCards(sourceLoc.sideKey,sourceLoc.row,sourceLoc.card.uid,loc.sideKey,loc.row,loc.card.uid,kind,why); else void v26PulseCard(loc.sideKey,loc.row,loc.card.uid,kind,why); }catch(_){ } }
+  function v26PlayPowerChangeVfx(targetSideKey,target,before,next,sourceSideKey=null,label=''){ try{ const loc=target&&findBoardCardByUid(target.uid); if(!loc) return; const kind=next<before?v26ReasonKind(label||'debuff'):'buff'; const sourceLoc=(sourceSideKey&&state?.justPlayedSide===sourceSideKey&&state?.justPlayed)?findBoardCardByUid(state.justPlayed):null; if(sourceLoc&&sourceLoc.card?.uid!==target.uid) void v26LinkCards(sourceLoc.sideKey,sourceLoc.row,sourceLoc.card.uid,loc.sideKey,loc.row,loc.card.uid,kind,label||(next<before?'DOWN':'UP')); else void v26PulseCard(loc.sideKey,loc.row,loc.card.uid,kind,label||(next<before?'DOWN':'UP')); }catch(_){ } }
+  function v26PulseVizards(sideKey){ try{ for(const r of ROWS){ for(const c of state?.[sideKey]?.board?.[r]||[]){ if(VIZARD_IDS.includes(c.id)) void v26PulseCard(sideKey,r,c.uid,'hollow','MASK'); } } }catch(_){ } }
+
+
   async function resolveAbility(ownerKey,targetSideKey,card,row,fromMuster){
     const owner=state[ownerKey], foe=state[enemyOf(ownerKey)];
     const ownerBoard=allBoard(owner), foeBoard=allBoard(foe);
@@ -16255,7 +16311,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const foeKey=enemyOf(ownerKey);
         const useSakanade=async()=>{
           const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=8,"SAKANADE","Выберите обычного вражеского бойца текущей силой 0–8. Его сила станет 1.");
-          if(target && !consumeAizenShield(foeKey,ownerKey,"Sakanade")) target.card.currentPower=1;
+          if(target && !consumeAizenShield(foeKey,ownerKey,"Sakanade")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"mind","SAKANADE"); target.card.currentPower=1; }
         };
         if(card._hadVizardBeforePlay){
           const choice=await chooseOptionForActor(ownerKey,"ХИРАКО СИНДЗИ","На поле уже был другой Вайзард. Выберите эффект Синдзи.",[
@@ -16265,7 +16321,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
             const gains=allBoard(owner).filter(c=>VIZARD_IDS.includes(c.id)&&!c._hollowified).reduce((sum,c)=>sum+Math.max(0,(VIZARD_MASK_POWERS[c.id]||c.currentPower)-c.currentPower),0);
             return gains>=5 ? arr.find(x=>x.value==="hollowification") : arr[0];
           });
-          if(choice?.value==="hollowification") hollowifyVizards(ownerKey); else await useSakanade();
+          if(choice?.value==="hollowification"){ await v26PulseCard(targetSideKey,row,card.uid,"hollow","MASK"); hollowifyVizards(ownerKey); } else await useSakanade();
         } else await useSakanade();
         delete card._hadVizardBeforePlay;
         break;
@@ -16276,7 +16332,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const foeKey=enemyOf(ownerKey);
         const sodeCap=card.id==="s_rukia"?7:8;
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=sodeCap,"СОДЭ НО СИРАЮКИ",`Выберите обычного врага текущей силой 0–${sodeCap}. Связанная заморозка удерживает его силу на 1, пока способность Рукии активна.`);
-        if(target&&!consumeAizenShield(foeKey,ownerKey,"Содэ но Сираюки")){
+        if(target&&!consumeAizenShield(foeKey,ownerKey,"Содэ но Сираюки")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"freeze","SODE");
           card._sodeFreezeTarget={sideKey:foeKey,uid:target.card.uid};
           target.card._sodeFreezeSourceUid=card.uid;
           addLog(`<b>Содэ но Сираюки:</b> ${target.card.name} заморожен связанной способностью.`);
@@ -16316,7 +16372,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
           "DOLLHOUSE",
           "Выберите обычного врага текущей силой 0–7. Dollhouse превращает его в куклу: цель остаётся в своём ряду, но получает Silence, пока Рирука поддерживает эффект."
         );
-        if(target && !consumeAizenShield(foeKey,ownerKey,"Dollhouse")){
+        if(target && !consumeAizenShield(foeKey,ownerKey,"Dollhouse")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"doll","DOLLHOUSE");
           card._dollhouseTarget={sideKey:foeKey,uid:target.card.uid};
           target.card._dollhouseSourceUid=card.uid;
           applySourceSilence(card,target.card,"Dollhouse");
@@ -16361,6 +16417,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>{const p=fieldPower(foeKey,r,c); return !c.hero&&p>=0&&p<=5;},"BOOK OF THE END","Выберите обычного вражеского бойца с текущей силой 0–5. Герои недоступны. Он покинет поле и перейдёт в вашу руку.");
         if(target){
           if(consumeAizenShield(foeKey,ownerKey,"Book of the End")) break;
+          await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"book","BOOK OF THE END");
           removeCardFromBoard(foeKey,target.card);
           target.card._ownerKey=ownerKey;
           target.card.currentPower=target.card.power;
@@ -16394,20 +16451,20 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const foeKey=enemyOf(ownerKey); card._shunsuiSpecialRoll=1+randomIndex(3);
         if(card._shunsuiSpecialRoll===1){
           const candidates=[]; for(const r of ROWS) for(const c of state[foeKey].board[r]) if(!c.hero) candidates.push({card:c,row:r});
-          if(candidates.length && !consumeAizenShield(foeKey,ownerKey,"Daruma-san")){ const t=candidates[randomIndex(candidates.length)]; const before=fieldPower(foeKey,t.row,t.card); applyHostilePowerChange(foeKey,t.card,Math.floor(before/2),ownerKey,"Daruma-san"); addLog(`<b>Daruma-san:</b> ${t.card.name} теряет половину текущей силы.`); }
+          if(candidates.length && !consumeAizenShield(foeKey,ownerKey,"Daruma-san")){ const t=candidates[randomIndex(candidates.length)]; await v26LinkCards(targetSideKey,row,card.uid,foeKey,t.row,t.card.uid,"mind","DARUMA"); const before=fieldPower(foeKey,t.row,t.card); applyHostilePowerChange(foeKey,t.card,Math.floor(before/2),ownerKey,"Daruma-san"); addLog(`<b>Daruma-san:</b> ${t.card.name} теряет половину текущей силы.`); }
         } else if(card._shunsuiSpecialRoll===2){
           const target=await chooseFieldTarget(ownerKey,foeKey,c=>!c.hero,"KAGEONI","Выберите обычного врага: он получает Silence, пока Сюнсуй остаётся активным на поле.");
-          if(target&&!consumeAizenShield(foeKey,ownerKey,"Kageoni")){ card._shunsuiKageoniTarget={uid:target.card.uid,sideKey:foeKey}; target.card._shunsuiKageoniSourceUid=card.uid; applySourceSilence(card,target.card,"Kageoni"); addLog(`<b>Kageoni:</b> ${target.card.name} получает связанный Silence.`); }
+          if(target&&!consumeAizenShield(foeKey,ownerKey,"Kageoni")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"silence","KAGEONI"); card._shunsuiKageoniTarget={uid:target.card.uid,sideKey:foeKey}; target.card._shunsuiKageoniSourceUid=card.uid; applySourceSilence(card,target.card,"Kageoni"); addLog(`<b>Kageoni:</b> ${target.card.name} получает связанный Silence.`); }
         } else {
           const picked=await chooseBoardRowForActor(ownerKey,foeKey,"IROONI",ROWS,null,"irooni"); const pick=picked?.value;
-          if(pick&&!consumeAizenShield(foeKey,ownerKey,"Irooni")){ for(const c of state[foeKey].board[pick].filter(c=>!c.hero)) applyHostilePowerChange(foeKey,c,Math.max(0,c.currentPower-2),ownerKey,"Irooni"); addLog(`<b>Irooni:</b> обычные бойцы ${rowRuleLabel(pick,"gen")} получают −2.`); }
+          if(pick&&!consumeAizenShield(foeKey,ownerKey,"Irooni")){ await v26PulseRow(foeKey,pick,"music","IROONI"); for(const c of state[foeKey].board[pick].filter(c=>!c.hero)) applyHostilePowerChange(foeKey,c,Math.max(0,c.currentPower-2),ownerKey,"Irooni"); addLog(`<b>Irooni:</b> обычные бойцы ${rowRuleLabel(pick,"gen")} получают −2.`); }
         }
         break;
       }
       case "soulNanaoBarrier": {
         const foeKey=enemyOf(ownerKey);
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=5,"БАРЬЕР НАНАО","Выберите обычного врага текущей силой 0–5.");
-        if(target && !consumeAizenShield(foeKey,ownerKey,"Барьер Нанао")) sealNanaoBarrier(ownerKey,card,foeKey,target.card,target.row);
+        if(target && !consumeAizenShield(foeKey,ownerKey,"Барьер Нанао")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"barrier","NANAO"); sealNanaoBarrier(ownerKey,card,foeKey,target.card,target.row); }
         break;
       }
       case "soulUkitakeKamikake": ensureKamikakeCard(ownerKey); break;
@@ -16427,7 +16484,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       case "soulNigeki": {
         const foeKey=enemyOf(ownerKey);
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero,"NIGEKI KESSATSU","Выберите обычного врага и наложите метку.");
-        if(target && !consumeAizenShield(foeKey,ownerKey,"Nigeki Kessatsu")){
+        if(target && !consumeAizenShield(foeKey,ownerKey,"Nigeki Kessatsu")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"strike","NIGEKI");
           card._nigekiTarget={uid:target.card.uid,sideKey:foeKey}; card._nigekiTurns=-1; target.card._nigekiMarkedBy=card.uid;
           addLog(`<b>Nigeki Kessatsu:</b> ${target.card.name} получает метку Сой Фон.`);
         }
@@ -16467,7 +16524,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       case "soulRoseShow": {
         const foeKey=enemyOf(ownerKey);
         const picked=await chooseBoardRowForActor(ownerKey,foeKey,"KINSHARA BUTŌDAN",ROWS,null,"rose"); const pick=picked?.value;
-        if(pick && !consumeAizenShield(foeKey,ownerKey,"Kinshara Butōdan")){ card._roseRow=pick; card._roseTargetSide=foeKey; card._roseTurns=0; card._roseCancelled=false; card._roseResolved=false; addLog(`<b>Kinshara Butōdan:</b> начинается представление в ${rowRuleLabel(pick,"prep")}.`); }
+        if(pick && !consumeAizenShield(foeKey,ownerKey,"Kinshara Butōdan")){ await v26PulseRow(foeKey,pick,"music","KINSHARA"); card._roseRow=pick; card._roseTargetSide=foeKey; card._roseTurns=0; card._roseCancelled=false; card._roseResolved=false; addLog(`<b>Kinshara Butōdan:</b> начинается представление в ${rowRuleLabel(pick,"prep")}.`); }
         break;
       }
       case "soulWabisuke": case "soulWabisukeZombie": {
@@ -16478,7 +16535,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       }
       case "soulHealing": {
         const target=await chooseFieldTarget(ownerKey,ownerKey,(c,r)=>!c.hero&&c.uid!==card.uid&&!isSenjumaruLockedRow(ownerKey,r),"ЛЕЧЕНИЕ","Выберите своего обычного бойца: +3 силы на текущее пребывание на поле.");
-        if(target){ target.card.currentPower+=3; addLog(`<b>Лечение:</b> ${target.card.name} получает +3.`); }
+        if(target){ await v26LinkCards(targetSideKey,row,card.uid,ownerKey,target.row,target.card.uid,"heal","HEAL"); target.card.currentPower+=3; addLog(`<b>Лечение:</b> ${target.card.name} получает +3.`); }
         break;
       }
       case "soulSakanade": {
@@ -16491,6 +16548,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const secondPick=await chooseBoardRowForActor(ownerKey,foeKey,"SAKANADE — ВТОРОЙ РЯД",secondChoices,null,"sakanade"); const second=secondPick?.value;
         if(!second) break;
         if(consumeAizenShield(foeKey,ownerKey,"Sakanade")) break;
+        await v26SwapRows(foeKey,first,second,"mind","SAKANADE");
         const tmp=state[foeKey].board[first]; state[foeKey].board[first]=state[foeKey].board[second]; state[foeKey].board[second]=tmp;
         addLog(`<b>Sakanade:</b> ${rowRuleLabel(first)} ↔ ${rowRuleLabel(second)}.`); break;
       }
@@ -16500,17 +16558,17 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
           const mode=await chooseOptionForActor(ownerKey,"TOBIUME","Синдзи на поле: выберите обычный удар −3 или рассеянный удар по двум целям −2.",[{value:"single",label:"ОДНА ЦЕЛЬ",sub:"Обычный враг 0–6 получает −3"},{value:"double",label:"ДВЕ ЦЕЛИ",sub:"До двух разных обычных врагов 0–6 получают −2"}],arr=>arr[1]);
           if(mode?.value==="double"){
             const picks=[]; for(let i=0;i<2;i++){ const t=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&!picks.includes(c.uid)&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=6,"TOBIUME",`Выберите цель ${i+1}/2 или отмените.`); if(!t) break; picks.push(t.card.uid); }
-            if(picks.length&&!consumeAizenShield(foeKey,ownerKey,"Tobiume")) for(const uid of picks){ const loc=findBoardCardByUid(uid); if(loc) applyHostilePowerChange(foeKey,loc.card,reducedScore(loc.card.currentPower,2,1),ownerKey,"Tobiume"); }
+            if(picks.length&&!consumeAizenShield(foeKey,ownerKey,"Tobiume")) for(const uid of picks){ const loc=findBoardCardByUid(uid); if(loc){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,loc.row,loc.card.uid,"fire","TOBIUME"); applyHostilePowerChange(foeKey,loc.card,reducedScore(loc.card.currentPower,2,1),ownerKey,"Tobiume"); } }
             break;
           }
         }
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=6,"TOBIUME","Выберите обычного врага 0–6: −3 силы, минимум 1.");
-        if(target&&!consumeAizenShield(foeKey,ownerKey,"Tobiume")) applyHostilePowerChange(foeKey,target.card,reducedScore(target.card.currentPower,3,1),ownerKey,"Tobiume");
+        if(target&&!consumeAizenShield(foeKey,ownerKey,"Tobiume")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"fire","TOBIUME"); applyHostilePowerChange(foeKey,target.card,reducedScore(target.card.currentPower,3,1),ownerKey,"Tobiume"); }
         break;
       }
       case "soulToshiroFreeze": {
         const foeKey=enemyOf(ownerKey); const target=await chooseFieldTarget(ownerKey,foeKey,c=>!c.hero,"ХЁРИНМАРУ","Выберите обычного врага: его текущая сила станет 1 и он получит Silence.");
-        if(target&&!consumeAizenShield(foeKey,ownerKey,"Хёринмару")){ applyHostilePowerChange(foeKey,target.card,1,ownerKey,"Хёринмару"); applyPermanentSilence(target.card,"Хёринмару"); }
+        if(target&&!consumeAizenShield(foeKey,ownerKey,"Хёринмару")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"freeze","HYORINMARU"); applyHostilePowerChange(foeKey,target.card,1,ownerKey,"Хёринмару"); applyPermanentSilence(target.card,"Хёринмару"); }
         break;
       }
       case "soulUnohanaBloodlust": {
@@ -16537,17 +16595,17 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       }
       case "soulDrug": {
         const foeKey=enemyOf(ownerKey); const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=8,"ПРЕПАРАТ","Выберите обычного врага 0–8. После каждого завершённого хода он будет терять 1 силу, минимум 1.");
-        if(target&&!consumeAizenShield(foeKey,ownerKey,"Препарат")){ card._drugTarget={sideKey:foeKey,uid:target.card.uid}; addLog(`<b>Препарат:</b> ${target.card.name} становится целью Маюри.`); }
+        if(target&&!consumeAizenShield(foeKey,ownerKey,"Препарат")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"poison","DRUG"); card._drugTarget={sideKey:foeKey,uid:target.card.uid}; addLog(`<b>Препарат:</b> ${target.card.name} становится целью Маюри.`); }
         break;
       }
       case "soulResearch": {
         const target=await chooseFieldTarget(ownerKey,ownerKey,(c,r)=>c.uid!==card.uid&&hasActiveSoulTimer(ownerKey,c),"ИССЛЕДОВАНИЕ","Выберите своего бойца с активным таймером: продвинуть его на 1 активный ход.");
-        if(target){ advanceOneActiveTimer(ownerKey,target.card); addLog(`<b>Исследование:</b> Акон продвигает таймер ${target.card.name} на 1.`); }
+        if(target){ await v26LinkCards(targetSideKey,row,card.uid,ownerKey,target.row,target.card.uid,"draw","RESEARCH"); advanceOneActiveTimer(ownerKey,target.card); addLog(`<b>Исследование:</b> Акон продвигает таймер ${target.card.name} на 1.`); }
         break;
       }
       case "soulIchimonji": {
         const foeKey=enemyOf(ownerKey); const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=10,"ИТИМОНДЗИ","Выберите обычного врага 0–10: сила 1 и Silence, пока Итибэй активен.");
-        if(target&&!consumeAizenShield(foeKey,ownerKey,"Итимондзи")){ linkSoulForceOne(card,target.card,"ichimonji","Итимондзи"); addLog(`<b>Итимондзи:</b> ${target.card.name} лишён имени: сила 1 и Silence.`); }
+        if(target&&!consumeAizenShield(foeKey,ownerKey,"Итимондзи")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"ink","ICHIMONJI"); linkSoulForceOne(card,target.card,"ichimonji","Итимондзи"); addLog(`<b>Итимондзи:</b> ${target.card.name} лишён имени: сила 1 и Silence.`); }
         break;
       }
       case "soulSayafushi": {
@@ -16558,20 +16616,21 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       }
       case "soulFateCloth": {
         const foeKey=enemyOf(ownerKey); const picked=await chooseBoardRowForActor(ownerKey,foeKey,"ТКАНЬ СУДЬБЫ",ROWS,null,"fatecloth"); const pick=picked?.value;
-        if(pick&&!consumeAizenShield(foeKey,ownerKey,"Ткань судьбы")){ card._fateRow=pick; card._fateTargetSide=foeKey; addLog(`<b>Ткань судьбы:</b> ${rowRuleLabel(pick)} запечатан.`); }
+        if(pick&&!consumeAizenShield(foeKey,ownerKey,"Ткань судьбы")){ await v26PulseRow(foeKey,pick,"barrier","FATE CLOTH"); card._fateRow=pick; card._fateTargetSide=foeKey; addLog(`<b>Ткань судьбы:</b> ${rowRuleLabel(pick)} запечатан.`); }
         break;
       }
       case "soulSoulFood": {
         const picked=new Set();
         for(let i=0;i<3;i++){
           const target=await chooseFieldTarget(ownerKey,ownerKey,(c,r)=>!c.hero&&c.uid!==card.uid&&!picked.has(c.uid)&&!isSenjumaruLockedRow(ownerKey,r),"ПИЩА ДУШИ",`Выберите обычного союзника для +2 (${i+1}/3) или отмените, чтобы закончить.`);
-          if(!target) break; picked.add(target.card.uid); target.card.currentPower+=2; addLog(`<b>Пища души:</b> ${target.card.name} получает +2.`);
+          if(!target) break; picked.add(target.card.uid); await v26LinkCards(targetSideKey,row,card.uid,ownerKey,target.row,target.card.uid,"heal","SOUL FOOD"); target.card.currentPower+=2; addLog(`<b>Пища души:</b> ${target.card.name} получает +2.`);
         }
         break;
       }
       case "soulHotSprings": {
         const picked=await chooseBoardRowForActor(ownerKey,ownerKey,"ГОРЯЧИЕ ИСТОЧНИКИ",ROWS,null,"hotsprings"); const pick=picked?.value;
         if(pick){
+          await v26PulseRow(ownerKey,pick,"hotspring","HOT SPRINGS");
           if(state.pressure?.[ownerKey]) state.pressure[ownerKey]=state.pressure[ownerKey].filter(r=>r!==pick);
           if(state.pressureHeroPenalty?.[ownerKey]) delete state.pressureHeroPenalty[ownerKey][pick];
           const bucket=state.rowEffects?.[ownerKey]?.[pick]; if(bucket) state.rowEffects[ownerKey][pick]=bucket.filter(x=>!["ryujin","senescencia","respiraLeader"].includes(x));
@@ -16582,13 +16641,13 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       case "soulToshiroComplete": {
         const base=allBoard(owner).find(c=>c.id==="s_toshiro"); if(base) removeForTransformation(ownerKey,base);
         const foeKey=enemyOf(ownerKey); const picked=await chooseBoardRowForActor(ownerKey,foeKey,"COMPLETED DAIGUREN HYORINMARU",ROWS,null,"toshirocomplete"); const pick=picked?.value;
-        if(pick&&!consumeAizenShield(foeKey,ownerKey,"Completed Daiguren Hyorinmaru")){ for(const target of [...state[foeKey].board[pick]]) applyHostilePowerChange(foeKey,target,Math.max(0,target.currentPower-3),ownerKey,"Completed Daiguren Hyorinmaru"); addLog(`<b>Взрослый Тосиро:</b> весь ${rowRuleLabel(pick)} получает −3, включая Hero.`); }
+        if(pick&&!consumeAizenShield(foeKey,ownerKey,"Completed Daiguren Hyorinmaru")){ await v26PulseRow(foeKey,pick,"freeze","DAIGUREN"); for(const target of [...state[foeKey].board[pick]]) applyHostilePowerChange(foeKey,target,Math.max(0,target.currentPower-3),ownerKey,"Completed Daiguren Hyorinmaru"); addLog(`<b>Взрослый Тосиро:</b> весь ${rowRuleLabel(pick)} получает −3, включая Hero.`); }
         break;
       }
       case "soulHakka": {
         const base=allBoard(owner).find(c=>c.id==="s_rukia"); if(base) removeForTransformation(ownerKey,base);
         const foeKey=enemyOf(ownerKey); const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=10,"HAKKA NO TOGAME","Выберите обычного врага 0–10: сила 1 и Silence, пока Банкай активен.");
-        if(target&&!consumeAizenShield(foeKey,ownerKey,"Hakka no Togame")){ linkSoulForceOne(card,target.card,"hakka","Hakka no Togame"); addLog(`<b>Hakka no Togame:</b> ${target.card.name} получает силу 1 и Silence.`); }
+        if(target&&!consumeAizenShield(foeKey,ownerKey,"Hakka no Togame")){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"freeze","HAKKA"); linkSoulForceOne(card,target.card,"hakka","Hakka no Togame"); addLog(`<b>Hakka no Togame:</b> ${target.card.name} получает силу 1 и Silence.`); }
         break;
       }
       case "soulNozarashi": {
@@ -16627,7 +16686,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const eligible=owner.grave.filter(c=>!c.special);
         const baseSum=eligible.reduce((s,c)=>s+(c.power||0),0);
         const ulq=eligible.some(c=>c.id==="h_ulquiorra"||c.id==="h_ulquiorra_segunda"||/Улькиорра/.test(c.name||""));
-        if(eligible.length>=4 || baseSum>=16 || ulq){ card._huecoTransformed=true; card.power=10; card.currentPower=10; card.name="Ямми — Resurrección"; addLog(`<b>Ямми</b> превращается в Resurrección 10.`); }
+        if(eligible.length>=4 || baseSum>=16 || ulq){ await v26PulseCard(targetSideKey,row,card.uid,"transform","RESURRECCIÓN"); card._huecoTransformed=true; card.power=10; card.currentPower=10; card.name="Ямми — Resurrección"; addLog(`<b>Ямми</b> превращается в Resurrección 10.`); }
         break;
       }
       case "huecoRespira": {
@@ -16642,13 +16701,13 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         const fr=allBoard(owner).find(c=>c.id==="h_szayel_fraccion");
         if(fr){
           const choice=await chooseOptionForActor(ownerKey,"ПОГЛОЩЕНИЕ","Поглотить Фрасьонов Сзаэльапорро и получить +3?",[{value:"yes",label:"Поглотить",sub:"Фрасьоны уйдут в кладбище; Сзаэльапорро +3"},{value:"no",label:"Оставить",sub:"Ничего не менять"}],arr=>arr[0]);
-          if(choice?.value==="yes"){ sacrificeCard(ownerKey,fr,"поглощением"); card.currentPower+=3; }
+          if(choice?.value==="yes"){ const frLoc=findBoardCardByUid(fr.uid); if(frLoc) await v26LinkCards(frLoc.sideKey,frLoc.row,fr.uid,targetSideKey,row,card.uid,"poison","ABSORB"); sacrificeCard(ownerKey,fr,"поглощением"); card.currentPower+=3; }
         }
         break;
       }
       case "glotoneria": {
         const candidates=owner.grave.filter(c=>!c.hero&&!c.special&&!c._token&&(c.power||0)>=0&&(c.power||0)<=5);
-        if(candidates.length){ const eaten=candidates[randomIndex(candidates.length)]; owner.grave=owner.grave.filter(c=>c.uid!==eaten.uid); card.currentPower+=(eaten.power||0); addLog(`<b>Аарониро</b> поглощает ${eaten.name} и получает +${eaten.power||0}.`); }
+        if(candidates.length){ const eaten=candidates[randomIndex(candidates.length)]; await v26PulseCard(targetSideKey,row,card.uid,"poison","GLOTONERÍA"); owner.grave=owner.grave.filter(c=>c.uid!==eaten.uid); card.currentPower+=(eaten.power||0); addLog(`<b>Аарониро</b> поглощает ${eaten.name} и получает +${eaten.power||0}.`); }
         break;
       }
       case "huecoSzayelRes": {
@@ -16657,12 +16716,13 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         if(base) removeForTransformation(ownerKey,base);
         if(fr) sacrificeCard(ownerKey,fr,"поглощением для Resurrección Сзаэльапорро");
         card._gabrielUsed=false;
+        await v26PulseCard(targetSideKey,row,card.uid,"transform","RESURRECCIÓN");
         addLog(`<b>Сзаэльапорро</b> принимает Resurrección 8. Gabriel готов предотвратить первую смерть.`);
         if(ownerKey==="player") toast("СЗАЭЛЬАПОРРО: RESURRECCIÓN 8");
         break;
       }
       case "huecoAdultNel": {
-        const child=allBoard(owner).find(c=>c.id==="h_nel_child"); if(child) removeForTransformation(ownerKey,child);
+        const child=allBoard(owner).find(c=>c.id==="h_nel_child"); if(child) removeForTransformation(ownerKey,child); await v26PulseCard(targetSideKey,row,card.uid,"transform","NEL");
         break;
       }
       case "huecoSegunda": {
@@ -16676,6 +16736,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
           "Выберите обычного вражеского бойца с текущей силой 0–8. Герои не являются допустимой целью."
         );
         if(target){
+          await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"lightning","LANZA");
           destroyCard(foeKey,target.card,"Lanza del Relámpago",ownerKey);
           addLog(`<b>Lanza del Relámpago:</b> ${target.card.name} уничтожен.`);
           if(ownerKey==="player") toast("LANZA DEL RELÁMPAGO");
@@ -16688,25 +16749,26 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         for(const id of HUECO_BESTIAS_IDS){ const b=allBoard(owner).find(c=>c.id===id); if(b){ b._usedForAyon=true; sacrificeCard(ownerKey,b,"жертвой для Айона"); } }
         const foeKey=enemyOf(ownerKey);
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero&&fieldPower(foeKey,r,c)>=0&&fieldPower(foeKey,r,c)<=4,"АЙОН","Выберите обычного врага с текущей силой 0–4.");
-        if(target) destroyCard(foeKey,target.card,"Айоном",ownerKey);
+        if(target){ await v26LinkCards(targetSideKey,row,card.uid,foeKey,target.row,target.card.uid,"strike","AYON"); destroyCard(foeKey,target.card,"Айоном",ownerKey); }
         break;
       }
       case "huecoLosLobos": {
         const st=allBoard(owner).find(c=>c.id==="h_starrk"), li=allBoard(owner).find(c=>c.id==="h_lilinette");
-        if(st) removeForTransformation(ownerKey,st); if(li) removeForTransformation(ownerKey,li); card._wolvesMade=0; break;
+        if(st) removeForTransformation(ownerKey,st); if(li) removeForTransformation(ownerKey,li); await v26PulseCard(targetSideKey,row,card.uid,"transform","LOS LOBOS"); card._wolvesMade=0; break;
       }
       case "huecoBerserk": {
         state[ownerKey]._berserkReady=false;
 
         const ownUlquiorras=allBoard(owner).filter(c=>c.id==="h_ulquiorra"||c.id==="h_ulquiorra_segunda");
+        await v26PulseCard(targetSideKey,row,card.uid,"transform","BERSERK");
         ownUlquiorras.forEach(c=>destroyCard(ownerKey,c,"ценой трансформации Ичиго — Берсерк",ownerKey,{bypassShield:true}));
         break;
       }
 
       case "damageStrong": { if(!consumeAizenShield(enemyOf(ownerKey),ownerKey,"ослабление")) damage(strongest(foeBoard,c=>!c.hero),2); break; }
-      case "boostWeak": boost(weakest(ownerBoard.filter(c=>c.uid!==card.uid),c=>!c.hero),3); break;
+      case "boostWeak": { const tgt=weakest(ownerBoard.filter(c=>c.uid!==card.uid),c=>!c.hero); if(tgt){ const loc=findBoardCardByUid(tgt.uid); if(loc) await v26LinkCards(targetSideKey,row,card.uid,loc.sideKey,loc.row,tgt.uid,"buff","BOOST"); boost(tgt,3);} break; }
       case "medicWeak": await reviveChoice(ownerKey,c=>!c.hero&&!c._token&&!isTransformationCard(c) && c.power<=5); break;
-      case "morale": owner.board[row].forEach(c=>{if(c.uid!==card.uid&&!c.hero)c.currentPower+=1}); break;
+      case "morale": await v26PulseRow(targetSideKey,row,"buff","MORALE"); owner.board[row].forEach(c=>{if(c.uid!==card.uid&&!c.hero)c.currentPower+=1}); break;
       case "bondIchigo": if(cardExists(owner,"l_ichigo")) card.currentPower+=2; break;
       case "bondUryu": if(cardExists(owner,"l_uryu")) card.currentPower+=2; break;
       case "pairUruru": if(cardExists(owner,"l_ururu")) card.currentPower+=2; break;
@@ -16723,9 +16785,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       case "rage": card.currentPower+=Math.min(3,owner.grave.length); break;
       case "selfBoost": card.currentPower+=2; break;
       case "miracle": if(total(owner)<total(foe)) card.currentPower+=3; break;
-      case "auraEnemy": { if(!consumeAizenShield(enemyOf(ownerKey),ownerKey,"подавляющую ауру")) foe.board[row].forEach(c=>damage(c,1)); break; }
+      case "auraEnemy": { if(!consumeAizenShield(enemyOf(ownerKey),ownerKey,"подавляющую ауру")){ await v26PulseRow(enemyOf(ownerKey),row,"decay","AURA"); foe.board[row].forEach(c=>damage(c,1)); } break; }
       case "executeWeak": { const w=weakest(foeBoard,c=>!c.hero&&c.currentPower<=3); if(w) destroyCard(enemyOf(ownerKey),w,"эффектом уничтожения",ownerKey); break; }
-      case "silenceStrong": { const s=strongest(foeBoard,c=>!c.hero&&!c.silenced); if(s&&!consumeAizenShield(enemyOf(ownerKey),ownerKey,"подавление")) applyPermanentSilence(s,"Silence"); break; }
+      case "silenceStrong": { const s=strongest(foeBoard,c=>!c.hero&&!c.silenced); if(s&&!consumeAizenShield(enemyOf(ownerKey),ownerKey,"подавление")){ const loc=findBoardCardByUid(s.uid); if(loc) await v26LinkCards(targetSideKey,row,card.uid,loc.sideKey,loc.row,s.uid,"silence","SILENCE"); applyPermanentSilence(s,"Silence"); } break; }
       case "recall": {
         const cand=strongest(owner.board[row],c=>isReturnableBoardCard(c,card.uid));
         if(cand && await returnBoardCardToHand(ownerKey,{row,card:cand})) addLog(`<b>${cand.name}</b> скрывается в дыму и возвращается в руку.`);
@@ -16737,7 +16799,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
         if(isHumanControlled(ownerKey)) toast(`ШПИОН: ДОБОР ${spyDrawn} КАРТ`);
         break;
       }
-      case "balance": { boost(weakest(ownerBoard,c=>!c.hero),2); if(!consumeAizenShield(enemyOf(ownerKey),ownerKey,"The Balance")) damage(strongest(foeBoard,c=>!c.hero),2); break; }
+      case "balance": { const ally=weakest(ownerBoard,c=>!c.hero); if(ally){ const loc=findBoardCardByUid(ally.uid); if(loc) await v26LinkCards(targetSideKey,row,card.uid,loc.sideKey,loc.row,ally.uid,"buff","BALANCE"); boost(ally,2); } if(!consumeAizenShield(enemyOf(ownerKey),ownerKey,"The Balance")){ const foeTarget=strongest(foeBoard,c=>!c.hero); if(foeTarget){ const floc=findBoardCardByUid(foeTarget.uid); if(floc) await v26LinkCards(targetSideKey,row,card.uid,floc.sideKey,floc.row,foeTarget.uid,"strike","BALANCE"); damage(foeTarget,2); } } break; }
       case "harribelBoost": card.currentPower += allBoard(owner).filter(c=>["h_apacci","h_milarose","h_sunsun"].includes(c.id)).length; break;
       case "bambieBond": if(ownerBoard.some(c=>c.uid!==card.uid && ["w_candice","w_meninas","w_liltotto","w_giselle","w_bambi"].includes(c.id))) card.currentPower+=2; break;
     }
@@ -16754,6 +16816,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     const chosen=await chooseGraveTarget(sideKey,sideKey,c=>!isHuecoSummonReserveUnit(c)&&pred(c),"МЕДИК — ВЫБЕРИТЕ БОЙЦА В РУКУ");
     if(!chosen) return false;
     const c=chosen.card;
+    await v26DrawFx(sideKey,1,"REVIVE");
     side.grave=side.grave.filter(x=>x.uid!==c.uid);
     c.currentPower=c.power; c.silenced=false; c._ownerKey=sideKey; normalizeLeavingCard(c);
     if(c.id==="s_kira" && c._kiraReallyDestroyed && !c._kiraZombie){ c._kiraZombieReady=true; }
@@ -16816,6 +16879,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     }
 
     if(sourceSideKey && sourceSideKey!==sideKey && card?.id==="s_hisagi" && !card._kazeshiniRevealed && !card.silenced){ if(revealHisagiHidden(sideKey,card,"первое уничтожение")) return false; }
+    const preLoc=findBoardCardByUid(card?.uid); if(preLoc) v26PlayDestroyVfx(sideKey,card,why,sourceSideKey,preLoc.row);
     const row=removeCardFromBoard(sideKey,card); if(row==null) return false;
     if(!card._token) moveToOwnerGrave(card,sideKey);
     releasePrisonByJailer(card.uid);
@@ -16860,6 +16924,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     for(const c of pulled){
       if(!state||state.gameOver) return;
 
+      await v26PulseRow(sideKey,c.row,"summon","SUMMON");
       await animateCardFromDeckToField(c,c.row,sideKey,sideKey);
       if(!state||state.gameOver) return;
       state.flightLandedUid=c.uid;
@@ -16920,6 +16985,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     }
     cards.forEach(c=>addCardToHand(sideKey,c));
     const drawn=cards.length;
+    if(drawn) void v26DrawFx(sideKey,drawn,opts.spyRestrictions?"SPY":"DRAW");
     addLog(`${actorLabel(sideKey)} добирает ${drawn} карт.`);
     return drawn;
   }
@@ -16968,7 +17034,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     fx.style.setProperty('--h',`${Math.max(70,targetRect.height*1.15)}px`);
     document.body.appendChild(fx); setTimeout(()=>fx.remove(),520);
   }
-  async function v242AnimateEffectCardTableCast(card,targetRect,effectKind='generic',opts={}){
+  async function v242AnimateEffectCardTableCast(card,targetRect,effectKind='generic'){
     const region=targetRect||v242BoardRect();
     if(!region) return;
     const start=previewFlightStartRect(card);
@@ -16986,14 +17052,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     try{
       const arc=Math.min(72,Math.max(26,Math.abs(target.left-start.left)*.04+Math.abs(target.top-start.top)*.035));
       await runPhysicalCardFlight(flyer,start,target,{duration:460,arc,fadeFrom:1});
-      if(opts?.coverTargetUid && opts?.coverSideKey && opts?.coverRow){
-        const targetEl=v242CardElement(opts.coverSideKey,opts.coverRow,opts.coverTargetUid);
-        const targetOldVisibility=targetEl?.style.visibility ?? '';
-        if(targetEl) targetEl.style.visibility='hidden';
-        const coverRect=visibleRect(flyer?.querySelector('.card-face')) || visibleRect(flyer) || target;
-        const coverClone=createShunpoOverlayClone(flyer,coverRect,'10131');
-        v19StorePendingShunpoCover(opts.coverTargetUid,{sourceRect:coverRect,coverClone,targetEl,targetOldVisibility});
-      }
       v242SpawnTableImpact(target);
       flyer.classList.add('v242-sink');
       await waitForMs(280);
@@ -17629,8 +17687,10 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
       const title=(card.name||"ТЕХНИКА ВОЗВРАТА").toUpperCase();
       const target=await chooseFieldTarget(sideKey,sideKey,c=>isReturnableBoardCard(c),title,"Выберите обычного бойца со своей стороны поля. Вражеский Шпион на вашей стороне тоже допустим. Карта вернётся в вашу руку.");
       if(!target) return false;
-      await v242AnimateEffectCardTableCast(card,visibleRect(v242CardElement(sideKey,target.row,target.card.uid))||visibleRect(v242RowElement(sideKey,target.row)),"return",{coverTargetUid:target.card.uid,coverSideKey:sideKey,coverRow:target.row});
-      if(!await returnBoardCardToHand(sideKey,target,{coverBeforeSmoke:true})) return false;
+      state.previewCard=null;
+      render();
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      if(!await returnBoardCardToHand(sideKey,target)) return false;
       addLog(`<b>${target.card.name}</b> скрывается в дыму и возвращается в руку.`);
     } else if(card.ability==="reiatsuPressure"){
       const eligible=ROWS.filter(r=>!isRowPressured(foeKey,r)&&!isZankaProtectedRow(foeKey,r));
@@ -18441,7 +18501,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
     const f=FACTIONS[card.faction]||FACTIONS.neutral, fs=f.style;
     el.style.setProperty("--art1",fs[0]); el.style.setProperty("--art2",fs[1]);
     const rowPlacement=rowPlacementLabel(card);
-    const mobileRowPlacement=rowPlacement.replaceAll("Ⅰ\u200aⅠ\u200aⅠ","Ⅲ").replaceAll("Ⅰ\u200aⅠ","Ⅱ");
+    const mobileRowPlacement=rowPlacement;
     const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}">${rowPlacement}</div>` : "";
     el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${card.special?"✦":card.power}</div>${rowBadge}<div class="assemble-lock-overlay" aria-hidden="true"><span class="legacy-lock-badge">🔒</span></div></div><div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>${copyCount>1?`<div class="deck-copy-badge">×${copyCount}</div>`:""}`;
     applyCardArtElement(el.querySelector(".art"),card);
@@ -19240,11 +19300,11 @@ ${template.desc}`:""}`;
     broadcastNetworkVfx("special-cast",{effectKind,actor:state?.actionLock?.actor||card?._ownerKey||localControlledSide(),card:safeNetworkClone(card)});
     return v303Original.animateSpecialCardCast(effectKind);
   };
-  v242AnimateEffectCardTableCast=async function(card,targetRect,effectKind='generic',opts={}){
+  v242AnimateEffectCardTableCast=async function(card,targetRect,effectKind='generic'){
     const target=inferNetworkRowTarget(targetRect);
     const actor=card?._ownerKey||state?.actionLock?.actor||localControlledSide();
     broadcastNetworkVfx("effect-cast",{effectKind,target,actor,card:safeNetworkClone(card)});
-    return v303Original.v242AnimateEffectCardTableCast(card,targetRect,effectKind,opts);
+    return v303Original.v242AnimateEffectCardTableCast(card,targetRect,effectKind);
   };
   v242AnimateReiatsuPressure=async function(sideKey,row){
     broadcastNetworkVfx("reiatsu-pressure",{sideKey,row});
