@@ -11902,6 +11902,105 @@ html.pwa-browser-ios.phone-device.phone-landscape .pass-btn{
 @keyframes v26Beam{0%{opacity:0;transform:scaleX(.08)}15%{opacity:1}100%{opacity:0;transform:scaleX(1)}}
 </style>
 
+
+<style id="v26-mobile-corrections-no-vfx-text">
+/* No text captions inside V26 ability VFX. */
+.v26-fx-label{display:none!important;visibility:hidden!important;opacity:0!important}
+
+/* Mobile/PWA card row marks: use the real card badge, not the mobile pseudo-glyph. */
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-badge,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge,
+html.touch-device.touch-landscape #choiceOverlay .show-row-placement .row-badge{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-family:"Arial Narrow","Roboto Condensed",Arial,sans-serif!important;
+  font-weight:700!important;
+  line-height:.9!important;
+  letter-spacing:-.025em!important;
+  word-spacing:normal!important;
+  -webkit-text-stroke:1.35px #000!important;
+  paint-order:stroke fill!important;
+  text-shadow:0 1px 2px #000,0 0 3px rgba(0,0,0,.9)!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge::after,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-badge::after,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after,
+html.touch-device.touch-landscape #choiceOverlay .show-row-placement .row-badge::after{
+  content:none!important;
+  display:none!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge{font-size:26px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="2"]{font-size:21px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="3"]{font-size:17px!important;letter-spacing:-.035em!important}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-badge,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge{font-size:27px!important}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-badge[data-rows="2"],
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="2"]{font-size:22px!important}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-badge[data-rows="3"],
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="3"]{font-size:18px!important;letter-spacing:-.035em!important}
+html.touch-device.touch-landscape #choiceOverlay .show-row-placement .row-badge{font-size:20px!important}
+html.touch-device.touch-landscape #choiceOverlay .show-row-placement .row-badge[data-rows="2"]{font-size:16.5px!important}
+html.touch-device.touch-landscape #choiceOverlay .show-row-placement .row-badge[data-rows="3"]{font-size:13px!important;letter-spacing:-.035em!important}
+
+/* Browser touch landscape only: reclaim vertical space from the hand.
+   Standalone PWA is intentionally excluded. */
+html.touch-device.touch-landscape:not(.pwa-standalone) .board-shell{
+  grid-template-rows:20px minmax(0,1fr) 44px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .board-shell:before{
+  inset:20px 0 44px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .topbar{
+  height:20px!important;
+  min-height:20px!important;
+  max-height:20px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .board{
+  grid-template-rows:repeat(3,minmax(16px,1fr)) 2px repeat(3,minmax(16px,1fr))!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand-wrap{
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  grid-template-columns:minmax(0,1fr) 30px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand{
+  gap:1px!important;
+  padding:1px 2px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand .card,
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand.hand-expanded .card{
+  flex:0 0 27px!important;
+  width:27px!important;
+  min-width:27px!important;
+  max-width:27px!important;
+  height:40px!important;
+  max-height:40px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand .card .power,
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand.hand-expanded .card .power{
+  width:11px!important;height:11px!important;font-size:6.4px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand .card .ability-icon{
+  min-width:7px!important;height:7px!important;font-size:4px!important;padding:0 1px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand .card .name,
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand.hand-expanded .card .name{
+  font-size:3.2px!important;padding:3px 1px 1px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .hand-actions{
+  width:30px!important;height:44px!important;min-width:30px!important;padding:1px!important;
+}
+html.touch-device.touch-landscape:not(.pwa-standalone) .pass-btn{
+  width:26px!important;height:25px!important;min-width:26px!important;min-height:25px!important;
+  font-size:4.1px!important;padding:0 1px!important;margin:auto!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -16238,7 +16337,7 @@ html.pwa-browser-ios.phone-device.phone-landscape .pass-btn{
   function v26CardRect(sideKey,row,uid){ const el=v242CardElement(sideKey,row,uid) || document.querySelector(`.card[data-uid="${uid}"]`); return visibleRect(el?.querySelector?.('.card-face')) || visibleRect(el); }
   function v26RowRect(sideKey,row){ return visibleRect(v242RowElement(sideKey,row)); }
   function v26HandRect(){ return visibleRect(document.querySelector('.hand-wrap')) || visibleRect(document.querySelector('.hand')); }
-  function v26ShortLabel(label){ const txt=String(label||"").replace(/<[^>]*>/g,'').trim(); return !txt?"":(txt.length>20?txt.slice(0,20):txt); }
+  function v26ShortLabel(label){ return ""; }
   function v26BuildStage(rect,kind,label,isRow=false){ if(!rect||rect.width<2||rect.height<2||!document.body) return 0; const t=v26Theme(kind); const host=document.createElement('div'); host.className=isRow?'v26-fx-row':'v26-fx-card'; host.style.left=`${rect.left}px`; host.style.top=`${rect.top}px`; host.style.width=`${rect.width}px`; host.style.height=`${rect.height}px`; host.style.setProperty('--v26-a',t.a); host.style.setProperty('--v26-b',t.b); host.style.setProperty('--v26-d',`${t.d}ms`); const tagText=v26ShortLabel(label); if(tagText){ const tag=document.createElement('div'); tag.className='v26-fx-label'; tag.textContent=tagText; host.appendChild(tag);} const count=isRow?16:10; for(let i=0;i<count;i++){ const s=document.createElement('span'); s.className='v26-fx-shard'; s.style.setProperty('--s',`${(4+Math.random()*(isRow?8:6)).toFixed(1)}px`); s.style.setProperty('--dx',`${(-rect.width*.28+Math.random()*rect.width*.56).toFixed(1)}px`); s.style.setProperty('--dy',`${(-rect.height*.35+Math.random()*rect.height*.7).toFixed(1)}px`); s.style.setProperty('--rot',`${(-140+Math.random()*280).toFixed(0)}deg`); s.style.setProperty('--delay',`${Math.round(Math.random()*120)}ms`); s.style.setProperty('--c',Math.random()>.45?t.a:t.b); s.style.setProperty('--r',Math.random()>.65?'999px':'28% 70% 22% 74%'); host.appendChild(s);} document.body.appendChild(host); requestAnimationFrame(()=>host.classList.add('v26-on')); setTimeout(()=>host.remove(),t.d+120); return t.d; }
   async function v26PulseRect(rect,kind='generic',label='',isRow=false){ const d=v26BuildStage(rect,kind,label,isRow)||0; if(d) await waitForMs(d*.78); }
   async function v26PulseCard(sideKey,row,uid,kind='generic',label=''){ await v26PulseRect(v26CardRect(sideKey,row,uid),kind,label,false); }
