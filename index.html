@@ -12899,7 +12899,8 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
 }
 </style>
 
-\n<style id="v60-mobile-pwa-ui-audit">
+
+<style id="v60-mobile-pwa-ui-audit">
 /* V60 — authoritative mobile/PWA UI corrections. Desktop gameplay layout is unchanged. */
 
 /* Row placement marks now use real DOM spans, never generated-content glyphs. */
@@ -13126,8 +13127,10 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-car
   html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-info-panel,
   html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{height:62px!important;min-height:62px!important;max-height:62px!important;flex:0 0 62px!important}
 }
-</style>\n
-\n<style id="v61-mobile-browser-pwa-real-fix">
+</style>
+
+
+<style id="v61-mobile-browser-pwa-real-fix">
 /* V61 — touch landscape is authoritative regardless of phone/tablet classification. */
 
 /* Assemble buttons: real DOM label, never pseudo-content / inherited transparent text. */
@@ -13332,7 +13335,28 @@ html.touch-device.touch-landscape #choiceOverlay .choice-card-preview:not(.show-
   html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important}
   html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{height:56px!important;min-height:56px!important;max-height:56px!important;flex:0 0 56px!important}
 }
-</style>\n
+</style>
+
+
+<style id="v62-mobile-pwa-stability-fix">
+/* V62 — final touch-only cascade guard. Desktop intentionally untouched. */
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm{
+  height:29px!important;
+  min-height:29px!important;
+  max-height:29px!important;
+  padding:0 5px!important;
+  margin:0!important;
+  line-height:1!important;
+  box-sizing:border-box!important;
+  align-self:start!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack .v61-db-label,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm .v61-db-label{
+  display:block!important;
+  line-height:1!important;
+}
+</style>
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -22166,5 +22190,11 @@ ${template.desc}`:""}`;
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start,{once:true}); else start();
 })();</script>
 
+
+<script id="v62-ios-install-hint-flow">(() => {
+  const root=document.documentElement;
+  const dismiss=()=>root.classList.remove('pwa-browser-ios');
+  ['modeAiBtn','modeDuelBtn','modeOnlineBtn'].forEach(id=>document.getElementById(id)?.addEventListener('click',dismiss,{once:true}));
+})();</script>
 </body>
 </html>
