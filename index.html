@@ -13127,6 +13127,212 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-car
   html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{height:62px!important;min-height:62px!important;max-height:62px!important;flex:0 0 62px!important}
 }
 </style>\n
+\n<style id="v61-mobile-browser-pwa-real-fix">
+/* V61 — touch landscape is authoritative regardless of phone/tablet classification. */
+
+/* Assemble buttons: real DOM label, never pseudo-content / inherited transparent text. */
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm{
+  font-size:0!important;text-indent:0!important;color:inherit!important;-webkit-text-fill-color:currentColor!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack::before,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack::after,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm::before,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm::after{content:none!important;display:none!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .v61-db-label{
+  display:block!important;position:relative!important;z-index:3!important;opacity:1!important;visibility:visible!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:8px!important;font-weight:1000!important;line-height:1!important;letter-spacing:.045em!important;
+  white-space:nowrap!important;text-align:center!important;text-shadow:none!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack .v61-db-label{color:#111!important;-webkit-text-fill-color:#111!important}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm .v61-db-label{color:#f4f0e8!important;-webkit-text-fill-color:#f4f0e8!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{
+  flex:0 0 32px!important;height:32px!important;min-height:32px!important;max-height:32px!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) 78px!important;grid-auto-rows:29px!important;
+  gap:5px!important;padding:2px 0 1px!important;overflow:hidden!important;align-items:start!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
+  height:29px!important;min-height:29px!important;max-height:29px!important;margin:0!important;box-sizing:border-box!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{font-size:13px!important;line-height:29px!important;padding:0 3px!important}
+
+/* One and only one Roman placement mark on all touch layouts, including tablet-class Safari/PWA. */
+html.touch-device.touch-landscape .card .row-badge::before,
+html.touch-device.touch-landscape .card .row-badge::after,
+html.pwa-standalone.touch-device.touch-landscape .card .row-badge::before,
+html.pwa-standalone.touch-device.touch-landscape .card .row-badge::after{
+  content:none!important;display:none!important;visibility:hidden!important;opacity:0!important;
+}
+html.touch-device.touch-landscape .card .row-badge{
+  color:transparent!important;-webkit-text-fill-color:transparent!important;font-size:0!important;
+  -webkit-text-stroke:0!important;text-shadow:none!important;line-height:1!important;
+  /* Do NOT force visible: hidden cards must hide their badge too. */
+  visibility:inherit!important;
+}
+html.touch-device.touch-landscape .card .row-badge>.row-badge-desktop,
+html.pwa-standalone.touch-device.touch-landscape .card .row-badge>.row-badge-desktop{
+  display:none!important;visibility:hidden!important;color:transparent!important;-webkit-text-fill-color:transparent!important;
+}
+html.touch-device.touch-landscape .card .row-badge>.row-badge-mobile,
+html.pwa-standalone.touch-device.touch-landscape .card .row-badge>.row-badge-mobile{
+  display:inline-block!important;visibility:inherit!important;opacity:1!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-family:Georgia,"Times New Roman",Times,serif!important;font-size:9px!important;font-weight:700!important;line-height:1!important;
+  letter-spacing:0!important;word-spacing:0!important;-webkit-text-stroke:.22px #000!important;paint-order:stroke fill!important;text-shadow:none!important;
+}
+html.touch-device.touch-landscape .row-cards .card .row-badge{display:none!important;visibility:hidden!important;opacity:0!important}
+html.touch-device.touch-landscape .card.returning-hidden .row-badge,
+html.touch-device.touch-landscape .card.local-landing-hold .row-badge,
+html.touch-device.touch-landscape .card.card-flight .row-badge,
+html.touch-device.touch-landscape .card[style*="visibility: hidden"] .row-badge{
+  display:none!important;visibility:hidden!important;opacity:0!important;
+}
+
+/* Assemble / preview badge anchors. */
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .row-badge,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-badge,
+html.touch-device.touch-landscape .rightbar .detail-preview .card .row-badge{
+  display:block!important;top:3px!important;right:3px!important;opacity:1!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .row-badge-mobile{font-size:10px!important}
+html.touch-device.touch-landscape #mulliganOverlay .row-badge-mobile{font-size:10px!important}
+html.touch-device.touch-landscape .rightbar .detail-preview .row-badge-mobile{font-size:9px!important}
+
+/* CHOOSE YOUR SOUL — fixed card geometry, no stretched wrappers, no row collision. */
+html.touch-device.touch-landscape #mulliganOverlay{
+  --v61-mulligan-w:78px;
+  --v61-mulligan-h:117px;
+  --v61-mulligan-power-w:28px;
+  --v61-mulligan-power-h:14px;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid{
+  flex:1 1 auto!important;min-height:0!important;width:100%!important;
+  display:grid!important;grid-template-columns:repeat(6,var(--v61-mulligan-w))!important;grid-template-rows:repeat(2,var(--v61-mulligan-h))!important;
+  grid-auto-flow:row!important;grid-auto-rows:var(--v61-mulligan-h)!important;
+  column-gap:10px!important;row-gap:10px!important;padding:4px 2px 6px!important;
+  align-content:center!important;justify-content:center!important;align-items:center!important;justify-items:center!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap{
+  width:var(--v61-mulligan-w)!important;min-width:var(--v61-mulligan-w)!important;max-width:var(--v61-mulligan-w)!important;
+  height:var(--v61-mulligan-h)!important;min-height:var(--v61-mulligan-h)!important;max-height:var(--v61-mulligan-h)!important;
+  display:block!important;align-self:center!important;justify-self:center!important;overflow:visible!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card{
+  box-sizing:border-box!important;width:var(--v61-mulligan-w)!important;min-width:var(--v61-mulligan-w)!important;max-width:var(--v61-mulligan-w)!important;
+  height:var(--v61-mulligan-h)!important;min-height:var(--v61-mulligan-h)!important;max-height:var(--v61-mulligan-h)!important;
+  aspect-ratio:auto!important;margin:0!important;overflow:visible!important;transform:none!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-face,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .card-face{
+  box-sizing:border-box!important;width:100%!important;height:100%!important;min-height:100%!important;max-height:100%!important;
+  aspect-ratio:auto!important;overflow:hidden!important;
+}
+/* True semicircle attached to the card bottom — no full circle clipped by another row. */
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power{
+  left:50%!important;right:auto!important;top:auto!important;bottom:0!important;transform:translateX(-50%)!important;
+  width:var(--v61-mulligan-power-w)!important;min-width:var(--v61-mulligan-power-w)!important;max-width:var(--v61-mulligan-power-w)!important;
+  height:var(--v61-mulligan-power-h)!important;min-height:var(--v61-mulligan-power-h)!important;max-height:var(--v61-mulligan-power-h)!important;
+  display:flex!important;align-items:flex-end!important;justify-content:center!important;box-sizing:border-box!important;
+  padding:0 0 1px!important;border-radius:28px 28px 0 0!important;border:1px solid #f6f3ea!important;border-bottom:0!important;
+  background:#050608!important;color:#f6f3ea!important;box-shadow:0 -1px 0 #050608!important;
+  font-size:10px!important;line-height:12px!important;overflow:hidden!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-nameplate{display:none!important}
+
+@media (max-height:370px){
+  html.touch-device.touch-landscape #mulliganOverlay{--v61-mulligan-w:68px;--v61-mulligan-h:102px;--v61-mulligan-power-w:24px;--v61-mulligan-power-h:12px}
+  html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid{column-gap:8px!important;row-gap:7px!important;padding:2px!important}
+  html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+  html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power{font-size:9px!important;line-height:10px!important}
+}
+
+/* Mobile browser hand — compact box and cards are one geometry. Hide the browser scrollbar/dock. */
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-wrap{
+  height:42px!important;min-height:42px!important;max-height:42px!important;
+  grid-template-columns:minmax(0,1fr) 29px!important;overflow:hidden!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-wrap:before,
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-scroll-dock{display:none!important}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand{
+  height:42px!important;min-height:42px!important;max-height:42px!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  gap:1px!important;padding:1px 2px!important;overflow-x:auto!important;overflow-y:hidden!important;
+  scrollbar-width:none!important;-ms-overflow-style:none!important;touch-action:pan-x!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card,
+html:not(.pwa-standalone).touch-device.touch-landscape #hand.hand-expanded .card{
+  flex:0 0 27px!important;width:27px!important;min-width:27px!important;max-width:27px!important;
+  height:39px!important;min-height:39px!important;max-height:39px!important;aspect-ratio:auto!important;margin:0!important;overflow:visible!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .card-face{
+  box-sizing:border-box!important;width:27px!important;min-width:27px!important;max-width:27px!important;
+  height:39px!important;min-height:39px!important;max-height:39px!important;aspect-ratio:auto!important;overflow:hidden!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .power{
+  left:50%!important;right:auto!important;top:auto!important;bottom:0!important;transform:translateX(-50%)!important;
+  width:12px!important;height:6px!important;min-width:12px!important;min-height:6px!important;max-width:12px!important;max-height:6px!important;
+  padding:0!important;border-radius:12px 12px 0 0!important;border-width:1px!important;border-bottom:0!important;font-size:5px!important;line-height:5px!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .ability-icon{
+  min-width:7px!important;width:auto!important;height:7px!important;padding:0 1px!important;font-size:3.7px!important;line-height:7px!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .row-badge{top:1px!important;right:1px!important}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .row-badge-mobile{font-size:5.5px!important;-webkit-text-stroke:.12px #000!important}
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-actions{
+  width:29px!important;min-width:29px!important;height:42px!important;min-height:42px!important;max-height:42px!important;padding:1px!important;
+}
+
+/* PWA: the same single white DOM badge; absolutely no legacy black pseudo glyph. */
+html.pwa-standalone.touch-device.touch-landscape .card .row-badge{
+  color:transparent!important;-webkit-text-fill-color:transparent!important;-webkit-text-stroke:0!important;text-shadow:none!important;visibility:inherit!important;
+}
+html.pwa-standalone.touch-device.touch-landscape .card .row-badge>.row-badge-mobile{
+  display:inline-block!important;color:#fff!important;-webkit-text-fill-color:#fff!important;-webkit-text-stroke:.18px #000!important;text-shadow:none!important;
+}
+
+/* Ability target / medic selector — readable cards on every touch landscape classification. */
+html.touch-device.touch-landscape #choiceOverlay .choice-grid{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;
+  min-height:0!important;overflow-x:auto!important;overflow-y:hidden!important;gap:9px!important;padding:6px 34px 10px!important;
+  scrollbar-width:none!important;scroll-snap-type:x proximity!important;
+}
+html.touch-device.touch-landscape #choiceOverlay .choice-grid::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-modal.choice-scrollable .choice-grid{justify-content:flex-start!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{
+  flex:0 0 110px!important;width:110px!important;min-width:110px!important;max-width:110px!important;
+  padding:3px!important;gap:3px!important;scroll-snap-align:center!important;
+}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.card.with-info{
+  width:100px!important;min-width:100px!important;max-width:100px!important;height:auto!important;aspect-ratio:auto!important;
+}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face{
+  width:100px!important;min-width:100px!important;max-width:100px!important;height:150px!important;min-height:150px!important;max-height:150px!important;aspect-ratio:auto!important;
+}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{
+  width:100px!important;min-width:100px!important;max-width:100px!important;height:64px!important;min-height:64px!important;max-height:64px!important;flex:0 0 64px!important;margin-top:4px!important;
+}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge{
+  display:block!important;top:3px!important;right:3px!important;opacity:1!important;visibility:inherit!important;
+}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile{font-size:9px!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge{display:none!important;visibility:hidden!important;opacity:0!important}
+
+@media (max-height:360px){
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{flex-basis:100px!important;width:100px!important;min-width:100px!important;max-width:100px!important}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.card.with-info,
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face,
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{width:90px!important;min-width:90px!important;max-width:90px!important}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{height:56px!important;min-height:56px!important;max-height:56px!important;flex:0 0 56px!important}
+}
+</style>\n
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -13262,8 +13468,8 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-car
 
     <div class="deck-builder-actions">
       <div id="deckBuilderCounter" class="deck-builder-counter">0 / 30</div>
-      <button id="deckBuilderBack" type="button" class="deck-builder-back">BACK TO PATHS</button>
-      <button id="deckBuilderConfirm" type="button" class="deck-builder-confirm">ENTER THE BATTLE</button>
+      <button id="deckBuilderBack" type="button" class="deck-builder-back"><span class="v61-db-label">BACK TO PATHS</span></button>
+      <button id="deckBuilderConfirm" type="button" class="deck-builder-confirm"><span class="v61-db-label">ENTER THE BATTLE</span></button>
     </div>
   </div>
 </div>
