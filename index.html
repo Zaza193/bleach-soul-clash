@@ -13,41 +13,65 @@
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 
-<script id="v317-early-responsive-bootstrap">(() => {
+<script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const vv=window.visualViewport;
-  const h=Math.round((vv&&vv.height)||window.innerHeight||document.documentElement.clientHeight||0);
-  const w=Math.round((vv&&vv.width)||window.innerWidth||document.documentElement.clientWidth||0);
-  const coarse=(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches)||(navigator.maxTouchPoints||0)>0;
-  const sw=(window.screen&&Number(window.screen.width))||w;
-  const sh=(window.screen&&Number(window.screen.height))||h;
-  const shortSide=Math.min(sw||w,sh||h);
-  const phone=!!coarse&&shortSide>0&&shortSide<=600;
-  const tablet=!!coarse&&!phone&&shortSide>0&&shortSide<=1100;
-  const portrait=window.matchMedia?window.matchMedia("(orientation: portrait)").matches:h>=w;
+
   const standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(h) root.style.setProperty("--app-height",`${h}px`);
-  if(w) root.style.setProperty("--app-width",`${w}px`);
-  if(h&&w){
-
-    const phoneStage=Math.min(w,Math.round(h*16/9),760);
-    const touchStage=phone ? phoneStage : Math.min(w,1180);
-    root.style.setProperty("--phone-stage-width",`${phoneStage}px`);
-    root.style.setProperty("--touch-stage-width",`${touchStage}px`);
-    root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
-  }
-  root.classList.toggle("touch-device",!!coarse);
-  root.classList.toggle("phone-device",phone);
-  root.classList.toggle("tablet-device",tablet);
-  root.classList.toggle("phone-portrait",phone&&portrait);
-  root.classList.toggle("phone-landscape",phone&&!portrait);
-  root.classList.toggle("touch-landscape",!!coarse&&!portrait);
   root.classList.toggle('pwa-standalone',!!standalone);
   root.classList.toggle('pwa-browser-ios',!!isIOS&&!standalone);
+
+  const syncResponsiveDevice=()=>{
+    const vv=window.visualViewport;
+    const h=Math.round((vv&&vv.height)||window.innerHeight||document.documentElement.clientHeight||0);
+    const w=Math.round((vv&&vv.width)||window.innerWidth||document.documentElement.clientWidth||0);
+    const coarse=(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches)||(navigator.maxTouchPoints||0)>0;
+    const sw=(window.screen&&Number(window.screen.width))||w;
+    const sh=(window.screen&&Number(window.screen.height))||h;
+    const shortSide=Math.min(sw||w,sh||h);
+    const phone=!!coarse&&shortSide>0&&shortSide<=600;
+    const tablet=!!coarse&&!phone&&shortSide>0&&shortSide<=1100;
+    const portrait=window.matchMedia?window.matchMedia("(orientation: portrait)").matches:h>=w;
+
+    if(h) root.style.setProperty("--app-height",`${h}px`);
+    if(w) root.style.setProperty("--app-width",`${w}px`);
+    if(h&&w){
+      const phoneStage=Math.min(w,Math.round(h*16/9),760);
+      const touchStage=phone ? phoneStage : Math.min(w,1180);
+      root.style.setProperty("--phone-stage-width",`${phoneStage}px`);
+      root.style.setProperty("--touch-stage-width",`${touchStage}px`);
+      root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
+    }
+
+    root.classList.toggle("touch-device",!!coarse);
+    root.classList.toggle("phone-device",phone);
+    root.classList.toggle("tablet-device",tablet);
+    root.classList.toggle("phone-portrait",phone&&portrait);
+    root.classList.toggle("phone-landscape",phone&&!portrait);
+    root.classList.toggle("touch-landscape",!!coarse&&!portrait);
+  };
+
+  syncResponsiveDevice();
+  window.addEventListener("resize",syncResponsiveDevice,{passive:true});
+  window.addEventListener("orientationchange",()=>setTimeout(syncResponsiveDevice,100),{passive:true});
+  window.visualViewport?.addEventListener("resize",syncResponsiveDevice,{passive:true});
   root.classList.add('responsive-booted');
+
+  const bindPwaUi=()=>{
+    document.getElementById('pwaInstallHintClose')?.addEventListener('click',()=>root.classList.remove('pwa-browser-ios'));
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindPwaUi,{once:true});
+  else bindPwaUi();
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('./sw.js').catch(err=>console.debug('[PWA] service worker:',err?.message||err));
+    },{once:true});
+  }
 })();</script>
 <title>BLEACH: Soul Clash — v6</title>
+<!-- v77 main cleanup pass 2: exact mobile overrides pruned; responsive/PWA runtime unified; first proven-dead JS layer removed. -->
+<!-- v78: summon flyers drop row badges; browser battlefield cards rescaled to safe-zone row geometry. -->
 <style id="app-styles">
 :root{
     --ink:#070707; --paper:#ede9df; --paper2:#d8d3c8; --line:rgba(255,255,255,.14);
@@ -11811,7 +11835,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #modeOnlineBtn.mode-card{
   box-shadow:inset 0 -3px 0 #777!important;
 }
 html.phone-device.phone-landscape #modeOnlineBtn.mode-card span,
-html.touch-device.touch-landscape:not(.tablet-device) #modeOnlineBtn.mode-card span{color:#555!important}
+html.touch-device.touch-landscape:not(.tablet-device) #modeOnlineBtn.mode-card span{color:#555!important;}
 html.phone-device.phone-landscape #modeAiBtn.mode-card,
 html.touch-device.touch-landscape:not(.tablet-device) #modeAiBtn.mode-card{
   background:#111!important;
@@ -11820,7 +11844,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #modeAiBtn.mode-card{
   box-shadow:inset 0 -3px 0 var(--p)!important;
 }
 html.phone-device.phone-landscape #modeAiBtn.mode-card span,
-html.touch-device.touch-landscape:not(.tablet-device) #modeAiBtn.mode-card span{color:#bbb!important}
+html.touch-device.touch-landscape:not(.tablet-device) #modeAiBtn.mode-card span{color:#bbb!important;}
 
 /* 2) Assemble Your Soul buttons: force visible labels in Safari/PWA. */
 html.phone-device.phone-landscape #deckBuilderBack,
@@ -11846,7 +11870,7 @@ html.phone-device.phone-landscape #deckBuilderBack::after,
 html.phone-device.phone-landscape #deckBuilderConfirm::after,
 html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderBack::after,
 html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after{
-  display:block!important;
+  
   position:relative!important;
   z-index:2!important;
   color:inherit!important;
@@ -11863,9 +11887,9 @@ html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after
   text-shadow:none!important;
 }
 html.phone-device.phone-landscape #deckBuilderBack::after,
-html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderBack::after{color:#111!important;-webkit-text-fill-color:#111!important}
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderBack::after{color:#111!important;-webkit-text-fill-color:#111!important;}
 html.phone-device.phone-landscape #deckBuilderConfirm::after,
-html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after{color:#f4f0e8!important;-webkit-text-fill-color:#f4f0e8!important}
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after{color:#f4f0e8!important;-webkit-text-fill-color:#f4f0e8!important;}
 
 /* 3) Assemble Your Soul + Choose Your Soul: use actual Roman-numeral glyphs from data-mobile-mark.
       Keep the original desktop badge text hidden and use a smaller mobile glyph. */
@@ -11893,10 +11917,10 @@ html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge::before,
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::before,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before{content:none!important;display:none!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before{content:none!important;display:none!important;}
 html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge::after{
-  content:none!important;display:none!important;
+  content:none!important;
   display:inline-block!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -11911,14 +11935,14 @@ html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-
   text-shadow:none!important;
 }
 html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="2"]::after,
-html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="2"]::after{font-size:11px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="2"]::after{font-size:11px!important;}
 html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="3"]::after,
-html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="3"]::after{font-size:9.5px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge[data-rows="3"]::after{font-size:9.5px!important;}
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge::after,
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after{
-  content:none!important;display:none!important;
+  content:none!important;
   display:inline-block!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -11935,11 +11959,11 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge[data-rows="2"]::after,
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="2"]::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge[data-rows="2"]::after,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="2"]::after{font-size:12px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="2"]::after{font-size:12px!important;}
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge[data-rows="3"]::after,
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="3"]::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge[data-rows="3"]::after,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="3"]::after{font-size:10.5px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge[data-rows="3"]::after{font-size:10.5px!important;}
 
 /* 4) Hand badges: fully erase the old underlying mark. Only the clean mobile glyph remains. */
 html.phone-device.phone-landscape #hand .card .row-badge,
@@ -11953,10 +11977,10 @@ html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge{
   word-spacing:0!important;
 }
 html.phone-device.phone-landscape #hand .card .row-badge::before,
-html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::before{content:none!important;display:none!important}
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::before{content:none!important;display:none!important;}
 html.phone-device.phone-landscape #hand .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::after{
-  content:none!important;display:none!important;
+  content:none!important;
   display:inline-block!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -11989,14 +12013,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .network-landing-ghost .ro
 
 /* Mobile browser only: hand and the grid row that owns it must shrink together.
    Standalone PWA is excluded because its hand already fits correctly. */
-html:not(.pwa-standalone).phone-device.phone-landscape .board-shell,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell{
-  grid-template-rows:20px minmax(0,1fr) 42px!important;
-  min-height:0!important;
-  overflow:hidden!important;
-}
-html:not(.pwa-standalone).phone-device.phone-landscape .board-shell:before,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell:before{inset:20px 0 42px!important}
+
+
 html:not(.pwa-standalone).phone-device.phone-landscape .topbar,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .topbar{
   height:20px!important;min-height:20px!important;max-height:20px!important;
@@ -12006,14 +12024,9 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .boar
   min-height:0!important;
   grid-template-rows:repeat(3,minmax(16px,1fr)) 2px repeat(3,minmax(16px,1fr))!important;
 }
-html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
-  height:42px!important;min-height:42px!important;max-height:42px!important;
-  grid-template-columns:minmax(0,1fr) 29px!important;
-  overflow:hidden!important;
-}
+
 html:not(.pwa-standalone).phone-device.phone-landscape .hand,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand{gap:1px!important;padding:1px 2px!important}
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand{gap:1px!important;padding:1px 2px!important;}
 html:not(.pwa-standalone).phone-device.phone-landscape .hand .card,
 html:not(.pwa-standalone).phone-device.phone-landscape .hand.hand-expanded .card,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand .card,
@@ -12022,14 +12035,9 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand
   height:38px!important;min-height:38px!important;max-height:38px!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .hand .card .power,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand .card .power{width:10px!important;height:10px!important;font-size:6px!important}
-html:not(.pwa-standalone).phone-device.phone-landscape .hand-actions,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-actions{width:29px!important;height:42px!important;min-width:29px!important;padding:1px!important}
-html:not(.pwa-standalone).phone-device.phone-landscape .pass-btn,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass-btn{
-  width:25px!important;height:24px!important;min-width:25px!important;min-height:24px!important;
-  font-size:4px!important;padding:0 1px!important;margin:auto!important;
-}
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand .card .power{width:10px!important;height:10px!important;font-size:6px!important;}
+
+
 </style>
 
 <style id="v31-target-lock-getsuga-sklaverei">
@@ -12890,7 +12898,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
 /* V60 — authoritative mobile/PWA UI corrections. Desktop gameplay layout is unchanged. */
 
 /* Row placement marks now use real DOM spans, never generated-content glyphs. */
-.card .row-badge::before,.card .row-badge::after{content:none!important;display:none!important}
+.card .row-badge::before,.card .row-badge::after{content:none!important;display:none!important;}
 /* The legacy mobile/PWA rules used high-specificity !important pseudo-elements. Kill them at equal/higher specificity too. */
 html.phone-device.phone-landscape .app .card .row-badge::before,
 html.phone-device.phone-landscape .app .card .row-badge::after,
@@ -12919,12 +12927,12 @@ html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .ro
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::before,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after{content:none!important;display:none!important}
-.card .row-badge>.row-badge-desktop{display:inline!important}
-.card .row-badge>.row-badge-mobile{display:none!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after{content:none!important;display:none!important;}
+.card .row-badge>.row-badge-desktop{display:inline!important;}
+.card .row-badge>.row-badge-mobile{display:none!important;}
 
 html.phone-device.phone-landscape .card .row-badge>.row-badge-desktop,
-html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-desktop{display:none!important}
+html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-desktop{display:none!important;}
 html.phone-device.phone-landscape .card .row-badge>.row-badge-mobile,
 html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-mobile{
   display:inline-block!important;
@@ -12941,7 +12949,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge{
 }
 /* Field cards never display placement marks. */
 html.phone-device.phone-landscape .row-cards .card .row-badge,
-html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .row-badge{display:none!important;visibility:hidden!important}
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .row-badge{display:none!important;visibility:hidden!important;}
 
 /* 1 — ASSEMBLE YOUR SOUL: use the actual button text, not Safari generated content. */
 html.phone-device.phone-landscape #deckBuilderBack,
@@ -12957,7 +12965,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm{
 html.phone-device.phone-landscape #deckBuilderBack::after,
 html.phone-device.phone-landscape #deckBuilderConfirm::after,
 html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderBack::after,
-html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after{content:none!important;display:none!important}
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after{content:none!important;display:none!important;}
 
 /* Assemble cards: one clean mobile placement mark. */
 html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .row-badge,
@@ -12965,7 +12973,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-
   top:3px!important;right:3px!important;display:block!important;visibility:visible!important;opacity:1!important;
 }
 html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .row-badge-mobile,
-html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .row-badge-mobile{font-size:10px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .row-badge-mobile{font-size:10px!important;}
 
 /* 2 — CHOOSE YOUR SOUL: cards and power semicircles share one geometry on browser + PWA. */
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
@@ -13012,43 +13020,20 @@ html.phone-device.phone-landscape #mulliganOverlay .row-badge,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge{
   top:3px!important;right:3px!important;display:block!important;visibility:visible!important;opacity:1!important;
 }
-html.phone-device.phone-landscape #mulliganOverlay .row-badge-mobile,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge-mobile{font-size:10.5px!important}
+
 
 /* 4 — mobile-browser hand: card itself and card-face shrink together with the 42px hand box. */
-html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
-  height:42px!important;min-height:42px!important;max-height:42px!important;grid-template-columns:minmax(0,1fr) 29px!important;overflow:hidden!important;
-}
-html:not(.pwa-standalone).phone-device.phone-landscape #hand,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
-  height:42px!important;min-height:42px!important;max-height:42px!important;align-items:center!important;gap:1px!important;padding:1px 2px!important;
-}
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
-html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
-  flex:0 0 26px!important;width:26px!important;min-width:26px!important;max-width:26px!important;
-  height:38px!important;min-height:38px!important;max-height:38px!important;aspect-ratio:auto!important;margin:0!important;
-}
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .card-face{
-  width:26px!important;min-width:26px!important;max-width:26px!important;height:38px!important;min-height:38px!important;max-height:38px!important;aspect-ratio:auto!important;
-}
+
+
+
+
 html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .ability-icon,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .ability-icon{
-  width:7px!important;height:7px!important;min-width:7px!important;max-width:7px!important;padding:0!important;font-size:4px!important;line-height:7px!important;
+  max-width:7px!important;
 }
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .power,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .power{
-  width:11px!important;height:11px!important;min-width:11px!important;min-height:11px!important;max-width:11px!important;max-height:11px!important;
-  left:50%!important;bottom:-4.5px!important;top:auto!important;transform:translateX(-50%)!important;border-radius:50%!important;
-  padding:1px 0 0!important;font-size:5.5px!important;line-height:1!important;
-}
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge{top:1px!important;right:1px!important}
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge-mobile,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge-mobile{font-size:5.8px!important;-webkit-text-stroke:.16px #000!important}
+
+
+
 
 /* 5 — detail-preview placement mark sits in the same top-right anchor as every other mobile card. */
 html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge,
@@ -13056,11 +13041,11 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
   top:3px!important;right:3px!important;display:block!important;visibility:visible!important;opacity:1!important;
 }
 html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge-mobile,
-html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge-mobile{font-size:10px!important}
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge-mobile{font-size:10px!important;}
 
 /* 6 — standalone PWA: explicitly suppress every legacy/desktop Roman glyph on cards. */
 html.pwa-standalone.phone-device.phone-landscape .card .row-badge>.row-badge-desktop,
-html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-desktop{display:none!important;color:transparent!important;-webkit-text-fill-color:transparent!important}
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-desktop{display:none!important;color:transparent!important;-webkit-text-fill-color:transparent!important;}
 html.pwa-standalone.phone-device.phone-landscape .card .row-badge>.row-badge-mobile,
 html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-mobile{
   display:inline-block!important;color:#fff!important;-webkit-text-fill-color:#fff!important;-webkit-text-stroke:.24px #000!important;text-shadow:none!important;
@@ -13073,7 +13058,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-gri
   overflow-x:auto!important;overflow-y:hidden!important;gap:8px!important;padding:6px 34px 10px!important;scroll-snap-type:x proximity!important;
 }
 html.phone-device.phone-landscape #choiceOverlay .choice-modal.choice-scrollable .choice-grid,
-html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.choice-scrollable .choice-grid{justify-content:flex-start!important}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.choice-scrollable .choice-grid{justify-content:flex-start!important;}
 html.phone-device.phone-landscape #choiceOverlay .choice-card-btn,
 html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{
   flex:0 0 110px!important;width:110px!important;min-width:110px!important;max-width:110px!important;padding:3px!important;gap:3px!important;scroll-snap-align:center!important;
@@ -13095,23 +13080,23 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-car
   display:block!important;visibility:visible!important;opacity:1!important;top:3px!important;right:3px!important;
 }
 html.phone-device.phone-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile,
-html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile{font-size:10px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile{font-size:10px!important;}
 html.phone-device.phone-landscape #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge,
-html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge{display:none!important;visibility:hidden!important}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge{display:none!important;visibility:hidden!important;}
 
 @media (max-height:360px){
   html.phone-device.phone-landscape #choiceOverlay .choice-card-btn,
-  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{flex-basis:100px!important;width:100px!important;min-width:100px!important;max-width:100px!important}
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{flex-basis:100px!important;width:100px!important;min-width:100px!important;max-width:100px!important;}
   html.phone-device.phone-landscape #choiceOverlay .choice-card-preview.card.with-info,
   html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.card.with-info,
   html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-face,
   html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-face,
   html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-info-panel,
-  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{width:90px!important;min-width:90px!important;max-width:90px!important}
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{width:90px!important;min-width:90px!important;max-width:90px!important;}
   html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-face,
-  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important}
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important;}
   html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-info-panel,
-  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{height:62px!important;min-height:62px!important;max-height:62px!important;flex:0 0 62px!important}
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{height:62px!important;min-height:62px!important;max-height:62px!important;flex:0 0 62px!important;}
 }
 
 /* consolidated source: v61-mobile-browser-pwa-real-fix */
@@ -13126,15 +13111,15 @@ html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm{
 html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack::before,
 html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack::after,
 html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm::before,
-html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm::after{content:none!important;display:none!important}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm::after{content:none!important;display:none!important;}
 html.touch-device.touch-landscape #deckBuilderOverlay .v61-db-label{
   display:block!important;position:relative!important;z-index:3!important;opacity:1!important;visibility:visible!important;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
   font-size:8px!important;font-weight:1000!important;line-height:1!important;letter-spacing:.045em!important;
   white-space:nowrap!important;text-align:center!important;text-shadow:none!important;
 }
-html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack .v61-db-label{color:#111!important;-webkit-text-fill-color:#111!important}
-html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm .v61-db-label{color:#f4f0e8!important;-webkit-text-fill-color:#f4f0e8!important}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack .v61-db-label{color:#111!important;-webkit-text-fill-color:#111!important;}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm .v61-db-label{color:#f4f0e8!important;-webkit-text-fill-color:#f4f0e8!important;}
 html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{
   flex:0 0 32px!important;height:32px!important;min-height:32px!important;max-height:32px!important;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr) 78px!important;grid-auto-rows:29px!important;
@@ -13144,7 +13129,7 @@ html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>butt
 html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
   height:29px!important;min-height:29px!important;max-height:29px!important;margin:0!important;box-sizing:border-box!important;
 }
-html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{font-size:13px!important;line-height:29px!important;padding:0 3px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{font-size:13px!important;line-height:29px!important;padding:0 3px!important;}
 
 /* One and only one Roman placement mark on all touch layouts, including tablet-class Safari/PWA. */
 html.touch-device.touch-landscape .card .row-badge::before,
@@ -13169,7 +13154,7 @@ html.pwa-standalone.touch-device.touch-landscape .card .row-badge>.row-badge-mob
   font-family:Georgia,"Times New Roman",Times,serif!important;font-size:9px!important;font-weight:700!important;line-height:1!important;
   letter-spacing:0!important;word-spacing:0!important;-webkit-text-stroke:.22px #000!important;paint-order:stroke fill!important;text-shadow:none!important;
 }
-html.touch-device.touch-landscape .row-cards .card .row-badge{display:none!important;visibility:hidden!important;opacity:0!important}
+html.touch-device.touch-landscape .row-cards .card .row-badge{display:none!important;visibility:hidden!important;opacity:0!important;}
 html.touch-device.touch-landscape .card.returning-hidden .row-badge,
 html.touch-device.touch-landscape .card.local-landing-hold .row-badge,
 html.touch-device.touch-landscape .card.card-flight .row-badge,
@@ -13184,9 +13169,9 @@ html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .row-bad
 html.touch-device.touch-landscape .rightbar .detail-preview .card .row-badge{
   display:block!important;top:3px!important;right:3px!important;opacity:1!important;
 }
-html.touch-device.touch-landscape #deckBuilderOverlay .row-badge-mobile{font-size:10px!important}
-html.touch-device.touch-landscape #mulliganOverlay .row-badge-mobile{font-size:10px!important}
-html.touch-device.touch-landscape .rightbar .detail-preview .row-badge-mobile{font-size:9px!important}
+html.touch-device.touch-landscape #deckBuilderOverlay .row-badge-mobile{font-size:10px!important;}
+html.touch-device.touch-landscape #mulliganOverlay .row-badge-mobile{font-size:10px!important;}
+html.touch-device.touch-landscape .rightbar .detail-preview .row-badge-mobile{font-size:9px!important;}
 
 /* CHOOSE YOUR SOUL — fixed card geometry, no stretched wrappers, no row collision. */
 html.touch-device.touch-landscape #mulliganOverlay{
@@ -13230,13 +13215,13 @@ html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power{
   background:#050608!important;color:#f6f3ea!important;box-shadow:0 -1px 0 #050608!important;
   font-size:10px!important;line-height:12px!important;overflow:hidden!important;
 }
-html.touch-device.touch-landscape #mulliganOverlay .mulligan-nameplate{display:none!important}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-nameplate{display:none!important;}
 
 @media (max-height:370px){
-  html.touch-device.touch-landscape #mulliganOverlay{--v61-mulligan-w:68px;--v61-mulligan-h:102px;--v61-mulligan-power-w:24px;--v61-mulligan-power-h:12px}
-  html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid{column-gap:8px!important;row-gap:7px!important;padding:2px!important}
+  html.touch-device.touch-landscape #mulliganOverlay{--v61-mulligan-w:68px;--v61-mulligan-h:102px;--v61-mulligan-power-w:24px;--v61-mulligan-power-h:12px;}
+  html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid{column-gap:8px!important;row-gap:7px!important;padding:2px!important;}
   html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
-  html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power{font-size:9px!important;line-height:10px!important}
+  html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power{font-size:9px!important;line-height:10px!important;}
 }
 
 /* Mobile browser hand — compact box and cards are one geometry. Hide the browser scrollbar/dock. */
@@ -13245,14 +13230,14 @@ html:not(.pwa-standalone).touch-device.touch-landscape .hand-wrap{
   grid-template-columns:minmax(0,1fr) 29px!important;overflow:hidden!important;
 }
 html:not(.pwa-standalone).touch-device.touch-landscape .hand-wrap:before,
-html:not(.pwa-standalone).touch-device.touch-landscape .hand-scroll-dock{display:none!important}
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-scroll-dock{display:none!important;}
 html:not(.pwa-standalone).touch-device.touch-landscape #hand{
   height:42px!important;min-height:42px!important;max-height:42px!important;
   display:flex!important;align-items:center!important;justify-content:flex-start!important;
   gap:1px!important;padding:1px 2px!important;overflow-x:auto!important;overflow-y:hidden!important;
   scrollbar-width:none!important;-ms-overflow-style:none!important;touch-action:pan-x!important;
 }
-html:not(.pwa-standalone).touch-device.touch-landscape #hand::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
 html:not(.pwa-standalone).touch-device.touch-landscape #hand .card,
 html:not(.pwa-standalone).touch-device.touch-landscape #hand.hand-expanded .card{
   flex:0 0 27px!important;width:27px!important;min-width:27px!important;max-width:27px!important;
@@ -13270,8 +13255,8 @@ html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .power{
 html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .ability-icon{
   min-width:7px!important;width:auto!important;height:7px!important;padding:0 1px!important;font-size:3.7px!important;line-height:7px!important;
 }
-html:not(.pwa-standalone).touch-device.touch-landscape #hand .row-badge{top:1px!important;right:1px!important}
-html:not(.pwa-standalone).touch-device.touch-landscape #hand .row-badge-mobile{font-size:5.5px!important;-webkit-text-stroke:.12px #000!important}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .row-badge{top:1px!important;right:1px!important;}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .row-badge-mobile{font-size:5.5px!important;-webkit-text-stroke:.12px #000!important;}
 html:not(.pwa-standalone).touch-device.touch-landscape .hand-actions{
   width:29px!important;min-width:29px!important;height:42px!important;min-height:42px!important;max-height:42px!important;padding:1px!important;
 }
@@ -13290,8 +13275,8 @@ html.touch-device.touch-landscape #choiceOverlay .choice-grid{
   min-height:0!important;overflow-x:auto!important;overflow-y:hidden!important;gap:9px!important;padding:6px 34px 10px!important;
   scrollbar-width:none!important;scroll-snap-type:x proximity!important;
 }
-html.touch-device.touch-landscape #choiceOverlay .choice-grid::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
-html.touch-device.touch-landscape #choiceOverlay .choice-modal.choice-scrollable .choice-grid{justify-content:flex-start!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-grid::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
+html.touch-device.touch-landscape #choiceOverlay .choice-modal.choice-scrollable .choice-grid{justify-content:flex-start!important;}
 html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{
   flex:0 0 110px!important;width:110px!important;min-width:110px!important;max-width:110px!important;
   padding:3px!important;gap:3px!important;scroll-snap-align:center!important;
@@ -13308,16 +13293,16 @@ html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info
 html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge{
   display:block!important;top:3px!important;right:3px!important;opacity:1!important;visibility:inherit!important;
 }
-html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile{font-size:9px!important}
-html.touch-device.touch-landscape #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge{display:none!important;visibility:hidden!important;opacity:0!important}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile{font-size:9px!important;}
+html.touch-device.touch-landscape #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge{display:none!important;visibility:hidden!important;opacity:0!important;}
 
 @media (max-height:360px){
-  html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{flex-basis:100px!important;width:100px!important;min-width:100px!important;max-width:100px!important}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-btn{flex-basis:100px!important;width:100px!important;min-width:100px!important;max-width:100px!important;}
   html.touch-device.touch-landscape #choiceOverlay .choice-card-preview.card.with-info,
   html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face,
-  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{width:90px!important;min-width:90px!important;max-width:90px!important}
-  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important}
-  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{height:56px!important;min-height:56px!important;max-height:56px!important;flex:0 0 56px!important}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{width:90px!important;min-width:90px!important;max-width:90px!important;}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important;}
+  html.touch-device.touch-landscape #choiceOverlay .choice-card-preview .card-info-panel{height:56px!important;min-height:56px!important;max-height:56px!important;flex:0 0 56px!important;}
 }
 
 /* consolidated source: v62-mobile-pwa-stability-fix */
@@ -13651,53 +13636,53 @@ html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-name
 /* 1) Mobile browser battle hand: larger card box, closer to PWA. */
 html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
-  height:62px!important;
-  min-height:62px!important;
-  max-height:62px!important;
+  
+  
+  
   grid-template-columns:minmax(0,1fr) 38px!important;
-  overflow:hidden!important;
+  
 }
 html:not(.pwa-standalone).phone-device.phone-landscape #hand,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
-  height:62px!important;
-  min-height:62px!important;
-  max-height:62px!important;
-  display:flex!important;
-  align-items:flex-end!important;
-  justify-content:flex-start!important;
-  gap:1px!important;
-  padding:3px 2px!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   scrollbar-width:none!important;
   -ms-overflow-style:none!important;
-  touch-action:pan-x!important;
+  
 }
 html:not(.pwa-standalone).phone-device.phone-landscape #hand::-webkit-scrollbar,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
 html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
 html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
-  flex:0 0 36px!important;
-  width:36px!important;
-  min-width:36px!important;
-  max-width:36px!important;
-  height:53px!important;
-  min-height:53px!important;
-  max-height:53px!important;
+  
+  
+  
+  
+  
+  
+  
   aspect-ratio:auto!important;
-  margin:0!important;
+  
   overflow:visible!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .card-face{
-  width:36px!important;
-  min-width:36px!important;
-  max-width:36px!important;
-  height:53px!important;
-  min-height:53px!important;
-  max-height:53px!important;
+  
+  
+  
+  
+  
+  
   aspect-ratio:auto!important;
   overflow:hidden!important;
 }
@@ -13729,17 +13714,17 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand
   line-height:9px!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge{top:1px!important;right:1px!important}
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge{top:1px!important;right:1px!important;}
 html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge-mobile,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge-mobile{font-size:6px!important;-webkit-text-stroke:.14px #000!important}
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge-mobile{font-size:6px!important;-webkit-text-stroke:.14px #000!important;}
 html:not(.pwa-standalone).phone-device.phone-landscape .hand-actions,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-actions{
   width:38px!important;
   min-width:38px!important;
-  height:62px!important;
-  min-height:62px!important;
-  max-height:62px!important;
-  padding:2px!important;
+  
+  
+  
+  
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .pass-btn,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass-btn{
@@ -13898,7 +13883,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan
   opacity:1!important;
 }
 html.phone-device.phone-landscape #mulliganOverlay .row-badge-mobile,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge-mobile{font-size:8px!important;-webkit-text-stroke:.18px #000!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge-mobile{font-size:8px!important;-webkit-text-stroke:.18px #000!important;}
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card.replace,
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card.replace,
@@ -13939,9 +13924,9 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan
   z-index:2!important;
 }
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-nameplate,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-nameplate{display:none!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-nameplate{display:none!important;}
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions,
-html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions{margin-top:4px!important}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions{margin-top:4px!important;}
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-actions button,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-actions button{
   height:30px!important;
@@ -14006,26 +13991,26 @@ html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliga
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid,
 html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
 html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid{
-  display:grid!important;
+  
   width:100%!important;
   min-height:0!important;
   flex:1 1 auto!important;
 
-  grid-template-columns:repeat(6,var(--v65-w))!important;
-  grid-template-rows:repeat(2,calc(var(--v65-face-h) + var(--v65-power-h) - 1px))!important;
-  grid-auto-rows:calc(var(--v65-face-h) + var(--v65-power-h) - 1px)!important;
-  grid-auto-flow:row!important;
+  
+  
+  
+  
 
-  column-gap:var(--v65-col-gap)!important;
-  row-gap:var(--v65-row-gap)!important;
+  
+  
 
-  align-content:center!important;
-  justify-content:center!important;
-  align-items:start!important;
-  justify-items:center!important;
+  
+  
+  
+  
 
-  padding:4px 2px 6px!important;
-  overflow:hidden!important;
+  
+  
 }
 
 /* ---------- wrapper ---------- */
@@ -14076,20 +14061,20 @@ html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliga
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
 html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
 html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face{
-  width:var(--v65-w)!important;
+  
   min-width:var(--v65-w)!important;
   max-width:var(--v65-w)!important;
 
-  height:var(--v65-face-h)!important;
-  min-height:var(--v65-face-h)!important;
-  max-height:var(--v65-face-h)!important;
+  
+  
+  
 
-  aspect-ratio:auto!important;
-  position:relative!important;
-  box-sizing:border-box!important;
+  
+  
+  
 
   /* Required: the power badge occupies the reserved gutter below this face. */
-  overflow:visible!important;
+  
 }
 
 /* Artwork/frame themselves never spill into the gutter. */
@@ -14101,54 +14086,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulligan
 }
 
 /* ---------- power: true semicircle BELOW the artwork ---------- */
-html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
-html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
-html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power{
-  position:absolute!important;
-  left:50%!important;
-  right:auto!important;
-  top:auto!important;
 
-  /* Safari-safe syntax: one-pixel seam overlap, rest lives in reserved gutter. */
-  bottom:calc(1px - var(--v65-power-h))!important;
-  transform:translateX(-50%)!important;
-
-  width:var(--v65-power-w)!important;
-  min-width:var(--v65-power-w)!important;
-  max-width:var(--v65-power-w)!important;
-
-  height:var(--v65-power-h)!important;
-  min-height:var(--v65-power-h)!important;
-  max-height:var(--v65-power-h)!important;
-
-  display:flex!important;
-  align-items:flex-end!important;
-  justify-content:center!important;
-  box-sizing:border-box!important;
-  margin:0!important;
-  padding:0 0 1px!important;
-
-  background:#050608!important;
-  color:#f6f3ea!important;
-
-  border:1px solid #f6f3ea!important;
-  border-bottom:0!important;
-  border-radius:999px 999px 0 0!important;
-
-  outline:0!important;
-  clip-path:none!important;
-  box-shadow:0 -1px 0 #050608!important;
-
-  font-family:Impact,"Arial Narrow",sans-serif!important;
-  font-size:9px!important;
-  font-weight:400!important;
-  line-height:calc(var(--v65-power-h) - 2px)!important;
-  text-align:center!important;
-
-  overflow:hidden!important;
-  z-index:30!important;
-}
 
 /* ---------- selected / locked cards: visual state only, never geometry ---------- */
 html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card.replace,
@@ -14547,58 +14485,30 @@ html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOv
  Keep PWA untouched.
 */
 
-html:not(.pwa-standalone).phone-device.phone-landscape .board-shell,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell{
-  grid-template-rows:20px minmax(0,1fr) 62px!important;
-  min-height:0!important;
-  overflow:hidden!important;
-}
+
 
 /* Keep decorative board background aligned with the real hand boundary. */
-html:not(.pwa-standalone).phone-device.phone-landscape .board-shell:before,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell:before{
-  inset:20px 0 62px!important;
-}
+
 
 /* Reassert one coherent browser-hand geometry. */
-html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
-  height:62px!important;
-  min-height:62px!important;
-  max-height:62px!important;
-  align-self:stretch!important;
-  overflow:hidden!important;
-}
+
 
 html:not(.pwa-standalone).phone-device.phone-landscape #hand,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
-  height:62px!important;
-  min-height:62px!important;
-  max-height:62px!important;
-  padding:3px 2px!important;
+  
+  
+  
+  
   padding-bottom:3px!important;
-  align-items:flex-end!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
+  
+  
+  
 }
 
 /* Cards fit completely inside the 62px row with room for padding. */
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
-html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
-  height:53px!important;
-  min-height:53px!important;
-  max-height:53px!important;
-  align-self:flex-end!important;
-}
 
-html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .card-face{
-  height:53px!important;
-  min-height:53px!important;
-  max-height:53px!important;
-}
+
+
 </style>
 
 <!-- v70: selected Soul Society VFX import -->
@@ -14852,6 +14762,39 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .boar
 html:not(.pwa-standalone).phone-device.phone-landscape .board-shell:before,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell:before{
   inset:20px 0 74px!important;
+}
+
+/* V78 — the safe zone removes 12px from the battlefield. Scale only browser battlefield cards
+   by the same row-height ratio; PWA/standalone keeps its original 26×39 geometry. */
+html:not(.pwa-standalone).phone-device.phone-landscape .row-cards .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
+  flex:0 0 25px!important;
+  width:25px!important;
+  min-width:25px!important;
+  max-width:25px!important;
+  height:37.5px!important;
+  min-height:37.5px!important;
+  max-height:37.5px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape .row-cards .card .card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .row-cards .card .card-face{
+  width:25px!important;
+  min-width:25px!important;
+  max-width:25px!important;
+  height:37.5px!important;
+  min-height:37.5px!important;
+  max-height:37.5px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape .row-cards .card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
+  width:25px!important;
+  min-width:25px!important;
+  max-width:25px!important;
+  height:13.5px!important;
+  min-height:13.5px!important;
+  max-height:13.5px!important;
+  border-radius:25px 25px 0 0!important;
+  font-size:9.5px!important;
 }
 
 /* Hand viewport: cards occupy the upper portion, bottom ~15px is scrollbar-safe space. */
@@ -15262,6 +15205,174 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
 }
 </style>
 
+
+<style id="v79-mobile-assemble-suicide-choice-tune">
+/*
+ V79 — mobile interaction polish only.
+ 1) ASSEMBLE YOUR SOUL: no sticky tap/hover scale on touch cards.
+ 2) ASSEMBLE action bar/buttons: larger touch targets, vertically centered.
+ 3) SOUL SUICIDE: restore the desktop circular visual language on mobile.
+ 4) Mobile browser only: card-choice rows sit slightly higher. PWA unchanged.
+*/
+
+/* 1 — touch deck builder cards never scale on tap/focus/hover. */
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item:hover .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item:focus .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item:focus-within .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item:active .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item:hover:not(.excluded) .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item:focus-within:not(.excluded) .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item.excluded:hover .card,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item.excluded:focus-within .card{
+  transform:none!important;
+  transition:none!important;
+  filter:none!important;
+  box-shadow:none!important;
+}
+
+/* 2 — a real mobile action dock instead of a 29px strip. */
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{
+  flex:0 0 42px!important;
+  height:42px!important;
+  min-height:42px!important;
+  max-height:42px!important;
+  grid-auto-rows:36px!important;
+  gap:6px!important;
+  padding:3px 0!important;
+  align-items:center!important;
+  justify-items:stretch!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button,
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
+  height:36px!important;
+  min-height:36px!important;
+  max-height:36px!important;
+  align-self:center!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 7px!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .v61-db-label{
+  font-size:8.5px!important;
+  line-height:1!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+  padding:2px 4px!important;
+}
+
+@media (max-height:370px){
+  html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{
+    flex-basis:39px!important;
+    height:39px!important;
+    min-height:39px!important;
+    max-height:39px!important;
+    grid-auto-rows:33px!important;
+    padding:3px 0!important;
+  }
+  html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button,
+  html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
+    height:33px!important;
+    min-height:33px!important;
+    max-height:33px!important;
+  }
+}
+
+/* 3 — compact circular SOUL SUICIDE on every phone/touch landscape mode. */
+html.phone-device.phone-landscape .pass-btn,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn{
+  position:relative!important;
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  min-height:34px!important;
+  max-width:34px!important;
+  max-height:34px!important;
+  margin:auto!important;
+  padding:0!important;
+  border-radius:50%!important;
+  clip-path:none!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  background:radial-gradient(circle at 50% 50%,#151515 0 48%,#050505 49% 62%,#d9d5cb 63% 65%,#080808 66% 100%)!important;
+  color:#f4f0e7!important;
+  transform:none!important;
+  box-shadow:0 0 0 1px #050505,0 0 0 2px rgba(255,255,255,.22),0 0 8px rgba(255,90,22,.14)!important;
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:5.3px!important;
+  line-height:.92!important;
+  letter-spacing:.055em!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:1px!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .pass-btn:before,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:4px!important;
+  border:1px solid rgba(255,255,255,.25)!important;
+  border-radius:50%!important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.65)!important;
+}
+html.phone-device.phone-landscape .pass-btn:after,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  width:2px!important;
+  height:44px!important;
+  background:#ff4e18!important;
+  transform:rotate(38deg)!important;
+  opacity:.78!important;
+  box-shadow:0 0 4px rgba(255,78,24,.55)!important;
+}
+html.phone-device.phone-landscape .pass-btn span,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn span{
+  position:relative!important;
+  z-index:3!important;
+  display:block!important;
+}
+html.phone-device.phone-landscape .pass-btn:hover,
+html.phone-device.phone-landscape .pass-btn:active,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:hover,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:active{
+  transform:none!important;
+}
+
+/* 4 — browser only. Raise card choices a little; standalone/PWA is already right. */
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{
+  transform:translateY(-7px)!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn:hover,
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn:focus-visible,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn:hover,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn:focus-visible{
+  transform:translateY(-7px)!important;
+}
+@media (max-height:360px){
+  html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{
+    transform:translateY(-4px)!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -15460,39 +15571,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
 (() => {
 
   const IS_TOUCH_UI = (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || (navigator.maxTouchPoints||0)>0;
-  function syncResponsiveDevice(){
-    const root=document.documentElement;
-    const vv=window.visualViewport;
-    const h=Math.round(vv?.height||window.innerHeight||document.documentElement.clientHeight||0);
-    const w=Math.round(vv?.width||window.innerWidth||document.documentElement.clientWidth||0);
-    if(h) root.style.setProperty("--app-height",`${h}px`);
-    if(w) root.style.setProperty("--app-width",`${w}px`);
-    const coarse=(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches)||(navigator.maxTouchPoints||0)>0;
-    const sw=Number(screen?.width)||w, sh=Number(screen?.height)||h;
-    const shortSide=Math.min(sw||w,sh||h);
-    const phone=!!coarse && shortSide>0 && shortSide<=600;
-    const tablet=!!coarse && !phone && shortSide>0 && shortSide<=1100;
-    const portrait=window.matchMedia ? window.matchMedia("(orientation: portrait)").matches : h>=w;
-    const standalone=window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone===true;
-    if(h&&w){
-
-      const phoneStage=Math.min(w,Math.round(h*16/9),760);
-      const touchStage=phone ? phoneStage : Math.min(w,1180);
-      root.style.setProperty("--phone-stage-width",`${phoneStage}px`);
-      root.style.setProperty("--touch-stage-width",`${touchStage}px`);
-      root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
-    }
-    root.classList.toggle("touch-device",!!coarse);
-    root.classList.toggle("phone-device",phone);
-    root.classList.toggle("tablet-device",tablet);
-    root.classList.toggle("phone-portrait",phone&&portrait);
-    root.classList.toggle("phone-landscape",phone&&!portrait);
-    root.classList.toggle("touch-landscape",!!coarse&&!portrait);
-  }
-  syncResponsiveDevice();
-  window.addEventListener("resize",syncResponsiveDevice,{passive:true});
-  window.addEventListener("orientationchange",()=>setTimeout(syncResponsiveDevice,100),{passive:true});
-  if(window.visualViewport) window.visualViewport.addEventListener("resize",syncResponsiveDevice,{passive:true});
 
   const ROWS = ["support", "ranged", "melee"];
   const STARTING_HAND_SIZE = 12;
@@ -16114,26 +16192,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
     openMulligan("player");
   }
 
-  function initPvPGame(playerSetup,enemySetup){
-    const pFaction=playerSetup?.faction||"living", eFaction=enemySetup?.faction||"hueco";
-    const pLeader=pickLeader(pFaction), eLeader=pickLeader(eFaction);
-    const pSelection=playerSetup?.selection ? new Set(playerSetup.selection) : null;
-    const eSelection=enemySetup?.selection ? new Set(enemySetup.selection) : null;
-    const pDeck=makeDeck(pFaction,pLeader,pSelection), eDeck=makeDeck(eFaction,eLeader,eSelection);
-    state={
-      round:1, turn:"player", playerPassed:false, enemyPassed:false, gameOver:false, selected:null, phase:"mulligan", mulliganSideKey:"player", initiativeSideKey:null, mulliganSelected:[], mulliganInspect:null, roundHistory:[], globalEffects:[], draggingUid:null, justPlayed:null, justPlayedRow:null, justPlayedSide:null, actionLock:null, flightLandedUid:null, previewCard:null, handRevealUid:null, rowTargeting:null,
-      pressure:{player:[],enemy:[]}, pressureHeroPenalty:{player:{},enemy:{}}, hogyoku:{player:[],enemy:[]}, rowEffects:{player:{support:[],ranged:[],melee:[]},enemy:{support:[],ranged:[],melee:[]}}, prisons:[], scoreOffsets:{player:0,enemy:0}, musterSpent:{player:[],enemy:[]},
-      player:{faction:pFaction,leader:pLeader,hand:takeFactionOpeningCards(pDeck,STARTING_HAND_SIZE,pFaction),deck:pDeck,grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false,_deckBuildRule:makeDeckBuildRule(pLeader,pSelection)},
-      enemy:{faction:eFaction,leader:eLeader,hand:takeFactionOpeningCards(eDeck,STARTING_HAND_SIZE,eFaction),deck:eDeck,grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false,_deckBuildRule:makeDeckBuildRule(eLeader,eSelection)},
-      lastDetail:null
-    };
-    for(const k of ["player","enemy"]) for(const c of [...state[k].hand,...state[k].deck]) c._ownerKey=k;
-    enforceAllDeckBuildRules();
-    localViewSide=gameMode==="online" ? (networkSession.localSide||"player") : "player";
-    addLog(`DUEL: <b>${FACTIONS[pFaction].name}</b> против <b>${FACTIONS[eFaction].name}</b>. Лидеры назначены случайно.`);
-    if(pFaction==="hueco"||eFaction==="hueco") addLog(`<b>Уэко Мундо — Инстинкт выживания:</b> один случайный подходящий обычный боец переживает конец раунда.`);
-    render();
-  }
 
   function prepareDuelSide(setup,sideKey){
     const faction=setup?.faction||("player"===sideKey?"living":"hueco");
@@ -16779,7 +16837,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
     delete sourceCard._shunsuiKageoniTarget; return true;
   }
   const SOUL_ELEVENTH_IDS=new Set(["s_kenpachi","s_kenpachi_nozarashi","s_kenpachi_bankai","s_yachiru","s_ikkaku","s_yumi"]);
-  function soulRowName(row){ return rowRuleLabel(row); }
   function isZankaProtectedRow(sideKey,row){
     return !!state?.[sideKey]?.board?.[row]?.some(c=>c.id==="s_yamamoto_zanka");
   }
@@ -17515,13 +17572,6 @@ function isNanaoBarrierActive(card){
   });
 
   function peerJsAvailable(){ return typeof globalThis.Peer==="function"; }
-  function roomPeerId(code){ return ONLINE_PEER_PREFIX+String(code||"").toUpperCase(); }
-  function generateRoomCode(){
-    const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let code="";
-    for(let i=0;i<6;i++) code+=alphabet[randomIndex(alphabet.length)];
-    return code;
-  }
   function makeOnlineDiagError(type,message,extra={}){
     const err=new Error(message||type||"P2P diagnostic error");
     err.type=type||"p2p-diagnostic";
@@ -17659,22 +17709,6 @@ function isNanaoBarrierActive(card){
     };
     wire();
     return stop;
-  }
-  function bindPeerLifecycle(peer){
-    peer.on("disconnected",()=>{
-      if(networkSession.closing||networkSession.peer!==peer) return;
-      onlineDiagWarn("PeerJS signalling disconnected",{peerId:peer?.id||null,conn:peerConnectionSnapshot(networkSession.conn)});
-
-      if(networkSession.conn?.open){
-        try{ setTimeout(()=>{ if(networkSession.peer===peer && peer.disconnected && !peer.destroyed) peer.reconnect(); },1200); }catch(_e){}
-      } else updateNetworkStatusForError(makeOnlineDiagError("signalling-disconnected","PeerJS signalling disconnected"));
-    });
-    peer.on("error",err=>{
-      if(networkSession.closing||networkSession.peer!==peer) return;
-      onlineDiagWarn("PeerJS error",{peerId:peer?.id||null,type:err?.type||null,message:err?.message||String(err)});
-
-      if(err?.type!=="peer-unavailable" && err?.type!=="unavailable-id") updateNetworkStatusForError(err);
-    });
   }
   function sendRawNetworkEnvelope(envelope){
     if(networkSession.roomClosed) return false;
@@ -17819,21 +17853,6 @@ function isNanaoBarrierActive(card){
 
       setTimeout(()=>{ if(!conn?.open) closeNow(); },1800);
     }
-  }
-  function acceptIncomingConnection(conn){
-    const status=$("#networkCreateStatus");
-    const remote=conn?.peer||"unknown peer";
-    if(status) status.textContent=`HOST connection received: ${remote}. Проверяем protocol / gameVersion…`;
-    onlineDiagLog("HOST connection received",{peerId:networkSession.peer?.id||null,remotePeer:remote,metadata:conn?.metadata||null});
-    if(networkSession.role!=="host"||networkSession.closing){ rejectIncomingConnection(conn,"host-state","host closing / wrong role"); return; }
-    if(conn.metadata?.protocol && conn.metadata.protocol!==ONLINE_PROTOCOL){ rejectIncomingConnection(conn,"protocol-mismatch","protocol mismatch"); return; }
-    if(String(conn.metadata?.gameVersion||ONLINE_GAME_VERSION)!==ONLINE_GAME_VERSION){ rejectIncomingConnection(conn,"version-mismatch",`gameVersion mismatch (expected ${ONLINE_GAME_VERSION}, got ${conn.metadata?.gameVersion??"missing"})`); return; }
-    if(networkSession.conn && networkSession.conn!==conn){ rejectIncomingConnection(conn,"room-busy","room busy"); return; }
-    if(status) status.textContent=`HOST connection received: ${remote} → WebRTC negotiating…`;
-    attachPeerConnectionDiagnostics(conn,{side:"host",statusEl:status,onFailure:err=>{
-      if(status) status.textContent=`HOST connection received: ${remote} → ${p2pErrorText(err)}.`;
-    }});
-    bindDataConnection(conn,"guest");
   }
   function bindDataConnection(conn,remoteRole){
     networkSession.conn=conn;
@@ -18646,29 +18665,6 @@ function isNanaoBarrierActive(card){
 
 
   /* ===== V32: refined targeted ability VFX ===== */
-  async function v32AnimateBookEndSlash(sideKey,row,uid){
-    if(cardChoicePreflightContext?.phase==='collect') return;
-    v31ClearAbilityTargetLock(uid);
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    const el=v242CardElement(sideKey,row,uid);
-    const r=visibleRect(el?.querySelector('.card-face'))||visibleRect(el);
-    if(!r){ await waitForMs(900); return; }
-    const stage=document.createElement('div'); stage.className='v32-book-stage';
-    stage.style.left=`${r.left}px`; stage.style.top=`${r.top}px`; stage.style.width=`${r.width}px`; stage.style.height=`${r.height}px`;
-    stage.innerHTML='<i class="flash"></i><i class="glow"></i><i class="slash"></i>';
-    for(let i=0;i<12;i++){
-      const s=document.createElement('b'); s.className='v32-book-spark';
-      s.style.setProperty('--r',`${(-70+Math.random()*140).toFixed(1)}deg`);
-      s.style.setProperty('--h',`${(9+Math.random()*17).toFixed(1)}px`);
-      s.style.setProperty('--dy',`${(-12-Math.random()*28).toFixed(1)}px`);
-      s.style.setProperty('--delay',`${Math.round(190+Math.random()*190)}ms`);
-      s.style.setProperty('--d',`${Math.round(330+Math.random()*220)}ms`);
-      stage.appendChild(s);
-    }
-    document.body.appendChild(stage);
-    await waitForMs(980);
-    stage.remove();
-  }
 
   async function v32AnimateSodeFreeze(sideKey,row,uid,onSettle=null){
     if(cardChoicePreflightContext?.phase==='collect'){ if(onSettle) onSettle(); return; }
@@ -18733,25 +18729,6 @@ function isNanaoBarrierActive(card){
     }
   }
 
-  async function v32ExecuteLaMuerte(sideKey,foeKey,label='La Muerte'){
-    if(rowPower(state[foeKey],'melee')<10) return false;
-    const ordinary=state[foeKey].board.melee.filter(c=>!c.hero);
-    if(!ordinary.length) return false;
-    const max=Math.max(...ordinary.map(c=>fieldPower(foeKey,'melee',c)));
-    const victims=ordinary.filter(c=>fieldPower(foeKey,'melee',c)===max);
-    if(!victims.length) return false;
-    if(consumeUraharaShield(foeKey,sideKey,label,()=>{
-      const reflectedCandidates=allBoard(state[sideKey]).filter(c=>!c.hero&&c.id!=='l_urahara');
-      if(!reflectedCandidates.length) return false;
-      const maxOwn=Math.max(...reflectedCandidates.map(c=>c.currentPower));
-      for(const c of [...reflectedCandidates.filter(c=>c.currentPower===maxOwn)]) destroyCard(sideKey,c,`отражённым эффектом ${label}`,foeKey,{bypassShield:true});
-      return true;
-    })) return false;
-    if(consumeAizenShield(foeKey,sideKey,label)) return false;
-    await v32AnimateLaMuerteTargets(foeKey,victims);
-    for(const c of [...victims]) destroyCard(foeKey,c,label,sideKey,{bypassShield:true});
-    return true;
-  }
 
   async function chooseFieldTarget(actorKey,targetSideKey,predicate,title,subtitle=""){
     const opts=fieldTargetOptions(targetSideKey,predicate);
@@ -18908,7 +18885,6 @@ function isNanaoBarrierActive(card){
     }
     return el;
   }
-  function abilityIcon(a){ return ({medic:"✚",medicWeak:"✚",damageStrong:"↓",morale:"↑",spy:"◉",recall:"↩",executeWeak:"✦",boostWeak:"+",auraEnemy:"≋",silenceStrong:"×",musterBestias:"∞",musterVizards:"∞",musterShop:"∞",musterSchool:"∞",musterPrivaron:"∞",musterGillians:"∞",musterHollows:"∞",arbol:"樹",huecoYammy:"怒",huecoRespira:"死",harribelAura:"潮",huecoComeback:"↑",gemelosSonido:"↩",szayelAbsorb:"喰",huecoSzayelRes:"胎",glotoneria:"喰",kyokaShield:"鏡",tousenTransform:"変",teslaBond:"+",barraganFraccion:"王",grimmFraccion:"豹",huecoAdultNel:"変",huecoSegunda:"雷",huecoAyon:"獣",huecoLosLobos:"狼",huecoBerserk:"狂",fullbringerAura:"＋",yoruichiShunpo:"瞬",uraharaReflect:"盾",balance:"⇄",battleSpirit:"↑",shinjiMasks:"仮",tatsukiBond:"+",bookEnd:"本",digitalPrison:"▣",hellGates:"獄",returnTechnique:"↩",reiatsuPressure:"圧",overcome:"晴",hogyoku:"崩",hollowification:"仮",ceroSincretico:"零",laMuerteExecute:"断",sodeFreeze:"雪",reishiAbsorb:"霊",quincyPride:"誇",getsugaExecute:"月",dollhouse:"家",dirtyBoots:"靴",donHorn:"角",schoolBond:"結",medicOrdinary:"✚",fullerSummon:"群",gillianHorde:"群",hordeBond:"結",extinguir:"封",omaedaShunpoGuard:"瞬",timeTellsNoLies:"時",jackpotKnuckle:"拳"}[a]||"◆"); }
   const ABILITY_NAMES={none:"Без способности",medic:"Медик",medicWeak:"Медик",damageStrong:"Давление",morale:"Мораль",spy:"Разведчик",recall:"Возврат",executeWeak:"Казнь",boostWeak:"Усиление",auraEnemy:"Подавляющая аура",silenceStrong:"Подавление",musterBestias:"Созыв",musterVizards:"Созыв: Вайзарды",musterShop:"Созыв: Лавка Урахары",musterSchool:"Созыв: Школьные друзья",balance:"Баланс",battleSpirit:"Боевой дух",shinjiMasks:"Маски Вайзардов / Саканадэ",tatsukiBond:"Помощь друзей",bookEnd:"Book of the End",digitalPrison:"Digital Prison",hellGates:"Врата Ада",returnTechnique:"Возврат",reiatsuPressure:"Давление реацу",overcome:"Превозмогание",bondIchigo:"Связь",bondUryu:"Связь",pairUruru:"Связь",pairJinta:"Связь",bondShunsui:"Связь",bondByakuya:"Связь",bondToshiro:"Связь",pairYumi:"Связь",pairIkkaku:"Связь",bondMayuri:"Связь",bondStarrk:"Связь",comeback:"Возвращение",comebackBig:"Возвращение",rage:"Ярость",selfBoost:"Усиление",miracle:"Чудо",harribelBoost:"Эспада",bambieBond:"Bambies",musterPrivaron:"Созыв: Приварон Эспада",musterGillians:"Созыв: Гиллианы",musterHollows:"Созыв: Пустые",arbol:"Árbol",huecoYammy:"Ярость",huecoRespira:"Respira",harribelAura:"Память Трёх Бестий",huecoComeback:"Возвращение",gemelosSonido:"Gemelos Sonído",szayelAbsorb:"Поглощение",huecoSzayelRes:"Resurrección",glotoneria:"Glotonería",kyokaShield:"Кёка Суйгэцу",tousenTransform:"Resurrección",teslaBond:"Ннойтора",barraganFraccion:"Фрасьон Баррагана",grimmFraccion:"Фрасьон Гриммджоу",huecoAdultNel:"Трансформация",huecoSegunda:"Segunda Etapa",huecoAyon:"Айон",huecoLosLobos:"Los Lobos",huecoBerserk:"Полная форма Пустого",fullbringerAura:"Лидер Fullbringer",yoruichiShunpo:"Шунпо",uraharaReflect:"Бенихимэ — отражение",hogyoku:"Хогёку",hollowification:"Пустофикация",ceroSincretico:"Cero Sincrético",laMuerteExecute:"La Muerte",sodeFreeze:"Содэ но Сираюки",reishiAbsorb:"Поглощение рейси",quincyPride:"Гордость Квинси",getsugaExecute:"Гэцуга Тэнсё",dollhouse:"Dollhouse",dirtyBoots:"Dirty Boots",donHorn:"Встроенный Рог",schoolBond:"Прочная связь",medicOrdinary:"Медик",fullerSummon:"Орда Пустых",gillianHorde:"Созыв Пустых — Гиллиан-призыватель",hordeBond:"Прочная связь: Орда",extinguir:"Extinguir",omaedaShunpoGuard:"Шунпо / Телохранитель",timeTellsNoLies:"Time Tells No Lies",jackpotKnuckle:"Jackpot Knuckle"};
   Object.assign(ABILITY_NAMES,{soulSasakibe:"Kokō Gonryō Rikyū",soulRoseShow:"Kinshara Butōdan",soulWabisuke:"Вабисукэ",soulWabisukeLate:"Вабисукэ / Полумёртвый",soulHealing:"Лечение",soulSakanade:"Sakanade",soulKido:"Кидо",soulKenseiAura:"Капитан 9-го отряда",soulKazeshini:"Кадзэсини",soulMashiro:"Супер-лейтенант",soulIceField:"Ледяное поле",soulRangikuBond:"Связь капитана",soulBattleThirst:"Жажда боя",soulYachiruAura:"Рядом с Кэнпати",soulIkkakuBond:"Прочная связь",soulYumichikaBond:"Прочная связь",soulEleventh:"11-й отряд",soulDrug:"Препарат",soulNemuAura:"Создание Маюри",soulResearch:"Исследование",soulOfficerBond:"Офицеры 13-го",soulKaienMentor:"Наставник Рукии",soulIchimonji:"Итимондзи",soulSayafushi:"Саяфуси",soulFateCloth:"Ткань судьбы",soulSoulFood:"Пища души",soulHotSprings:"Горячие источники",soulToshiroComplete:"Завершённый Хёринмару",soulHakka:"Hakka no Togame",soulNozarashi:"Нодзараси"});
 
@@ -19901,6 +19877,7 @@ function isNanaoBarrierActive(card){
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
     flyer.classList.add('card-flight','deck-summon-flight','compact-card');
     flyer.querySelector('.card-info-panel')?.remove();
+    flyer.querySelector('.row-badge')?.remove();
     document.body.appendChild(flyer);
     document.body.classList.add('card-flight-active');
     let landed=false;
@@ -20044,11 +20021,6 @@ function isNanaoBarrierActive(card){
       setTimeout(()=>board.classList.remove('table-impact-kick'),240);
     }
     setTimeout(()=>impact.remove(),980);
-  }
-  function spawnLandingImpact(uid){
-    const cardEl=document.querySelector(`.row-cards .card[data-uid="${uid}"]`);
-    if(!cardEl) return;
-    spawnLandingImpactAtRect(cardEl.getBoundingClientRect());
   }
 
   const LIVE_GAMEPLAY_ROW_CHOICE_ABILITIES=new Set(["soulShunsuiRandom","soulRoseShow","soulByakuyaIkkaSenjinka","soulFateCloth","soulHotSprings","soulToshiroComplete"]);
@@ -22076,61 +22048,6 @@ function v242CardElement(sideKey,row,uid){
     else { reels=["7","7","7"]; outcome="jackpot"; }
     return {reels,outcome};
   }
-  async function v43AnimateJackpotKnuckle(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid,reels,outcome){
-    v31ClearAbilityTargetLock(targetUid);
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    const sourceRect=visibleRect(v242CardElement(sourceSideKey,sourceRow,sourceUid)) || v254LeaderSourceRect(sourceSideKey) || v243RowStartRect(sourceSideKey,sourceRow) || v243DefaultEffectRowStart(sourceSideKey);
-    const targetEl=v242CardElement(targetSideKey,targetRow,targetUid);
-    const targetRect=visibleRect(targetEl) || visibleRect(v242RowElement(targetSideKey,targetRow)) || v243RowStartRect(targetSideKey,targetRow) || v243DefaultEffectRowStart(targetSideKey);
-    if(!targetRect){ await waitForMs(340); return; }
-    const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-    const sx=(sourceRect?.left||targetRect.left)+((sourceRect?.width)||targetRect.width)*.52;
-    const sy=(sourceRect?.top||targetRect.top)+((sourceRect?.height)||targetRect.height)*.46;
-    const tx=targetRect.left+targetRect.width*.5;
-    const ty=targetRect.top+targetRect.height*.5;
-    const mx=clamp(tx,155,innerWidth-155);
-    const my=clamp(ty-112,104,innerHeight-112);
-    const dx=mx-sx, dy=my-sy, len=Math.max(80,Math.hypot(dx,dy));
-    const ang=(Math.atan2(dy,dx)*180/Math.PI).toFixed(2)+"deg";
-    const stage=document.createElement('div');
-    stage.className=`v43-jackpot-stage result-${outcome}`;
-    stage.style.setProperty('--sx',`${sx}px`); stage.style.setProperty('--sy',`${sy}px`);
-    stage.style.setProperty('--tx',`${tx}px`); stage.style.setProperty('--ty',`${ty}px`);
-    stage.style.setProperty('--mx',`${mx}px`); stage.style.setProperty('--my',`${my}px`);
-    stage.style.setProperty('--len',`${len}px`); stage.style.setProperty('--ang',ang);
-    const resultLabel=outcome==='jackpot' ? '777 — JACKPOT' : outcome==='two' ? '77 — −4 POWER' : 'ONE 7 — NO EFFECT';
-    stage.innerHTML=`<div class="v43-jackpot-backdrop"></div><div class="v43-jackpot-bolt"></div><div class="v43-jackpot-machine"><div class="v43-jackpot-top"><span class="lamp"></span><span>JACKPOT KNUCKLE</span><span class="lamp"></span></div><div class="v43-jackpot-body"><div class="v43-jackpot-wheel"></div><div class="v43-jackpot-window"></div><div class="v43-jackpot-wheel"></div></div><div class="v43-jackpot-result">${resultLabel}</div></div><div class="v43-jackpot-burst"></div>`;
-    const windowEl=stage.querySelector('.v43-jackpot-window');
-    const filler=["BAR","★","CHERRY","BELL","7"];
-    reels.forEach((finalSymbol,idx)=>{
-      const reel=document.createElement('div'); reel.className='v43-jackpot-reel';
-      const track=document.createElement('div'); track.className='v43-jackpot-track';
-      const seq=[];
-      for(let i=0;i<8+idx*2;i++) seq.push(filler[randomIndex(filler.length)]);
-      seq.push(finalSymbol,finalSymbol);
-      for(const sym of seq){
-        const item=document.createElement('div');
-        item.className=`v43-jackpot-symbol ${sym==='7'?'seven':'non7'}`;
-        item.textContent=sym;
-        track.appendChild(item);
-      }
-      reel.appendChild(track); windowEl?.appendChild(reel);
-      const itemH=64;
-      const finalY=-(seq.length-2)*itemH;
-      track.animate([
-        {transform:'translateY(0px)'},
-        {offset:.84,transform:`translateY(${(finalY-itemH*.36).toFixed(1)}px)`},
-        {transform:`translateY(${finalY}px)`}
-      ],{duration:1260+idx*240,easing:'cubic-bezier(.12,.78,.16,1)',fill:'forwards'});
-    });
-    document.body.appendChild(stage);
-    if(targetEl?.isConnected) targetEl.classList.add('v43-slot-target-hit');
-    await waitForMs(1820);
-    stage.classList.add('result-ready');
-    await waitForMs(420);
-    targetEl?.classList.remove('v43-slot-target-hit');
-    stage.remove();
-  }
 
 
 
@@ -22351,86 +22268,6 @@ function v242CardElement(sideKey,row,uid){
     stage.remove();
   }
 
-  async function v44AnimateGetsugaVerticalCut(targetSideKey,targetRow,targetUid){
-    const cardEl=v242CardElement(targetSideKey,targetRow,targetUid);
-    if(!cardEl){ await waitForMs(120); return; }
-    const r=cardEl.getBoundingClientRect();
-    if(!r || r.width<2 || r.height<2){ await waitForMs(120); return; }
-    const stage=document.createElement('div');
-    stage.className='v44-getsuga-cut-stage';
-    stage.style.left=`${r.left}px`;
-    stage.style.top=`${r.top}px`;
-    stage.style.width=`${r.width}px`;
-    stage.style.height=`${r.height}px`;
-
-    const seam=[];
-    const pointCount=11;
-    const centerBase=50;
-    for(let i=0;i<pointCount;i++){
-      const t=i/(pointCount-1);
-      const y=92 + (8-92)*t;
-      const edge=Math.sin(Math.PI*t);
-      const jitter=(Math.random()*2-1)*(1.2+edge*1.8);
-      const x=Math.max(42,Math.min(58,centerBase+jitter));
-      seam.push({x:+x.toFixed(2),y:+y.toFixed(2)});
-    }
-    seam[0]={x:50,y:92};
-    seam[seam.length-1]={x:50,y:8};
-    const seamForward=seam.map(p=>`${p.x}% ${p.y}%`).join(',');
-    const seamBackward=[...seam].reverse().map(p=>`${p.x}% ${p.y}%`).join(',');
-
-    const makeHalf=(kind,clip)=>{
-      const half=cardEl.cloneNode(true);
-      half.classList.remove('selected','enter','landed-impact','dragging','with-info','ability-target-locked','v260-getsuga-target-hit','v32-getsuga-shake');
-      half.classList.add('v44-getsuga-half',kind);
-      half.querySelectorAll('.row-badge').forEach(n=>n.remove());
-      half.style.setProperty('--cut-clip',clip);
-      return half;
-    };
-    const left=makeHalf('left',`polygon(0 0,${seamBackward},0 100%)`);
-    const right=makeHalf('right',`polygon(100% 0,100% 100%,${seamForward})`);
-    stage.appendChild(left);
-    stage.appendChild(right);
-
-    const len=r.height*0.92;
-    const midX=r.width*0.5;
-    const midY=r.height*0.5;
-    for(const cls of ['v44-getsuga-seam-trail','v44-getsuga-seam-glow','v44-getsuga-seam-core']){
-      const line=document.createElement('div');
-      line.className=cls;
-      line.style.setProperty('--mx',`${midX}px`);
-      line.style.setProperty('--my',`${midY}px`);
-      line.style.setProperty('--len',`${len}px`);
-      stage.appendChild(line);
-    }
-    const flash=document.createElement('div');
-    flash.className='v44-getsuga-flash';
-    flash.style.setProperty('--mx',`${midX}px`);
-    flash.style.setProperty('--my',`${midY}px`);
-    stage.appendChild(flash);
-
-    for(let i=0;i<14;i++){
-      const t=Math.random();
-      const p=seam[Math.max(0,Math.min(seam.length-1,Math.round(t*(seam.length-1))))];
-      const spark=document.createElement('i');
-      spark.className='v44-getsuga-spark';
-      spark.style.setProperty('--x',`${(r.width*(p.x/100) + (-1+Math.random()*2)*4).toFixed(1)}px`);
-      spark.style.setProperty('--y',`${(r.height*(p.y/100)).toFixed(1)}px`);
-      spark.style.setProperty('--w',`${(1.3+Math.random()*1.2).toFixed(1)}px`);
-      spark.style.setProperty('--h',`${(10+Math.random()*12).toFixed(0)}px`);
-      spark.style.setProperty('--rot',`${(-25+Math.random()*50).toFixed(1)}deg`);
-      spark.style.setProperty('--dy',`${(-10-Math.random()*18).toFixed(1)}px`);
-      spark.style.setProperty('--delay',`${Math.floor(Math.random()*100)}ms`);
-      spark.style.setProperty('--dur',`${(260+Math.random()*180).toFixed(0)}ms`);
-      stage.appendChild(spark);
-    }
-
-    document.body.appendChild(stage);
-    cardEl.style.visibility='hidden';
-    await waitForMs(560);
-    stage.remove();
-    if(cardEl?.isConnected && cardEl.style.visibility==='hidden') cardEl.style.visibility='';
-  }
 
   async function v254AnimateGetsugaTensho(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid,opts={}){
     return await v46AnimateGetsugaTensho(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid,opts);
@@ -23539,10 +23376,6 @@ ${template.desc}`:""}`;
     await processOnlinePhase();
     return true;
   }
-  async function tryStartOnlineMatch(){
-
-    return maybeFinalizeOnlinePregame();
-  }
   function resetNetworkSession(){
     if(networkSession.guestDisconnectTimer) clearTimeout(networkSession.guestDisconnectTimer);
     if(networkSession.hostDisconnectTimer) clearTimeout(networkSession.hostDisconnectTimer);
@@ -23776,32 +23609,6 @@ ${template.desc}`:""}`;
     });
   }
 
-  function createPeerAndWait(id){
-    return new Promise((resolve,reject)=>{
-      if(!peerJsAvailable()){ reject(makeOnlineDiagError("network","PeerJS не загрузился. Для ONLINE DUEL нужен интернет.")); return; }
-      let peer;
-      try{
-        onlineDiagLog("Creating PeerJS peer",{requestedId:id||null,debug:3,rtcConfig:onlineRtcConfig()});
-        peer=new Peer(id,{debug:3,config:onlineRtcConfig()});
-      }catch(err){ reject(err); return; }
-      let settled=false;
-      const timer=setTimeout(()=>{
-        if(settled) return; settled=true;
-        onlineDiagWarn("PeerJS signalling timeout",{requestedId:id||null,peerId:peer?.id||null});
-        try{peer.destroy();}catch(_e){}
-        reject(makeOnlineDiagError("signalling-timeout","PeerJS Cloud не ответил за 12 секунд"));
-      },12000);
-      peer.on("open",peerId=>{
-        if(settled) return; settled=true; clearTimeout(timer);
-        onlineDiagLog("PeerJS connected / ID received",{requestedId:id||null,peerId:peerId||peer?.id||null});
-        resolve(peer);
-      });
-      peer.on("error",err=>{
-        onlineDiagWarn("PeerJS startup error",{requestedId:id||null,peerId:peer?.id||null,type:err?.type||null,message:err?.message||String(err)});
-        if(settled) return; settled=true; clearTimeout(timer); try{peer.destroy();}catch(_e){} reject(err);
-      });
-    });
-  }
   async function createOnlineRoom(){
     const status=$("#networkCreateStatus"), btn=$("#networkCreateBtn");
     if(btn) btn.disabled=true;
@@ -23836,87 +23643,6 @@ ${template.desc}`:""}`;
       if(status) status.textContent=`Не удалось создать комнату: ${p2pErrorText(err)}.`;
       return false;
     }finally{ if(btn) btn.disabled=false; }
-  }
-  function waitForGuestConnectionReady(peer,conn,status,targetPeerId){
-    return new Promise((resolve,reject)=>{
-      let settled=false;
-      let opened=!!conn?.open;
-      let cleanupPc=()=>{};
-      const timer=setTimeout(()=>fail(makeOnlineDiagError("connect-timeout","Connection handshake timed out after 45 seconds",{targetPeerId,snapshot:peerConnectionSnapshot(conn)})),45000);
-      const cleanup=()=>{
-        clearTimeout(timer);
-        cleanupPc();
-        removeEmitterListener(conn,"open",onOpen);
-        removeEmitterListener(conn,"data",onData);
-        removeEmitterListener(conn,"error",onConnError);
-        removeEmitterListener(conn,"close",onClose);
-        removeEmitterListener(peer,"error",onPeerError);
-        removeEmitterListener(peer,"disconnected",onPeerDisconnected);
-      };
-      const ok=()=>{ if(settled) return; settled=true; cleanup(); resolve(); };
-      function fail(err){ if(settled) return; settled=true; cleanup(); reject(err); }
-      const onOpen=()=>{
-        opened=true;
-        appendDiagStatus(status,"DataChannel open");
-        onlineDiagLog("Guest DataChannel open",{peerId:peer?.id||null,targetPeerId,connPeer:conn?.peer||null,states:peerConnectionSnapshot(conn)});
-      };
-      const onData=data=>{
-        if(!data||typeof data!=="object") return;
-        if(data.type==="connection_rejected"){
-          try{ conn._bscHandshakeRejected=true; }catch(_e){}
-          const reason=data.payload?.reason||"host-rejected";
-          const detail=data.payload?.detail||reason;
-          const type=reason==="room-busy"?"room-busy":reason==="protocol-mismatch"?"protocol-mismatch":reason==="version-mismatch"?"version-mismatch":reason==="host-state"?"host-state":"host-rejected";
-          fail(makeOnlineDiagError(type,detail,{reason:detail,expected:data.payload?.expected,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
-          return;
-        }
-        if(data.type==="room_busy"){
-          try{ conn._bscHandshakeRejected=true; }catch(_e){}
-          fail(makeOnlineDiagError("room-busy","room busy",{targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
-          return;
-        }
-        if(data.type==="version_mismatch"){
-          try{ conn._bscHandshakeRejected=true; }catch(_e){}
-          fail(makeOnlineDiagError("version-mismatch","gameVersion mismatch",{expected:data.payload?.expected||ONLINE_GAME_VERSION,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
-          return;
-        }
-        if(data.type==="hello"){
-          if(!opened) onOpen();
-          appendDiagStatus(status,"HOST handshake received");
-          onlineDiagLog("Guest received HOST hello",{peerId:peer?.id||null,targetPeerId,senderRole:data.senderRole||null,states:peerConnectionSnapshot(conn)});
-          ok();
-        }
-      };
-      const onConnError=err=>{
-        onlineDiagWarn("Guest DataConnection error before ready",{peerId:peer?.id||null,targetPeerId,type:err?.type||null,message:err?.message||String(err),states:peerConnectionSnapshot(conn)});
-        if(err?.type==="webrtc") fail(makeOnlineDiagError("ice-failed",err?.message||"WebRTC error",{cause:err,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
-        else fail(err);
-      };
-      const onClose=()=>{
-        if(settled) return;
-        const err=classifyPreReadyClose(peer,conn);
-        onlineDiagWarn("Guest connection closed before ready",{peerId:peer?.id||null,targetPeerId,opened,errorType:err.type,states:peerConnectionSnapshot(conn)});
-        fail(err);
-      };
-      const onPeerError=err=>{
-        onlineDiagWarn("Guest PeerJS error while joining",{peerId:peer?.id||null,targetPeerId,type:err?.type||null,message:err?.message||String(err)});
-        if(err?.type==="peer-unavailable") fail(err);
-        else if(err?.type==="webrtc") fail(makeOnlineDiagError("ice-failed",err?.message||"WebRTC failed",{cause:err,targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
-        else if(err?.type==="network"||err?.type==="socket-error"||err?.type==="socket-closed"||err?.type==="server-error") fail(makeOnlineDiagError("signalling-disconnected",err?.message||"PeerJS signalling disconnected",{cause:err,targetPeerId}));
-      };
-      const onPeerDisconnected=()=>{
-        if(settled||conn?.open) return;
-        fail(makeOnlineDiagError("signalling-disconnected","PeerJS signalling disconnected before connection became ready",{targetPeerId,snapshot:peerConnectionSnapshot(conn)}));
-      };
-      conn.on("open",onOpen);
-      conn.on("data",onData);
-      conn.on("error",onConnError);
-      conn.on("close",onClose);
-      peer.on("error",onPeerError);
-      peer.on("disconnected",onPeerDisconnected);
-      cleanupPc=attachPeerConnectionDiagnostics(conn,{side:"guest",statusEl:status,onFailure:fail});
-      if(conn.open) onOpen();
-    });
   }
   async function joinOnlineRoom(){
     const status=$("#networkJoinStatus"), btn=$("#networkJoinBtn");
@@ -24666,19 +24392,6 @@ ${template.desc}`:""}`;
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupDeckBuilderScrollWrapper,{once:true});
   else setupDeckBuilderScrollWrapper();
 })();</script>
-
-<script id="v312-pwa-runtime">(() => {
-  const root=document.documentElement;
-  const standalone=window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone===true;
-  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  root.classList.toggle('pwa-standalone',!!standalone);
-  root.classList.toggle('pwa-browser-ios',!!isIOS&&!standalone);
-  document.getElementById('pwaInstallHintClose')?.addEventListener('click',()=>root.classList.remove('pwa-browser-ios'));
-  if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(err=>console.debug('[PWA] service worker:',err?.message||err));},{once:true});
-  }
-})();</script>
-
 <script id="v318-front-menu-shell-guard">(() => {
   const frontIds=["modeOverlay","networkOverlay","networkCreateOverlay","networkJoinOverlay","startOverlay","deckBuilderOverlay"];
   const sync=()=>{
