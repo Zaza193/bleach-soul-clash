@@ -13357,6 +13357,314 @@ html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm .v61-d
   line-height:1!important;
 }
 </style>
+
+<style id="v63-mobile-followup-tune">
+/* V63 — mobile follow-up tune: battle buttons, browser hand, and CHOOSE YOUR SOUL geometry. */
+
+/* 1) CHOOSE YOUR BATTLE: all 3 cards use the same neutral visual style on touch landscape. */
+html.touch-device.touch-landscape #modeOverlay .mode-card,
+html.touch-device.touch-landscape #modeOverlay #modeAiBtn.mode-card,
+html.touch-device.touch-landscape #modeOverlay #modeDuelBtn.mode-card,
+html.touch-device.touch-landscape #modeOverlay #modeOnlineBtn.mode-card,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay .mode-card,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay #modeAiBtn.mode-card,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay #modeDuelBtn.mode-card,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay #modeOnlineBtn.mode-card{
+  background:#d0cbc1!important;
+  color:#111!important;
+  border-left-color:#777!important;
+  box-shadow:inset 0 -3px 0 #777!important;
+  filter:none!important;
+}
+html.touch-device.touch-landscape #modeOverlay .mode-card span,
+html.touch-device.touch-landscape #modeOverlay #modeAiBtn.mode-card span,
+html.touch-device.touch-landscape #modeOverlay #modeDuelBtn.mode-card span,
+html.touch-device.touch-landscape #modeOverlay #modeOnlineBtn.mode-card span,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay .mode-card span,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay #modeAiBtn.mode-card span,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay #modeDuelBtn.mode-card span,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay #modeOnlineBtn.mode-card span{
+  color:#535353!important;
+}
+html.touch-device.touch-landscape #modeOverlay .mode-card:hover,
+html.touch-device.touch-landscape #modeOverlay .mode-card:focus-visible,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay .mode-card:hover,
+html.pwa-standalone.touch-device.touch-landscape #modeOverlay .mode-card:focus-visible{
+  transform:none!important;
+  background:#d0cbc1!important;
+}
+
+/* 2) Browser battle hand: increase to almost PWA size. */
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-wrap,
+html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap{
+  height:56px!important;
+  min-height:56px!important;
+  max-height:56px!important;
+  grid-template-columns:minmax(0,1fr) 34px!important;
+  overflow:hidden!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand{
+  height:56px!important;
+  min-height:56px!important;
+  max-height:56px!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:flex-start!important;
+  gap:1px!important;
+  padding:2px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card,
+html:not(.pwa-standalone).touch-device.touch-landscape #hand.hand-expanded .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card{
+  flex:0 0 32px!important;
+  width:32px!important;
+  min-width:32px!important;
+  max-width:32px!important;
+  height:47px!important;
+  min-height:47px!important;
+  max-height:47px!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  overflow:visible!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .card-face,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face{
+  width:32px!important;
+  min-width:32px!important;
+  max-width:32px!important;
+  height:47px!important;
+  min-height:47px!important;
+  max-height:47px!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .power,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:0!important;
+  transform:translateX(-50%)!important;
+  width:12px!important;
+  min-width:12px!important;
+  max-width:12px!important;
+  height:12px!important;
+  min-height:12px!important;
+  max-height:12px!important;
+  border-radius:12px!important;
+  padding:0!important;
+  font-size:7px!important;
+  line-height:12px!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape #hand .card .ability-icon,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .ability-icon{
+  min-width:8px!important;
+  width:auto!important;
+  height:8px!important;
+  padding:0 1px!important;
+  font-size:4.5px!important;
+  line-height:8px!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape .hand-actions,
+html:not(.pwa-standalone).phone-device.phone-landscape .hand-actions{
+  width:34px!important;
+  min-width:34px!important;
+  height:56px!important;
+  min-height:56px!important;
+  max-height:56px!important;
+  padding:2px!important;
+}
+html:not(.pwa-standalone).touch-device.touch-landscape .pass-btn,
+html:not(.pwa-standalone).phone-device.phone-landscape .pass-btn{
+  width:29px!important;
+  height:28px!important;
+  min-width:29px!important;
+  min-height:28px!important;
+  font-size:4.5px!important;
+  padding:0 1px!important;
+  margin:0!important;
+}
+
+/* 3) CHOOSE YOUR SOUL — strict grid, no overlap, and true attached semicircle. */
+html.touch-device.touch-landscape #mulliganOverlay,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay{
+  --v63-mulligan-w:72px;
+  --v63-mulligan-h:108px;
+  --v63-mulligan-power-w:26px;
+  --v63-mulligan-power-h:13px;
+  --v63-mulligan-col-gap:8px;
+  --v63-mulligan-row-gap:8px;
+}
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay{
+  --v63-mulligan-w:76px;
+  --v63-mulligan-h:114px;
+  --v63-mulligan-power-w:28px;
+  --v63-mulligan-power-h:14px;
+}
+@media (max-height:370px){
+  html.touch-device.touch-landscape #mulliganOverlay,
+  html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay{
+    --v63-mulligan-w:66px;
+    --v63-mulligan-h:99px;
+    --v63-mulligan-power-w:24px;
+    --v63-mulligan-power-h:12px;
+    --v63-mulligan-col-gap:7px;
+    --v63-mulligan-row-gap:7px;
+  }
+  html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay{
+    --v63-mulligan-w:70px;
+    --v63-mulligan-h:105px;
+    --v63-mulligan-power-w:25px;
+    --v63-mulligan-power-h:12px;
+  }
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-modal,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-modal{
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,var(--v63-mulligan-w))!important;
+  grid-template-rows:repeat(2,var(--v63-mulligan-h))!important;
+  grid-auto-flow:row!important;
+  grid-auto-rows:var(--v63-mulligan-h)!important;
+  column-gap:var(--v63-mulligan-col-gap)!important;
+  row-gap:var(--v63-mulligan-row-gap)!important;
+  padding:4px 2px 6px!important;
+  align-content:center!important;
+  justify-content:center!important;
+  align-items:center!important;
+  justify-items:center!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap{
+  width:var(--v63-mulligan-w)!important;
+  min-width:var(--v63-mulligan-w)!important;
+  max-width:var(--v63-mulligan-w)!important;
+  height:var(--v63-mulligan-h)!important;
+  min-height:var(--v63-mulligan-h)!important;
+  max-height:var(--v63-mulligan-h)!important;
+  display:block!important;
+  align-self:center!important;
+  justify-self:center!important;
+  overflow:visible!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card{
+  box-sizing:border-box!important;
+  width:var(--v63-mulligan-w)!important;
+  min-width:var(--v63-mulligan-w)!important;
+  max-width:var(--v63-mulligan-w)!important;
+  height:var(--v63-mulligan-h)!important;
+  min-height:var(--v63-mulligan-h)!important;
+  max-height:var(--v63-mulligan-h)!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  overflow:visible!important;
+  transform:none!important;
+  position:relative!important;
+  z-index:1!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .card-face,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-face,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .card-face,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-face{
+  box-sizing:border-box!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:0!important;
+  transform:translateX(-50%)!important;
+  width:var(--v63-mulligan-power-w)!important;
+  min-width:var(--v63-mulligan-power-w)!important;
+  max-width:var(--v63-mulligan-power-w)!important;
+  height:var(--v63-mulligan-power-h)!important;
+  min-height:var(--v63-mulligan-power-h)!important;
+  max-height:var(--v63-mulligan-power-h)!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  padding:0 0 1px!important;
+  border-radius:999px 999px 0 0!important;
+  border:1px solid #f6f3ea!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f6f3ea!important;
+  box-shadow:0 -1px 0 #050608!important;
+  font-size:10px!important;
+  line-height:calc(var(--v63-mulligan-power-h) - 2px)!important;
+  overflow:hidden!important;
+  z-index:4!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace:hover,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace:hover,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace:hover,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace:hover,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace:focus-within,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace:focus-within,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace:focus-within,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace:focus-within{
+  transform:none!important;
+  rotate:none!important;
+  box-shadow:0 0 0 2px var(--danger)!important;
+  z-index:3!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace::after,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace::after,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace::after,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace::after{
+  inset:auto 4px 18px!important;
+  font-size:7px!important;
+  line-height:1.05!important;
+  padding:3px 2px!important;
+  z-index:5!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace .card-face::after,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace .card-face::after,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card.replace .card-face::after,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card.replace .card-face::after{
+  inset:0!important;
+  z-index:2!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card:not(.replace):hover,
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):hover,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-grid .card:not(.replace):hover,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-card-wrap>.card:not(.replace):hover{
+  transform:none!important;
+}
+html.touch-device.touch-landscape #mulliganOverlay .mulligan-nameplate,
+html.pwa-standalone.touch-device.touch-landscape #mulliganOverlay .mulligan-nameplate{
+  display:none!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
