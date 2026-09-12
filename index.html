@@ -14204,6 +14204,236 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulligan
 }
 </style>
 
+
+<style id="v66-mobile-mulligan-hand-scroll-fix">
+/*
+ V66
+ 1. Mulligan power returns to the intended card geometry: a semicircle
+    embedded into the bottom edge of the card, not a detached badge below it.
+ 2. Mobile browser hand: permanently suppress the legacy handScrollDock
+    and cancel its 27px bottom-padding side effect.
+*/
+
+/* =========================================================
+   1) CHOOSE YOUR SOUL — power belongs to the card face.
+   ========================================================= */
+
+/* Keep the v65 sizes, but the cell/card no longer needs an external power gutter. */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v66-mulligan-w:60px;
+  --v66-mulligan-h:90px;
+  --v66-power-w:23px;
+  --v66-power-h:12px;
+  --v66-col-gap:6px;
+  --v66-row-gap:9px;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v66-mulligan-w:68px;
+  --v66-mulligan-h:102px;
+  --v66-power-w:26px;
+  --v66-power-h:13px;
+  --v66-col-gap:7px;
+  --v66-row-gap:10px;
+}
+
+@media (max-height:370px){
+  html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v66-mulligan-w:56px;
+    --v66-mulligan-h:84px;
+    --v66-power-w:21px;
+    --v66-power-h:11px;
+    --v66-col-gap:5px;
+    --v66-row-gap:7px;
+  }
+  html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+  html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v66-mulligan-w:62px;
+    --v66-mulligan-h:93px;
+    --v66-power-w:23px;
+    --v66-power-h:12px;
+    --v66-col-gap:6px;
+    --v66-row-gap:8px;
+  }
+}
+
+/* Exact grid sizing. */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid{
+  display:grid!important;
+  grid-template-columns:repeat(6,var(--v66-mulligan-w))!important;
+  grid-template-rows:repeat(2,var(--v66-mulligan-h))!important;
+  grid-auto-rows:var(--v66-mulligan-h)!important;
+  grid-auto-flow:row!important;
+
+  column-gap:var(--v66-col-gap)!important;
+  row-gap:var(--v66-row-gap)!important;
+
+  align-content:center!important;
+  justify-content:center!important;
+  align-items:center!important;
+  justify-items:center!important;
+
+  padding:4px 2px 6px!important;
+  overflow:hidden!important;
+}
+
+/* Wrapper and card are exactly one card-sized box. */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card{
+  width:var(--v66-mulligan-w)!important;
+  min-width:var(--v66-mulligan-w)!important;
+  max-width:var(--v66-mulligan-w)!important;
+
+  height:var(--v66-mulligan-h)!important;
+  min-height:var(--v66-mulligan-h)!important;
+  max-height:var(--v66-mulligan-h)!important;
+
+  aspect-ratio:auto!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  position:relative!important;
+  transform:none!important;
+}
+
+/* Outer card may expose the selection outline, face clips artwork normally. */
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card{
+  overflow:visible!important;
+}
+
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face{
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  aspect-ratio:auto!important;
+  position:relative!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+
+/*
+ True semicircle INSIDE the lower edge of the artwork.
+ This matches the established card design and cannot collide with the next row.
+ */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power{
+  position:absolute!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:1px!important;
+  transform:translateX(-50%)!important;
+
+  width:var(--v66-power-w)!important;
+  min-width:var(--v66-power-w)!important;
+  max-width:var(--v66-power-w)!important;
+  height:var(--v66-power-h)!important;
+  min-height:var(--v66-power-h)!important;
+  max-height:var(--v66-power-h)!important;
+
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:1px 0 0!important;
+
+  background:#050608!important;
+  color:#f6f3ea!important;
+
+  border:1px solid #f6f3ea!important;
+  border-bottom:0!important;
+  border-radius:999px 999px 0 0!important;
+  outline:0!important;
+  clip-path:none!important;
+
+  box-shadow:inset 0 0 0 1px #050608!important;
+
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:9px!important;
+  font-weight:400!important;
+  line-height:1!important;
+  text-align:center!important;
+
+  overflow:hidden!important;
+  z-index:30!important;
+}
+
+/* Selection/lock never moves a touch mulligan card. */
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace:hover,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace:focus-within,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace:focus-within,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card:hover,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card:hover{
+  transform:none!important;
+  translate:none!important;
+  rotate:none!important;
+  margin:0!important;
+}
+
+/* =========================================================
+   2) MOBILE BROWSER HAND — kill the legacy range dock.
+   ========================================================= */
+
+/*
+ The legacy selector:
+   .hand.hand-scroll-needed + #handScrollDock.hand-scroll-dock
+ contains an ID and therefore beats ordinary mobile display:none rules.
+ Match/exceed that specificity explicitly in browser mode.
+ */
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-scroll-needed + #handScrollDock.hand-scroll-dock,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-scroll-needed + #handScrollDock.hand-scroll-dock,
+html:not(.pwa-standalone).phone-device.phone-landscape #handScrollDock.hand-scroll-dock,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #handScrollDock.hand-scroll-dock{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+/* Remove the 27px space reserved for that hidden dock. */
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-scroll-needed,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-scroll-needed{
+  padding:3px 2px!important;
+  padding-bottom:3px!important;
+  align-items:flex-end!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+}
+
+/* Hide any native WebKit horizontal scrollbar as well. */
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-scroll-needed::-webkit-scrollbar,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-scroll-needed::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  background:transparent!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
