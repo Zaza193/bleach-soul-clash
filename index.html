@@ -14434,6 +14434,202 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand
 }
 </style>
 
+
+<style id="v67-pwa-mulligan-power-final-fix">
+/* V67 — PWA-only mulligan power fix. Browser stays untouched. */
+
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  --v67-pwa-w:68px;
+  --v67-pwa-h:102px;
+  --v67-pwa-power-w:26px;
+  --v67-pwa-power-h:13px;
+  --v67-pwa-col-gap:7px;
+  --v67-pwa-row-gap:10px;
+}
+@media (max-height:370px){
+  html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay,
+  html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+    --v67-pwa-w:62px;
+    --v67-pwa-h:93px;
+    --v67-pwa-power-w:23px;
+    --v67-pwa-power-h:12px;
+    --v67-pwa-col-gap:6px;
+    --v67-pwa-row-gap:8px;
+  }
+}
+
+/* Reassert the whole PWA mulligan box model with standalone-specific selectors. */
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid{
+  display:grid!important;
+  grid-template-columns:repeat(6,var(--v67-pwa-w))!important;
+  grid-template-rows:repeat(2,var(--v67-pwa-h))!important;
+  grid-auto-rows:var(--v67-pwa-h)!important;
+  grid-auto-flow:row!important;
+  column-gap:var(--v67-pwa-col-gap)!important;
+  row-gap:var(--v67-pwa-row-gap)!important;
+  align-content:center!important;
+  justify-content:center!important;
+  align-items:center!important;
+  justify-items:center!important;
+  padding:4px 2px 6px!important;
+  overflow:hidden!important;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face{
+  width:var(--v67-pwa-w)!important;
+  min-width:var(--v67-pwa-w)!important;
+  max-width:var(--v67-pwa-w)!important;
+  height:var(--v67-pwa-h)!important;
+  min-height:var(--v67-pwa-h)!important;
+  max-height:var(--v67-pwa-h)!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card{
+  overflow:visible!important;
+  position:relative!important;
+  transform:none!important;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face{
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+/* Critical PWA-only override: true semicircle INSIDE the bottom edge of the card. */
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .mulligan-card-wrap>.card .power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .mulligan-card-wrap>.card .power,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card>.card-face>.power{
+  position:absolute!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:1px!important;
+  transform:translateX(-50%)!important;
+
+  width:var(--v67-pwa-power-w)!important;
+  min-width:var(--v67-pwa-power-w)!important;
+  max-width:var(--v67-pwa-power-w)!important;
+  height:var(--v67-pwa-power-h)!important;
+  min-height:var(--v67-pwa-power-h)!important;
+  max-height:var(--v67-pwa-power-h)!important;
+
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:1px 0 0!important;
+
+  background:#050608!important;
+  color:#f6f3ea!important;
+  border:1px solid #f6f3ea!important;
+  border-bottom:0!important;
+  border-radius:999px 999px 0 0!important;
+  outline:0!important;
+  clip-path:none!important;
+  box-shadow:inset 0 0 0 1px #050608!important;
+
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:9px!important;
+  font-weight:400!important;
+  line-height:1!important;
+  text-align:center!important;
+
+  overflow:hidden!important;
+  z-index:50!important;
+}
+
+/* Lock/select state stays visual only. */
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace:hover,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace:hover,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card.replace:focus-within,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card.replace:focus-within,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card:hover,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card:hover{
+  transform:none!important;
+  translate:none!important;
+  rotate:none!important;
+  margin:0!important;
+}
+</style>
+
+
+<style id="v68-browser-hand-full-height-fix">
+/*
+ V68 — mobile browser only.
+ V64 enlarged the hand to 62px, but a legacy browser-only board-shell rule
+ still reserved only 42px for the third grid row. Because board-shell has
+ overflow:hidden, the lower 20px of the hand/cards were clipped.
+ Keep PWA untouched.
+*/
+
+html:not(.pwa-standalone).phone-device.phone-landscape .board-shell,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell{
+  grid-template-rows:20px minmax(0,1fr) 62px!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+
+/* Keep decorative board background aligned with the real hand boundary. */
+html:not(.pwa-standalone).phone-device.phone-landscape .board-shell:before,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board-shell:before{
+  inset:20px 0 62px!important;
+}
+
+/* Reassert one coherent browser-hand geometry. */
+html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+  height:62px!important;
+  min-height:62px!important;
+  max-height:62px!important;
+  align-self:stretch!important;
+  overflow:hidden!important;
+}
+
+html:not(.pwa-standalone).phone-device.phone-landscape #hand,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
+  height:62px!important;
+  min-height:62px!important;
+  max-height:62px!important;
+  padding:3px 2px!important;
+  padding-bottom:3px!important;
+  align-items:flex-end!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+}
+
+/* Cards fit completely inside the 62px row with room for padding. */
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
+  height:53px!important;
+  min-height:53px!important;
+  max-height:53px!important;
+  align-self:flex-end!important;
+}
+
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .card-face{
+  height:53px!important;
+  min-height:53px!important;
+  max-height:53px!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
