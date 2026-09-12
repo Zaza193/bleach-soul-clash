@@ -11010,7 +11010,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .app .card .row-badge{
 }
 html.phone-device.phone-landscape .app .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) .app .card .row-badge::after{
-  content:attr(data-mobile-mark)!important;
+  content:none!important;display:none!important;
   display:inline-block!important;
   color:#fff!important;
   font-family:"Times New Roman",Georgia,serif!important;
@@ -11902,7 +11902,7 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before{content:none!important;display:none!important}
 html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge::after{
-  content:attr(data-mobile-mark)!important;
+  content:none!important;display:none!important;
   display:inline-block!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -11924,7 +11924,7 @@ html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-bad
 html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after{
-  content:attr(data-mobile-mark)!important;
+  content:none!important;display:none!important;
   display:inline-block!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -11962,7 +11962,7 @@ html.phone-device.phone-landscape #hand .card .row-badge::before,
 html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::before{content:none!important;display:none!important}
 html.phone-device.phone-landscape #hand .card .row-badge::after,
 html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::after{
-  content:attr(data-mobile-mark)!important;
+  content:none!important;display:none!important;
   display:inline-block!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -12899,6 +12899,234 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
 }
 </style>
 
+\n<style id="v60-mobile-pwa-ui-audit">
+/* V60 — authoritative mobile/PWA UI corrections. Desktop gameplay layout is unchanged. */
+
+/* Row placement marks now use real DOM spans, never generated-content glyphs. */
+.card .row-badge::before,.card .row-badge::after{content:none!important;display:none!important}
+/* The legacy mobile/PWA rules used high-specificity !important pseudo-elements. Kill them at equal/higher specificity too. */
+html.phone-device.phone-landscape .app .card .row-badge::before,
+html.phone-device.phone-landscape .app .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) .app .card .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) .app .card .row-badge::after,
+html.phone-device.phone-landscape #hand .card .row-badge::before,
+html.phone-device.phone-landscape #hand .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) #hand .card .row-badge::after,
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge::before,
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge::after,
+html.phone-device.phone-landscape #choiceOverlay .show-row-placement .row-badge::before,
+html.phone-device.phone-landscape #choiceOverlay .show-row-placement .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .show-row-placement .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .show-row-placement .row-badge::after,
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge::before,
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .card .row-badge::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge::before,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .row-badge::after,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .row-badge::after,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::before,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .row-badge::after{content:none!important;display:none!important}
+.card .row-badge>.row-badge-desktop{display:inline!important}
+.card .row-badge>.row-badge-mobile{display:none!important}
+
+html.phone-device.phone-landscape .card .row-badge>.row-badge-desktop,
+html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-desktop{display:none!important}
+html.phone-device.phone-landscape .card .row-badge>.row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-mobile{
+  display:inline-block!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-family:Georgia,"Times New Roman",Times,serif!important;
+  font-size:9px!important;font-weight:700!important;line-height:1!important;letter-spacing:0!important;word-spacing:0!important;
+  -webkit-text-stroke:.24px #000!important;paint-order:stroke fill!important;text-shadow:none!important;
+}
+html.phone-device.phone-landscape .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge{
+  color:transparent!important;-webkit-text-fill-color:transparent!important;
+  font-size:0!important;-webkit-text-stroke:0!important;text-shadow:none!important;
+  line-height:1!important;letter-spacing:0!important;word-spacing:0!important;
+}
+/* Field cards never display placement marks. */
+html.phone-device.phone-landscape .row-cards .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .row-badge{display:none!important;visibility:hidden!important}
+
+/* 1 — ASSEMBLE YOUR SOUL: use the actual button text, not Safari generated content. */
+html.phone-device.phone-landscape #deckBuilderBack,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderBack{
+  color:#111!important;-webkit-text-fill-color:#111!important;font-size:8.5px!important;
+  font-weight:1000!important;line-height:1!important;letter-spacing:.045em!important;text-indent:0!important;
+}
+html.phone-device.phone-landscape #deckBuilderConfirm,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm{
+  color:#f4f0e8!important;-webkit-text-fill-color:#f4f0e8!important;font-size:8.5px!important;
+  font-weight:1000!important;line-height:1!important;letter-spacing:.045em!important;text-indent:0!important;
+}
+html.phone-device.phone-landscape #deckBuilderBack::after,
+html.phone-device.phone-landscape #deckBuilderConfirm::after,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderBack::after,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderConfirm::after{content:none!important;display:none!important}
+
+/* Assemble cards: one clean mobile placement mark. */
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .row-badge{
+  top:3px!important;right:3px!important;display:block!important;visibility:visible!important;opacity:1!important;
+}
+html.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-item .row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-item .row-badge-mobile{font-size:10px!important}
+
+/* 2 — CHOOSE YOUR SOUL: cards and power semicircles share one geometry on browser + PWA. */
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+  width:min(78px,100%)!important;min-width:0!important;max-width:78px!important;
+  height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:2 / 3!important;margin:0 auto!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .card-face,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .card-face{
+  width:100%!important;height:auto!important;aspect-ratio:2 / 3!important;overflow:hidden!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .power,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .power,
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card .power,
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card .power{
+  left:50%!important;right:auto!important;top:auto!important;bottom:-13px!important;transform:translateX(-50%)!important;
+  width:26px!important;height:26px!important;min-width:26px!important;min-height:26px!important;max-width:26px!important;max-height:26px!important;
+  display:flex!important;align-items:flex-start!important;justify-content:center!important;
+  padding:3px 0 0!important;box-sizing:border-box!important;overflow:hidden!important;
+  border:1px solid var(--card-frame)!important;border-radius:50%!important;background:#050608!important;color:#f6f3ea!important;
+  box-shadow:inset 0 0 0 1px var(--card-ink)!important;font-size:10px!important;line-height:1!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge{
+  top:3px!important;right:3px!important;display:block!important;visibility:visible!important;opacity:1!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .row-badge-mobile{font-size:10.5px!important}
+
+/* 4 — mobile-browser hand: card itself and card-face shrink together with the 42px hand box. */
+html:not(.pwa-standalone).phone-device.phone-landscape .hand-wrap,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+  height:42px!important;min-height:42px!important;max-height:42px!important;grid-template-columns:minmax(0,1fr) 29px!important;overflow:hidden!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand{
+  height:42px!important;min-height:42px!important;max-height:42px!important;align-items:center!important;gap:1px!important;padding:1px 2px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card,
+html:not(.pwa-standalone).phone-device.phone-landscape #hand.hand-expanded .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
+  flex:0 0 26px!important;width:26px!important;min-width:26px!important;max-width:26px!important;
+  height:38px!important;min-height:38px!important;max-height:38px!important;aspect-ratio:auto!important;margin:0!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .card-face{
+  width:26px!important;min-width:26px!important;max-width:26px!important;height:38px!important;min-height:38px!important;max-height:38px!important;aspect-ratio:auto!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .ability-icon,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .ability-icon{
+  width:7px!important;height:7px!important;min-width:7px!important;max-width:7px!important;padding:0!important;font-size:4px!important;line-height:7px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .card .power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .card .power{
+  width:11px!important;height:11px!important;min-width:11px!important;min-height:11px!important;max-width:11px!important;max-height:11px!important;
+  left:50%!important;bottom:-4.5px!important;top:auto!important;transform:translateX(-50%)!important;border-radius:50%!important;
+  padding:1px 0 0!important;font-size:5.5px!important;line-height:1!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge{top:1px!important;right:1px!important}
+html:not(.pwa-standalone).phone-device.phone-landscape #hand .row-badge-mobile,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #hand .row-badge-mobile{font-size:5.8px!important;-webkit-text-stroke:.16px #000!important}
+
+/* 5 — detail-preview placement mark sits in the same top-right anchor as every other mobile card. */
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge{
+  top:3px!important;right:3px!important;display:block!important;visibility:visible!important;opacity:1!important;
+}
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge-mobile{font-size:10px!important}
+
+/* 6 — standalone PWA: explicitly suppress every legacy/desktop Roman glyph on cards. */
+html.pwa-standalone.phone-device.phone-landscape .card .row-badge>.row-badge-desktop,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-desktop{display:none!important;color:transparent!important;-webkit-text-fill-color:transparent!important}
+html.pwa-standalone.phone-device.phone-landscape .card .row-badge>.row-badge-mobile,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) .card .row-badge>.row-badge-mobile{
+  display:inline-block!important;color:#fff!important;-webkit-text-fill-color:#fff!important;-webkit-text-stroke:.24px #000!important;text-shadow:none!important;
+}
+
+/* 7 — ability target selector: keep cards readable and scroll horizontally instead of shrinking them. */
+html.phone-device.phone-landscape #choiceOverlay .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-grid{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;
+  overflow-x:auto!important;overflow-y:hidden!important;gap:8px!important;padding:6px 34px 10px!important;scroll-snap-type:x proximity!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-modal.choice-scrollable .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.choice-scrollable .choice-grid{justify-content:flex-start!important}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-btn,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{
+  flex:0 0 110px!important;width:110px!important;min-width:110px!important;max-width:110px!important;padding:3px!important;gap:3px!important;scroll-snap-align:center!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-preview.card.with-info,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.card.with-info{
+  width:100px!important;min-width:100px!important;max-width:100px!important;height:auto!important;aspect-ratio:auto!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-face{
+  width:100px!important;min-width:100px!important;max-width:100px!important;height:150px!important;min-height:150px!important;max-height:150px!important;aspect-ratio:auto!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{
+  width:100px!important;min-width:100px!important;max-width:100px!important;height:72px!important;min-height:72px!important;max-height:72px!important;flex:0 0 72px!important;margin-top:4px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.show-row-placement .row-badge{
+  display:block!important;visibility:visible!important;opacity:1!important;top:3px!important;right:3px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.show-row-placement .row-badge-mobile{font-size:10px!important}
+html.phone-device.phone-landscape #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview:not(.show-row-placement) .row-badge{display:none!important;visibility:hidden!important}
+
+@media (max-height:360px){
+  html.phone-device.phone-landscape #choiceOverlay .choice-card-btn,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{flex-basis:100px!important;width:100px!important;min-width:100px!important;max-width:100px!important}
+  html.phone-device.phone-landscape #choiceOverlay .choice-card-preview.card.with-info,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview.card.with-info,
+  html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-face,
+  html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{width:90px!important;min-width:90px!important;max-width:90px!important}
+  html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-face{height:135px!important;min-height:135px!important;max-height:135px!important}
+  html.phone-device.phone-landscape #choiceOverlay .choice-card-preview .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-preview .card-info-panel{height:62px!important;min-height:62px!important;max-height:62px!important;flex:0 0 62px!important}
+}
+</style>\n
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -16071,7 +16299,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
     const infoPanel=showInfoPanel ? `<div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>` : "";
     const rowPlacement=rowPlacementLabel(card);
     const mobileRowPlacement=rowPlacement.replaceAll("Ⅰ\u200aⅠ\u200aⅠ","Ⅲ").replaceAll("Ⅰ\u200aⅠ","Ⅱ");
-    const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}">${rowPlacement}</div>` : "";
+    const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}"><span class="row-badge-desktop">${rowPlacement}</span><span class="row-badge-mobile" aria-hidden="true">${mobileRowPlacement}</span></div>` : "";
     const sodeIce=(!inHand && isSodeFreezeActive(card))?`<div class="v32-sode-ice" aria-hidden="true"></div>`:"";
     const dollhouseOverlay=(!inHand && isDollhouseActive(card))?`<div class="v36-dollhouse-overlay" aria-hidden="true"><i class="roof"></i><i class="body"></i><i class="door"></i><i class="heart" style="left:14%;top:28%"></i><i class="heart" style="right:14%;top:31%"></i></div>`:"";
     const dirtyBootsOverlay=isDirtyBootsJackie?`<div class="v43-dirty-boots-overlay${card._dirtyBootsHero?` hero`:``}" aria-hidden="true"><i class="mud mud-a"></i><i class="mud mud-b"></i><i class="mud mud-c"></i><i class="mud mud-d"></i><i class="drip d1"></i><i class="drip d2"></i><i class="drip d3"></i><i class="speck s1"></i><i class="speck s2"></i><i class="speck s3"></i><i class="speck s4"></i>${card._dirtyBootsHero?`<i class="title">DIRTY BOOTS</i>`:``}</div>`:"";
@@ -17041,10 +17269,11 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
       || detailEl?.querySelector('.detail-preview .card');
     const handCard=handEl?.querySelector(`.card[data-uid="${card.uid}"]`);
     const previewRowBadge=detailCard?.querySelector('.row-badge')||null;
-    const oldPreviewBadgeVisibility=previewRowBadge?.style.visibility??"";
+    const handRowBadge=handCard?.querySelector('.row-badge')||null;
+    const badgeStates=[previewRowBadge,handRowBadge].filter(Boolean).map(b=>({b,display:b.style.display,visibility:b.style.visibility}));
 
-    if(previewRowBadge){
-      previewRowBadge.style.setProperty('visibility','hidden','important');
+    if(badgeStates.length){
+      badgeStates.forEach(({b})=>{ b.style.setProperty('display','none','important'); b.style.setProperty('visibility','hidden','important'); });
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       await waitForMs(55);
     }
@@ -17074,7 +17303,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .pass
       } else {
         flyer.remove();
         hidden.forEach(([el,visibility])=>{ if(el&&el.isConnected) el.style.visibility=visibility; });
-        if(previewRowBadge?.isConnected) previewRowBadge.style.visibility=oldPreviewBadgeVisibility;
+        badgeStates.forEach(({b,display,visibility})=>{ if(b?.isConnected){ if(display) b.style.setProperty('display',display); else b.style.removeProperty('display'); if(visibility) b.style.setProperty('visibility',visibility); else b.style.removeProperty('visibility'); } });
       }
       document.body.classList.remove('card-flight-active');
     }
@@ -20535,7 +20764,7 @@ function v242CardElement(sideKey,row,uid){
     el.style.setProperty("--art1",fs[0]); el.style.setProperty("--art2",fs[1]);
     const rowPlacement=rowPlacementLabel(card);
     const mobileRowPlacement=rowPlacement.replaceAll("Ⅰ\u200aⅠ\u200aⅠ","Ⅲ").replaceAll("Ⅰ\u200aⅠ","Ⅱ");
-    const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}">${rowPlacement}</div>` : "";
+    const rowBadge=!card.special && !isTargetReturnLandingCard(card) ? `<div class="row-badge" data-rows="${validRows(card).length}" data-mobile-mark="${mobileRowPlacement}" aria-label="Допустимые ряды: ${rowPlacement}"><span class="row-badge-desktop">${rowPlacement}</span><span class="row-badge-mobile" aria-hidden="true">${mobileRowPlacement}</span></div>` : "";
     el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div><div class="power">${card.special?"✦":card.power}</div>${rowBadge}<div class="assemble-lock-overlay" aria-hidden="true"><span class="legacy-lock-badge">🔒</span></div></div><div class="card-info-panel"><div class="card-info-name">${card.name}</div>${card.desc?`<div class="card-info-desc">${card.desc}</div>`:""}</div>${copyCount>1?`<div class="deck-copy-badge">×${copyCount}</div>`:""}`;
     applyCardArtElement(el.querySelector(".art"),card);
     return el;
@@ -21229,10 +21458,12 @@ ${template.desc}`:""}`;
     if(!start){ if(previewShown) clearRemotePlayedCardPreview(card); return; }
     const previewCard=previewShown ? detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`) : null;
     const previewRowBadge=previewCard?.querySelector('.row-badge')||null;
+    const oldBadgeDisplay=previewRowBadge?.style.display??"";
     const oldBadgeVisibility=previewRowBadge?.style.visibility??"";
     const oldVisibility=previewCard?.style.visibility??null;
 
     if(previewRowBadge){
+      previewRowBadge.style.setProperty('display','none','important');
       previewRowBadge.style.setProperty('visibility','hidden','important');
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       await waitForMs(55);
@@ -21258,7 +21489,7 @@ ${template.desc}`:""}`;
     } finally {
       flyer.remove();
       if(previewCard?.isConnected) previewCard.style.visibility=oldVisibility||'';
-      if(previewRowBadge?.isConnected) previewRowBadge.style.visibility=oldBadgeVisibility;
+      if(previewRowBadge?.isConnected){ if(oldBadgeDisplay) previewRowBadge.style.setProperty('display',oldBadgeDisplay); else previewRowBadge.style.removeProperty('display'); if(oldBadgeVisibility) previewRowBadge.style.setProperty('visibility',oldBadgeVisibility); else previewRowBadge.style.removeProperty('visibility'); }
       if(previewShown) clearRemotePlayedCardPreview(card);
       document.body.classList.remove('card-flight-active');
     }
