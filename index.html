@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="114";
+  const BUILD_VERSION="115";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -69,7 +69,7 @@
 
 <!-- v108: mobile SOUL SUICIDE smaller and vertically centered; keeps v107 card/preview fixes. -->
 <!-- v99 ONLINE SECURITY v4: host-authoritative Guest setup/actions; Guest snapshots redact HOST hidden hand/deck. -->
-<title>BLEACH: Soul Clash — v114 MAIN</title>
+<title>BLEACH: Soul Clash — v115 MAIN</title>
 <!-- v104 FIX #4: Leader-linked return techniques persist through render + Online snapshot restore. -->
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
@@ -16158,6 +16158,69 @@ html.tablet-device #detail .detail-preview .card.hero .frame{
 }
 </style>
 
+
+<style id="v115-desktop-2k-and-spy-fixes">
+/* v115 — 2K desktop: scale the actual battle pieces instead of leaving 50x75 cards in a 2560x1440 field. */
+@media (min-width:2000px) and (min-height:1100px) and (pointer:fine){
+  html:not(.phone-device):not(.tablet-device) .app{
+    grid-template-columns:330px minmax(0,1fr) 300px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .board-shell{
+    grid-template-rows:48px minmax(0,1fr) 180px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .board-shell:before{inset:48px 0 180px!important}
+  html:not(.phone-device):not(.tablet-device) .board{
+    grid-template-rows:repeat(3,minmax(120px,1fr)) 7px repeat(3,minmax(120px,1fr))!important;
+    padding:7px 10px 5px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .board .row{
+    grid-template-columns:118px minmax(0,1fr) 58px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .row-label{padding:9px 10px 9px 14px!important}
+  html:not(.phone-device):not(.tablet-device) .row-label strong{font-size:15px!important}
+  html:not(.phone-device):not(.tablet-device) .row-score{font-size:32px!important}
+  html:not(.phone-device):not(.tablet-device) .row-cards{gap:7px!important;padding:5px 8px!important}
+  html:not(.phone-device):not(.tablet-device) .row-cards .card{
+    flex:0 0 78px!important;width:78px!important;min-width:78px!important;max-width:78px!important;
+    height:117px!important;min-height:117px!important;max-height:117px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .row-cards .card .card-face{
+    width:78px!important;height:117px!important;min-height:117px!important;max-height:117px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .row-cards .card .power{
+    width:64px!important;min-width:64px!important;max-width:64px!important;
+    height:34px!important;min-height:34px!important;max-height:34px!important;
+    border-radius:64px 64px 0 0!important;font-size:28px!important;padding-top:3px!important;bottom:2px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .hand-wrap{
+    height:180px!important;min-height:180px!important;max-height:180px!important;
+    grid-template-columns:minmax(0,1fr) 110px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .hand{gap:7px!important;padding:18px 12px 8px!important}
+  html:not(.phone-device):not(.tablet-device) .hand .card,
+  html:not(.phone-device):not(.tablet-device) .hand.hand-expanded .card{
+    flex:0 0 104px!important;width:104px!important;min-width:104px!important;max-width:104px!important;height:151px!important;
+  }
+  html:not(.phone-device):not(.tablet-device) .pass-btn{width:78px!important;height:78px!important;font-size:18px!important}
+  html:not(.phone-device):not(.tablet-device) .rightbar{padding:12px!important;gap:10px!important}
+  html:not(.phone-device):not(.tablet-device) .rightbar .detail-preview{width:160px!important;max-width:160px!important}
+  html:not(.phone-device):not(.tablet-device) .rightbar .detail-preview .card{width:160px!important;max-width:160px!important}
+}
+
+/* v115 — desktop draw/reveal: no giant accent frame or viewport jump when Spy adds two cards. */
+@media (min-width:901px) and (pointer:fine){
+  html:not(.phone-device):not(.tablet-device) .hand .card.hand-new{
+    animation:v115DesktopHandNew .42s cubic-bezier(.2,.78,.24,1) both!important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.72),0 0 12px rgba(255,255,255,.16)!important;
+  }
+}
+@keyframes v115DesktopHandNew{
+  0%{opacity:.18;transform:translateY(12px) scale(.94)}
+  65%{opacity:1;transform:translateY(-2px) scale(1.012)}
+  100%{opacity:1;transform:none}
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -18641,7 +18704,7 @@ function isNanaoBarrierActive(card){
       snap.player._hiddenZonesRedacted=true;
       snap.lastDetail=null;
       snap.mulliganInspect=null;
-      snap.handRevealUid=null;
+      snap.handRevealUid=null; snap.handRevealUids=[];
       snap.enemy=unorderedGuestSide(snap.enemy);
       snap._redactedFor="enemy";
     }
@@ -19807,6 +19870,10 @@ function isNanaoBarrierActive(card){
     const loc=findBoardCardByUid(record.uid);
     return loc && loc.sideKey===sideKey ? loc : null;
   }
+  function hasReturnLandingTarget(sideKey,card){
+    if(!isTargetReturnLandingCard(card) || !state?.[sideKey]) return false;
+    return fieldTargetOptions(sideKey,c=>isReturnableBoardCard(c,card.uid)).length>0;
+  }
 
   function renderRow(sideKey,row,viewSide=activeViewSide()){
     const side=state[sideKey]; const el=document.createElement("div");
@@ -19814,7 +19881,7 @@ function isNanaoBarrierActive(card){
     const playable = canLocalSideAct();
     const isUnit=state.selected && !state.selected.special;
     const unitReady = isUnit && canPlayUnit(actor,state.selected);
-    const targetReturnSelected=isTargetReturnLandingCard(state.selected);
+    const targetReturnSelected=isTargetReturnLandingCard(state.selected)&&hasReturnLandingTarget(actor,state.selected);
     const isValid = playable && unitReady && !targetReturnSelected && sideKey===actor && validRows(state.selected).includes(row) && state.selected.ability!=="spy";
     const spyValid = playable && unitReady && !targetReturnSelected && state.selected && state.selected.ability==="spy" && sideKey===enemyOf(actor) && validRows(state.selected).includes(row);
     const rowTarget=state.rowTargeting;
@@ -19828,11 +19895,11 @@ function isNanaoBarrierActive(card){
       el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();finishBoardRowChoice(row);},true);
     } else if(isValid||spyValid) el.addEventListener("click",()=>playSelected(row));
     el.addEventListener("dragover",e=>{
-      const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || isTargetReturnLandingCard(c) || !playable || !canPlayUnit(actor,c)) return;
+      const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || (isTargetReturnLandingCard(c)&&hasReturnLandingTarget(actor,c)) || !playable || !canPlayUnit(actor,c)) return;
       const targetSide=c.ability==="spy"?enemyOf(actor):actor; if(sideKey===targetSide && validRows(c).includes(row)){ e.preventDefault(); el.classList.add("drop-target"); }
     });
     el.addEventListener("dragleave",()=>el.classList.remove("drop-target"));
-    el.addEventListener("drop",e=>{ e.preventDefault(); el.classList.remove("drop-target"); const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || isTargetReturnLandingCard(c)) return; state.selected=c; playSelected(row); });
+    el.addEventListener("drop",e=>{ e.preventDefault(); el.classList.remove("drop-target"); const c=state[actor].hand.find(x=>x.uid===state.draggingUid); if(!c || c.special || (isTargetReturnLandingCard(c)&&hasReturnLandingTarget(actor,c))) return; state.selected=c; playSelected(row); });
     const [name,sub]=ROW_META[row];
     const scoreClass = state.justPlayedRow===row && state.justPlayedSide===sideKey ? "row-score pulse" : "row-score";
     const pressureTag=isRowPressured(sideKey,row)?'<em class="pressure-tag">REIATSU</em>':'';
@@ -19879,7 +19946,7 @@ function isNanaoBarrierActive(card){
       }
       if(inHand && canLocalSideAct() && sideKey===actor){
         if(card.special){ state.lastDetail=card; executeSpecialTurn(actor,card,0); return; }
-        if(isTargetReturnLandingCard(card)){
+        if(isTargetReturnLandingCard(card) && hasReturnLandingTarget(actor,card)){
           state.selected=card; state.lastDetail=card; render();
           requestAnimationFrame(()=>{ if(state?.selected?.uid===card.uid && !isActionLocked()) playSelected(null); });
           return;
@@ -19887,7 +19954,7 @@ function isNanaoBarrierActive(card){
         state.selected = state.selected?.uid===card.uid?null:card; state.lastDetail=card; render();
       }
     });
-    if(inHand && !card.special && !isTargetReturnLandingCard(card) && !IS_TOUCH_UI && canLocalSideAct() && sideKey===localControlledSide()){
+    if(inHand && !card.special && !(isTargetReturnLandingCard(card)&&hasReturnLandingTarget(localControlledSide(),card)) && !IS_TOUCH_UI && canLocalSideAct() && sideKey===localControlledSide()){
       el.draggable=true;
       el.addEventListener("dragstart",e=>{ state.draggingUid=card.uid; state.selected=card; e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",card.uid); requestAnimationFrame(()=>el.classList.add("dragging")); });
       el.addEventListener("dragend",()=>{ state.draggingUid=null; el.classList.remove("dragging"); document.querySelectorAll(".drop-target").forEach(x=>x.classList.remove("drop-target")); });
@@ -20543,7 +20610,7 @@ function isNanaoBarrierActive(card){
     if(isTransformationCard(card)) return transformationCondition(sideKey,card.id);
     return true;
   }
-  function validRows(card){ if(card.special) return []; if(isTargetReturnLandingCard(card)) return [...ROWS]; if(card.id==="h_aizen"||card.id==="h_aizen_butterfly") return [...ROWS]; return card.flexible ? Array.from(new Set([card.row, card.row==="melee"?"ranged":"melee"])) : [card.row]; }
+  function validRows(card){ if(card.special) return []; if(card.id==="h_aizen"||card.id==="h_aizen_butterfly") return [...ROWS]; return card.flexible ? Array.from(new Set([card.row, card.row==="melee"?"ranged":"melee"])) : [card.row]; }
   function rowPlacementLabel(card){
     if(!card || card.special) return "";
     const allowed=new Set(validRows(card));
@@ -20558,7 +20625,11 @@ function isNanaoBarrierActive(card){
       return card;
     }
     state[sideKey].hand.push(card);
-    if(opts.reveal && sideKey===activeViewSide() && state.phase==="play" && isHumanControlled(sideKey)) state.handRevealUid=card.uid;
+    if(opts.reveal && sideKey===activeViewSide() && state.phase==="play" && isHumanControlled(sideKey)){
+      const queue=Array.isArray(state.handRevealUids)?state.handRevealUids:(state.handRevealUids=[]);
+      if(!queue.includes(card.uid)) queue.push(card.uid);
+      state.handRevealUid=card.uid;
+    }
     return card;
   }
   function syncHandScrollRange(){
@@ -20607,15 +20678,21 @@ function isNanaoBarrierActive(card){
       handEl.scrollLeft=0;
     }
     syncHandScrollRange();
-    const revealUid=state.handRevealUid;
-    if(revealUid){
-      const el=handEl.querySelector(`.card[data-uid="${revealUid}"]`);
-      if(el){
-        el.classList.add("hand-new");
-        el.scrollIntoView({behavior:"smooth",block:"nearest",inline:"nearest"});
+    const revealQueue=Array.isArray(state.handRevealUids)?[...state.handRevealUids]:[];
+    if(state.handRevealUid && !revealQueue.includes(state.handRevealUid)) revealQueue.push(state.handRevealUid);
+    if(revealQueue.length){
+      let lastEl=null;
+      revealQueue.forEach(uid=>{
+        const el=handEl.querySelector(`.card[data-uid="${uid}"]`);
+        if(el){ el.classList.add("hand-new"); lastEl=el; }
+      });
+      if(lastEl && handEl.classList.contains("hand-scroll-needed")){
+        const touchReveal=document.documentElement.classList.contains("touch-device");
+        lastEl.scrollIntoView({behavior:touchReveal?"smooth":"auto",block:"nearest",inline:"nearest"});
         requestAnimationFrame(syncHandScrollRange);
       }
       state.handRevealUid=null;
+      state.handRevealUids=[];
     }
   }
   function renderHand(){
@@ -20843,7 +20920,8 @@ function isNanaoBarrierActive(card){
   }
 
   async function animateCardToField(card,row,targetSide,opts={}){
-    if(usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)) return;
+    const hasReturnTarget=!!opts?.targetUid;
+    if((usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)) && hasReturnTarget) return;
     const target=measureCardLandingRect(targetSide,row,card,opts);
     if(!target) return;
     const start=previewFlightStartRect(card);
@@ -21115,8 +21193,9 @@ function isNanaoBarrierActive(card){
     if(!canPlayUnit(actor,c)){ toast("УСЛОВИЯ ФОРМЫ НЕ ВЫПОЛНЕНЫ"); return; }
     const targetSide = c.ability==="spy" ? enemyOf(actor) : actor;
     const targetReturn=isTargetReturnLandingCard(c);
-    if(!targetReturn && !validRows(c).includes(row)) return;
-    const preflightRow=targetReturn ? (ROWS.includes(c.row)?c.row:ROWS[0]) : row;
+    const useReturnLanding=targetReturn && hasReturnLandingTarget(actor,c);
+    if(!useReturnLanding && !validRows(c).includes(row)) return;
+    const preflightRow=useReturnLanding ? (ROWS.includes(c.row)?c.row:ROWS[0]) : row;
 
     const cancelSnapshot=makeGameplayActionSnapshot();
     const actionState=state;
@@ -21138,7 +21217,7 @@ function isNanaoBarrierActive(card){
       if(preflightPlan) cardChoicePreflightPlans.set(c.uid,preflightPlan);
       let resolvedRow=preflightRow;
       let returnTarget=null;
-      if(targetReturn){
+      if(useReturnLanding){
         returnTarget=returnLandingTargetFromPlan(actor,preflightPlan);
         if(!returnTarget){
           restoreGameplayActionSnapshot(cancelSnapshot,"НЕТ ПОДХОДЯЩЕЙ КАРТЫ ДЛЯ ВОЗВРАТА");
@@ -21165,8 +21244,8 @@ function isNanaoBarrierActive(card){
       state[actor].hand=state[actor].hand.filter(x=>x.uid!==c.uid);
       state.selected=null;
       state.previewCard=null;
-      const returnTechniquePlay=usesReturnTechniqueAnimation(c);
-      const heroShunpoPlay=isTargetReturnLandingCard(c);
+      const returnTechniquePlay=usesReturnTechniqueAnimation(c) && !!visualReturnTarget;
+      const heroShunpoPlay=useReturnLanding;
       state.flightLandedUid=(returnTechniquePlay||heroShunpoPlay)?null:c.uid;
       const abilityPromise=placeCard(actor,targetSide,c,resolvedRow);
       state.lastDetail=c;
@@ -23418,7 +23497,7 @@ function v242CardElement(sideKey,row,uid){
 
   function canPlaySpecial(sideKey,card){
     if(!card?.special) return false;
-    if(card.ability==="returnTechnique") return allBoard(state[sideKey]).some(c=>isReturnableBoardCard(c));
+    if(card.ability==="returnTechnique") return true;
     if(card.ability==="reiatsuPressure") return ROWS.some(r=>!isRowPressured(enemyOf(sideKey),r)&&!isZankaProtectedRow(enemyOf(sideKey),r));
     if(card.ability==="soulKamikake") return allBoard(state[sideKey]).some(c=>c.id==="s_ukitake");
     if(card.ability==="overcome") return true;
@@ -23477,13 +23556,19 @@ function v242CardElement(sideKey,row,uid){
       }
     } else if(card.ability==="returnTechnique"){
       const title=(card.name||"ТЕХНИКА ВОЗВРАТА").toUpperCase();
-      const target=await chooseFieldTarget(sideKey,sideKey,c=>isReturnableBoardCard(c),title,"Выберите обычного бойца со своей стороны поля. Вражеский Шпион на вашей стороне тоже допустим. Карта вернётся в вашу руку.");
-      if(!target) return false;
+      const hasTarget=allBoard(state[sideKey]).some(c=>isReturnableBoardCard(c));
+      const target=hasTarget ? await chooseFieldTarget(sideKey,sideKey,c=>isReturnableBoardCard(c),title,"Выберите обычного бойца со своей стороны поля. Вражеский Шпион на вашей стороне тоже допустим. Карта вернётся в вашу руку.") : null;
+      if(!target){
+        if(hasTarget) return false;
+        await v242AnimateEffectCardTableCast(card,v243DefaultEffectRowStart(sideKey),"return");
+        void 0;
+      } else {
       state.previewCard=null;
       render();
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       if(!await returnBoardCardToHand(sideKey,target)) return false;
       void 0;
+      }
     } else if(card.ability==="reiatsuPressure"){
       const eligible=ROWS.filter(r=>!isRowPressured(foeKey,r)&&!isZankaProtectedRow(foeKey,r));
       if(eligible.length){
@@ -23622,8 +23707,11 @@ function v242CardElement(sideKey,row,uid){
     cardChoicePreflightContext=ctx;
     try{
       if(card.ability==="returnTechnique"){
-        const picked=await chooseFieldTarget(sideKey,sideKey,c=>isReturnableBoardCard(c),(card.name||"ТЕХНИКА ВОЗВРАТА").toUpperCase(),"Выберите бойца для возврата.");
-        if(!picked) return null;
+        const hasTarget=allBoard(state[sideKey]).some(c=>isReturnableBoardCard(c));
+        if(hasTarget){
+          const picked=await chooseFieldTarget(sideKey,sideKey,c=>isReturnableBoardCard(c),(card.name||"ТЕХНИКА ВОЗВРАТА").toUpperCase(),"Выберите бойца для возврата.");
+          if(!picked) return null;
+        }
       } else if(card.ability==="reiatsuPressure"){
         const eligible=ROWS.filter(r=>!isRowPressured(foeKey,r)&&!isZankaProtectedRow(foeKey,r));
         if(eligible.length && !await chooseBoardRowForActor(sideKey,foeKey,"ДАВЛЕНИЕ РЕАЦУ",eligible,null,"reiatsu")) return null;
@@ -23779,7 +23867,7 @@ function v242CardElement(sideKey,row,uid){
       if(!e.hand.length){ markSidePassed("enemy","empty"); void 0; tickCompletedTurnPassives(); if(checkRoundEnd()) return; state.turn="player";render();return; }
 
       const playable=e.hand.filter(c=>!c.special || canPlaySpecial("enemy",c));
-      const units=playable.filter(c=>!c.special&&canPlayUnit("enemy",c) && (!isTargetReturnLandingCard(c) || fieldTargetOptions("enemy",x=>isReturnableBoardCard(x,c.uid)).length>0));
+      const units=playable.filter(c=>!c.special&&canPlayUnit("enemy",c));
       const specials=playable.filter(c=>c.special);
       const freeTransforms=units.filter(isFreeTransformationCard);
       let card=freeTransforms.length ? [...freeTransforms].sort((a,b)=>b.power-a.power)[0] : null;
@@ -23805,11 +23893,14 @@ function v242CardElement(sideKey,row,uid){
       if(isTargetReturnLandingCard(card)){
         const opts=fieldTargetOptions("enemy",x=>isReturnableBoardCard(x,card.uid));
         returnTarget=[...opts].sort((a,b)=>fieldPower("enemy",b.row,b.card)-fieldPower("enemy",a.row,a.card))[0]||null;
-        if(!returnTarget){ markSidePassed("enemy","blocked"); tickCompletedTurnPassives(); if(checkRoundEnd()) return; state.turn="player"; render(); return; }
-        row=returnTarget.row;
-        cardChoicePreflightPlans.set(card.uid,{choices:[serializePreflightChoice(returnTarget)],randoms:[]});
-        const targetIndex=state.enemy.board[row].findIndex(x=>x.uid===returnTarget.card.uid);
-        card._targetLandingInsertIndex=Math.max(0,targetIndex);
+        if(returnTarget){
+          row=returnTarget.row;
+          cardChoicePreflightPlans.set(card.uid,{choices:[serializePreflightChoice(returnTarget)],randoms:[]});
+          const targetIndex=state.enemy.board[row].findIndex(x=>x.uid===returnTarget.card.uid);
+          card._targetLandingInsertIndex=Math.max(0,targetIndex);
+        }else{
+          const rows=validRows(card); row=rows[randomIndex(rows.length)];
+        }
       }else{
         const rows=validRows(card); row=rows[randomIndex(rows.length)];
       }
@@ -23834,8 +23925,8 @@ function v242CardElement(sideKey,row,uid){
 
         e.hand=e.hand.filter(x=>x.uid!==card.uid);
         state.previewCard=null;
-        state.flightLandedUid=usesReturnTechniqueAnimation(card)?null:card.uid;
-        const returnTechniquePlay=usesReturnTechniqueAnimation(card);
+        const returnTechniquePlay=usesReturnTechniqueAnimation(card) && !!visualReturnTarget;
+        state.flightLandedUid=returnTechniquePlay?null:card.uid;
         const abilityPromise=placeCard("enemy",targetSide,card,row);
         state.lastDetail=card;
         if(!returnTechniquePlay) render();
@@ -24055,9 +24146,9 @@ function v242CardElement(sideKey,row,uid){
       const branchChoice=hostRoll===1 ? plan.choices[0] : hostRoll===2 ? plan.choices[1] : null;
       plan={choices:branchChoice?[branchChoice]:[],randoms:[hostRoll]};
     }
-    if(isTargetReturnLandingCard(card)){
+    const useReturnLanding=isTargetReturnLandingCard(card) && !!returnLandingTargetFromPlan(actor,plan);
+    if(useReturnLanding){
       const target=returnLandingTargetFromPlan(actor,plan);
-      if(!target) return false;
       resolvedRow=target.row;
       card._targetLandingInsertIndex=Math.max(0,state.enemy.board[resolvedRow].findIndex(x=>x.uid===target.card.uid));
     } else if(!ROWS.includes(resolvedRow) || !validRows(card).includes(resolvedRow)) return false;
@@ -24070,7 +24161,7 @@ function v242CardElement(sideKey,row,uid){
       /* v111 — echo the accepted Guest card-flight back to the Guest immediately.
          Previously networkApplyingState suppressed this path, so the Guest saw neither
          its own preview nor its own flight. HOST still renders the same action locally. */
-      if(!usesReturnTechniqueAnimation(card) && !isTargetReturnLandingCard(card)){
+      if(!(usesReturnTechniqueAnimation(card)&&!!visualTarget) && !(isTargetReturnLandingCard(card)&&useReturnLanding)){
         void sendNetworkEvent("vfx",{kind:"card-flight",actor,targetSide,row:resolvedRow,targetUid:visualTarget?.card?.uid||null,card:safeNetworkClone(card)});
       }
       await showRemotePlayedCardPreview(card,actor,520);
@@ -24080,7 +24171,7 @@ function v242CardElement(sideKey,row,uid){
       if(state!==actionState || state.gameOver) return false;
       state.enemy.hand=state.enemy.hand.filter(x=>x.uid!==card.uid);
       state.selected=null; state.previewCard=null;
-      const returnTechniquePlay=usesReturnTechniqueAnimation(card), heroShunpoPlay=isTargetReturnLandingCard(card);
+      const returnTechniquePlay=usesReturnTechniqueAnimation(card) && !!visualTarget, heroShunpoPlay=useReturnLanding;
       state.flightLandedUid=(returnTechniquePlay||heroShunpoPlay)?null:card.uid;
       const abilityPromise=placeCard(actor,targetSide,card,resolvedRow);
       state.lastDetail=card;
@@ -25271,7 +25362,7 @@ ${template.desc}`:""}`;
     const previewShown=await showRemotePlayedCardPreview(card,payload.actor,520);
     const target=measureCardLandingRect(payload.targetSide,payload.row,card,{targetUid:payload.targetUid||null});
     if(!target){ if(previewShown) clearRemotePlayedCardPreview(card); return; }
-    if(usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)){
+    if((usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)) && payload.targetUid){
       if(previewShown) clearRemotePlayedCardPreview(card);
       return;
     }
@@ -25402,7 +25493,8 @@ ${template.desc}`:""}`;
   };
 
   animateCardToField=async function(card,row,targetSide,opts={}){
-    if(!usesReturnTechniqueAnimation(card) && !isTargetReturnLandingCard(card)) broadcastNetworkVfx("card-flight",{actor:card?._ownerKey||localControlledSide(),targetSide,row,targetUid:opts?.targetUid||null,card:safeNetworkClone(card)});
+    const hasReturnTarget=!!opts?.targetUid;
+    if(!(usesReturnTechniqueAnimation(card)&&hasReturnTarget) && !(isTargetReturnLandingCard(card)&&hasReturnTarget)) broadcastNetworkVfx("card-flight",{actor:card?._ownerKey||localControlledSide(),targetSide,row,targetUid:opts?.targetUid||null,card:safeNetworkClone(card)});
     return v303Original.animateCardToField(card,row,targetSide,opts);
   };
   animateCardFromDeckToField=async function(card,row,targetSide,ownerKey){
