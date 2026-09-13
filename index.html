@@ -15403,6 +15403,182 @@ html.touch-device.touch-landscape:not(.tablet-device) #modeOverlay .bsc-mode-lan
 }
 /* V365 — gameplay VFX intentionally keep full timing even when the OS reports reduced motion. */
 </style>
+
+<style id="v366-mobile-start-initiative-layout-fix">
+/* v366 — Safari browser faction screen + compact initiative composition. */
+
+/* Browser Safari has less vertical room than standalone PWA. Keep the four
+   faction choices in a single landscape row and let the overlay safe-area
+   padding define the usable width. */
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay .faction-modal,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay .faction-modal{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  max-height:100%!important;
+  margin:0!important;
+  padding:10px 12px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay .faction-modal .factions,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay .faction-modal .factions{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-rows:auto!important;
+  grid-auto-rows:auto!important;
+  gap:6px!important;
+  margin:7px 0!important;
+  width:100%!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay .faction-modal .faction,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay .faction-modal .faction{
+  width:100%!important;
+  min-width:0!important;
+  height:clamp(78px,26vh,112px)!important;
+  min-height:0!important;
+  max-height:112px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay .faction-modal .faction b,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay .faction-modal .faction b{
+  left:6px!important;
+  right:6px!important;
+  bottom:5px!important;
+  font-size:clamp(8px,1.35vw,11px)!important;
+  line-height:1!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay .network-actions,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay .network-actions{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:6px!important;
+  margin-top:6px!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay #pathBackBtn,
+html:not(.pwa-standalone).phone-device.phone-landscape #startOverlay #startBtn,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay #pathBackBtn,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #startOverlay #startBtn{
+  height:36px!important;
+  min-height:36px!important;
+  max-height:36px!important;
+  padding:0 8px!important;
+  font-size:8px!important;
+  line-height:1!important;
+}
+
+/* Mobile browser + PWA: initiative is one compact visual group instead of
+   title at the top / choices in the middle / faction explanation at bottom. */
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice{
+  width:calc(var(--phone-stage-width,100vw) - 8px)!important;
+  max-width:calc(var(--phone-stage-width,100vw) - 8px)!important;
+  height:calc(var(--app-height,100dvh) - 8px)!important;
+  max-height:calc(var(--app-height,100dvh) - 8px)!important;
+  margin:0 auto!important;
+  padding:10px 12px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  overflow:hidden!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice .choice-heading{
+  position:static!important;
+  inset:auto!important;
+  order:1!important;
+  width:100%!important;
+  max-width:620px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  transform:none!important;
+  text-align:center!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice h1{
+  margin:0!important;
+  font-size:clamp(20px,4.2vh,27px)!important;
+  line-height:1!important;
+  letter-spacing:.04em!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice #choiceSub{
+  position:static!important;
+  inset:auto!important;
+  order:2!important;
+  flex:0 0 auto!important;
+  width:min(560px,94%)!important;
+  max-width:560px!important;
+  height:auto!important;
+  margin:0 auto 2px!important;
+  padding:0!important;
+  color:rgba(255,255,255,.86)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:clamp(8.5px,2.35vh,11px)!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:0!important;
+  word-spacing:0!important;
+  text-align:center!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.85)!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice .choice-grid{
+  position:static!important;
+  inset:auto!important;
+  order:3!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+  gap:10px!important;
+  overflow:visible!important;
+  scroll-snap-type:none!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice .choice-text-btn{
+  flex:0 0 clamp(164px,27vw,190px)!important;
+  width:clamp(164px,27vw,190px)!important;
+  min-width:164px!important;
+  max-width:190px!important;
+  height:72px!important;
+  min-height:72px!important;
+  max-height:72px!important;
+  margin:0!important;
+  padding:8px 10px!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice .choice-text-btn b{
+  font-size:10px!important;
+  line-height:1.08!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice .choice-text-btn span{
+  margin-top:5px!important;
+  font-size:7.5px!important;
+  line-height:1.15!important;
+}
+@media (max-height:370px){
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice{
+    gap:5px!important;
+    padding:7px 10px!important;
+  }
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice h1{
+    font-size:19px!important;
+  }
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice #choiceSub{
+    font-size:8px!important;
+  }
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.initiative-choice .choice-text-btn{
+    height:62px!important;
+    min-height:62px!important;
+    max-height:62px!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -18298,7 +18474,7 @@ function isNanaoBarrierActive(card){
       const overlay=$("#choiceOverlay"), grid=$("#choiceGrid"), t=$("#choiceTitle"), s=$("#choiceSub"), cancelBtn=$("#choiceCancel");
       const prevBtn=$("#choicePrev"), nextBtn=$("#choiceNext");
       const modal=overlay?.querySelector(".choice-modal");
-      const isInitiativeChoice = title==="ИНИЦИАТИВА";
+      const isInitiativeChoice = state?.phase==="initiative" || title==="ИНИЦИАТИВА" || title==="INITIATIVE";
       const hasCards=options.some(opt=>!!opt.card);
       modal?.classList.toggle("initiative-choice", isInitiativeChoice);
       modal?.classList.toggle("card-choice", hasCards);
