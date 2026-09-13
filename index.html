@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="111";
+  const BUILD_VERSION="113";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -69,7 +69,7 @@
 
 <!-- v108: mobile SOUL SUICIDE smaller and vertically centered; keeps v107 card/preview fixes. -->
 <!-- v99 ONLINE SECURITY v4: host-authoritative Guest setup/actions; Guest snapshots redact HOST hidden hand/deck. -->
-<title>BLEACH: Soul Clash — v111 MAIN</title>
+<title>BLEACH: Soul Clash — v113 MAIN</title>
 <!-- v104 FIX #4: Leader-linked return techniques persist through render + Online snapshot restore. -->
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
@@ -16072,6 +16072,59 @@ html.tablet-device .card.hero .card-face::before{
     box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88)!important;
     border-radius:1.4cqw!important;
   }
+}
+</style>
+
+
+<style id="v112-mobile-browser-mulligan-top-frame-fix">
+/* v112 — mobile browser only: the first CHOOSE YOUR SOUL row must leave room for
+   the card face outer frame/glow. Previous generic padding lost to the more-specific
+   #mulliganGrid.mulligan-grid legacy rule, which also clipped overflow. */
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid.mulligan-grid,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid.mulligan-grid{
+  padding:11px 2px 6px!important;
+  scroll-padding-top:11px!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape #mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid>.mulligan-card-wrap{
+  overflow:visible!important;
+}
+</style>
+
+
+<style id="v113-preview-and-deckbuilder-hero-fix">
+/* v113 — hard-disable row-placement numerals inside the right preview box on every platform.
+   Uses #detail specificity so older mobile !important rules cannot resurrect the badge. */
+#detail .detail-preview .row-badge,
+#detail .detail-preview .row-badge-desktop,
+#detail .detail-preview .row-badge-mobile,
+#detail .detail-preview .row-badge::before,
+#detail .detail-preview .row-badge::after{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  content:none!important;
+}
+
+/* ASSEMBLE YOUR SOUL uses the current square card skin.
+   v111's broad mobile Hero parity accidentally overrode this menu-specific skin. */
+#deckBuilderOverlay .deck-builder-item .card.hero .card-face{
+  border-radius:0!important;
+  clip-path:none!important;
+  border:2px solid #111!important;
+  outline:0!important;
+  background:var(--card-frame)!important;
+  box-shadow:inset 0 0 0 2px var(--card-frame),inset 0 0 0 4px var(--card-ink)!important;
+}
+#deckBuilderOverlay .deck-builder-item .card.hero .card-face::before{
+  border-radius:0!important;
+}
+#deckBuilderOverlay .deck-builder-item .card.hero .frame{
+  border:0!important;
+  box-shadow:none!important;
+  background:none!important;
 }
 </style>
 
