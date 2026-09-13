@@ -22,7 +22,6 @@
   const standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
   root.classList.toggle('pwa-standalone',!!standalone);
-  root.classList.toggle('pwa-browser-ios',!!isIOS&&!standalone);
   root.classList.toggle('ios-device',!!isIOS);
 
   const syncResponsiveDevice=()=>{
@@ -60,12 +59,6 @@
   window.addEventListener("orientationchange",()=>setTimeout(syncResponsiveDevice,100),{passive:true});
   window.visualViewport?.addEventListener("resize",syncResponsiveDevice,{passive:true});
   root.classList.add('responsive-booted');
-
-  const bindPwaUi=()=>{
-    document.getElementById('pwaInstallHintClose')?.addEventListener('click',()=>root.classList.remove('pwa-browser-ios'));
-  };
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindPwaUi,{once:true});
-  else bindPwaUi();
 
   if('serviceWorker' in navigator){
     window.addEventListener('load',()=>{
@@ -8758,11 +8751,6 @@ html.pwa-standalone,html.pwa-standalone body{width:100%;height:100%;min-height:1
 html.pwa-standalone body{padding:0!important}
 html.pwa-standalone .app{max-height:100dvh!important}
 html.pwa-standalone.phone-device.phone-landscape .app,html.pwa-standalone.touch-device.touch-landscape .app{height:100dvh!important}
-.pwa-install-hint{display:none;position:fixed;z-index:65000;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(420px,calc(100vw - 28px));padding:10px 12px;background:rgba(12,12,12,.96);color:#eee;border:1px solid #444;border-left:4px solid var(--p,#ff5b18);box-shadow:0 8px 24px rgba(0,0,0,.45);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:11px;line-height:1.35;text-align:left}
-.pwa-install-hint b{display:block;margin-bottom:3px;font-size:12px}
-.pwa-install-hint button{float:right;margin-left:10px;border:0;background:#2b2b2b;color:#fff;padding:4px 8px;font:inherit;font-weight:800}
-html.pwa-browser-ios .pwa-install-hint{display:block}
-@media (orientation:landscape){html.pwa-browser-ios .pwa-install-hint{font-size:9px;width:min(390px,calc(100vw - 22px));padding:7px 9px}}
 
 @media (pointer:coarse) and (orientation:portrait) and (max-width:600px){
   .rotate-device-card{
@@ -15159,6 +15147,144 @@ html:not(.touch-device) #passBtn.pass-btn{
 }
 </style>
 
+
+<style id="v100-ui-refinements">
+/* v100 — requested UI refinements shared by MAIN + TEST. */
+
+/* 1) Desktop battle detail preview: character name is already visible on the art.
+   Remove the duplicate name strip and its divider so the ability text owns the plaque. */
+html:not(.touch-device) .rightbar .detail-preview .card.with-info>.card-info-panel::before{
+  content:none!important;
+  display:none!important;
+}
+html:not(.touch-device) .rightbar .detail-preview .card.with-info .card-info-name{
+  display:none!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+html:not(.touch-device) .rightbar .detail-preview .card.with-info .card-info-desc{
+  margin:0!important;
+  padding-top:0!important;
+}
+
+/* 2) Mobile BROWSER battlefield cards: fit the REAL row height instead of using a
+   fixed pixel height. Leave a narrow 2px breathing space above and below so the
+   outer card frame is visible but almost touches the row edges. PWA is untouched. */
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards{
+  align-items:center!important;
+  padding-top:1px!important;
+  padding-bottom:1px!important;
+  overflow-y:hidden!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card{
+  flex:0 0 auto!important;
+  flex-basis:auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:calc(100% - 4px)!important;
+  min-height:0!important;
+  max-height:calc(100% - 4px)!important;
+  aspect-ratio:2 / 3!important;
+  margin:0!important;
+  align-self:center!important;
+  transform:none!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  aspect-ratio:auto!important;
+}
+
+/* 3) Mobile browser + PWA: the bottom power semicircle belongs UNDER the inner
+   frame line. Previously several high-specificity mobile rules painted it above
+   the frame, visually cutting the border. Keep ability/placement marks above both. */
+html.phone-device.phone-landscape .card .card-face::before,
+html.touch-device.touch-landscape:not(.tablet-device) .card .card-face::before{
+  z-index:9!important;
+}
+html.phone-device.phone-landscape .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) .card .power{
+  z-index:6!important;
+}
+html.phone-device.phone-landscape .card .ability-icon,
+html.touch-device.touch-landscape:not(.tablet-device) .card .ability-icon,
+html.phone-device.phone-landscape .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .card .row-badge{
+  z-index:10!important;
+}
+/* PWA mulligan had an intentionally very high power-badge z-index; explicitly
+   put its inner frame above the badge without changing its geometry. */
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card>.card-face::before,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card>.card-face::before,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card>.card-face::before,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card>.card-face::before{
+  z-index:60!important;
+}
+html.pwa-standalone.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card>.card-face>.power,
+html.pwa-standalone.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card>.card-face>.power,
+html.phone-device.phone-landscape #mulliganOverlay #mulliganGrid .card>.card-face>.power,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay #mulliganGrid .card>.card-face>.power{
+  z-index:50!important;
+}
+
+/* 4) iOS mobile browser + iOS PWA: ASSEMBLE / CHOOSE screens respect the
+   physical safe-area (Home Indicator + rounded/notched edges). The modal sizes
+   are derived from the padded overlay content box, so the extra safe zone does
+   not cause clipping or page overflow. */
+html.ios-device.phone-device.phone-landscape,
+html.ios-device.touch-device.touch-landscape:not(.tablet-device){
+  --v100-setup-safe-top:max(4px, env(safe-area-inset-top, 0px));
+  --v100-setup-safe-right:max(4px, env(safe-area-inset-right, 0px));
+  --v100-setup-safe-bottom:max(10px, env(safe-area-inset-bottom, 0px));
+  --v100-setup-safe-left:max(4px, env(safe-area-inset-left, 0px));
+}
+html.ios-device.phone-device.phone-landscape #deckBuilderOverlay,
+html.ios-device.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay,
+html.ios-device.phone-device.phone-landscape #mulliganOverlay,
+html.ios-device.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  box-sizing:border-box!important;
+  padding:
+    var(--v100-setup-safe-top)
+    var(--v100-setup-safe-right)
+    var(--v100-setup-safe-bottom)
+    var(--v100-setup-safe-left)!important;
+  overflow:hidden!important;
+}
+html.ios-device.phone-device.phone-landscape #deckBuilderOverlay .deck-builder-modal,
+html.ios-device.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay .deck-builder-modal,
+html.ios-device.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+html.ios-device.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+  width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  box-sizing:border-box!important;
+}
+
+/* v101 — portrait rotate copy: browser guidance lives in the central card; PWA stays concise. */
+.rotate-browser-copy{display:block}
+.rotate-pwa-copy{display:none}
+.rotate-browser-install{margin:14px auto 0;max-width:330px;color:#cbc6bd;font-size:11px;line-height:1.38}
+.rotate-browser-install b{display:block;margin-bottom:5px;color:#f5f1e9;font-size:11px;line-height:1.2;letter-spacing:.035em}
+.rotate-browser-install span{display:block;margin-top:6px}
+html.pwa-standalone .rotate-browser-copy{display:none}
+html.pwa-standalone .rotate-pwa-copy{display:block}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -15166,14 +15292,16 @@ html:not(.touch-device) #passBtn.pass-btn{
     <div class="rotate-device-symbol" aria-hidden="true"><span></span></div>
     <div class="rotate-device-kicker">MOBILE MODE</div>
     <div class="rotate-device-title">ПОВЕРНИТЕ ТЕЛЕФОН</div>
-    <p>BLEACH: SOUL CLASH рассчитан на горизонтальный экран. Для большей игровой площади используйте режим без панелей Safari, затем поверните устройство на бок.</p>
+    <div class="rotate-browser-copy">
+      <p>BLEACH: SOUL CLASH рассчитан на горизонтальный экран, поверните устройство на бок.</p>
+      <div class="rotate-browser-install">
+        <b>РЕЖИМ БЕЗ АДРЕСНОЙ СТРОКИ БРАУЗЕРА</b>
+        <span>Для большей игровой площади используйте режим без панелей:</span>
+        <span>Нажмите «Поделиться» → «На экран Домой», затем запускайте игру с иконки. Адресная строка будет скрыта.</span>
+      </div>
+    </div>
+    <p class="rotate-pwa-copy">BLEACH: SOUL CLASH рассчитан на горизонтальный экран, поверните устройство на бок.</p>
   </div>
-</div>
-
-<div id="pwaInstallHint" class="pwa-install-hint" role="status">
-  <button id="pwaInstallHintClose" type="button" aria-label="Закрыть">×</button>
-  <b>РЕЖИМ БЕЗ ПАНЕЛЕЙ SAFARI</b>
-  Нажмите «Поделиться» → «На экран Домой», затем запускайте игру с иконки. Адресная строка и панели Safari будут скрыты.
 </div>
 
 <div id="app" class="app">
@@ -24504,11 +24632,6 @@ ${template.desc}`:""}`;
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start,{once:true}); else start();
 })();</script>
 
-<script id="v62-ios-install-hint-flow">(() => {
-  const root=document.documentElement;
-  const dismiss=()=>root.classList.remove('pwa-browser-ios');
-  ['modeAiBtn','modeDuelBtn','modeOnlineBtn'].forEach(id=>document.getElementById(id)?.addEventListener('click',dismiss,{once:true}));
-})();</script>
 
 </body>
 </html>
