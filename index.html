@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="85";
+  const BUILD_VERSION="99";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -73,7 +73,7 @@
     },{once:true});
   }
 })();</script>
-<title>BLEACH: Soul Clash — v85 MAIN</title>
+<title>BLEACH: Soul Clash — v99 MAIN</title>
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
 <!-- v81: browser card choices lifted; ASSEMBLE action dock made truly larger via ID-specific overrides; browser battlefield cards now fit actual row height. -->
@@ -14730,25 +14730,26 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .boar
   inset:20px 0 74px!important;
 }
 
-/* V84 — browser battlefield card geometry.
-   Fixed 28×42 card size. It no longer depends on the computed CSS row height.
+/* V87 — authoritative browser battlefield card geometry.
+   Restore the proven mobile proportions that fit the actual browser rows.
+   Card size is explicit and DOES NOT depend on the computed row height.
    PWA/standalone remains untouched. */
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards{
   align-items:center!important;
-  padding-top:1px!important;
-  padding-bottom:1px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
   overflow-y:hidden!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card{
-  flex:0 0 28px!important;
-  width:28px!important;
-  min-width:28px!important;
-  max-width:28px!important;
-  height:42px!important;
-  min-height:42px!important;
-  max-height:42px!important;
+  flex:0 0 27px!important;
+  width:27px!important;
+  min-width:27px!important;
+  max-width:27px!important;
+  height:40.5px!important;
+  min-height:40.5px!important;
+  max-height:40.5px!important;
   aspect-ratio:auto!important;
   margin:0!important;
   align-self:center!important;
@@ -14756,25 +14757,50 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .boar
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face{
-  width:28px!important;
-  min-width:28px!important;
-  max-width:28px!important;
-  height:42px!important;
-  min-height:42px!important;
-  max-height:42px!important;
+  width:27px!important;
+  min-width:27px!important;
+  max-width:27px!important;
+  height:40.5px!important;
+  min-height:40.5px!important;
+  max-height:40.5px!important;
   aspect-ratio:auto!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face>.power,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face>.power{
-  width:22px!important;
-  min-width:0!important;
-  max-width:calc(100% - 2px)!important;
-  height:12px!important;
-  min-height:12px!important;
-  max-height:12px!important;
-  border-radius:22px 22px 0 0!important;
-  font-size:9px!important;
+  width:15px!important;
+  min-width:15px!important;
+  max-width:15px!important;
+  height:8px!important;
+  min-height:8px!important;
+  max-height:8px!important;
+  border-radius:15px 15px 0 0!important;
+  font-size:7px!important;
+  padding-top:0!important;
   bottom:1px!important;
+}
+
+/* Short iPhone/Safari landscape — this is the geometry that fits the
+   reduced browser board after the iOS scrollbar safe-zone. */
+@media (max-height:395px){
+  html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card{
+    flex-basis:26px!important;
+    width:26px!important;
+    min-width:26px!important;
+    max-width:26px!important;
+    height:39px!important;
+    min-height:39px!important;
+    max-height:39px!important;
+  }
+  html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face{
+    width:26px!important;
+    min-width:26px!important;
+    max-width:26px!important;
+    height:39px!important;
+    min-height:39px!important;
+    max-height:39px!important;
+  }
 }
 
 /* Hand viewport: cards occupy the upper portion, bottom ~15px is scrollbar-safe space. */
@@ -15974,7 +16000,7 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
   let transientPlayedCardPreviewActor=null;
 
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION=String(globalThis.BSC_BUILD_VERSION||"85");
+  const ONLINE_GAME_VERSION=String(globalThis.BSC_BUILD_VERSION||"99");
 
   const ONLINE_MQTT_TOPIC_PREFIX=`bleach-soul-clash/v${ONLINE_GAME_VERSION}`;
   const ONLINE_MQTT_CLIENT_PREFIX=`bsc${ONLINE_GAME_VERSION}`;
@@ -17063,6 +17089,18 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
     return destroyCard(liveAfter.sideKey,liveAfter.card,cause,sourceSideKey);
   }
 
+  async function v98AnimateYamamotoViaRenjiPath(sideKey,row,targetCard,cause,sourceSideKey){
+    const liveBefore=findBoardCardByUid(targetCard?.uid);
+    const entry=liveBefore
+      ? {sideKey:liveBefore.sideKey,row:liveBefore.row,uid:liveBefore.card.uid,card:liveBefore.card,power:fieldPower(liveBefore.sideKey,liveBefore.row,liveBefore.card)}
+      : (targetCard ? {sideKey,row,uid:targetCard.uid,card:targetCard,power:fieldPower(sideKey,row,targetCard)} : null);
+    if(!entry) return false;
+    await animateHellGatesTargets([entry]);
+    const liveAfter=findBoardCardByUid(entry.uid);
+    if(!liveAfter) return false;
+    return destroyCard(liveAfter.sideKey,liveAfter.card,cause,sourceSideKey,{bypassShield:true});
+  }
+
   async function v65AnimateRenjiYamamotoBeam(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
     if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
@@ -17255,11 +17293,21 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
     if(cardChoicePreflightContext?.phase==='collect') return;
     v31ClearAbilityTargetLock(targetUid);
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    const sourceEl=v242CardElement(sourceSideKey,sourceRow,sourceUid);
-    const targetEl=v242CardElement(targetSideKey,targetRow,targetUid);
+
+    // V86 — authoritative Sasakibe target lookup.
+    // During ability replay the exact row/side DOM can lag one render frame;
+    // fall back to the unique battlefield UID instead of silently skipping VFX.
+    const sourceEl=v242CardElement(sourceSideKey,sourceRow,sourceUid)
+      || document.querySelector(`.board .row-cards .card[data-uid="${sourceUid}"]`);
+    const targetEl=v242CardElement(targetSideKey,targetRow,targetUid)
+      || document.querySelector(`.board .row-cards .card[data-uid="${targetUid}"]`);
     const sr=visibleRect(sourceEl?.querySelector('.card-face'))||visibleRect(sourceEl);
     const tr=visibleRect(targetEl?.querySelector('.card-face'))||visibleRect(targetEl);
-    if(!tr){ await waitForMs(680); return; }
+    if(!tr){
+      console.warn("[SASAKIBE VFX] target element not visible", {targetSideKey,targetRow,targetUid});
+      await waitForMs(180);
+      return;
+    }
     const sx=sr ? sr.left+sr.width*.58 : Math.max(20,tr.left-160);
     const sy=sr ? sr.top+sr.height*.42 : tr.top+tr.height*.8;
     const tx=tr.left+tr.width*.5, ty=tr.top+tr.height*.5;
@@ -17305,8 +17353,35 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
       stage.appendChild(s);
     }
     document.body.appendChild(stage);
+
+    // Force the stage to enter the rendered tree before the first lightning frame.
+    // The direct WAAPI pass also avoids an iOS/Safari case where the SVG
+    // stroke animation occasionally fails to start on insertion.
+    void stage.offsetWidth;
+    const mainBolts=[...stage.querySelectorAll('.bolt-halo,.bolt-body,.bolt-core')];
+    mainBolts.forEach((p,index)=>{
+      try{
+        p.getAnimations().forEach(a=>a.cancel());
+        p.animate([
+          {opacity:0,strokeDashoffset:dash},
+          {opacity:1,strokeDashoffset:dash,offset:.10},
+          {opacity:1,strokeDashoffset:"0",offset:.72},
+          {opacity:0,strokeDashoffset:"0"}
+        ],{
+          duration:620,
+          easing:"cubic-bezier(.1,.7,.18,1)",
+          fill:"both",
+          delay:index*8
+        });
+      }catch(_e){}
+    });
+
     await waitForMs(430);
-    if(targetEl?.isConnected){ targetEl.classList.remove('v68-sasakibe-hit'); void targetEl.offsetWidth; targetEl.classList.add('v68-sasakibe-hit'); }
+    if(targetEl?.isConnected){
+      targetEl.classList.remove('v68-sasakibe-hit');
+      void targetEl.offsetWidth;
+      targetEl.classList.add('v68-sasakibe-hit');
+    }
     await waitForMs(430);
     targetEl?.classList.remove('v68-sasakibe-hit');
     stage.remove();
@@ -20563,17 +20638,46 @@ function isNanaoBarrierActive(card){
       case "soulUkitakeKamikake": ensureKamikakeCard(ownerKey); break;
       case "soulYamamotoExecute": {
         const foeKey=enemyOf(ownerKey), candidates=[];
-        for(const r of ROWS) for(const c of state[foeKey].board[r]) if(!c.hero) candidates.push({card:c,row:r,power:fieldPower(foeKey,r,c)});
+        for(const r of ROWS) for(const c of state[foeKey].board[r]){
+          if(!c.hero) candidates.push({card:c,row:r,power:fieldPower(foeKey,r,c)});
+        }
         if(candidates.length && !consumeAizenShield(foeKey,ownerKey,"Испепели всё сущее")){
           const max=Math.max(...candidates.map(x=>x.power));
-          const burnVictims=[];
-          for(const x of [...candidates.filter(x=>x.power===max)]){
-            if(destroyCard(foeKey,x.card,"Испепели всё сущее",ownerKey,{bypassShield:true})) burnVictims.push({sideKey:foeKey,row:x.row,uid:x.card.uid,card:x.card});
-          }
-          if(burnVictims.length) await animateBurnDisintegrateTargets(burnVictims);
+          const victims=candidates.filter(x=>x.power===max);
+
+          // V99 — IMPORTANT: Yamamoto reaches Hell Gates immediately when
+          // placeCard() starts. playSelected() performs its mandatory board
+          // render only after placeCard() yields. Without this barrier that
+          // render recreates every enemy DOM card AFTER Hell Gates hides it,
+          // leaving visible originals underneath the VFX.
+          //
+          // Renji never had this bug because his beam animation yields first.
+          // Two RAFs reproduce the same ordering: placement render + paint,
+          // then the unchanged working v80 Hell Gates pipeline.
+          await new Promise(resolve=>
+            requestAnimationFrame(()=>
+              requestAnimationFrame(resolve)
+            )
+          );
+
+          const results=await Promise.all(
+            victims.map(x=>v98AnimateYamamotoViaRenjiPath(
+              foeKey,
+              x.row,
+              x.card,
+              "Испепели всё сущее",
+              ownerKey
+            ))
+          );
+
+          // All v80 source-card restore timers are now scheduled, while every
+          // successful victim is already removed from state. Rebuild the board
+          // once before any of those 110ms timers can revive stale DOM nodes.
+          if(results.some(Boolean)) render();
         }
         break;
       }
+
       case "soulNigeki": {
         const foeKey=enemyOf(ownerKey);
         const target=await chooseFieldTarget(ownerKey,foeKey,(c,r)=>!c.hero,"NIGEKI KESSATSU","Выберите обычного врага и наложите метку.");
