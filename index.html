@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="109";
+  const BUILD_VERSION="111";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -69,7 +69,7 @@
 
 <!-- v108: mobile SOUL SUICIDE smaller and vertically centered; keeps v107 card/preview fixes. -->
 <!-- v99 ONLINE SECURITY v4: host-authoritative Guest setup/actions; Guest snapshots redact HOST hidden hand/deck. -->
-<title>BLEACH: Soul Clash — v106 MAIN</title>
+<title>BLEACH: Soul Clash — v111 MAIN</title>
 <!-- v104 FIX #4: Leader-linked return techniques persist through render + Online snapshot restore. -->
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
@@ -16015,6 +16015,66 @@ html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan
 }
 </style>
 
+
+<style id="v110-preview-no-row-badge">
+/* v110 — preview box never shows row-placement Roman numerals on any platform. */
+.detail-preview .row-badge{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+</style>
+
+
+<style id="v111-mobile-hero-desktop-parity">
+/* v111 — Hero cards on touch/mobile use the exact same card-face construction as desktop.
+   This intentionally overrides the older v368/v101/v106 single-pixel mobile Hero fixes. */
+html.phone-device.phone-landscape .card.hero .card-face,
+html.touch-device.touch-landscape .card.hero .card-face,
+html.tablet-device .card.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:2.8cqw!important;
+  background:var(--card-frame)!important;
+  clip-path:none!important;
+  box-shadow:0 0 0 1.35cqw var(--card-ink),0 0 0 2.25cqw var(--card-frame),0 0 0 3.05cqw var(--card-ink),0 2.8cqw 5.5cqw rgba(0,0,0,.42),0 0 5cqw var(--card-frame-glow)!important;
+}
+html.phone-device.phone-landscape .card.hero .card-face::before,
+html.touch-device.touch-landscape .card.hero .card-face::before,
+html.tablet-device .card.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:11!important;
+  inset:2.3cqw!important;
+  pointer-events:none!important;
+  border:0.75cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88)!important;
+  border-radius:1.4cqw!important;
+}
+@media (pointer:coarse) and (orientation:landscape){
+  .card.hero .card-face{
+    box-sizing:border-box!important;
+    border:0!important;
+    border-radius:2.8cqw!important;
+    background:var(--card-frame)!important;
+    clip-path:none!important;
+    box-shadow:0 0 0 1.35cqw var(--card-ink),0 0 0 2.25cqw var(--card-frame),0 0 0 3.05cqw var(--card-ink),0 2.8cqw 5.5cqw rgba(0,0,0,.42),0 0 5cqw var(--card-frame-glow)!important;
+  }
+  .card.hero .card-face::before{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    z-index:11!important;
+    inset:2.3cqw!important;
+    pointer-events:none!important;
+    border:0.75cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+    box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88)!important;
+    border-radius:1.4cqw!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -21009,6 +21069,13 @@ function isNanaoBarrierActive(card){
         const cand=strongest(state[actor].board[resolvedRow],x=>isReturnableBoardCard(x,c.uid));
         return cand?{row:resolvedRow,card:cand}:null;
       })() : null);
+      if(gameMode==="online" && networkSession.role==="host"){
+        /* v111 — HOST's own ONLINE card is explicitly committed to the preview box
+           before its flight, matching the normal desktop opponent-preview cadence. */
+        state.previewCard=c; state.lastDetail=c; renderDetail();
+        await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+        await waitForMs(520);
+      }
       await animateCardToField(c,resolvedRow,targetSide,visualReturnTarget?{targetUid:visualReturnTarget.card.uid}:{});
       if(state!==actionState || state.gameOver) return;
 
@@ -23916,11 +23983,16 @@ function v242CardElement(sideKey,row,uid){
     const token=beginTurnAction(actor,"network-card"); if(!token) return false;
     try{
       if(plan) cardChoicePreflightPlans.set(card.uid,{choices:plan.choices||[],randoms:Array.isArray(plan.randoms)?plan.randoms:[]});
-      /* v109: HOST executes Guest actions authoritatively, so this path never passes through incoming VFX replay.
-         Give the Guest card the same static opponent preview before the local authoritative flight. */
-      await showRemotePlayedCardPreview(card,actor,2400);
       const visualTarget=isTargetReturnLandingCard(card)?returnLandingTargetFromPlan(actor,plan):(card.ability==="recall"?(()=>{const cand=strongest(state.enemy.board[resolvedRow],x=>isReturnableBoardCard(x,card.uid));return cand?{row:resolvedRow,card:cand}:null;})():null);
-      await animateCardToField(card,resolvedRow,targetSide,visualTarget?{targetUid:visualTarget.card.uid}:{});
+      /* v111 — echo the accepted Guest card-flight back to the Guest immediately.
+         Previously networkApplyingState suppressed this path, so the Guest saw neither
+         its own preview nor its own flight. HOST still renders the same action locally. */
+      if(!usesReturnTechniqueAnimation(card) && !isTargetReturnLandingCard(card)){
+        void sendNetworkEvent("vfx",{kind:"card-flight",actor,targetSide,row:resolvedRow,targetUid:visualTarget?.card?.uid||null,card:safeNetworkClone(card)});
+      }
+      await showRemotePlayedCardPreview(card,actor,520);
+      /* Use the captured local animator here so the card-flight is not broadcast twice. */
+      await v303Original.animateCardToField(card,resolvedRow,targetSide,visualTarget?{targetUid:visualTarget.card.uid}:{});
       clearRemotePlayedCardPreview(card);
       if(state!==actionState || state.gameOver) return false;
       state.enemy.hand=state.enemy.hand.filter(x=>x.uid!==card.uid);
@@ -25002,7 +25074,10 @@ ${template.desc}`:""}`;
   let networkVfxChain=Promise.resolve();
   function shouldBroadcastNetworkVfx(){
     const proposalPreflight=cardChoicePreflightContext?.phase==="collect";
-    return gameMode==="online" && networkSession.connected && !networkSession.linkSuspended && !networkSession.roomClosed && !networkApplyingState && !proposalPreflight && networkVfxReplayDepth===0;
+    /* v111 — HOST must also broadcast VFX while authoritatively replaying a Guest action.
+       Guest canonical-state application remains non-broadcasting. */
+    const authoritativeHostReplay=networkApplyingState && networkSession.role==="host";
+    return gameMode==="online" && networkSession.connected && !networkSession.linkSuspended && !networkSession.roomClosed && (!networkApplyingState || authoritativeHostReplay) && !proposalPreflight && networkVfxReplayDepth===0;
   }
   function safeNetworkClone(value){
     try{return JSON.parse(JSON.stringify(value));}catch(_e){return null;}
@@ -25026,10 +25101,9 @@ ${template.desc}`:""}`;
     return best;
   }
   function remotePreviewMinimumMs(holdMs=520){
-    const root=document.documentElement;
-    const coarsePointer=(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||(navigator.maxTouchPoints||0)>0;
-    const mobileTouch=root.classList.contains('touch-device') || root.classList.contains('phone-device') || coarsePointer;
-    return mobileTouch ? Math.max(Number(holdMs)||0,2400) : Math.max(0,Number(holdMs)||0);
+    /* v111 — one ONLINE preview timing on every platform.
+       Mobile/PWA now use the same duration requested by the desktop VFX path. */
+    return Math.max(0,Number(holdMs)||0);
   }
   async function waitForRemotePreviewDeadline(card,minMs=0){
     if(!card) return;
