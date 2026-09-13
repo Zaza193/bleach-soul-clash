@@ -15,6 +15,9 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
+  const BUILD_VERSION="80";
+  globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
+  root.dataset.buildVersion=BUILD_VERSION;
 
   const standalone=(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)||window.navigator.standalone===true;
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -65,12 +68,14 @@
 
   if('serviceWorker' in navigator){
     window.addEventListener('load',()=>{
-      navigator.serviceWorker.register('./sw.js').catch(err=>console.debug('[PWA] service worker:',err?.message||err));
+      navigator.serviceWorker.register(`./sw.js?v=${BUILD_VERSION}`).catch(err=>console.debug('[PWA] service worker:',err?.message||err));
     },{once:true});
   }
 })();</script>
-<title>BLEACH: Soul Clash — v6</title>
-<!-- v77 main cleanup pass 2: exact mobile overrides pruned; responsive/PWA runtime unified; first proven-dead JS layer removed. -->
+<title>BLEACH: Soul Clash — v80</title>
+<!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
+<!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
+<!-- v81: browser card choices lifted; ASSEMBLE action dock made truly larger via ID-specific overrides; browser battlefield cards now fit actual row height. -->
 <!-- v78: summon flyers drop row badges; browser battlefield cards rescaled to safe-zone row geometry. -->
 <style id="app-styles">
 :root{
@@ -1996,38 +2001,38 @@
 @keyframes v45HeroSpark{0%{opacity:0;transform:rotate(var(--rot,0deg)) translateY(0) scaleY(.2)}18%{opacity:1}60%{opacity:.86;transform:rotate(var(--rot,0deg)) translateY(var(--dy,-18px)) scaleY(1)}100%{opacity:0;transform:rotate(var(--rot,0deg)) translateY(calc(var(--dy,-18px) * 1.24)) scaleY(.1)}}
 @keyframes v45HeroCardGlow{0%{box-shadow:0 0 0 rgba(0,0,0,0);filter:none}24%{box-shadow:0 0 0 2px rgba(255,238,182,.86),0 0 16px rgba(255,211,111,.58);filter:brightness(1.08) saturate(1.12)}100%{box-shadow:0 0 0 rgba(0,0,0,0);filter:none}}
 
-.v43-jackpot-stage{position:fixed;inset:0;pointer-events:none;z-index:9999}
-.v43-jackpot-stage .v43-jackpot-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(20,12,5,.12) 0 20%,rgba(0,0,0,.36) 66%,rgba(0,0,0,.52) 100%)}
-.v43-jackpot-stage .v43-jackpot-bolt{position:absolute;left:var(--sx);top:var(--sy);width:var(--len);height:6px;transform-origin:0 50%;transform:rotate(var(--ang));background:linear-gradient(90deg,rgba(255,199,83,.08),rgba(255,216,132,.94) 38%,rgba(255,248,221,.96) 50%,rgba(255,216,132,.94) 62%,rgba(255,199,83,.08));border-radius:999px;filter:drop-shadow(0 0 8px rgba(255,188,68,.6));animation:v43JackpotBolt .38s ease-out both}
-.v43-jackpot-stage .v43-jackpot-machine{position:absolute;left:var(--mx);top:var(--my);transform:translate(-50%,-50%);width:min(270px,46vw);padding:12px 12px 14px;border-radius:22px;background:linear-gradient(180deg,#ab3b20 0,#8c2211 36%,#621208 100%);box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,224,169,.72),inset 0 10px 18px rgba(255,255,255,.12);animation:v43JackpotMachineIn .22s ease-out both}
-.v43-jackpot-stage .v43-jackpot-top{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:9px;color:#ffe8a8;font-size:13px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase;text-shadow:0 2px 5px rgba(0,0,0,.55)}
-.v43-jackpot-stage .v43-jackpot-top .lamp{width:8px;height:8px;border-radius:50%;background:#ffd771;box-shadow:0 0 10px rgba(255,216,113,.95);animation:v43JackpotLamp .72s steps(1,end) infinite}
-.v43-jackpot-stage .v43-jackpot-body{display:flex;align-items:center;justify-content:center;gap:10px}
-.v43-jackpot-stage .v43-jackpot-wheel{position:relative;flex:0 0 48px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff4bf 0 10%,#ffd96e 14%,#c05719 58%,#6d1709 100%);box-shadow:0 0 0 2px rgba(255,229,179,.75),0 0 18px rgba(255,170,66,.42);animation:v43JackpotWheel 1.1s linear infinite}
-.v43-jackpot-stage .v43-jackpot-wheel::before,.v43-jackpot-stage .v43-jackpot-wheel::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:42px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,228,155,.1));transform:translate(-50%,-50%);border-radius:999px}
-.v43-jackpot-stage .v43-jackpot-wheel::after{transform:translate(-50%,-50%) rotate(90deg)}
-.v43-jackpot-stage .v43-jackpot-window{display:flex;gap:6px;padding:10px;border-radius:16px;background:linear-gradient(180deg,#2a130b,#120805);box-shadow:inset 0 0 0 2px rgba(255,220,164,.22),inset 0 8px 16px rgba(255,255,255,.05)}
-.v43-jackpot-stage .v43-jackpot-reel{position:relative;width:54px;height:64px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#fdf2cf,#fbdfa4 32%,#fff8e6 50%,#f3c66d 100%);box-shadow:inset 0 0 0 2px rgba(107,38,12,.24),0 0 14px rgba(0,0,0,.2)}
-.v43-jackpot-stage .v43-jackpot-reel::before,.v43-jackpot-stage .v43-jackpot-reel::after{content:"";position:absolute;left:0;right:0;height:16px;z-index:2;pointer-events:none}
-.v43-jackpot-stage .v43-jackpot-reel::before{top:0;background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,0))}
-.v43-jackpot-stage .v43-jackpot-reel::after{bottom:0;background:linear-gradient(0deg,rgba(0,0,0,.24),rgba(0,0,0,0))}
-.v43-jackpot-stage .v43-jackpot-track{position:absolute;left:0;right:0;top:0}
-.v43-jackpot-stage .v43-jackpot-symbol{height:64px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:1000;color:#8d1212;text-shadow:0 1px 0 #fff7dc,0 2px 8px rgba(255,255,255,.4);letter-spacing:.05em}
-.v43-jackpot-stage .v43-jackpot-symbol.non7{color:#5a2812;font-size:20px}
-.v43-jackpot-stage .v43-jackpot-result{margin-top:10px;min-height:18px;text-align:center;color:#fff0c7;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 1px 4px rgba(0,0,0,.7);opacity:.15;transition:opacity .15s ease}
-.v43-jackpot-stage.result-ready .v43-jackpot-result{opacity:1}
-.v43-jackpot-stage.result-none .v43-jackpot-machine{box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,224,169,.72),0 0 26px rgba(255,224,169,.2)}
-.v43-jackpot-stage.result-two .v43-jackpot-machine{box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,224,169,.72),0 0 34px rgba(255,157,71,.45)}
-.v43-jackpot-stage.result-jackpot .v43-jackpot-machine{box-shadow:0 18px 40px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,224,169,.72),0 0 44px rgba(255,242,151,.7)}
-.v43-jackpot-stage .v43-jackpot-burst{position:absolute;left:var(--tx);top:var(--ty);width:18px;height:18px;border-radius:50%;transform:translate(-50%,-50%) scale(.3);background:radial-gradient(circle,rgba(255,252,238,.96) 0 18%,rgba(255,208,96,.9) 22%,rgba(255,150,46,.42) 45%,rgba(255,150,46,0) 72%);opacity:0}
-.v43-jackpot-stage.result-ready .v43-jackpot-burst{animation:v43JackpotBurst .56s ease-out both}
-.v43-slot-target-hit{animation:v43SlotTargetHit .66s ease-out 1}
-@keyframes v43JackpotBolt{0%{opacity:0;transform:rotate(var(--ang)) scaleX(.15)}100%{opacity:1;transform:rotate(var(--ang)) scaleX(1)}}
-@keyframes v43JackpotMachineIn{0%{opacity:0;transform:translate(-50%,-56%) scale(.84)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@keyframes v43JackpotLamp{0%,100%{opacity:.42;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}
-@keyframes v43JackpotWheel{to{transform:rotate(360deg)}}
-@keyframes v43JackpotBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.24)}18%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(5.8)}}
-@keyframes v43SlotTargetHit{0%{transform:none;filter:none}18%{transform:translateY(-2px) scale(1.02);filter:brightness(1.18)}42%{transform:translateY(1px) scale(.99)}100%{transform:none;filter:none}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .card.transformation-card{outline:2px solid rgba(197,139,255,.82)!important;outline-offset:-2px;box-shadow:0 0 0 2px #050505,0 0 16px rgba(197,139,255,.6),3px 4px 0 #000!important}
 .card .transform-badge{position:absolute;z-index:8;top:4px;right:4px;padding:2px 4px;background:#120b1c;color:#f4e9ff;border:1px solid #c58bff;font-size:6px;font-weight:1000;letter-spacing:.08em;line-height:1;text-transform:uppercase;pointer-events:none}
@@ -12095,39 +12100,31 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand
   50%{filter:drop-shadow(0 0 5px rgba(225,248,255,1)) drop-shadow(0 0 13px rgba(68,184,255,.98)) drop-shadow(0 0 25px rgba(35,128,255,.7))}
 }
 
-.card.v32-getsuga-shake{animation:v32GetsugaTargetShake 330ms cubic-bezier(.2,.78,.22,1) both!important;z-index:64!important}
+
 .v246-cut-stage.v31-getsuga-impact-cut.v246-active{animation:none!important}
-@keyframes v32GetsugaTargetShake{
-  0%,100%{transform:translate(0,0) rotate(0);filter:none}
-  10%{transform:translate(-3px,1px) rotate(-.55deg);filter:brightness(1.18)}
-  22%{transform:translate(3.4px,-1px) rotate(.58deg)}
-  35%{transform:translate(-2.8px,-1.2px) rotate(-.48deg)}
-  49%{transform:translate(2.6px,1.2px) rotate(.42deg);filter:brightness(1.3) saturate(1.1)}
-  64%{transform:translate(-2px,.6px) rotate(-.34deg)}
-  80%{transform:translate(1.2px,-.5px) rotate(.2deg)}
-}
 
-.v32-book-stage{position:fixed!important;z-index:10315!important;pointer-events:none!important;overflow:visible!important}
-.v32-book-stage .flash{position:absolute;inset:-8%;border-radius:10px;background:radial-gradient(circle at 50% 50%,rgba(119,255,174,.35),rgba(35,190,105,.12) 48%,transparent 72%);opacity:0;animation:v32BookFlash 920ms ease-out both}
-.v32-book-stage .slash,.v32-book-stage .glow{position:absolute;left:50%;top:50%;width:155%;transform-origin:50% 50%;border-radius:999px;opacity:0;transform:translate(-50%,-50%) rotate(-36deg) scaleX(.04)}
-.v32-book-stage .glow{height:13px;background:linear-gradient(90deg,transparent,rgba(80,255,151,.35) 12%,rgba(126,255,181,.8) 50%,rgba(80,255,151,.35) 88%,transparent);filter:blur(6px);animation:v32BookSlash 760ms cubic-bezier(.12,.82,.2,1) 80ms both}
-.v32-book-stage .slash{height:2px;background:linear-gradient(90deg,transparent,#a9ffd0 13%,#38f797 45%,#eafff3 52%,#38f797 60%,#a9ffd0 87%,transparent);box-shadow:0 0 5px #68ffae,0 0 12px rgba(42,242,136,.8);animation:v32BookSlash 690ms cubic-bezier(.1,.8,.18,1) 110ms both}
-.v32-book-spark{position:absolute;left:50%;top:50%;width:2px;height:var(--h,15px);margin-left:-1px;margin-top:calc(var(--h,15px)/-2);border-radius:999px;background:linear-gradient(180deg,transparent,#caffdf 28%,#3cff9a 70%,transparent);opacity:0;transform:rotate(var(--r,0deg)) translateY(0);animation:v32BookSpark var(--d,460ms) ease-out var(--delay,210ms) both}
-@keyframes v32BookFlash{0%{opacity:0;transform:scale(.86)}18%{opacity:.55}55%{opacity:.24;transform:scale(1.05)}100%{opacity:0;transform:scale(1.12)}}
-@keyframes v32BookSlash{0%{opacity:0;transform:translate(-50%,-50%) rotate(-36deg) scaleX(.04)}18%{opacity:1}62%{opacity:1;transform:translate(-50%,-50%) rotate(-36deg) scaleX(1)}100%{opacity:0;transform:translate(-50%,-50%) rotate(-36deg) scaleX(1.08)}}
-@keyframes v32BookSpark{0%{opacity:0;transform:rotate(var(--r)) translateY(0) scaleY(.15)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--r)) translateY(var(--dy,-22px)) scaleY(1)}}
 
-.card.v32-chad-shake{animation:v32ChadShake 430ms cubic-bezier(.2,.76,.22,1) both!important;z-index:64!important}
-@keyframes v32ChadShake{0%,100%{transform:none;filter:none}12%{transform:translate(-2.8px,1px) rotate(-.45deg)}25%{transform:translate(3px,-1px) rotate(.5deg)}38%{transform:translate(-2.4px,-1px) rotate(-.38deg)}52%{transform:translate(2.2px,1.1px) rotate(.32deg);filter:brightness(1.14) contrast(1.06)}68%{transform:translate(-1.6px,.4px) rotate(-.24deg)}84%{transform:translate(.9px,-.4px) rotate(.14deg)}}
-.v32-chad-stage{position:fixed!important;z-index:10310!important;pointer-events:none!important;overflow:visible!important}
-.v32-chad-skull{position:absolute;inset:-3%;width:106%;height:106%;overflow:visible;filter:drop-shadow(0 0 3px rgba(255,214,164,.7));opacity:0;animation:v32SkullAppear 520ms ease-out both}
-.v32-chad-skull path,.v32-chad-skull circle{fill:none;stroke:rgba(255,230,195,.95);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:v32CrackDraw 430ms cubic-bezier(.18,.74,.2,1) 80ms forwards}
-.v32-chad-skull .hot{stroke:rgba(255,156,74,.92);stroke-width:1.3;animation-delay:150ms}
-.v32-chad-fragment{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;pointer-events:none!important;will-change:transform,opacity,filter;animation:v32ChadFragment var(--d,620ms) cubic-bezier(.2,.62,.3,1) var(--delay,0ms) forwards!important;transform-origin:50% 50%!important}
-.v32-chad-fragment .row-badge{display:none!important}
-@keyframes v32SkullAppear{0%{opacity:0;transform:scale(.84)}20%{opacity:.95}75%{opacity:1;transform:scale(1)}100%{opacity:.15;transform:scale(1.03)}}
-@keyframes v32CrackDraw{to{stroke-dashoffset:0}}
-@keyframes v32ChadFragment{0%{opacity:1;transform:translate(0,0) rotate(0);filter:none}18%{opacity:1;filter:brightness(1.14) contrast(1.08)}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,28px)) rotate(var(--rot,0deg)) scale(.93);filter:brightness(.7) contrast(1.2) blur(.5px)}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .v32-sode-freeze-stage{position:fixed!important;z-index:10312!important;pointer-events:none!important;overflow:hidden!important;border-radius:8px;background:linear-gradient(135deg,rgba(223,250,255,.15),rgba(95,205,255,.35));box-shadow:inset 0 0 18px rgba(211,248,255,.82),0 0 12px rgba(101,210,255,.5);clip-path:inset(100% 0 0 0);animation:v32IceCover 700ms cubic-bezier(.12,.76,.22,1) forwards}
 .v32-sode-freeze-stage:before,.v32-sode-freeze-stage:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(128deg,transparent 0 10%,rgba(225,252,255,.7) 10.5% 11.1%,transparent 11.6% 24%),repeating-linear-gradient(38deg,transparent 0 14%,rgba(131,220,255,.62) 14.4% 15%,transparent 15.5% 29%);mix-blend-mode:screen;opacity:.8}
@@ -12137,12 +12134,9 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand
 .v32-sode-ice:before{content:"";position:absolute;inset:-8%;background:repeating-linear-gradient(126deg,transparent 0 12%,rgba(225,252,255,.66) 12.3% 13%,transparent 13.5% 27%),repeating-linear-gradient(42deg,transparent 0 17%,rgba(104,205,247,.54) 17.3% 18%,transparent 18.4% 34%);opacity:.62}
 .v32-sode-ice:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.25),transparent 14% 86%,rgba(216,248,255,.32)),linear-gradient(0deg,rgba(229,252,255,.25),transparent 18% 82%,rgba(200,240,255,.32));box-shadow:inset 0 0 12px rgba(232,253,255,.5)}
 
-@media (prefers-reduced-motion:reduce){html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.ability-target-locked,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v32-getsuga-shake,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.v32-chad-shake,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v32-book-stage *,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v32-chad-stage *,
-  html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v32-sode-freeze-stage{animation-duration:.01ms!important;animation-delay:0ms!important}
+@media (prefers-reduced-motion:reduce){
+html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .card.ability-target-locked,
+html:not(.pwa-standalone):not(.phone-device):not(.touch-device) .v32-sode-freeze-stage{animation-duration:.01ms!important;animation-delay:0ms!important}
 }
 </style>
 
@@ -12555,7 +12549,6 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand
 .v57-burn-stage .row-badge,
 .v254-getsuga-stage .row-badge,
 .v260-getsuga-stage .row-badge,
-.v32-book-stage .row-badge,
 .v33-book-stage .row-badge,
 .v35-chad-shard .row-badge,
 .v35-chad-shard-card .row-badge,
@@ -12580,28 +12573,6 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand
   100%{opacity:1;transform:translate(-50%,-95%) rotate(360deg) scaleY(1)}
 }
 </style>
-
-<style id="v44-getsuga-rebuilt">
-/* v44: dedicated Getsuga split from bottom to top. */
-.v44-getsuga-cut-stage{position:fixed;pointer-events:none;z-index:10320;overflow:visible}
-.v44-getsuga-half{position:absolute;inset:0;clip-path:var(--cut-clip);will-change:transform,opacity,filter}
-.v44-getsuga-half.left{animation:v44GetsugaHalfLeft 560ms cubic-bezier(.16,.76,.2,1) forwards}
-.v44-getsuga-half.right{animation:v44GetsugaHalfRight 560ms cubic-bezier(.16,.76,.2,1) forwards}
-.v44-getsuga-seam-core,.v44-getsuga-seam-glow,.v44-getsuga-seam-trail{position:absolute;left:var(--mx);top:var(--my);pointer-events:none;transform-origin:50% 50%}
-.v44-getsuga-seam-glow{width:18px;height:var(--len);margin-left:-9px;margin-top:calc(var(--len)/-2);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(205,238,255,.88) 18%,rgba(111,178,255,.94) 44%,rgba(67,127,255,.92) 56%,rgba(205,238,255,.88) 82%,rgba(255,255,255,0));filter:blur(7px);opacity:0;animation:v44GetsugaSeamGlow 380ms ease-out 1 both}
-.v44-getsuga-seam-core{width:5px;height:var(--len);margin-left:-2.5px;margin-top:calc(var(--len)/-2);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(246,252,255,1) 18%,rgba(162,217,255,1) 42%,rgba(255,255,255,1) 56%,rgba(162,217,255,1) 72%,rgba(255,255,255,0));box-shadow:0 0 12px rgba(140,206,255,.75);opacity:0;animation:v44GetsugaSeamCore 360ms ease-out 1 both}
-.v44-getsuga-seam-trail{width:56px;height:var(--len);margin-left:-28px;margin-top:calc(var(--len)/-2);background:linear-gradient(180deg,rgba(255,255,255,0),rgba(108,180,255,.18) 20%,rgba(28,79,214,.26) 55%,rgba(255,255,255,0));filter:blur(10px);opacity:0;animation:v44GetsugaSeamTrail 520ms ease-out 1 both}
-.v44-getsuga-flash{position:absolute;left:var(--mx);top:var(--my);width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.96) 0 18%,rgba(148,210,255,.74) 28%,rgba(74,133,255,.32) 52%,rgba(255,255,255,0) 78%);filter:blur(.6px);opacity:0;animation:v44GetsugaFlash 420ms ease-out 1 both}
-.v44-getsuga-spark{position:absolute;left:var(--x);top:var(--y);width:var(--w,2px);height:var(--h,18px);margin-left:calc(var(--w,2px)/-2);margin-top:calc(var(--h,18px)/-2);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(223,242,255,.98) 26%,rgba(88,161,255,.86) 62%,rgba(255,255,255,0));transform:rotate(var(--rot,0deg)) translateY(0) scaleY(.25);opacity:0;animation:v44GetsugaSpark var(--dur,360ms) ease-out var(--delay,0ms) forwards}
-@keyframes v44GetsugaHalfLeft{0%{opacity:1;transform:translate3d(0,0,0) rotate(0deg);filter:none}18%{opacity:1;transform:translate3d(-1px,-1px,0) rotate(-.3deg);filter:brightness(1.12)}100%{opacity:0;transform:translate3d(-14px,-3px,0) rotate(-3.4deg);filter:brightness(.82) blur(.25px)}}
-@keyframes v44GetsugaHalfRight{0%{opacity:1;transform:translate3d(0,0,0) rotate(0deg);filter:none}18%{opacity:1;transform:translate3d(1px,1px,0) rotate(.3deg);filter:brightness(1.12)}100%{opacity:0;transform:translate3d(14px,3px,0) rotate(3.4deg);filter:brightness(.82) blur(.25px)}}
-@keyframes v44GetsugaSeamGlow{0%{opacity:0;transform:translateY(26px) scaleY(.08)}28%{opacity:1;transform:translateY(0) scaleY(.62)}100%{opacity:0;transform:translateY(-16px) scaleY(1.04)}}
-@keyframes v44GetsugaSeamCore{0%{opacity:0;transform:translateY(24px) scaleY(.04)}26%{opacity:1;transform:translateY(0) scaleY(.74)}78%{opacity:.96;transform:translateY(-4px) scaleY(1)}100%{opacity:0;transform:translateY(-10px) scaleY(1.02)}}
-@keyframes v44GetsugaSeamTrail{0%{opacity:0;transform:translateY(28px) scaleY(.05)}26%{opacity:.84;transform:translateY(2px) scaleY(.66)}100%{opacity:0;transform:translateY(-20px) scaleY(1.08)}}
-@keyframes v44GetsugaFlash{0%{opacity:0;transform:scale(.16)}24%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(2.2)}}
-@keyframes v44GetsugaSpark{0%{opacity:0;transform:rotate(var(--rot,0deg)) translateY(0) scaleY(.2)}18%{opacity:1}60%{opacity:.86;transform:rotate(var(--rot,0deg)) translateY(var(--dy,-16px)) scaleY(1)}100%{opacity:0;transform:rotate(var(--rot,0deg)) translateY(calc(var(--dy,-16px) * 1.3)) scaleY(.1)}}
-</style>
-
 <style id="v46-getsuga-jackpot-rebuild">
 /* === V46: dedicated modern Getsuga projectile + true masked physical split === */
 .v46-getsuga-flight-stage{position:fixed;inset:0;z-index:10380;pointer-events:none;overflow:hidden;isolation:isolate}
@@ -12701,12 +12672,6 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .hand
 .v46-jackpot-symbol .v48-slot-cherry .berry.left{left:11px}
 .v46-jackpot-symbol .v48-slot-cherry .berry.right{left:28px}
 </style>
-
-<style id="v52-vfx-compat-notes">
-/* V52: ability VFX remain animated on touch/mobile/PWA even when the OS exposes reduced-motion.
-   Desktop/browser reduced-motion behavior remains intact. Fixed/body VFX layers stay outside scaled .app containers. */
-</style>
-
 <style id="v58-v27-hell-gates-exact">
 .v244-hell-stage{
   position:fixed!important;
@@ -14764,37 +14729,51 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .boar
   inset:20px 0 74px!important;
 }
 
-/* V78 — the safe zone removes 12px from the battlefield. Scale only browser battlefield cards
-   by the same row-height ratio; PWA/standalone keeps its original 26×39 geometry. */
-html:not(.pwa-standalone).phone-device.phone-landscape .row-cards .card,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
-  flex:0 0 25px!important;
-  width:25px!important;
-  min-width:25px!important;
-  max-width:25px!important;
-  height:37.5px!important;
-  min-height:37.5px!important;
-  max-height:37.5px!important;
+/* V81 — browser safe-zone battlefield geometry.
+   Card height is tied to the ACTUAL row height, not the pre-safe-zone fixed size.
+   PWA/standalone is intentionally untouched. */
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards{
+  align-items:center!important;
+  padding-top:2px!important;
+  padding-bottom:2px!important;
+  overflow-y:hidden!important;
 }
-html:not(.pwa-standalone).phone-device.phone-landscape .row-cards .card .card-face,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .row-cards .card .card-face{
-  width:25px!important;
-  min-width:25px!important;
-  max-width:25px!important;
-  height:37.5px!important;
-  min-height:37.5px!important;
-  max-height:37.5px!important;
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:calc(100% - 8px)!important;
+  min-height:0!important;
+  max-height:34px!important;
+  aspect-ratio:2 / 3!important;
+  margin:0!important;
+  align-self:center!important;
+  transform:none!important;
 }
-html:not(.pwa-standalone).phone-device.phone-landscape .row-cards .card .power,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
-  width:25px!important;
-  min-width:25px!important;
-  max-width:25px!important;
-  height:13.5px!important;
-  min-height:13.5px!important;
-  max-height:13.5px!important;
-  border-radius:25px 25px 0 0!important;
-  font-size:9.5px!important;
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  aspect-ratio:2 / 3!important;
+}
+html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face>.power,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face>.power{
+  width:20px!important;
+  min-width:0!important;
+  max-width:calc(100% - 2px)!important;
+  height:11px!important;
+  min-height:11px!important;
+  max-height:11px!important;
+  border-radius:20px 20px 0 0!important;
+  font-size:8.5px!important;
+  bottom:1px!important;
 }
 
 /* Hand viewport: cards occupy the upper portion, bottom ~15px is scrollbar-safe space. */
@@ -15206,9 +15185,9 @@ html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview 
 </style>
 
 
-<style id="v79-mobile-assemble-suicide-choice-tune">
+<style id="v81-mobile-ui-authoritative-corrections">
 /*
- V79 — mobile interaction polish only.
+ V81 — authoritative mobile interaction/layout corrections.
  1) ASSEMBLE YOUR SOUL: no sticky tap/hover scale on touch cards.
  2) ASSEMBLE action bar/buttons: larger touch targets, vertically centered.
  3) SOUL SUICIDE: restore the desktop circular visual language on mobile.
@@ -15231,61 +15210,70 @@ html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-item.exclude
   box-shadow:none!important;
 }
 
-/* 2 — a real mobile action dock instead of a 29px strip. */
+/* 2 — ASSEMBLE YOUR SOUL action dock.
+   Old v62 rules use button IDs + !important, so this block intentionally matches that specificity. */
 html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{
-  flex:0 0 42px!important;
-  height:42px!important;
-  min-height:42px!important;
-  max-height:42px!important;
-  grid-auto-rows:36px!important;
-  gap:6px!important;
-  padding:3px 0!important;
+  flex:0 0 54px!important;
+  height:54px!important;
+  min-height:54px!important;
+  max-height:54px!important;
+  grid-auto-rows:44px!important;
+  gap:7px!important;
+  padding:5px 0!important;
   align-items:center!important;
   justify-items:stretch!important;
   overflow:hidden!important;
 }
-html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button,
-html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
-  height:36px!important;
-  min-height:36px!important;
-  max-height:36px!important;
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm{
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
   align-self:center!important;
   margin:0!important;
-  box-sizing:border-box!important;
-}
-html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button{
+  padding:0 9px!important;
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
-  padding:0 7px!important;
-}
-html.touch-device.touch-landscape #deckBuilderOverlay .v61-db-label{
-  font-size:8.5px!important;
-  line-height:1!important;
+  box-sizing:border-box!important;
 }
 html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  align-self:center!important;
+  margin:0!important;
+  padding:3px 4px!important;
   display:flex!important;
   flex-direction:column!important;
   align-items:center!important;
   justify-content:center!important;
+  box-sizing:border-box!important;
   line-height:1!important;
-  padding:2px 4px!important;
+}
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack .v61-db-label,
+html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm .v61-db-label{
+  display:block!important;
+  font-size:9px!important;
+  line-height:1!important;
+  margin:0!important;
 }
 
 @media (max-height:370px){
   html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions{
-    flex-basis:39px!important;
+    flex-basis:49px!important;
+    height:49px!important;
+    min-height:49px!important;
+    max-height:49px!important;
+    grid-auto-rows:39px!important;
+    padding:5px 0!important;
+  }
+  html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderBack,
+  html.touch-device.touch-landscape #deckBuilderOverlay #deckBuilderConfirm,
+  html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
     height:39px!important;
     min-height:39px!important;
     max-height:39px!important;
-    grid-auto-rows:33px!important;
-    padding:3px 0!important;
-  }
-  html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-actions>button,
-  html.touch-device.touch-landscape #deckBuilderOverlay .deck-builder-counter{
-    height:33px!important;
-    min-height:33px!important;
-    max-height:33px!important;
   }
 }
 
@@ -15354,21 +15342,25 @@ html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:active{
   transform:none!important;
 }
 
-/* 4 — browser only. Raise card choices a little; standalone/PWA is already right. */
-html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{
-  transform:translateY(-7px)!important;
+/* 4 — browser only. Lift the CARD-CHOICE stage itself; PWA stays exactly as-is. */
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-modal.card-choice .choice-grid,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.card-choice .choice-grid{
+  position:relative!important;
+  top:-22px!important;
 }
-html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn:hover,
-html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn:focus-visible,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn:hover,
-html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn:focus-visible{
-  transform:translateY(-7px)!important;
+/* Do not stack the old per-button translate with the grid lift. */
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-modal.card-choice .choice-card-btn,
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-modal.card-choice .choice-card-btn:hover,
+html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-modal.card-choice .choice-card-btn:focus-visible,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.card-choice .choice-card-btn,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.card-choice .choice-card-btn:hover,
+html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.card-choice .choice-card-btn:focus-visible{
+  transform:none!important;
 }
 @media (max-height:360px){
-  html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-card-btn,
-  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-card-btn{
-    transform:translateY(-4px)!important;
+  html:not(.pwa-standalone).phone-device.phone-landscape #choiceOverlay .choice-modal.card-choice .choice-grid,
+  html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-modal.card-choice .choice-grid{
+    top:-16px!important;
   }
 }
 </style>
@@ -15566,7 +15558,6 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choi
 <div id="toast" class="toast"></div>
 
 <script src="https://unpkg.com/mqtt@5.15.2/dist/mqtt.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js" integrity="sha512-XEKeWX+mI3Ov+tg2evDlVQFzVOIp4T8J3cNcCEPaEUGpxJV3eZaN8rHuvnFPvQpGJBHPmrozJDMpm2xcDvtmyQ==" crossorigin="anonymous"></script>
 <script>
 (() => {
 
@@ -15852,41 +15843,17 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choi
   let transientPlayedCardPreviewActor=null;
 
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION="349";
-  const ONLINE_PEER_PREFIX="bleach-soul-clash-v348-";
+  const ONLINE_GAME_VERSION=String(globalThis.BSC_BUILD_VERSION||"80");
 
-  const ONLINE_MQTT_TOPIC_PREFIX="bleach-soul-clash/v295";
+  const ONLINE_MQTT_TOPIC_PREFIX=`bleach-soul-clash/v${ONLINE_GAME_VERSION}`;
+  const ONLINE_MQTT_CLIENT_PREFIX=`bsc${ONLINE_GAME_VERSION}`;
   const ONLINE_MQTT_BROKERS=[
     {key:"E",name:"EMQX Relay",url:"wss://broker.emqx.io:8084/mqtt"},
     {key:"H",name:"HiveMQ Relay",url:"wss://broker.hivemq.com:8884/mqtt"}
   ];
-
-  const ONLINE_BASE_ICE_SERVERS=[
-    {urls:"stun:stun.l.google.com:19302"},
-    {urls:"stun:stun1.l.google.com:19302"},
-    {urls:"stun:stun2.l.google.com:19302"},
-    {urls:"stun:openrelay.metered.ca:80"},
-    {urls:"turn:openrelay.metered.ca:80",username:"openrelayproject",credential:"openrelayproject"},
-    {urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"},
-    {urls:"turn:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"},
-    {urls:"turns:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"}
-  ];
-  function onlineIceServers(){
-    const extra=Array.isArray(globalThis.BSC_TURN_SERVERS)?globalThis.BSC_TURN_SERVERS:[];
-    return [...extra,...ONLINE_BASE_ICE_SERVERS];
-  }
-  function onlineRtcConfig({relayOnly=false}={}){
-    return {
-      iceServers:onlineIceServers(),
-      iceTransportPolicy:relayOnly?"relay":"all",
-      iceCandidatePoolSize:8,
-      bundlePolicy:"max-bundle",
-      rtcpMuxPolicy:"require"
-    };
-  }
   const networkSession={
     connected:false, role:null, localSide:null, roomCode:null,
-    peer:null, conn:null, peerReady:false, closing:false,
+    closing:false,
     transport:null, mqtt:null, mqttBroker:null, mqttClientId:null, mqttTopicIn:null, mqttTopicOut:null, remoteId:null,
     mqttSeq:0, mqttSeen:new Set(), mqttJoinResolve:null, mqttJoinReject:null, mqttWasConnected:false,
     localSetup:null, peerSetup:null, roomClosed:false, lastError:null,
@@ -17571,10 +17538,9 @@ function isNanaoBarrierActive(card){
     if(fn) fn();
   });
 
-  function peerJsAvailable(){ return typeof globalThis.Peer==="function"; }
   function makeOnlineDiagError(type,message,extra={}){
-    const err=new Error(message||type||"P2P diagnostic error");
-    err.type=type||"p2p-diagnostic";
+    const err=new Error(message||type||"ONLINE diagnostic error");
+    err.type=type||"online-diagnostic";
     try{ Object.assign(err,extra||{}); }catch(_e){}
     return err;
   }
@@ -17598,117 +17564,28 @@ function isNanaoBarrierActive(card){
     if(el._onlineDiagStages.length>9) el._onlineDiagStages=el._onlineDiagStages.slice(-9);
     el.textContent=el._onlineDiagStages.join(" → ");
   }
-  function removeEmitterListener(emitter,event,fn){
-    try{
-      if(typeof emitter?.off==="function") emitter.off(event,fn);
-      else if(typeof emitter?.removeListener==="function") emitter.removeListener(event,fn);
-    }catch(_e){}
-  }
-  function p2pErrorText(err){
+  function onlineErrorText(err){
     const type=err?.type||"";
-    if(type==="peer-unavailable") return "HOST peer не существует: комната не найдена или HOST ещё не создал её";
-    if(type==="unavailable-id") return "такой код комнаты уже занят";
-    if(type==="browser-incompatible") return "этот браузер не поддерживает WebRTC";
     if(type==="host-rejected") return `HOST отклонил соединение${err?.reason?`: ${err.reason}`:""}`;
     if(type==="room-busy") return "HOST отклонил соединение: room busy — в комнате уже есть Игрок 2";
     if(type==="protocol-mismatch") return "HOST отклонил соединение: protocol mismatch";
     if(type==="version-mismatch") return `HOST отклонил соединение: gameVersion mismatch${err?.expected?`; нужна v${err.expected}`:""}`;
     if(type==="host-state") return "HOST отклонил соединение: host closing / wrong role";
-    if(type==="signalling-disconnected") return "signalling disconnected: соединение с PeerJS Cloud оборвалось до открытия DataChannel";
-    if(type==="ice-failed"||type==="webrtc") return "ICE/WebRTC failed: прямой канал не установился (NAT/CGNAT/firewall); TURN нужен только если это подтверждается этим статусом";
-    if(type==="datachannel-closed") return "DataChannel closed до завершения подключения";
-    if(type==="connect-timeout") return "не удалось открыть WebRTC DataChannel за 45 секунд даже с TURN fallback";
     if(type==="relay-unavailable") return err?.message||"relay-сервер недоступен";
     if(type==="room-not-found") return "HOST не ответил: проверьте код комнаты и убедитесь, что HOST оставил комнату открытой";
     if(type==="relay-disconnected") return "соединение с relay-сервером временно потеряно";
-    if(type==="signalling-timeout") return err?.message||"PeerJS Cloud не ответил вовремя";
     if(type==="network"||type==="server-error"||type==="socket-error"||type==="socket-closed") return "сетевая ошибка ONLINE DUEL";
-    return err?.message||type||"ошибка P2P-соединения";
+    return err?.message||type||"ошибка ONLINE-соединения";
   }
   function updateNetworkStatusForError(err){
     networkSession.lastError=err;
-    const text=p2pErrorText(err);
-    onlineDiagWarn("P2P error",{role:networkSession.role,peerId:networkSession.peer?.id||null,type:err?.type||null,message:err?.message||String(err),details:err});
+    const text=onlineErrorText(err);
+    onlineDiagWarn("ONLINE error",{role:networkSession.role,remoteId:networkSession.remoteId||null,type:err?.type||null,message:err?.message||String(err),details:err});
     if(networkSession.role==="host"){
       const el=$("#networkCreateStatus"); if(el) el.textContent=`ONLINE: ${text}.`;
     } else {
       const el=$("#networkJoinStatus"); if(el) el.textContent=`ONLINE: ${text}.`;
     }
-  }
-  function peerConnectionSnapshot(conn){
-    const pc=conn?.peerConnection;
-    return {
-      peer:conn?.peer||null,
-      dataChannel:conn?.dataChannel?.readyState||null,
-      connectionState:pc?.connectionState||null,
-      iceConnectionState:pc?.iceConnectionState||null,
-      iceGatheringState:pc?.iceGatheringState||null,
-      signalingState:pc?.signalingState||null,
-      localDescription:pc?.localDescription?.type||null,
-      remoteDescription:pc?.remoteDescription?.type||null,
-      turnConfigured:onlineIceServers().some(x=>String(x?.urls||"").startsWith("turn"))
-    };
-  }
-  function classifyPreReadyClose(peer,conn){
-    const pc=conn?.peerConnection;
-    const connectionState=pc?.connectionState||"";
-    const iceState=pc?.iceConnectionState||"";
-    if(peer?.disconnected) return makeOnlineDiagError("signalling-disconnected","PeerJS signalling disconnected before DataChannel open");
-    if(connectionState==="failed"||iceState==="failed") return makeOnlineDiagError("ice-failed","ICE/WebRTC failed before DataChannel open");
-    if(connectionState==="connected"||iceState==="connected"||iceState==="completed") return makeOnlineDiagError("datachannel-closed","DataChannel closed before application handshake",{connectionState,iceState});
-    return makeOnlineDiagError("host-rejected","HOST closed/rejected the incoming connection before application handshake",{reason:"connection closed before open/hello",connectionState,iceState});
-  }
-  function attachPeerConnectionDiagnostics(conn,{side="unknown",statusEl=null,onFailure=null}={}){
-    let pc=null,stopped=false,retryTimer=null;
-    const cleanups=[];
-    const stop=()=>{
-      if(stopped) return; stopped=true;
-      if(retryTimer) clearTimeout(retryTimer);
-      while(cleanups.length){ try{ cleanups.pop()(); }catch(_e){} }
-    };
-    const add=(target,event,fn)=>{
-      try{ target?.addEventListener?.(event,fn); cleanups.push(()=>target?.removeEventListener?.(event,fn)); }catch(_e){}
-    };
-    const failIce=(why)=>{
-      const err=makeOnlineDiagError("ice-failed",why,{snapshot:peerConnectionSnapshot(conn)});
-      onlineDiagWarn(`${side}: ICE/WebRTC failed`,err.snapshot);
-      if(typeof onFailure==="function") onFailure(err);
-      else updateNetworkStatusForError(err);
-    };
-    const wire=()=>{
-      if(stopped) return;
-      pc=conn?.peerConnection;
-      if(!pc){ retryTimer=setTimeout(wire,80); return; }
-      onlineDiagLog(`${side}: RTCPeerConnection attached`,peerConnectionSnapshot(conn));
-      if(side==="guest") appendDiagStatus(statusEl,"WebRTC negotiating");
-      let hostAnswerMarked=false;
-      const markHostAnswer=()=>{
-        if(side!=="guest"||hostAnswerMarked||!pc?.remoteDescription) return;
-        hostAnswerMarked=true;
-        appendDiagStatus(statusEl,"HOST connection received");
-        onlineDiagLog("guest: remote description received",peerConnectionSnapshot(conn));
-      };
-      const logState=(name)=>()=>{
-        const snap=peerConnectionSnapshot(conn);
-        onlineDiagLog(`${side}: ${name}`,snap);
-        markHostAnswer();
-        if(snap.connectionState==="failed"||snap.iceConnectionState==="failed") failIce(`${name}: ${snap.connectionState||snap.iceConnectionState||"failed"}`);
-      };
-      add(pc,"connectionstatechange",logState("connectionState change"));
-      add(pc,"iceconnectionstatechange",logState("iceConnectionState change"));
-      add(pc,"icegatheringstatechange",logState("iceGatheringState change"));
-      add(pc,"signalingstatechange",logState("signalingState change"));
-      add(pc,"icecandidate",ev=>{
-        const c=ev?.candidate;
-        if(!c){ onlineDiagLog(`${side}: ICE gathering complete`,peerConnectionSnapshot(conn)); return; }
-        onlineDiagLog(`${side}: ICE candidate`,{type:c.type||null,protocol:c.protocol||null,address:c.address||null,port:c.port||null,relayProtocol:c.relayProtocol||null,url:c.url||null});
-        if(c.type==="relay" && statusEl) appendDiagStatus(statusEl,"TURN relay candidate ready");
-      });
-      markHostAnswer();
-      if(pc.connectionState==="failed"||pc.iceConnectionState==="failed") failIce("initial RTCPeerConnection state is failed");
-    };
-    wire();
-    return stop;
   }
   function sendRawNetworkEnvelope(envelope){
     if(networkSession.roomClosed) return false;
@@ -17733,10 +17610,7 @@ function isNanaoBarrierActive(card){
         return true;
       }catch(err){ console.warn("ONLINE DUEL relay send:",err); return false; }
     }
-    const conn=networkSession.conn;
-    if(!conn?.open) return false;
-    try{ conn.send(envelope); return true; }
-    catch(err){ console.warn("ONLINE DUEL send:",err); return false; }
+    return false;
   }
   async function sendNetworkEvent(type,payload={}){
     if(!networkSession.connected||networkSession.roomClosed||networkSession.linkSuspended) return false;
@@ -17831,72 +17705,6 @@ function isNanaoBarrierActive(card){
     state=snapshot;
     state.actionLock=null; state.rowTargeting=null; state.draggingUid=null; state.previewCard=null; state.selected=null;
     enforceAllDeckBuildRules();
-  }
-  function rejectIncomingConnection(conn,reasonCode,reasonText){
-    const status=$("#networkCreateStatus");
-    const remote=conn?.peer||"unknown peer";
-    const label=reasonText||reasonCode||"unknown reason";
-    if(status) status.textContent=`HOST connection received: ${remote} → отклонено: ${label}.`;
-    onlineDiagWarn("HOST rejecting incoming connection",{peerId:networkSession.peer?.id||null,remotePeer:remote,reasonCode,reasonText,metadata:conn?.metadata||null,states:peerConnectionSnapshot(conn)});
-    try{ conn._bscRejected=true; }catch(_e){}
-    let closed=false;
-    const closeNow=()=>{ if(closed) return; closed=true; try{conn.close();}catch(_e){} };
-    const sendReason=()=>{
-      try{
-        if(conn?.open) conn.send({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"connection_rejected",payload:{reason:reasonCode,detail:reasonText,expected:ONLINE_GAME_VERSION},senderRole:"host",ts:Date.now()});
-      }catch(err){ onlineDiagWarn("HOST rejection packet failed",{reasonCode,message:err?.message||String(err)}); }
-      setTimeout(closeNow,180);
-    };
-    if(conn?.open) sendReason();
-    else {
-      try{ conn.on("open",sendReason); }catch(_e){}
-
-      setTimeout(()=>{ if(!conn?.open) closeNow(); },1800);
-    }
-  }
-  function bindDataConnection(conn,remoteRole){
-    networkSession.conn=conn;
-    let closedHandled=false;
-    let everOpened=!!conn?.open;
-    onlineDiagLog("bindDataConnection",{localRole:networkSession.role,remoteRole,localPeerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,open:!!conn?.open,metadata:conn?.metadata||null});
-    conn.on("open",()=>{
-      everOpened=true;
-      if(networkSession.closing||networkSession.conn!==conn) return;
-      networkSession.connected=true; networkSession.roomClosed=false;
-      onlineDiagLog("DataChannel open",{localRole:networkSession.role,peerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,states:peerConnectionSnapshot(conn)});
-      sendRawNetworkEnvelope({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"hello",payload:{role:networkSession.role,roomCode:networkSession.roomCode},senderRole:networkSession.role,ts:Date.now()});
-      if(networkSession.role==="host"){
-        const status=$("#networkCreateStatus"); if(status) status.textContent=`DataChannel open: Игрок 2 ${conn?.peer||""} подключён к комнате ${networkSession.roomCode}.`;
-      }
-      if(networkSession.localSetup) sendNetworkEvent("setup",networkSession.localSetup);
-    });
-    conn.on("data",data=>{
-      if(!data||typeof data!=="object") return;
-      if(data.type==="connection_rejected"){
-        try{ conn._bscHandshakeRejected=true; }catch(_e){}
-      }
-      if(data.protocol!==ONLINE_PROTOCOL||String(data.gameVersion||"")!==ONLINE_GAME_VERSION){
-        sendRawNetworkEnvelope({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:"version_mismatch",payload:{expected:ONLINE_GAME_VERSION},senderRole:networkSession.role,ts:Date.now()});
-        return;
-      }
-      Promise.resolve(handleNetworkEvent(data)).catch(err=>console.error("ONLINE DUEL event:",err));
-    });
-    conn.on("error",err=>{
-      onlineDiagWarn("DataConnection error",{localRole:networkSession.role,peerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,type:err?.type||null,message:err?.message||String(err),states:peerConnectionSnapshot(conn)});
-      if(!networkSession.closing) updateNetworkStatusForError(err);
-    });
-    conn.on("close",()=>{
-      if(closedHandled) return; closedHandled=true;
-      onlineDiagWarn("DataConnection close",{localRole:networkSession.role,peerId:networkSession.peer?.id||null,connPeer:conn?.peer||null,everOpened,rejected:!!conn?._bscHandshakeRejected,states:peerConnectionSnapshot(conn)});
-      if(networkSession.closing||networkSession.conn!==conn) return;
-      networkSession.connected=false; networkSession.conn=null;
-
-      if(!everOpened) return;
-
-      if(conn._bscHandshakeRejected) return;
-      if(networkSession.role==="guest") handleHostClosed();
-      else handleGuestClosed();
-    });
   }
   function ensureHostOnlinePregameUi(reason="guest-connected"){
     if(gameMode!=="online" || networkSession.role!=="host" || !networkSession.connected || networkSession.pregameFinalized) return false;
@@ -18014,7 +17822,7 @@ function isNanaoBarrierActive(card){
       restorePreparedSideOwners(side,"enemy");
       networkSession.peerPreparedSide=side;
       networkSession.peerMulliganReady=true;
-      onlineDiagLog("Guest READY received",{peer:networkSession.conn?.peer||null,faction:side.faction,hand:side.hand.length,deck:side.deck.length});
+      onlineDiagLog("Guest READY received",{remoteId:networkSession.remoteId||null,faction:side.faction,hand:side.hand.length,deck:side.deck.length});
       await sendNetworkEvent("pregame_status",{hostReady:networkSession.localMulliganReady,guestReady:true});
       await maybeFinalizeOnlinePregame();
       return;
@@ -18149,33 +17957,24 @@ function isNanaoBarrierActive(card){
     try{ await sendNetworkEvent("host_closed",{}); }catch(_e){}
     networkSession.roomClosed=true;
   }
-  function destroyNetworkPeer(sendLeave=true){
+  function destroyNetworkTransport(sendLeave=true){
     const sessionRole=networkSession.role;
     networkSession.closing=true;
-    if(networkSession.transport==="mqtt"){
-      const client=networkSession.mqtt;
-      try{
-        if(sendLeave && client?.connected && networkSession.mqttTopicOut){
-          const packet={protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:sessionRole==="host"?"host_closed":"guest_left",payload:{},senderRole:sessionRole,senderId:networkSession.mqttClientId,targetId:networkSession.remoteId||null,roomCode:networkSession.roomCode,messageId:`${networkSession.mqttClientId}:leave:${Date.now()}`,ts:Date.now()};
-          client.publish(networkSession.mqttTopicOut,JSON.stringify(packet),{qos:1,retain:false},()=>{ try{client.end(true);}catch(_e){} });
-          setTimeout(()=>{ try{client.end(true);}catch(_e){} },250);
-        }else try{client?.end(true);}catch(_e){}
-      }catch(_e){ try{client?.end(true);}catch(__e){} }
-      networkSession.connected=false; networkSession.peerReady=false; networkSession.mqtt=null; networkSession.transport=null; networkSession.remoteId=null;
-      networkSession.conn=null; networkSession.peer=null;
-      return;
-    }
+    const client=networkSession.mqtt;
     try{
-      if(sendLeave && networkSession.conn?.open){
-        networkSession.conn.send({protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:sessionRole==="host"?"host_closed":"guest_left",payload:{},senderRole:sessionRole,ts:Date.now()});
-      }
-    }catch(_e){}
-    try{ networkSession.conn?.close(); }catch(_e){}
-    try{ networkSession.peer?.destroy(); }catch(_e){}
-    networkSession.connected=false; networkSession.peerReady=false; networkSession.conn=null; networkSession.peer=null;
+      if(sendLeave && client?.connected && networkSession.mqttTopicOut){
+        const packet={protocol:ONLINE_PROTOCOL,gameVersion:ONLINE_GAME_VERSION,type:sessionRole==="host"?"host_closed":"guest_left",payload:{},senderRole:sessionRole,senderId:networkSession.mqttClientId,targetId:networkSession.remoteId||null,roomCode:networkSession.roomCode,messageId:`${networkSession.mqttClientId}:leave:${Date.now()}`,ts:Date.now()};
+        client.publish(networkSession.mqttTopicOut,JSON.stringify(packet),{qos:1,retain:false},()=>{ try{client.end(true);}catch(_e){} });
+        setTimeout(()=>{ try{client.end(true);}catch(_e){} },250);
+      }else try{client?.end(true);}catch(_e){}
+    }catch(_e){ try{client?.end(true);}catch(__e){} }
+    networkSession.connected=false;
+    networkSession.mqtt=null;
+    networkSession.transport=null;
+    networkSession.remoteId=null;
   }
   window.addEventListener("pagehide",()=>{
-    if(gameMode==="online" && (networkSession.peer||networkSession.conn||networkSession.mqtt)) destroyNetworkPeer(true);
+    if(gameMode==="online" && networkSession.mqtt) destroyNetworkTransport(true);
   });
 
   const GAMEPLAY_CHOICE_CANCELLED = Symbol("gameplay-choice-cancelled");
@@ -18480,7 +18279,7 @@ function isNanaoBarrierActive(card){
     if(!el||!r) return null;
     const stage=document.createElement('div');stage.className='v33-chad-stage';
     stage.style.left=`${r.left}px`;stage.style.top=`${r.top}px`;stage.style.width=`${r.width}px`;stage.style.height=`${r.height}px`;
-    const clone=el.cloneNode(true);clone.classList.remove('ability-target-locked','selected','enter','landed-impact','dragging','with-info','v32-chad-shake');clone.classList.add('v33-chad-cardclone');clone.querySelectorAll('.row-badge').forEach(n=>n.remove());
+    const clone=el.cloneNode(true);clone.classList.remove('ability-target-locked','selected','enter','landed-impact','dragging','with-info');clone.classList.add('v33-chad-cardclone');clone.querySelectorAll('.row-badge').forEach(n=>n.remove());
     stage.appendChild(clone);
     const wrap=document.createElement('div');
     wrap.innerHTML=`<svg class="v33-chad-skull" viewBox="0 0 100 140" preserveAspectRatio="none" aria-hidden="true">
@@ -18682,52 +18481,6 @@ function isNanaoBarrierActive(card){
     stage.remove();
   }
 
-  async function v32AnimateLaMuerteTargets(sideKey,victims){
-    if(cardChoicePreflightContext?.phase==='collect') return;
-    const active=[];
-    for(const card of victims||[]){
-      const el=v242CardElement(sideKey,'melee',card.uid);
-      const r=visibleRect(el?.querySelector('.card-face'))||visibleRect(el);
-      if(!el||!r) continue;
-      el.classList.add('v32-chad-shake');
-      const stage=document.createElement('div'); stage.className='v32-chad-stage';
-      stage.style.left=`${r.left}px`; stage.style.top=`${r.top}px`; stage.style.width=`${r.width}px`; stage.style.height=`${r.height}px`;
-      stage.innerHTML=`<svg class="v32-chad-skull" viewBox="0 0 100 140" preserveAspectRatio="none" aria-hidden="true">
-        <path pathLength="1" d="M50 15 C28 15 17 31 18 52 C19 67 26 77 34 82 L34 95 L42 101 L42 116 L50 123 L58 116 L58 101 L66 95 L66 82 C75 76 81 65 82 51 C83 30 71 15 50 15 Z"/>
-        <path pathLength="1" d="M31 51 L43 46 L48 58 L38 64 Z M69 51 L57 46 L52 58 L62 64 Z M44 76 L50 68 L56 76 L53 83 L47 83 Z"/>
-        <path class="hot" pathLength="1" d="M50 15 L44 34 L52 43 L47 58 L54 69 L48 82 L55 96 L50 123 M18 52 L35 58 L28 73 L42 82 L34 95 M82 51 L65 58 L73 72 L58 82 L66 95 M31 51 L24 38 M69 51 L77 36"/>
-      </svg>`;
-      document.body.appendChild(stage);
-      active.push({card,el,r,stage,oldVisibility:el.style.visibility});
-    }
-    if(!active.length){ await waitForMs(150); return; }
-    await waitForMs(430);
-    for(const item of active){
-      item.el.classList.remove('v32-chad-shake');
-      item.el.style.visibility='hidden';
-      const cols=3,rows=3;
-      for(let y=0;y<rows;y++) for(let x=0;x<cols;x++){
-        const frag=item.el.cloneNode(true);
-        frag.classList.remove('ability-target-locked','v32-chad-shake','selected','enter','landed-impact','dragging','with-info');
-        frag.classList.add('v32-chad-fragment');
-        frag.querySelectorAll('.row-badge').forEach(n=>n.remove());
-        const x1=x*100/cols, x2=(x+1)*100/cols, y1=y*100/rows, y2=(y+1)*100/rows;
-        frag.style.clipPath=`polygon(${x1}% ${y1}%,${x2}% ${y1}%,${x2}% ${y2}%,${x1}% ${y2}%)`;
-        const cx=x-(cols-1)/2, cy=y-(rows-1)/2;
-        frag.style.setProperty('--dx',`${(cx*(10+Math.random()*8)+(-4+Math.random()*8)).toFixed(1)}px`);
-        frag.style.setProperty('--dy',`${(14+cy*8+Math.random()*20).toFixed(1)}px`);
-        frag.style.setProperty('--rot',`${(cx*8+(-7+Math.random()*14)).toFixed(1)}deg`);
-        frag.style.setProperty('--delay',`${Math.round(Math.random()*85)}ms`);
-        frag.style.setProperty('--d',`${Math.round(540+Math.random()*170)}ms`);
-        item.stage.appendChild(frag);
-      }
-    }
-    await waitForMs(760);
-    for(const item of active){
-      if(item.el?.isConnected) item.el.style.visibility=item.oldVisibility||'';
-      item.stage.remove();
-    }
-  }
 
 
   async function chooseFieldTarget(actorKey,targetSideKey,predicate,title,subtitle=""){
@@ -22081,7 +21834,7 @@ function v242CardElement(sideKey,row,uid){
       wrap.className=`v46-getsuga-piece ${kind}`;
       wrap.style.setProperty('--piece-clip',clip);
       const copy=cardEl.cloneNode(true);
-      copy.classList.remove('selected','enter','landed-impact','dragging','with-info','ability-target-locked','v32-getsuga-shake','v46-getsuga-target-kick');
+      copy.classList.remove('selected','enter','landed-impact','dragging','with-info','ability-target-locked','v46-getsuga-target-kick');
       copy.classList.add('v46-getsuga-cardcopy');
       copy.querySelectorAll('.row-badge').forEach(n=>n.remove());
       copy.removeAttribute('draggable');
@@ -23380,8 +23133,8 @@ ${template.desc}`:""}`;
     if(networkSession.guestDisconnectTimer) clearTimeout(networkSession.guestDisconnectTimer);
     if(networkSession.hostDisconnectTimer) clearTimeout(networkSession.hostDisconnectTimer);
     if(networkSession.canonicalRetryTimer) clearTimeout(networkSession.canonicalRetryTimer);
-    destroyNetworkPeer(false);
-    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,peer:null,conn:null,peerReady:false,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null,canonicalRetryTimer:null,pendingProposal:null,linkSuspended:false,hostSetupStarted:false,pregameUiStarted:false,guestDisconnectTimer:null,hostDisconnectTimer:null});
+    destroyNetworkTransport(false);
+    Object.assign(networkSession,{connected:false,role:null,localSide:null,roomCode:null,closing:false,transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,mqttSeq:0,mqttSeen:new Set(),mqttJoinResolve:null,mqttJoinReject:null,mqttWasConnected:false,localSetup:null,peerSetup:null,roomClosed:false,lastError:null,localPreparedSide:null,peerPreparedSide:null,localMulliganReady:false,peerMulliganReady:false,pregameFinalized:false,localRematchReady:false,peerRematchReady:false,rematchStarting:false,revision:0,awaitingCanonical:false,lastAcceptedReason:null,canonicalRetryTimer:null,pendingProposal:null,linkSuspended:false,hostSetupStarted:false,pregameUiStarted:false,guestDisconnectTimer:null,hostDisconnectTimer:null});
   }
   function mqttAvailable(){ return !!globalThis.mqtt?.connect; }
   function mqttBrokerByKey(key){ return ONLINE_MQTT_BROKERS.find(b=>b.key===String(key||"").toUpperCase())||null; }
@@ -23391,7 +23144,7 @@ ${template.desc}`:""}`;
   }
   function makeMqttClientId(role,code){
     const rand=()=>Math.random().toString(36).slice(2,8);
-    return `bsc322_${role}_${code}_${rand()}_${Date.now().toString(36).slice(-5)}`.slice(0,62);
+    return `${ONLINE_MQTT_CLIENT_PREFIX}_${role}_${code}_${rand()}_${Date.now().toString(36).slice(-5)}`.slice(0,62);
   }
   function generateRelayRoomCode(brokerKey){
     const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -23529,7 +23282,6 @@ ${template.desc}`:""}`;
           networkSession.mqttClientId=clientId;
           networkSession.mqttTopicIn=topics.in;
           networkSession.mqttTopicOut=topics.out;
-          networkSession.peerReady=true;
           const wasConnectedBefore=networkSession.mqttWasConnected;
           networkSession.mqttWasConnected=true;
           if(!settled){
@@ -23628,7 +23380,7 @@ ${template.desc}`:""}`;
           lastErr=err;
           onlineDiagWarn("Relay broker failed; trying next",{broker:broker.name,message:err?.message||String(err)});
           try{networkSession.mqtt?.end(true);}catch(_e){}
-          Object.assign(networkSession,{transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null,peerReady:false});
+          Object.assign(networkSession,{transport:null,mqtt:null,mqttBroker:null,mqttClientId:null,mqttTopicIn:null,mqttTopicOut:null,remoteId:null});
         }
       }
       if(!connected) throw lastErr||makeOnlineDiagError("relay-unavailable","не удалось подключиться ни к одному relay-серверу");
@@ -23640,7 +23392,7 @@ ${template.desc}`:""}`;
       return true;
     }catch(err){
       resetNetworkSession();
-      if(status) status.textContent=`Не удалось создать комнату: ${p2pErrorText(err)}.`;
+      if(status) status.textContent=`Не удалось создать комнату: ${onlineErrorText(err)}.`;
       return false;
     }finally{ if(btn) btn.disabled=false; }
   }
@@ -23650,7 +23402,7 @@ ${template.desc}`:""}`;
     $("#networkJoinCode").value=code;
     if(code.length!==6){ if(status) status.textContent="Введите полный шестизначный код комнаты."; return false; }
     const broker=mqttBrokerByKey(code[0]);
-    if(!broker){ if(status) status.textContent="Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v337."; return false; }
+    if(!broker){ if(status) status.textContent=`Этот код комнаты несовместим с текущей версией. HOST должен создать новую комнату в v${ONLINE_GAME_VERSION}.`; return false; }
     if(btn) btn.disabled=true;
     try{
       resetNetworkSession();
@@ -23666,7 +23418,7 @@ ${template.desc}`:""}`;
     }catch(err){
       onlineDiagWarn("JOIN relay failed",{roomCode:code,type:err?.type||null,message:err?.message||String(err),details:err});
       resetNetworkSession();
-      if(status) status.textContent=`Не удалось войти: ${p2pErrorText(err)}.`;
+      if(status) status.textContent=`Не удалось войти: ${onlineErrorText(err)}.`;
       return false;
     }finally{ if(btn) btn.disabled=false; }
   }
