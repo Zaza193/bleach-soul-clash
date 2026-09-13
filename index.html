@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="108";
+  const BUILD_VERSION="109";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -15956,6 +15956,65 @@ html.touch-device.touch-landscape:not(.tablet-device) .pass-btn span{
 }
 </style>
 
+
+<style id="v109-mobile-ui-online-preview-fixes">
+/* v109 — mobile polish: desktop Roman badge composition, correct power/frame stacking,
+   unclipped CHOOSE YOUR SOUL first row, and right-column guest READY. */
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  top:7px!important;
+  right:8px!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-family:"Times New Roman",Georgia,serif!important;
+  font-size:19.3px!important;
+  line-height:.88!important;
+  letter-spacing:0!important;
+  word-spacing:0!important;
+  -webkit-text-stroke:1.05px #000!important;
+  paint-order:stroke fill!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.82)!important;
+}
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge>.row-badge-desktop,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge>.row-badge-desktop{
+  display:inline!important;
+  visibility:visible!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html.phone-device.phone-landscape .rightbar .detail-preview .card .row-badge>.row-badge-mobile,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card .row-badge>.row-badge-mobile{
+  display:none!important;
+  visibility:hidden!important;
+}
+
+/* Desktop stacking parity: power semicircle sits under the frame layers, not above them. */
+html.touch-device .card .power,
+html.tablet-device .card .power{
+  z-index:4!important;
+}
+html.touch-device .card .frame,
+html.tablet-device .card .frame{z-index:10!important;}
+html.touch-device .card .card-face::before,
+html.tablet-device .card .card-face::before{z-index:11!important;}
+
+/* CHOOSE YOUR SOUL: reserve pixels for the outer top frame/glow of row one. */
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid{
+  padding-top:8px!important;
+  scroll-padding-top:8px!important;
+  box-sizing:border-box!important;
+}
+
+/* Guest has no Back button; keep READY in the same right-hand action column. */
+#mulliganOverlay .mulligan-actions.guest-ready-only #mulliganConfirmBtn{
+  grid-column:2!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -16461,6 +16520,8 @@ html.touch-device.touch-landscape:not(.tablet-device) .pass-btn span{
 
   let transientPlayedCardPreview=null;
   let transientPlayedCardPreviewActor=null;
+  let transientPlayedCardPreviewUntil=0;
+  let transientPlayedCardPreviewUid=null;
 
   const ONLINE_PROTOCOL="soul-clash-secure-v5";
   const ONLINE_GAME_VERSION=String(globalThis.BSC_BUILD_VERSION||"99");
@@ -23855,8 +23916,12 @@ function v242CardElement(sideKey,row,uid){
     const token=beginTurnAction(actor,"network-card"); if(!token) return false;
     try{
       if(plan) cardChoicePreflightPlans.set(card.uid,{choices:plan.choices||[],randoms:Array.isArray(plan.randoms)?plan.randoms:[]});
+      /* v109: HOST executes Guest actions authoritatively, so this path never passes through incoming VFX replay.
+         Give the Guest card the same static opponent preview before the local authoritative flight. */
+      await showRemotePlayedCardPreview(card,actor,2400);
       const visualTarget=isTargetReturnLandingCard(card)?returnLandingTargetFromPlan(actor,plan):(card.ability==="recall"?(()=>{const cand=strongest(state.enemy.board[resolvedRow],x=>isReturnableBoardCard(x,card.uid));return cand?{row:resolvedRow,card:cand}:null;})():null);
       await animateCardToField(card,resolvedRow,targetSide,visualTarget?{targetUid:visualTarget.card.uid}:{});
+      clearRemotePlayedCardPreview(card);
       if(state!==actionState || state.gameOver) return false;
       state.enemy.hand=state.enemy.hand.filter(x=>x.uid!==card.uid);
       state.selected=null; state.previewCard=null;
@@ -23880,6 +23945,7 @@ function v242CardElement(sideKey,row,uid){
       onlineDiagWarn("Authoritative Guest card rejected",{uid:card.uid,message:err?.message||String(err)});
       return false;
     } finally {
+      clearRemotePlayedCardPreview(card);
       if(state===actionState){ state.flightLandedUid=null; if(state.actionLock?.id===token) endTurnAction(token); render(); }
     }
   }
@@ -23902,7 +23968,7 @@ function v242CardElement(sideKey,row,uid){
       if(!card?.special || !canPlaySpecial(actor,card)) return false;
       const previous=cardChoicePreflightContext;
       cardChoicePreflightContext={phase:"replay",actorKey:actor,choices:action.plan?.choices||[],choiceCursor:0,randoms:[],randomCursor:0,recordingPaused:false};
-      try{ return await executeSpecialTurn(actor,card,ENEMY_REVEAL_MS); }
+      try{ return await executeSpecialTurn(actor,card,remotePreviewMinimumMs(ENEMY_REVEAL_MS)); }
       finally { cardChoicePreflightContext=previous; }
     }
     if(action.kind==="leader"){
@@ -24064,7 +24130,9 @@ function v242CardElement(sideKey,row,uid){
     const confirm=$("#mulliganConfirmBtn");
     if(confirm) confirm.textContent=gameMode==="online"?"READY":"SHOW YOUR RESOLVE";
     const back=$("#mulliganBackBtn");
-    if(back){ const locked=gameMode==="online" && networkSession.role==="guest"; back.disabled=locked; back.hidden=locked; }
+    const guestReadyOnly=gameMode==="online" && networkSession.role==="guest";
+    if(back){ back.disabled=guestReadyOnly; back.hidden=guestReadyOnly; }
+    $("#mulliganOverlay .mulligan-actions")?.classList.toggle("guest-ready-only",guestReadyOnly);
     $("#mulliganOverlay").classList.remove("hidden"); renderMulligan(); render();
   }
   function returnMulliganToDeckBuilder(){
@@ -24957,35 +25025,48 @@ ${template.desc}`:""}`;
     });
     return best;
   }
+  function remotePreviewMinimumMs(holdMs=520){
+    const root=document.documentElement;
+    const coarsePointer=(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||(navigator.maxTouchPoints||0)>0;
+    const mobileTouch=root.classList.contains('touch-device') || root.classList.contains('phone-device') || coarsePointer;
+    return mobileTouch ? Math.max(Number(holdMs)||0,2400) : Math.max(0,Number(holdMs)||0);
+  }
+  async function waitForRemotePreviewDeadline(card,minMs=0){
+    if(!card) return;
+    const uid=card.uid||null;
+    const requested=performance.now()+Math.max(0,Number(minMs)||0);
+    if(uid && transientPlayedCardPreviewUid===uid) transientPlayedCardPreviewUntil=Math.max(transientPlayedCardPreviewUntil,requested);
+    while(uid && transientPlayedCardPreviewUid===uid){
+      const remaining=transientPlayedCardPreviewUntil-performance.now();
+      if(remaining<=0) break;
+      await new Promise(resolve=>setTimeout(resolve,Math.min(remaining,120)));
+    }
+  }
   async function showRemotePlayedCardPreview(card,actor,holdMs=520){
-    /* Incoming ONLINE VFX envelopes are already guaranteed to come from the peer
-       (self-sent MQTT envelopes are rejected), so actor metadata must never suppress
-       the opponent preview. This also covers cards restored from snapshots with a
-       stale/missing _ownerKey. */
     if(!card) return false;
     transientPlayedCardPreview=safeNetworkClone(card)||card;
     transientPlayedCardPreviewActor=actor||enemyOf(activeViewSide());
+    transientPlayedCardPreviewUid=card.uid||null;
+    transientPlayedCardPreviewUntil=Infinity;
     renderDetail();
 
-    /* Commit the preview to a real painted frame before starting its visible hold. */
+    /* The hold starts only after the preview exists through two committed frames. */
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     if(!detailEl?.querySelector('.detail-preview .card')){
       renderDetail();
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     }
-
-    const root=document.documentElement;
-    const coarsePointer=(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||(navigator.maxTouchPoints||0)>0;
-    const mobileTouchPreview=root.classList.contains('touch-device') || root.classList.contains('phone-device') || coarsePointer;
-    /* v107 — readable ONLINE preview on phones/PWA/tablets: at least 2.4s after paint. */
-    const visibleHoldMs=mobileTouchPreview ? Math.max(Number(holdMs)||0,2400) : Math.max(0,Number(holdMs)||0);
-    if(visibleHoldMs>0) await waitForMs(visibleHoldMs);
+    const hold=remotePreviewMinimumMs(holdMs);
+    transientPlayedCardPreviewUntil=performance.now()+hold;
+    await waitForRemotePreviewDeadline(card);
     return true;
   }
   function clearRemotePlayedCardPreview(card=null){
     if(card && transientPlayedCardPreview?.uid && card.uid!==transientPlayedCardPreview.uid) return;
     transientPlayedCardPreview=null;
     transientPlayedCardPreviewActor=null;
+    transientPlayedCardPreviewUid=null;
+    transientPlayedCardPreviewUntil=0;
     if(state) renderDetail();
   }
   function networkCardStartRect(actor,card){
@@ -25044,6 +25125,8 @@ ${template.desc}`:""}`;
     const oldBadgeDisplay=previewRowBadge?.style.display??"";
     const oldBadgeVisibility=previewRowBadge?.style.visibility??"";
     const oldVisibility=previewCard?.style.visibility??null;
+
+    await waitForRemotePreviewDeadline(card);
 
     if(previewRowBadge){
       previewRowBadge.style.setProperty('display','none','important');
@@ -25472,6 +25555,8 @@ ${template.desc}`:""}`;
     document.querySelectorAll("body > .card-flight,body > .network-landing-ghost,body > .landing-impact").forEach(el=>el.remove());
     transientPlayedCardPreview=null;
     transientPlayedCardPreviewActor=null;
+    transientPlayedCardPreviewUid=null;
+    transientPlayedCardPreviewUntil=0;
     try{ if(state) renderDetail(); }catch(_e){}
   }
   async function runNetworkVfxBounded(payload){
