@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="105";
+  const BUILD_VERSION="106";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -67,8 +67,9 @@
   }
 })();</script>
 
+<!-- v106: mobile Hero single-pixel frame + durable 1.6s ONLINE opponent preview. -->
 <!-- v99 ONLINE SECURITY v4: host-authoritative Guest setup/actions; Guest snapshots redact HOST hidden hand/deck. -->
-<title>BLEACH: Soul Clash — v104 FIXED</title>
+<title>BLEACH: Soul Clash — v106 MAIN</title>
 <!-- v104 FIX #4: Leader-linked return techniques persist through render + Online snapshot restore. -->
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
@@ -15595,6 +15596,53 @@ html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card.hero .car
 }
 </style>
 
+
+<style id="v106-mobile-hero-frame-final">
+/* v106 — mobile/touch Hero frame: exactly one physical accent pixel.
+   The legacy .card.hero .frame rule still had a 2px !important border, which
+   stacked on top of the redesigned card-face frame on tiny hand/board cards. */
+html.touch-device.touch-landscape .card.hero{
+  box-shadow:none!important;
+  outline:0!important;
+}
+html.touch-device.touch-landscape .card.hero .frame{
+  border:0!important;
+  box-shadow:none!important;
+  background:none!important;
+}
+html.touch-device.touch-landscape .card.hero .frame::after{
+  content:none!important;
+  display:none!important;
+}
+html.touch-device.touch-landscape .card.hero .card-face{
+  box-sizing:border-box!important;
+  border:1px solid var(--card-frame)!important;
+  border-radius:0!important;
+  background:#111820!important;
+  clip-path:none!important;
+  box-shadow:none!important;
+}
+html.touch-device.touch-landscape .card.hero .card-face::before{
+  content:none!important;
+  display:none!important;
+}
+/* Fallback for coarse-pointer mobile browsers if device classification is delayed. */
+@media (pointer:coarse) and (orientation:landscape){
+  .card.hero{box-shadow:none!important;outline:0!important}
+  .card.hero .frame{border:0!important;box-shadow:none!important;background:none!important}
+  .card.hero .frame::after{content:none!important;display:none!important}
+  .card.hero .card-face{
+    box-sizing:border-box!important;
+    border:1px solid var(--card-frame)!important;
+    border-radius:0!important;
+    background:#111820!important;
+    clip-path:none!important;
+    box-shadow:none!important;
+  }
+  .card.hero .card-face::before{content:none!important;display:none!important}
+}
+</style>
+
 <style id="v102-mobile-animation-performance">
 /* v102 FIX #2 — transient card-flight layers on phones/PWA.
    Keep the gameplay art, but remove filters/glows that make the moving raster layer
@@ -24628,21 +24676,27 @@ ${template.desc}`:""}`;
     return best;
   }
   async function showRemotePlayedCardPreview(card,actor,holdMs=520){
-    if(!card || !actor || actor===activeViewSide()) return false;
+    /* Incoming ONLINE VFX envelopes are already guaranteed to come from the peer
+       (self-sent MQTT envelopes are rejected), so actor metadata must never suppress
+       the opponent preview. This also covers cards restored from snapshots with a
+       stale/missing _ownerKey. */
+    if(!card) return false;
     transientPlayedCardPreview=safeNetworkClone(card)||card;
-    transientPlayedCardPreviewActor=actor;
+    transientPlayedCardPreviewActor=actor||enemyOf(activeViewSide());
     renderDetail();
 
-    /* v103 FIX #3 — make ONLINE opponent preview actually readable on phones/PWA.
-       The old 420–520ms timer started immediately after DOM mutation. On a busy
-       mobile frame much of that interval could elapse before the preview was painted,
-       so the card appeared to fly almost instantly. Wait for a committed paint first,
-       then give touch-phone layouts the same full reveal time used by the AI. */
+    /* Commit the preview to a real painted frame before starting its visible hold. */
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    if(!detailEl?.querySelector('.detail-preview .card')){
+      renderDetail();
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    }
+
     const root=document.documentElement;
-    const mobileTouchPreview=root.classList.contains('phone-device') ||
-      (root.classList.contains('touch-device') && !root.classList.contains('tablet-device'));
-    const visibleHoldMs=mobileTouchPreview ? Math.max(Number(holdMs)||0,ENEMY_REVEAL_MS) : Math.max(0,Number(holdMs)||0);
+    const coarsePointer=(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||(navigator.maxTouchPoints||0)>0;
+    const mobileTouchPreview=root.classList.contains('touch-device') || root.classList.contains('phone-device') || coarsePointer;
+    /* v106 — readable ONLINE preview on phones/PWA/tablets: 1.6s after paint. */
+    const visibleHoldMs=mobileTouchPreview ? Math.max(Number(holdMs)||0,1600) : Math.max(0,Number(holdMs)||0);
     if(visibleHoldMs>0) await waitForMs(visibleHoldMs);
     return true;
   }
@@ -25129,7 +25183,7 @@ ${template.desc}`:""}`;
     finally{ networkVfxReplayDepth=Math.max(0,networkVfxReplayDepth-1); }
   }
   const ONLINE_VFX_ITEM_TIMEOUT_MS=5200;
-  const ONLINE_VFX_STATE_WAIT_MS=1800;
+  const ONLINE_VFX_STATE_WAIT_MS=3600;
   function cleanupStalledNetworkVfx(){
     networkVfxReplayDepth=0;
     document.body.classList.remove("card-flight-active");
