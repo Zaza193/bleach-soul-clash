@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="106";
+  const BUILD_VERSION="108";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -67,7 +67,7 @@
   }
 })();</script>
 
-<!-- v106: mobile Hero single-pixel frame + durable 1.6s ONLINE opponent preview. -->
+<!-- v108: mobile SOUL SUICIDE smaller and vertically centered; keeps v107 card/preview fixes. -->
 <!-- v99 ONLINE SECURITY v4: host-authoritative Guest setup/actions; Guest snapshots redact HOST hidden hand/deck. -->
 <title>BLEACH: Soul Clash — v106 MAIN</title>
 <!-- v104 FIX #4: Leader-linked return techniques persist through render + Online snapshot restore. -->
@@ -15674,6 +15674,288 @@ html.touch-device.touch-landscape:not(.tablet-device) .card-flight:not(.hero) .c
 .row.preflight-row-target{touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(255,255,255,.08);}
 </style>
 <style id="v100-ui-fixes">#networkRoomCode{font-size:clamp(12px,2.7vw,22px)!important;letter-spacing:.06em!important;overflow-wrap:anywhere;user-select:all}#networkJoinCode{font-size:16px!important}#copyInvitation{margin:8px auto;display:block}html.bsc-lang-boot .vfx{display:none}</style>
+
+<style id="v107-touch-card-desktop-parity">
+/* v107 FIX: mobile/touch cards use the same final visual language as desktop. */
+html.touch-device .row-cards .card,
+html.touch-device .hand .card,
+html.touch-device .detail-preview .card,
+html.touch-device .mulligan-grid .card,
+html.touch-device .deck-builder-item .card,
+html.touch-device .card-flight,
+html.touch-device .network-landing-ghost,
+html.tablet-device .row-cards .card,
+html.tablet-device .hand .card,
+html.tablet-device .detail-preview .card,
+html.tablet-device .mulligan-grid .card,
+html.tablet-device .deck-builder-item .card,
+html.tablet-device .card-flight,
+html.tablet-device .network-landing-ghost{
+  --card-frame:#fff!important;
+  --card-frame-glow:rgba(255,255,255,.24)!important;
+}
+html.touch-device .row-cards .card.special-unit-card:not(.hero),
+html.touch-device .hand .card.special-unit-card:not(.hero),
+html.touch-device .detail-preview .card.special-unit-card:not(.hero),
+html.touch-device .mulligan-grid .card.special-unit-card:not(.hero),
+html.touch-device .deck-builder-item .card.special-unit-card:not(.hero),
+html.touch-device .card-flight.special-unit-card:not(.hero),
+html.touch-device .network-landing-ghost.special-unit-card:not(.hero),
+html.touch-device .row-cards .card.transformation-card:not(.hero),
+html.touch-device .hand .card.transformation-card:not(.hero),
+html.touch-device .detail-preview .card.transformation-card:not(.hero),
+html.touch-device .mulligan-grid .card.transformation-card:not(.hero),
+html.touch-device .deck-builder-item .card.transformation-card:not(.hero),
+html.touch-device .card-flight.transformation-card:not(.hero),
+html.touch-device .network-landing-ghost.transformation-card:not(.hero),
+html.tablet-device .row-cards .card.special-unit-card:not(.hero),
+html.tablet-device .hand .card.special-unit-card:not(.hero),
+html.tablet-device .detail-preview .card.special-unit-card:not(.hero),
+html.tablet-device .mulligan-grid .card.special-unit-card:not(.hero),
+html.tablet-device .deck-builder-item .card.special-unit-card:not(.hero),
+html.tablet-device .card-flight.special-unit-card:not(.hero),
+html.tablet-device .network-landing-ghost.special-unit-card:not(.hero),
+html.tablet-device .row-cards .card.transformation-card:not(.hero),
+html.tablet-device .hand .card.transformation-card:not(.hero),
+html.tablet-device .detail-preview .card.transformation-card:not(.hero),
+html.tablet-device .mulligan-grid .card.transformation-card:not(.hero),
+html.tablet-device .deck-builder-item .card.transformation-card:not(.hero),
+html.tablet-device .card-flight.transformation-card:not(.hero),
+html.tablet-device .network-landing-ghost.transformation-card:not(.hero){
+  --card-frame:#fff!important;
+  --card-frame-glow:rgba(255,255,255,.24)!important;
+}
+html.touch-device .row-cards .card.hero,
+html.touch-device .hand .card.hero,
+html.touch-device .detail-preview .card.hero,
+html.touch-device .mulligan-grid .card.hero,
+html.touch-device .deck-builder-item .card.hero,
+html.touch-device .card-flight.hero,
+html.touch-device .network-landing-ghost.hero,
+html.tablet-device .row-cards .card.hero,
+html.tablet-device .hand .card.hero,
+html.tablet-device .detail-preview .card.hero,
+html.tablet-device .mulligan-grid .card.hero,
+html.tablet-device .deck-builder-item .card.hero,
+html.tablet-device .card-flight.hero,
+html.tablet-device .network-landing-ghost.hero{
+  --card-frame:#f1c84a!important;
+  --card-frame-glow:rgba(241,200,74,.48)!important;
+}
+html.touch-device .row-cards .card .card-face,
+html.touch-device .hand .card .card-face,
+html.touch-device .detail-preview .card .card-face,
+html.touch-device .mulligan-grid .card .card-face,
+html.touch-device .deck-builder-item .card .card-face,
+html.touch-device .card-flight .card-face,
+html.touch-device .network-landing-ghost .card-face,
+html.tablet-device .row-cards .card .card-face,
+html.tablet-device .hand .card .card-face,
+html.tablet-device .detail-preview .card .card-face,
+html.tablet-device .mulligan-grid .card .card-face,
+html.tablet-device .deck-builder-item .card .card-face,
+html.tablet-device .card-flight .card-face,
+html.tablet-device .network-landing-ghost .card-face{
+  background:var(--card-frame)!important;
+}
+html.touch-device .row-cards .card .card-face>.art,
+html.touch-device .hand .card .card-face>.art,
+html.touch-device .detail-preview .card .card-face>.art,
+html.touch-device .mulligan-grid .card .card-face>.art,
+html.touch-device .deck-builder-item .card .card-face>.art,
+html.touch-device .card-flight .card-face>.art,
+html.touch-device .network-landing-ghost .card-face>.art,
+html.tablet-device .row-cards .card .card-face>.art,
+html.tablet-device .hand .card .card-face>.art,
+html.tablet-device .detail-preview .card .card-face>.art,
+html.tablet-device .mulligan-grid .card .card-face>.art,
+html.tablet-device .deck-builder-item .card .card-face>.art,
+html.tablet-device .card-flight .card-face>.art,
+html.tablet-device .network-landing-ghost .card-face>.art{
+  inset:3.2cqw!important;
+  width:auto!important;
+  height:auto!important;
+  border-radius:1.25cqw!important;
+}
+html.touch-device .row-cards .card .frame,
+html.touch-device .hand .card .frame,
+html.touch-device .detail-preview .card .frame,
+html.touch-device .mulligan-grid .card .frame,
+html.touch-device .deck-builder-item .card .frame,
+html.touch-device .card-flight .frame,
+html.touch-device .network-landing-ghost .frame,
+html.tablet-device .row-cards .card .frame,
+html.tablet-device .hand .card .frame,
+html.tablet-device .detail-preview .card .frame,
+html.tablet-device .mulligan-grid .card .frame,
+html.tablet-device .deck-builder-item .card .frame,
+html.tablet-device .card-flight .frame,
+html.tablet-device .network-landing-ghost .frame{
+  border:0!important;
+  box-shadow:none!important;
+  z-index:10!important;
+}
+html.touch-device .row-cards .card .card-face::before,
+html.touch-device .hand .card .card-face::before,
+html.touch-device .detail-preview .card .card-face::before,
+html.touch-device .mulligan-grid .card .card-face::before,
+html.touch-device .deck-builder-item .card .card-face::before,
+html.touch-device .card-flight .card-face::before,
+html.touch-device .network-landing-ghost .card-face::before,
+html.tablet-device .row-cards .card .card-face::before,
+html.tablet-device .hand .card .card-face::before,
+html.tablet-device .detail-preview .card .card-face::before,
+html.tablet-device .mulligan-grid .card .card-face::before,
+html.tablet-device .deck-builder-item .card .card-face::before,
+html.tablet-device .card-flight .card-face::before,
+html.tablet-device .network-landing-ghost .card-face::before{
+  z-index:11!important;
+}
+html.touch-device .row-cards .card .power,
+html.tablet-device .row-cards .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:136cqw!important;
+  height:68cqw!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:7.4cqw 0 0!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  transform:translateX(-50%)!important;
+  clip-path:none!important;
+  border-radius:136cqw 136cqw 0 0!important;
+  border:2.2cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1.9cqw var(--card-ink),0 -1.2cqw 2.2cqw rgba(0,0,0,.28)!important;
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:51.2cqw!important;
+  line-height:1!important;
+  z-index:14!important;
+}
+html.touch-device .hand .card .power,
+html.touch-device #hand.hand-expanded .card .power,
+html.touch-device .detail-preview .card .power,
+html.touch-device .mulligan-grid .card .power,
+html.touch-device .deck-builder-item .card .power,
+html.touch-device .card-flight .power,
+html.touch-device .network-landing-ghost .power,
+html.tablet-device .hand .card .power,
+html.tablet-device #hand.hand-expanded .card .power,
+html.tablet-device .detail-preview .card .power,
+html.tablet-device .mulligan-grid .card .power,
+html.tablet-device .deck-builder-item .card .power,
+html.tablet-device .card-flight .power,
+html.tablet-device .network-landing-ghost .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:34cqw!important;
+  height:17cqw!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:1.9cqw 0 0!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  transform:translateX(-50%)!important;
+  clip-path:none!important;
+  border-radius:34cqw 34cqw 0 0!important;
+  border:1.2cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1cqw var(--card-ink),0 -0.8cqw 1.8cqw rgba(0,0,0,.28)!important;
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:12.8cqw!important;
+  line-height:1!important;
+  z-index:14!important;
+}
+html.touch-device .hand .card.hand-new,
+html.tablet-device .hand .card.hand-new{
+  box-shadow:0 0 0 1px rgba(255,255,255,.82),0 0 14px rgba(255,255,255,.18)!important;
+}
+</style>
+
+
+<style id="v108-mobile-soul-suicide-size-center">
+/* v108 — phone/touch: smaller SOUL SUICIDE and true centering inside its action plate. */
+html.phone-device.phone-landscape .hand-actions,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-actions{
+  box-sizing:border-box!important;
+  display:grid!important;
+  place-items:center!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 2px!important;
+}
+html.phone-device.phone-landscape .pass-btn,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn{
+  position:relative!important;
+  width:26px!important;
+  height:26px!important;
+  min-width:26px!important;
+  min-height:26px!important;
+  max-width:26px!important;
+  max-height:26px!important;
+  margin:0!important;
+  padding:0!important;
+  align-self:center!important;
+  justify-self:center!important;
+  border-radius:50%!important;
+  clip-path:none!important;
+  border:1px solid rgba(255,255,255,.68)!important;
+  background:radial-gradient(circle at 50% 50%,#151515 0 47%,#050505 48% 61%,#d9d5cb 62% 64%,#080808 65% 100%)!important;
+  color:#f4f0e7!important;
+  transform:none!important;
+  box-shadow:0 0 0 1px #050505,0 0 0 1.5px rgba(255,255,255,.18),0 0 5px rgba(255,90,22,.10)!important;
+  font-size:4.15px!important;
+  line-height:.88!important;
+  letter-spacing:.035em!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .pass-btn:before,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:3px!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  border-radius:50%!important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.62)!important;
+}
+html.phone-device.phone-landscape .pass-btn:after,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn:after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  width:1.5px!important;
+  height:31px!important;
+  background:#ff4e18!important;
+  transform:rotate(38deg)!important;
+  opacity:.72!important;
+  box-shadow:0 0 3px rgba(255,78,24,.45)!important;
+}
+html.phone-device.phone-landscape .pass-btn span,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn span{
+  position:relative!important;
+  z-index:3!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -24695,8 +24977,8 @@ ${template.desc}`:""}`;
     const root=document.documentElement;
     const coarsePointer=(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches)||(navigator.maxTouchPoints||0)>0;
     const mobileTouchPreview=root.classList.contains('touch-device') || root.classList.contains('phone-device') || coarsePointer;
-    /* v106 — readable ONLINE preview on phones/PWA/tablets: 1.6s after paint. */
-    const visibleHoldMs=mobileTouchPreview ? Math.max(Number(holdMs)||0,1600) : Math.max(0,Number(holdMs)||0);
+    /* v107 — readable ONLINE preview on phones/PWA/tablets: at least 2.4s after paint. */
+    const visibleHoldMs=mobileTouchPreview ? Math.max(Number(holdMs)||0,2400) : Math.max(0,Number(holdMs)||0);
     if(visibleHoldMs>0) await waitForMs(visibleHoldMs);
     return true;
   }
@@ -25183,7 +25465,7 @@ ${template.desc}`:""}`;
     finally{ networkVfxReplayDepth=Math.max(0,networkVfxReplayDepth-1); }
   }
   const ONLINE_VFX_ITEM_TIMEOUT_MS=5200;
-  const ONLINE_VFX_STATE_WAIT_MS=3600;
+  const ONLINE_VFX_STATE_WAIT_MS=5200;
   function cleanupStalledNetworkVfx(){
     networkVfxReplayDepth=0;
     document.body.classList.remove("card-flight-active");
