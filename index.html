@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="80";
+  const BUILD_VERSION="85";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -23,6 +23,7 @@
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
   root.classList.toggle('pwa-standalone',!!standalone);
   root.classList.toggle('pwa-browser-ios',!!isIOS&&!standalone);
+  root.classList.toggle('ios-device',!!isIOS);
 
   const syncResponsiveDevice=()=>{
     const vv=window.visualViewport;
@@ -72,7 +73,7 @@
     },{once:true});
   }
 })();</script>
-<title>BLEACH: Soul Clash — v80</title>
+<title>BLEACH: Soul Clash — v85 MAIN</title>
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
 <!-- v81: browser card choices lifted; ASSEMBLE action dock made truly larger via ID-specific overrides; browser battlefield cards now fit actual row height. -->
@@ -14729,50 +14730,50 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .boar
   inset:20px 0 74px!important;
 }
 
-/* V81 — browser safe-zone battlefield geometry.
-   Card height is tied to the ACTUAL row height, not the pre-safe-zone fixed size.
-   PWA/standalone is intentionally untouched. */
+/* V84 — browser battlefield card geometry.
+   Fixed 28×42 card size. It no longer depends on the computed CSS row height.
+   PWA/standalone remains untouched. */
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards{
   align-items:center!important;
-  padding-top:2px!important;
-  padding-bottom:2px!important;
+  padding-top:1px!important;
+  padding-bottom:1px!important;
   overflow-y:hidden!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card{
-  flex:0 0 auto!important;
-  width:auto!important;
-  min-width:0!important;
-  max-width:none!important;
-  height:calc(100% - 8px)!important;
-  min-height:0!important;
-  max-height:34px!important;
-  aspect-ratio:2 / 3!important;
+  flex:0 0 28px!important;
+  width:28px!important;
+  min-width:28px!important;
+  max-width:28px!important;
+  height:42px!important;
+  min-height:42px!important;
+  max-height:42px!important;
+  aspect-ratio:auto!important;
   margin:0!important;
   align-self:center!important;
   transform:none!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face{
-  width:100%!important;
-  min-width:100%!important;
-  max-width:100%!important;
-  height:100%!important;
-  min-height:100%!important;
-  max-height:100%!important;
-  aspect-ratio:2 / 3!important;
+  width:28px!important;
+  min-width:28px!important;
+  max-width:28px!important;
+  height:42px!important;
+  min-height:42px!important;
+  max-height:42px!important;
+  aspect-ratio:auto!important;
 }
 html:not(.pwa-standalone).phone-device.phone-landscape .board .row .row-cards>.card>.card-face>.power,
 html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face>.power{
-  width:20px!important;
+  width:22px!important;
   min-width:0!important;
   max-width:calc(100% - 2px)!important;
-  height:11px!important;
-  min-height:11px!important;
-  max-height:11px!important;
-  border-radius:20px 20px 0 0!important;
-  font-size:8.5px!important;
+  height:12px!important;
+  min-height:12px!important;
+  max-height:12px!important;
+  border-radius:22px 22px 0 0!important;
+  font-size:9px!important;
   bottom:1px!important;
 }
 
@@ -15365,6 +15366,136 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choi
 }
 </style>
 
+<style id="v84-pwa-ios-home-indicator-safe-zone">
+/*
+ V84 — iOS PWA only.
+ Reserve the actual Home Indicator area below the hand.
+ This is separate from the browser-only native-scrollbar safe-zone.
+*/
+html.pwa-standalone.ios-device.phone-device.phone-landscape,
+html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device){
+  --v84-pwa-home-safe:max(12px, env(safe-area-inset-bottom, 0px));
+  --v333-hand:calc(72px + var(--v84-pwa-home-safe))!important;
+}
+
+@media (max-height:395px){
+  html.pwa-standalone.ios-device.phone-device.phone-landscape,
+  html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device){
+    --v333-hand:calc(68px + var(--v84-pwa-home-safe))!important;
+  }
+}
+
+html.pwa-standalone.ios-device.phone-device.phone-landscape #hand,
+html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device) #hand{
+  box-sizing:border-box!important;
+  padding:3px 3px calc(3px + var(--v84-pwa-home-safe))!important;
+  align-items:flex-end!important;
+}
+
+html.pwa-standalone.ios-device.phone-device.phone-landscape .hand-actions,
+html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device) .hand-actions{
+  box-sizing:border-box!important;
+  padding:2px 2px calc(2px + var(--v84-pwa-home-safe))!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+html.pwa-standalone.ios-device.phone-device.phone-landscape .board .row .row-cards,
+html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards{
+  padding-top:1px!important;
+  padding-bottom:1px!important;
+}
+
+/* Only very short iPhone landscape heights need a small PWA board-card reduction
+   after reserving the full Home Indicator inset. */
+@media (max-height:370px){
+  html.pwa-standalone.ios-device.phone-device.phone-landscape .board .row .row-cards>.card,
+  html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card{
+    flex-basis:28px!important;
+    width:28px!important;
+    min-width:28px!important;
+    max-width:28px!important;
+    height:40px!important;
+    min-height:40px!important;
+    max-height:40px!important;
+  }
+  html.pwa-standalone.ios-device.phone-device.phone-landscape .board .row .row-cards>.card>.card-face,
+  html.pwa-standalone.ios-device.touch-device.touch-landscape:not(.tablet-device) .board .row .row-cards>.card>.card-face{
+    width:28px!important;
+    min-width:28px!important;
+    max-width:28px!important;
+    height:40px!important;
+    min-height:40px!important;
+    max-height:40px!important;
+  }
+}
+</style>
+
+<style id="v85-mobile-preview-description-only-full-height">
+/*
+ V85 — mobile preview: ability text only.
+ Character name is already visible on the card art and wastes scarce plaque height.
+ Description is limited only by the real plaque bottom, not by a fixed line count.
+*/
+html.phone-device.phone-landscape .rightbar .detail-preview .card.with-info>.card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card.with-info>.card-info-panel{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:5px 6px 6px!important;
+}
+
+html.phone-device.phone-landscape .rightbar .detail-preview .card.with-info .card-info-name,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card.with-info .card-info-name{
+  display:none!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+
+html.phone-device.phone-landscape .rightbar .detail-preview .card.with-info .card-info-desc,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card.with-info .card-info-desc{
+  display:block!important;
+  flex:1 1 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+  -webkit-box-orient:initial!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  font-size:6.8px!important;
+  line-height:1.18!important;
+}
+
+@media (max-height:395px){
+  html.phone-device.phone-landscape .rightbar .detail-preview .card.with-info>.card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card.with-info>.card-info-panel{
+    padding:4px 5px 5px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .detail-preview .card.with-info .card-info-desc,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail-preview .card.with-info .card-info-desc{
+    font-size:6.4px!important;
+    line-height:1.16!important;
+    -webkit-line-clamp:unset!important;
+    line-clamp:unset!important;
+  }
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 <div id="rotateDeviceOverlay" class="rotate-device-overlay" aria-live="polite" aria-label="Поверните телефон горизонтально">
@@ -15843,7 +15974,7 @@ html:not(.pwa-standalone).touch-device.touch-landscape:not(.tablet-device) #choi
   let transientPlayedCardPreviewActor=null;
 
   const ONLINE_PROTOCOL="soul-clash-relay-v3";
-  const ONLINE_GAME_VERSION=String(globalThis.BSC_BUILD_VERSION||"80");
+  const ONLINE_GAME_VERSION=String(globalThis.BSC_BUILD_VERSION||"85");
 
   const ONLINE_MQTT_TOPIC_PREFIX=`bleach-soul-clash/v${ONLINE_GAME_VERSION}`;
   const ONLINE_MQTT_CLIENT_PREFIX=`bsc${ONLINE_GAME_VERSION}`;
