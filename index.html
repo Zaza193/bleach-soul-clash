@@ -15579,6 +15579,28 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay .choice-mod
 }
 </style>
 
+
+<style id="v367-online-mobile-hero-fixes">
+/* v367 — stable hero frames on phone battle rows.
+   Tiny cqw shadow rings rasterize inconsistently at 26–28 px card widths;
+   draw the hero frame inward in whole device-independent pixels instead. */
+html.phone-device.phone-landscape .row-cards .card.hero .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card.hero .card-face{
+  border-radius:1px!important;
+  box-shadow:
+    inset 0 0 0 1px var(--card-ink),
+    inset 0 0 0 2px var(--card-frame),
+    inset 0 0 0 3px var(--card-ink),
+    0 1px 2px rgba(0,0,0,.42)!important;
+}
+html.phone-device.phone-landscape .row-cards .card.hero .card-face::before,
+html.touch-device.touch-landscape:not(.tablet-device) .row-cards .card.hero .card-face::before{
+  inset:3px!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+</style>
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -21665,10 +21687,10 @@ function v242CardElement(sideKey,row,uid){
     fx.style.setProperty('--h',`${Math.max(70,targetRect.height*1.15)}px`);
     document.body.appendChild(fx); setTimeout(()=>fx.remove(),520);
   }
-  async function v242AnimateEffectCardTableCast(card,targetRect,effectKind='generic'){
+  async function v242AnimateEffectCardTableCast(card,targetRect,effectKind='generic',opts={}){
     const region=targetRect||v242BoardRect();
     if(!region) return;
-    const start=previewFlightStartRect(card);
+    const start=opts?.startRect||previewFlightStartRect(card);
     if(!start) return;
     const target=v242RectCenterTarget(region,start); if(!target) return;
     const detailCard=detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`) || detailEl?.querySelector('.detail-preview .card');
@@ -24312,18 +24334,43 @@ ${template.desc}`:""}`;
     transientPlayedCardPreviewActor=null;
     if(state) renderDetail();
   }
-  function networkCardStartRect(actor,card){
-
-    const fromPreview=previewFlightStartRect(card);
-    if(fromPreview) return fromPreview;
+  function networkCardStartRect(actor,card,target=null){
+    const remote=!!actor && actor!==activeViewSide();
+    const source=remote
+      ? (document.getElementById('opponentHandPanel') || document.querySelector('#enemyLeader .leader-ui-art') || document.getElementById('enemyLeader'))
+      : null;
+    const sourceRect=visibleRect(source);
+    const hint=target || v242BattlefieldCardSizeHint?.() || null;
+    if(sourceRect && hint){
+      const targetW=Math.max(24,Number(hint.width)||50);
+      const targetH=Math.max(36,Number(hint.height)||targetW*1.5);
+      const ratio=targetH/targetW;
+      const width=Math.max(24,Math.min(targetW*1.08,72));
+      const height=width*ratio;
+      return {
+        left:sourceRect.left+(sourceRect.width-width)/2,
+        top:sourceRect.top+(sourceRect.height-height)/2,
+        width,height
+      };
+    }
     const enemyArt=document.querySelector('#enemyLeader .leader-ui-art')||document.getElementById('enemyLeader');
     const r=visibleRect(enemyArt);
     if(r){
-      const width=Math.max(42,Math.min(112,r.width*.56));
-      const height=width*1.5;
+      const targetW=Math.max(24,Number(hint?.width)||50);
+      const targetH=Math.max(36,Number(hint?.height)||targetW*1.5);
+      const width=Math.max(24,Math.min(targetW*1.08,72));
+      const height=width*(targetH/targetW);
       return {left:r.left+(r.width-width)/2,top:r.top+(r.height-height)/2,width,height};
     }
-    return null;
+    const fromPreview=previewFlightStartRect(card);
+    if(fromPreview && hint){
+      const targetW=Math.max(24,Number(hint.width)||50);
+      const targetH=Math.max(36,Number(hint.height)||targetW*1.5);
+      const width=Math.max(24,Math.min(targetW*1.08,72));
+      const height=width*(targetH/targetW);
+      return {left:fromPreview.left+(fromPreview.width-width)/2,top:fromPreview.top+(fromPreview.height-height)/2,width,height};
+    }
+    return fromPreview;
   }
   function createNetworkLandingGhost(card,targetSide,row,target=null,targetUid=null){
     if(!card||!row) return null;
@@ -24354,14 +24401,14 @@ ${template.desc}`:""}`;
 
   async function replayNetworkCardFlight(payload){
     const card=payload.card; if(!card) return;
-    const previewShown=await showRemotePlayedCardPreview(card,payload.actor,520);
+    const previewShown=await showRemotePlayedCardPreview(card,payload.actor,110);
     const target=measureCardLandingRect(payload.targetSide,payload.row,card,{targetUid:payload.targetUid||null});
     if(!target){ if(previewShown) clearRemotePlayedCardPreview(card); return; }
     if(usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)){
       if(previewShown) clearRemotePlayedCardPreview(card);
       return;
     }
-    const start=networkCardStartRect(payload.actor,card);
+    const start=networkCardStartRect(payload.actor,card,target);
     if(!start){ if(previewShown) clearRemotePlayedCardPreview(card); return; }
     const previewCard=previewShown ? detailEl?.querySelector(`.detail-preview .card[data-uid="${card.uid}"]`) : null;
     const previewRowBadge=previewCard?.querySelector('.row-badge')||null;
@@ -24498,11 +24545,11 @@ ${template.desc}`:""}`;
     broadcastNetworkVfx("special-cast",{effectKind,actor:state?.actionLock?.actor||card?._ownerKey||localControlledSide(),card:safeNetworkClone(card)});
     return v303Original.animateSpecialCardCast(effectKind);
   };
-  v242AnimateEffectCardTableCast=async function(card,targetRect,effectKind='generic'){
+  v242AnimateEffectCardTableCast=async function(card,targetRect,effectKind='generic',opts={}){
     const target=inferNetworkRowTarget(targetRect);
     const actor=card?._ownerKey||state?.actionLock?.actor||localControlledSide();
     broadcastNetworkVfx("effect-cast",{effectKind,target,actor,card:safeNetworkClone(card)});
-    return v303Original.v242AnimateEffectCardTableCast(card,targetRect,effectKind);
+    return v303Original.v242AnimateEffectCardTableCast(card,targetRect,effectKind,opts);
   };
   v242AnimateReiatsuPressure=async function(sideKey,row){
     broadcastNetworkVfx("reiatsu-pressure",{sideKey,row});
@@ -24670,15 +24717,16 @@ ${template.desc}`:""}`;
       if(payload.kind==="card-flight") return await replayNetworkCardFlight(payload);
       if(payload.kind==="deck-flight") return await replayNetworkDeckFlight(payload);
       if(payload.kind==="special-cast"){
-        const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,420);
+        const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,120);
         try{return await v303Original.animateSpecialCardCast(payload.effectKind||"generic");}
         finally{if(shown) clearRemotePlayedCardPreview(payload.card);}
       }
       if(payload.kind==="effect-cast"){
-        const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,520);
+        const shown=await showRemotePlayedCardPreview(payload.card,payload.actor,120);
         const t=payload.target;
         const rect=t?.sideKey&&t?.row ? (v243RowStartRect(t.sideKey,t.row)||v243DefaultEffectRowStart(t.sideKey)) : v242BoardRect();
-        try{return await v303Original.v242AnimateEffectCardTableCast(payload.card,rect,payload.effectKind||"generic");}
+        const startRect=networkCardStartRect(payload.actor,payload.card,v242BattlefieldCardSizeHint?.()||null);
+        try{return await v303Original.v242AnimateEffectCardTableCast(payload.card,rect,payload.effectKind||"generic",{startRect});}
         finally{if(shown) clearRemotePlayedCardPreview(payload.card);}
       }
       if(payload.kind==="reiatsu-pressure") return await v303Original.v242AnimateReiatsuPressure(payload.sideKey,payload.row);
