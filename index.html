@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="105-test1";
+  const BUILD_VERSION="105";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -68,7 +68,7 @@
 })();</script>
 
 <!-- v99 ONLINE SECURITY v4: host-authoritative Guest setup/actions; Guest snapshots redact HOST hidden hand/deck. -->
-<title>BLEACH: Soul Clash — v105 TEST LAB</title>
+<title>BLEACH: Soul Clash — v104 FIXED</title>
 <!-- v104 FIX #4: Leader-linked return techniques persist through render + Online snapshot restore. -->
 <!-- v80 cleanup pass 3: second dead-JS layer removed; obsolete VFX generations pruned; build/Online/PWA version unified. -->
 <!-- ONLINE transport cleanup: unreachable legacy direct-connection fallback removed; MQTT/WSS relay is the single transport. -->
@@ -15850,7 +15850,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .card-flight:not(.hero) .c
 (() => {
 
   const IS_TOUCH_UI = (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) || (navigator.maxTouchPoints||0)>0;
-  const TEST_BUILD = true;
 
   const ROWS = ["support", "ranged", "melee"];
   const STARTING_HAND_SIZE = 12;
@@ -16493,95 +16492,6 @@ html.touch-device.touch-landscape:not(.tablet-device) .card-flight:not(.hero) .c
     openMulligan("player");
   }
 
-
-  function testLabClone(template,sideKey,faction,leader,{conditional=false}={}){
-    let source=template;
-    if(faction==="soul" && !template?.special) source=applySoulEraProfile(template,leader);
-    const card=clone(source);
-    card._ownerKey=sideKey;
-    if(conditional && isTransformationCard(card)){
-      card._transformationCard=true;
-      card._freeAction=isFreeTransformationCard(card);
-    }
-    if(card.ability==="returnTechnique") applyReturnTechniqueIdentity(card,faction,leader);
-    return card;
-  }
-  function testLabAllCardsForFaction(faction,leader,sideKey){
-    const out=[], seen=new Set();
-    const add=(template,{conditional=false}={})=>{
-      if(!template?.id || seen.has(template.id)) return;
-      seen.add(template.id);
-      out.push(testLabClone(template,sideKey,faction,leader,{conditional}));
-    };
-
-    // Literal faction pool first: includes summon-only units and transformation templates.
-    byFaction(faction).forEach(template=>add(template,{conditional:isTransformationCard(template)}));
-    // Some conditional forms live outside CARD_POOL (currently the Living World mask previews).
-    conditionalTemplatesForFaction(faction).forEach(template=>add(template,{conditional:true}));
-    // Every special card that belongs to this faction's playable pool.
-    specialTemplatesForFaction(faction).forEach(template=>add(template));
-    // Generated combo/special cards are also useful in the mechanics lab.
-    if(faction==="hueco") add(CERO_SINCRETICO_TEMPLATE,{conditional:true});
-    if(faction==="soul"){
-      add(VACUUM_ICE_TEMPLATE,{conditional:true});
-      const kamikake=makeKamikakeCard?.(sideKey);
-      if(kamikake && !seen.has(kamikake.id)){ seen.add(kamikake.id); out.push(kamikake); }
-    }
-    return out;
-  }
-  function initTestLab(faction=selectedFaction){
-    cancelRoundContinuation();
-    gameMode="ai";
-    localViewSide="player";
-    setupSideKey="player";
-    selectedFaction=faction;
-
-    const playerLeader=pickLeader(faction);
-    const enemyFaction="soul";
-    // Deterministic enemy leader keeps the target board reproducible between test launches.
-    const enemyLeader={...FACTIONS.soul.leaders[0]};
-
-    const playerHand=testLabAllCardsForFaction(faction,playerLeader,"player");
-    const enemyCards=testLabAllCardsForFaction(enemyFaction,enemyLeader,"enemy").filter(card=>!card.special);
-    const enemyBoard={support:[],ranged:[],melee:[]};
-    for(const card of enemyCards){
-      const row=ROWS.includes(card.row)?card.row:"support";
-      enemyBoard[row].push(card);
-    }
-
-    state={
-      round:1, turn:"player", playerPassed:false, enemyPassed:false, passReason:{player:null,enemy:null},
-      gameOver:false, selected:null, phase:"play", mulliganSideKey:null, initiativeSideKey:null,
-      mulliganSelected:[], mulliganInspect:null, roundHistory:[], globalEffects:[], draggingUid:null,
-      justPlayed:null, justPlayedRow:null, justPlayedSide:null, actionLock:null, flightLandedUid:null,
-      previewCard:null, handRevealUid:null, rowTargeting:null,
-      pressure:{player:[],enemy:[]}, pressureHeroPenalty:{player:{},enemy:{}}, hogyoku:{player:[],enemy:[]},
-      rowEffects:{player:{support:[],ranged:[],melee:[]},enemy:{support:[],ranged:[],melee:[]}},
-      prisons:[], scoreOffsets:{player:0,enemy:0}, musterSpent:{player:[],enemy:[]},
-      player:{faction,leader:playerLeader,hand:playerHand,deck:[],grave:[],board:{support:[],ranged:[],melee:[]},leaderUsed:false,_deckBuildRule:null},
-      enemy:{faction:enemyFaction,leader:enemyLeader,hand:[],deck:[],grave:[],board:enemyBoard,leaderUsed:false,_deckBuildRule:null},
-      lastDetail:null
-    };
-    normalizeSideReturnTechniques(state.player,"player");
-    normalizeSideReturnTechniques(state.enemy,"enemy");
-
-    ["#modeOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay","#startOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#soulSuicideOverlay","#resultOverlay","#handoffOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
-    document.body.classList.remove("front-menu-active","local-handoff-active");
-    const pass=$("#passBtn"); if(pass) pass.style.display="none";
-    render();
-    requestAnimationFrame(()=>{ fitHandLayout(); syncHandScrollRange(); });
-    toast(`TEST: ${FACTIONS[faction].name} · ВСЕ КАРТЫ В РУКЕ`,1400);
-  }
-  function openTestFactionPicker(){
-    cancelRoundContinuation();
-    state=null; gameMode="ai"; setupSideKey="player"; localViewSide="player"; selectedFaction="living";
-    ["#modeOverlay","#networkOverlay","#networkCreateOverlay","#networkJoinOverlay","#deckBuilderOverlay","#mulliganOverlay","#choiceOverlay","#soulSuicideOverlay","#resultOverlay","#handoffOverlay"].forEach(sel=>$(sel)?.classList.add("hidden"));
-    const pass=$("#passBtn"); if(pass) pass.style.display="none";
-    openPathPicker("player");
-    const start=$("#startBtn"); if(start) start.textContent="START TEST";
-    const back=$("#pathBackBtn"); if(back) back.hidden=true;
-    const label=$("#setupPlayerLabel"); if(label) label.textContent="TEST LAB";
-  }
 
   function prepareDuelSide(setup,sideKey){
     const faction=setup?.faction||("player"===sideKey?"living":"hueco");
@@ -17898,7 +17808,6 @@ function isNanaoBarrierActive(card){
   }
 
   function nextActorAfterResolvedAction(actor){
-    if(TEST_BUILD) return "player";
     const other=enemyOf(actor);
     if(hasPassed(other) && !hasPassed(actor)) return actor;
     if(hasPassed(actor) && !hasPassed(other)) return other;
@@ -17907,14 +17816,6 @@ function isNanaoBarrierActive(card){
   function scheduleCurrentActor(delay=320){
     let actionState=state;
     if(!actionState || actionState.gameOver || actionState.phase!=="play") return;
-    if(TEST_BUILD){
-      actionState.turn="player";
-      actionState.playerPassed=false;
-      actionState.enemyPassed=false;
-      if(actionState.passReason){ actionState.passReason.player=null; actionState.passReason.enemy=null; }
-      render();
-      return;
-    }
 
     if(actionState.phase==="play" && actionState[actionState.turn]?.hand?.length===0 && !hasPassed(actionState.turn)){
       const emptyActor=actionState.turn;
@@ -19347,7 +19248,7 @@ function isNanaoBarrierActive(card){
     { const div=document.createElement("div"); div.className="divider"; boardEl.appendChild(div); }
     BOARD_ORDER.player.forEach(row=>boardEl.appendChild(renderRow(view,row,view)));
     renderHand(); renderDetail(); renderLeaders(); renderRoundOutcome(); renderPiles();
-    $("#roundLabel").textContent=TEST_BUILD?"TEST LAB · БЕЗ ХОДА ВРАГА":`РАУНД ${state.round} / 3`;
+    $("#roundLabel").textContent=`РАУНД ${state.round} / 3`;
     const tl=$("#turnLabel");
     if(state.gameOver) tl.textContent="МАТЧ ЗАВЕРШЁН";
     else if(state.phase==="mulligan") tl.textContent="ПОДГОТОВКА";
@@ -20092,7 +19993,6 @@ function isNanaoBarrierActive(card){
     void 0;
   }
   function syncAllConditionalTransforms(){
-    if(TEST_BUILD) return; // TEST: all conditional forms are supplied up front and must stay visible.
     if(!state || state.gameOver || state.phase!=="play") return;
     if(gameMode==="online" && networkSession.role==="guest" && state._redactedFor==="enemy") return;
     for(const sideKey of ["player","enemy"]){
@@ -23702,7 +23602,6 @@ function v242CardElement(sideKey,row,uid){
   }
 
   function checkRoundEnd(){
-    if(TEST_BUILD) return false;
     if(!state || state.gameOver || state.roundClosing) return true;
     const reasons=ensurePassReasons();
     const noP=state.player.hand.length===0, noE=state.enemy.hand.length===0;
@@ -25403,9 +25302,9 @@ ${template.desc}`:""}`;
     document.getElementById("handScrollPrev")?.setAttribute("disabled","");
     document.getElementById("handScrollNext")?.setAttribute("disabled","");
   }
-  $("#restartBtn").onclick=()=>TEST_BUILD?openTestFactionPicker():(gameMode==="online"?requestOnlineRematch({allowActive:true}):returnToModeMenu());
-  $("#pathBackBtn").onclick=()=>TEST_BUILD?openTestFactionPicker():returnToModeMenu();
-  $("#startBtn").onclick=()=>TEST_BUILD?initTestLab(selectedFaction):openDeckBuilder();
+  $("#restartBtn").onclick=()=>gameMode==="online"?requestOnlineRematch({allowActive:true}):returnToModeMenu();
+  $("#pathBackBtn").onclick=()=>returnToModeMenu();
+  $("#startBtn").onclick=()=>openDeckBuilder();
   $("#deckBuilderBack").onclick=()=>closeDeckBuilderToPaths();
   $("#deckBuilderConfirm").onclick=()=>{
     if(minimumPlayableDeckSize(selectedFaction,deckBuilderSelection)<30){ toast("МИНИМУМ 30 КАРТ"); return; }
@@ -25446,7 +25345,6 @@ ${template.desc}`:""}`;
 
   $("#copyInvitation").onclick=async()=>{const text=networkSession.invitation;if(!text)return;try{await navigator.clipboard.writeText(text);toast("СКОПИРОВАНО");}catch(_e){const range=document.createRange();range.selectNodeContents($("#networkRoomCode"));const selection=getSelection();selection.removeAllRanges();selection.addRange(range);toast("Выделено — скопируйте код");}};
   buildFactionPicker(); updateSetupPlayerLabel();
-  if(TEST_BUILD) setTimeout(openTestFactionPicker,0);
 })();
 </script>
 
