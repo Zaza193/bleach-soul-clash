@@ -34683,5 +34683,51 @@ html.network-keyboard-open.network-keyboard-tight #networkJoinBtn{
   window.addEventListener('orientationchange',()=>setTimeout(syncJoinKeyboardViewport,120),{passive:true});
 })();</script>
 
+<style id="v321-mobile-front-scroll-readable-factions">
+/* v321 — touch-browser front menus: real scrolling + readable faction text. */
+@media (hover:none), (pointer:coarse){
+  #modeOverlay,#networkOverlay,#networkCreateOverlay,#networkJoinOverlay,#startOverlay,#deckBuilderOverlay,#mulliganOverlay,#handoffOverlay{
+    overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important;align-items:flex-start!important;justify-items:center!important;place-items:start center!important;
+    padding-top:max(6px,env(safe-area-inset-top,0px))!important;padding-bottom:max(10px,env(safe-area-inset-bottom,0px))!important;
+  }
+  #modeOverlay>.modal,#networkOverlay>.modal,#networkCreateOverlay>.modal,#networkJoinOverlay>.modal,#startOverlay>.modal,#handoffOverlay>.modal{
+    height:auto!important;min-height:0!important;max-height:none!important;flex:0 0 auto!important;margin:auto!important;
+  }
+  #deckBuilderOverlay .deck-builder-scroll-content,#deckBuilderOverlay .deck-builder-grid,#choiceOverlay .choice-grid,#mulliganOverlay .mulligan-grid,#startOverlay .factions{
+    -webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;overscroll-behavior-y:contain!important;
+  }
+  #startOverlay .faction-modal{
+    width:min(880px,calc(100% - 12px))!important;max-width:880px!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;padding:12px!important;box-sizing:border-box!important;
+  }
+  #startOverlay .faction-modal .factions{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-rows:auto!important;gap:10px!important;height:auto!important;max-height:none!important;overflow:visible!important;margin:10px 0!important;
+  }
+  #startOverlay .faction-modal .faction{
+    display:flex!important;align-items:stretch!important;height:auto!important;min-height:178px!important;max-height:none!important;overflow:hidden!important;clip-path:none!important;border-radius:0!important;
+  }
+  #startOverlay .faction-modal .faction:last-child:nth-child(odd){grid-column:1/-1!important;min-height:148px!important}
+  #startOverlay .faction-modal .faction-copy{
+    width:100%!important;min-height:100%!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;align-items:flex-start!important;gap:8px!important;padding:12px 13px 14px!important;
+    background:linear-gradient(180deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.58) 42%,rgba(0,0,0,.72) 72%,rgba(0,0,0,.90) 100%)!important;text-shadow:0 1px 3px #000!important;overflow:visible!important;
+  }
+  #startOverlay .faction-modal .faction b{
+    position:static!important;display:block!important;width:100%!important;margin:0!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;font-size:15px!important;line-height:1.08!important;font-weight:900!important;letter-spacing:.015em!important;white-space:normal!important;overflow:visible!important;
+  }
+  #startOverlay .faction-modal .faction small{
+    display:block!important;width:100%!important;max-height:none!important;margin:0!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;font-size:11px!important;line-height:1.30!important;font-weight:700!important;letter-spacing:0!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;-webkit-line-clamp:unset!important;line-clamp:unset!important;
+  }
+  #startOverlay .network-actions{
+    position:sticky!important;bottom:0!important;z-index:50!important;width:100%!important;margin-top:8px!important;padding-top:8px!important;padding-bottom:max(4px,env(safe-area-inset-bottom,0px))!important;background:linear-gradient(to bottom,rgba(236,231,219,0),rgba(236,231,219,.97) 28%,#ece7db 100%)!important;
+  }
+}
+@media (hover:none) and (max-width:620px), (pointer:coarse) and (max-width:620px){
+  #startOverlay .faction-modal .factions{grid-template-columns:1fr!important}
+  #startOverlay .faction-modal .faction:last-child:nth-child(odd){grid-column:auto!important}
+  #startOverlay .faction-modal .faction{min-height:155px!important}
+}
+html.touch-device #modeOverlay,html.touch-device #networkOverlay,html.touch-device #networkCreateOverlay,html.touch-device #networkJoinOverlay,html.touch-device #startOverlay,html.touch-device #deckBuilderOverlay,html.touch-device #mulliganOverlay,html.touch-device #handoffOverlay{
+  overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;
+}
+</style>
 </body>
 </html>
