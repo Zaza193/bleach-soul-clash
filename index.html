@@ -33785,20 +33785,26 @@ function v242CardElement(sideKey,row,uid){
     const randomBtn=overlay.querySelector('#deckBuilderRandom') || modal.querySelector('#deckBuilderRandom');
     if(!grid || !actions) return;
 
-    if(!modal.querySelector('.deck-builder-main-area')){
-      const main=document.createElement('div');
+    let main=modal.querySelector('.deck-builder-main-area');
+    if(!main){
+      main=document.createElement('div');
       main.className='deck-builder-main-area';
-      const scroller=document.createElement('div');
-      scroller.className='deck-builder-scroll-content';
       modal.insertBefore(main,actions);
-      main.appendChild(scroller);
-      scroller.appendChild(grid);
-      if(head) modal.insertBefore(head,main);
-      if(sub) modal.insertBefore(sub,main);
-    }else{
-      const scroller=modal.querySelector('.deck-builder-scroll-content');
-      if(scroller && grid.parentElement!==scroller) scroller.appendChild(grid);
     }
+    let scroller=main.querySelector('.deck-builder-scroll-content');
+    if(!scroller){
+      scroller=document.createElement('div');
+      scroller.className='deck-builder-scroll-content';
+      main.appendChild(scroller);
+    }
+
+    /* v324: ASSEMBLE title + rules belong to the same vertical scroll as the card list. */
+    if(head && head.parentElement!==scroller) scroller.insertBefore(head,scroller.firstChild);
+    if(sub && sub.parentElement!==scroller){
+      const anchor=head?.parentElement===scroller ? head.nextSibling : scroller.firstChild;
+      scroller.insertBefore(sub,anchor);
+    }
+    if(grid.parentElement!==scroller) scroller.appendChild(grid);
 
     let sidePanel=shell.querySelector('.deck-builder-side-panel');
     if(!sidePanel){
@@ -35241,5 +35247,24 @@ html.network-keyboard-open #networkJoinOverlay{
 }
 </style>
 
+<style id="v324-assemble-header-scrolls">
+/* v324 — ASSEMBLE header/description scroll with cards; actions stay fixed. */
+#deckBuilderOverlay .deck-builder-scroll-content > .deck-builder-head{
+  flex:0 0 auto!important;
+  margin:0!important;
+  padding:0!important;
+}
+#deckBuilderOverlay .deck-builder-scroll-content > .deck-builder-sub{
+  flex:0 0 auto!important;
+  margin-top:8px!important;
+  margin-bottom:12px!important;
+}
+#deckBuilderOverlay .deck-builder-scroll-content > .deck-builder-grid{
+  flex:0 0 auto!important;
+}
+#deckBuilderOverlay .deck-builder-actions{
+  flex:0 0 auto!important;
+}
+</style>
 </body>
 </html>
