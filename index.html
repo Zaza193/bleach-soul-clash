@@ -24,6 +24,13 @@
   root.classList.toggle('pwa-standalone',!!standalone);
   root.classList.toggle('ios-device',!!isIOS);
 
+  const mobileLike=/android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent||"")
+    || (navigator.maxTouchPoints||0)>0
+    || !!(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches);
+  root.classList.toggle("mobile-ui",!!mobileLike);
+  root.classList.toggle("mobile-browser-ui",!!mobileLike&&!standalone);
+  root.classList.toggle("mobile-standalone-ui",!!mobileLike&&standalone);
+
   const syncResponsiveDevice=()=>{
     const vv=window.visualViewport;
     const h=Math.round((vv&&vv.height)||window.innerHeight||document.documentElement.clientHeight||0);
@@ -34729,5 +34736,510 @@ html.touch-device #modeOverlay,html.touch-device #networkOverlay,html.touch-devi
   overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;
 }
 </style>
+
+<style id="v322-mobile-all-pages-scroll-hardfix">
+/* v322 — authoritative mobile shell.
+   Applies to BOTH browser Safari/Chrome and installed/standalone mobile UI.
+   It deliberately does not depend on phone-device/touch-landscape breakpoints. */
+
+html.mobile-ui #modeOverlay,
+html.mobile-ui #networkOverlay,
+html.mobile-ui #networkCreateOverlay,
+html.mobile-ui #networkJoinOverlay,
+html.mobile-ui #startOverlay,
+html.mobile-ui #deckBuilderOverlay,
+html.mobile-ui #mulliganOverlay,
+html.mobile-ui #choiceOverlay,
+html.mobile-ui #handoffOverlay,
+html.mobile-ui #resultOverlay,
+html.mobile-ui #soulSuicideOverlay{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  overscroll-behavior-y:contain!important;
+  align-items:flex-start!important;
+  justify-items:center!important;
+  place-items:start center!important;
+  padding-top:max(8px,env(safe-area-inset-top,0px))!important;
+  padding-right:max(7px,env(safe-area-inset-right,0px))!important;
+  padding-bottom:max(18px,env(safe-area-inset-bottom,0px))!important;
+  padding-left:max(7px,env(safe-area-inset-left,0px))!important;
+}
+
+/* Ordinary front pages scroll as pages, not as clipped fixed-height cards. */
+html.mobile-ui #modeOverlay>.modal,
+html.mobile-ui #networkOverlay>.modal,
+html.mobile-ui #networkCreateOverlay>.modal,
+html.mobile-ui #networkJoinOverlay>.modal,
+html.mobile-ui #startOverlay>.modal,
+html.mobile-ui #handoffOverlay>.modal,
+html.mobile-ui #resultOverlay>.modal,
+html.mobile-ui #soulSuicideOverlay>.modal{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  flex:0 0 auto!important;
+  margin:0 auto!important;
+}
+
+/* CHOOSE YOUR SOUL / target-choice screens also need a genuine vertical path
+   when their contents are taller than the mobile viewport. */
+html.mobile-ui #mulliganOverlay .mulligan-modal,
+html.mobile-ui #choiceOverlay .choice-modal{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  margin:0 auto!important;
+}
+html.mobile-ui #mulliganOverlay .mulligan-grid,
+html.mobile-ui #choiceOverlay .choice-grid{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  overscroll-behavior:contain!important;
+}
+
+/* ASSEMBLE keeps its useful internal card-list scroller, but make the gesture
+   work on both mobile browser and PWA instead of relying on device subclasses. */
+html.mobile-ui #deckBuilderOverlay{
+  align-items:center!important;
+  place-items:center!important;
+}
+html.mobile-ui #deckBuilderOverlay .deck-builder-shell{
+  max-height:calc(100dvh - max(16px,env(safe-area-inset-top,0px)) - max(22px,env(safe-area-inset-bottom,0px)))!important;
+  min-height:0!important;
+}
+html.mobile-ui #deckBuilderOverlay .deck-builder-modal{
+  min-height:0!important;
+  max-height:100%!important;
+  overflow:hidden!important;
+}
+html.mobile-ui #deckBuilderOverlay .deck-builder-main-area{
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.mobile-ui #deckBuilderOverlay .deck-builder-scroll-content{
+  min-height:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  overscroll-behavior-y:contain!important;
+}
+html.mobile-ui #deckBuilderOverlay .deck-builder-grid{
+  overflow:visible!important;
+  touch-action:pan-y!important;
+}
+
+/* Faction picker — readable in BOTH browser mode and installed mode.
+   The old tablet rule forced 4 tiny columns and won on iPad-sized viewports. */
+html.mobile-ui #startOverlay .faction-modal{
+  width:min(900px,calc(100% - 4px))!important;
+  max-width:900px!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  padding:12px!important;
+  overflow:visible!important;
+  clip-path:none!important;
+  margin:0 auto!important;
+}
+html.mobile-ui #startOverlay .faction-modal .factions{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:none!important;
+  grid-auto-rows:minmax(190px,auto)!important;
+  gap:10px!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:10px 0!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+html.mobile-ui #startOverlay .faction-modal .faction{
+  display:flex!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:190px!important;
+  max-height:none!important;
+  margin:0!important;
+  overflow:hidden!important;
+  clip-path:none!important;
+  border-radius:0!important;
+}
+html.mobile-ui #startOverlay .faction-modal .faction:last-child:nth-child(odd){
+  grid-column:1/-1!important;
+  min-height:155px!important;
+}
+html.mobile-ui #startOverlay .faction-modal .faction-copy{
+  position:relative!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:190px!important;
+  max-height:none!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:flex-start!important;
+  gap:8px!important;
+  padding:12px 14px 14px!important;
+  overflow:visible!important;
+  background:
+    linear-gradient(180deg,
+      rgba(0,0,0,.78) 0%,
+      rgba(0,0,0,.56) 43%,
+      rgba(0,0,0,.74) 72%,
+      rgba(0,0,0,.92) 100%)!important;
+  text-shadow:0 1px 3px #000!important;
+}
+html.mobile-ui #startOverlay .faction-modal .faction b{
+  position:static!important;
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  color:#fff!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:16px!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+  text-transform:uppercase!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+html.mobile-ui #startOverlay .faction-modal .faction small{
+  position:static!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  color:rgba(255,255,255,.98)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  font-size:12px!important;
+  line-height:1.34!important;
+  font-weight:750!important;
+  letter-spacing:0!important;
+  word-spacing:normal!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+}
+html.mobile-ui #startOverlay .network-actions{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:60!important;
+  width:100%!important;
+  margin:8px 0 0!important;
+  padding:8px 0 max(5px,env(safe-area-inset-bottom,0px))!important;
+  background:linear-gradient(to bottom,rgba(236,231,219,0),rgba(236,231,219,.98) 25%,#ece7db 100%)!important;
+}
+
+/* Very narrow phones: one column, so no description has to become microscopic. */
+@media (max-width:620px){
+  html.mobile-ui #startOverlay .faction-modal .factions{
+    grid-template-columns:1fr!important;
+    grid-auto-rows:minmax(160px,auto)!important;
+  }
+  html.mobile-ui #startOverlay .faction-modal .faction,
+  html.mobile-ui #startOverlay .faction-modal .faction-copy{
+    min-height:160px!important;
+  }
+  html.mobile-ui #startOverlay .faction-modal .faction:last-child:nth-child(odd){
+    grid-column:auto!important;
+  }
+  html.mobile-ui #startOverlay .faction-modal .faction b{font-size:15px!important}
+  html.mobile-ui #startOverlay .faction-modal .faction small{font-size:11px!important;line-height:1.3!important}
+}
+
+/* Browser-specific override: iPad/mobile Safari can report a desktop-sized CSS
+   viewport, so never key browser scrolling only off max-width. */
+html.mobile-browser-ui #modeOverlay,
+html.mobile-browser-ui #networkOverlay,
+html.mobile-browser-ui #networkCreateOverlay,
+html.mobile-browser-ui #networkJoinOverlay,
+html.mobile-browser-ui #startOverlay,
+html.mobile-browser-ui #deckBuilderOverlay,
+html.mobile-browser-ui #mulliganOverlay,
+html.mobile-browser-ui #choiceOverlay,
+html.mobile-browser-ui #handoffOverlay{
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+}
+
+/* Installed version gets the same scrolling contract explicitly. */
+html.mobile-standalone-ui #modeOverlay,
+html.mobile-standalone-ui #networkOverlay,
+html.mobile-standalone-ui #networkCreateOverlay,
+html.mobile-standalone-ui #networkJoinOverlay,
+html.mobile-standalone-ui #startOverlay,
+html.mobile-standalone-ui #deckBuilderOverlay,
+html.mobile-standalone-ui #mulliganOverlay,
+html.mobile-standalone-ui #choiceOverlay,
+html.mobile-standalone-ui #handoffOverlay{
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+}
+</style>
+
+
+<style id="v323-universal-overlay-scroll-center">
+/* v323 — one scroll/centering contract for DESKTOP + mobile browser + standalone.
+   Short panels stay centered. Tall panels start at the top and the overlay itself scrolls. */
+
+#modeOverlay:not(.hidden),
+#networkOverlay:not(.hidden),
+#networkCreateOverlay:not(.hidden),
+html:not(.network-keyboard-open) #networkJoinOverlay:not(.hidden),
+#startOverlay:not(.hidden),
+#deckBuilderOverlay:not(.hidden),
+#mulliganOverlay:not(.hidden),
+#choiceOverlay:not(.hidden),
+#handoffOverlay:not(.hidden),
+#resultOverlay:not(.hidden),
+#soulSuicideOverlay:not(.hidden){
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  box-sizing:border-box!important;
+  padding:
+    max(12px,env(safe-area-inset-top,0px))
+    max(12px,env(safe-area-inset-right,0px))
+    max(16px,env(safe-area-inset-bottom,0px))
+    max(12px,env(safe-area-inset-left,0px))!important;
+  scrollbar-gutter:stable both-edges!important;
+  overscroll-behavior-y:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+}
+
+/* Auto margins center short dialogs vertically and horizontally.
+   When a dialog is taller than the viewport, the vertical auto margins collapse,
+   leaving the top reachable and allowing normal scrolling. */
+#modeOverlay>.modal,
+#networkOverlay>.modal,
+#networkCreateOverlay>.modal,
+html:not(.network-keyboard-open) #networkJoinOverlay>.modal,
+#startOverlay>.modal,
+#mulliganOverlay>.modal,
+#choiceOverlay>.modal,
+#handoffOverlay>.modal,
+#resultOverlay>.modal,
+#soulSuicideOverlay>.modal,
+#deckBuilderOverlay>.deck-builder-shell{
+  flex:0 0 auto!important;
+  align-self:center!important;
+  margin:auto!important;
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+}
+
+/* Normal preparation dialogs should grow naturally. Their PAGE scroll belongs
+   to the overlay, so fixed heights/max-heights can no longer clip content. */
+#modeOverlay>.modal,
+#networkOverlay>.modal,
+#networkCreateOverlay>.modal,
+html:not(.network-keyboard-open) #networkJoinOverlay>.modal,
+#startOverlay>.modal,
+#handoffOverlay>.modal,
+#resultOverlay>.modal,
+#soulSuicideOverlay>.modal{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  max-width:calc(100% - 2px)!important;
+}
+
+/* Mulligan: let the whole page become taller than the viewport instead of
+   clipping the second row. */
+#mulliganOverlay>.mulligan-modal{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  max-width:calc(100% - 2px)!important;
+}
+#mulliganOverlay .mulligan-grid{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  grid-auto-rows:auto!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-x pan-y!important;
+}
+
+/* Choice pages: the overlay can scroll vertically, while horizontally large
+   choice sets can still scroll inside the grid. */
+#choiceOverlay>.choice-modal{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  max-width:calc(100% - 2px)!important;
+}
+#choiceOverlay .choice-grid{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-x pan-y!important;
+}
+
+/* ASSEMBLE is the one screen where keeping the action bar fixed is useful:
+   only the card list scrolls. The complete shell itself is always centered. */
+#deckBuilderOverlay{
+  overflow:hidden!important;
+}
+#deckBuilderOverlay>.deck-builder-shell{
+  width:min(1320px,calc(100% - 2px))!important;
+  max-width:1320px!important;
+  height:calc(100dvh - max(28px,env(safe-area-inset-top,0px)) - max(32px,env(safe-area-inset-bottom,0px)))!important;
+  max-height:94vh!important;
+  min-height:0!important;
+}
+#deckBuilderOverlay .deck-builder-modal{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  box-sizing:border-box!important;
+}
+#deckBuilderOverlay .deck-builder-main-area{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+#deckBuilderOverlay .deck-builder-scroll-content{
+  height:100%!important;
+  min-height:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  scrollbar-gutter:stable!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-y:contain!important;
+  touch-action:pan-y!important;
+}
+#deckBuilderOverlay .deck-builder-grid{
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
+
+/* Three Worlds: modal on the left, truly separate counters card on the right,
+   both centered as one shell. */
+#deckBuilderOverlay.three-worlds-builder>.deck-builder-shell{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 298px!important;
+  gap:16px!important;
+  align-items:stretch!important;
+}
+#deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel{
+  min-height:0!important;
+  height:100%!important;
+}
+#deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel-inner{
+  height:100%!important;
+  min-height:0!important;
+}
+
+/* Undo the old mobile rules that shifted entire panels toward the top/left.
+   This applies to Safari/Chrome browser mode and installed mode equally. */
+html.mobile-ui #modeOverlay:not(.hidden),
+html.mobile-ui #networkOverlay:not(.hidden),
+html.mobile-ui #networkCreateOverlay:not(.hidden),
+html.mobile-ui:not(.network-keyboard-open) #networkJoinOverlay:not(.hidden),
+html.mobile-ui #startOverlay:not(.hidden),
+html.mobile-ui #mulliganOverlay:not(.hidden),
+html.mobile-ui #choiceOverlay:not(.hidden),
+html.mobile-ui #handoffOverlay:not(.hidden),
+html.mobile-ui #resultOverlay:not(.hidden),
+html.mobile-ui #soulSuicideOverlay:not(.hidden){
+  align-items:center!important;
+  justify-content:flex-start!important;
+  place-items:initial!important;
+}
+
+/* Keep faction text readable; unlike the old patch this does not change the
+   overlay's alignment or scrolling model. */
+html.mobile-ui #startOverlay .faction-modal .faction-copy{
+  justify-content:flex-start!important;
+}
+html.mobile-ui #startOverlay .faction-modal .faction small{
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:normal!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+}
+
+/* On narrow screens Three Worlds counters remain a separate card below the
+   main ASSEMBLE card instead of being merged into it. */
+@media (max-width:920px){
+  #deckBuilderOverlay.three-worlds-builder>.deck-builder-shell{
+    display:flex!important;
+    flex-direction:column!important;
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  #deckBuilderOverlay.three-worlds-builder .deck-builder-modal{
+    height:min(78dvh,720px)!important;
+    flex:0 0 auto!important;
+  }
+  #deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel{
+    height:auto!important;
+    flex:0 0 auto!important;
+  }
+  #deckBuilderOverlay{
+    overflow-y:auto!important;
+  }
+}
+
+/* The software-keyboard JOIN ROOM mode keeps its own visualViewport geometry. */
+html.network-keyboard-open #networkJoinOverlay{
+  margin:0!important;
+}
+</style>
+
 </body>
 </html>
