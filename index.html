@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="201-v120-assemble-card-frame-parity";
+  const BUILD_VERSION="202-v123-mobile-hand-lower-assemble-romans";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -72,7 +72,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v120 · ASSEMBLE CARD FRAME PARITY</title>
+<title>BLEACH: Soul Clash — v123 · MOBILE HAND LOWER + ASSEMBLE ROMANS</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -37940,6 +37940,489 @@ html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverl
   html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel{
     width:86px!important;min-width:86px!important;max-width:86px!important;height:53px!important;min-height:53px!important;max-height:53px!important;flex-basis:53px!important;
   }
+}
+</style>
+
+
+<style id="bsc-v123-mobile-hand-lower-assemble-romans">
+/* v123 — mobile hand placement + ASSEMBLE row-mark parity.
+   1) The mobile hand zone already grows for the PWA/home safe area. Do not add
+      safe-area-inset-bottom a second time to the absolutely anchored hand strip;
+      that double-count raised every card. Selected cards alone keep a small lift.
+   2) ASSEMBLE mobile uses the exact desktop Roman-row string and desktop visual
+      hierarchy instead of the compact Ⅰ/Ⅱ/Ⅲ substitute. */
+
+@media (pointer:coarse) and (orientation:landscape){
+  html.phone-device.phone-landscape #hand,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand,
+  html.mobile-ui.phone-device.phone-landscape #hand{
+    top:auto!important;
+    bottom:0!important;
+    padding-top:0!important;
+    padding-bottom:0!important;
+    align-items:flex-end!important;
+  }
+  html.phone-device.phone-landscape #hand .card,
+  html.phone-device.phone-landscape #hand.hand-expanded .card,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card,
+  html.mobile-ui.phone-device.phone-landscape #hand .card,
+  html.mobile-ui.phone-device.phone-landscape #hand.hand-expanded .card{
+    align-self:flex-end!important;
+    margin-top:0!important;
+    margin-bottom:0!important;
+  }
+  html.phone-device.phone-landscape #hand .card:hover,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card:hover,
+  html.mobile-ui.phone-device.phone-landscape #hand .card:hover{
+    transform:none!important;
+  }
+  html.phone-device.phone-landscape #hand .card.selected,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card.selected,
+  html.mobile-ui.phone-device.phone-landscape #hand .card.selected{
+    transform:translateY(-3px) scale(1.015)!important;
+  }
+}
+
+/* Phone ASSEMBLE: restore the same Roman-row representation used on desktop.
+   The card is a size container, so cqw preserves the desktop placement ratio
+   when the five-column mobile grid changes width. */
+@media (pointer:coarse){
+  html.mobile-ui.phone-device #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge,
+  html.phone-device.phone-landscape #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    top:clamp(5px,4.25cqw,7px)!important;
+    right:clamp(5px,4.25cqw,7px)!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:calc(100% - 12px)!important;
+    height:auto!important;
+    padding:0!important;
+    margin:0!important;
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+    font-family:"Times New Roman",Georgia,serif!important;
+    font-size:clamp(16px,11.8cqw,19.3px)!important;
+    font-weight:700!important;
+    line-height:.9!important;
+    letter-spacing:0!important;
+    word-spacing:0!important;
+    text-align:right!important;
+    white-space:nowrap!important;
+    -webkit-text-stroke:clamp(.8px,.65cqw,1.05px) #000!important;
+    paint-order:stroke fill!important;
+    text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.82)!important;
+    pointer-events:none!important;
+  }
+
+  html.mobile-ui.phone-device #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge > .row-badge-desktop,
+  html.phone-device.phone-landscape #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge > .row-badge-desktop,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge > .row-badge-desktop{
+    display:inline!important;
+    visibility:visible!important;
+    opacity:1!important;
+    color:inherit!important;
+    -webkit-text-fill-color:inherit!important;
+    font:inherit!important;
+    line-height:inherit!important;
+    letter-spacing:inherit!important;
+    word-spacing:inherit!important;
+    -webkit-text-stroke:inherit!important;
+    paint-order:inherit!important;
+    text-shadow:inherit!important;
+  }
+
+  html.mobile-ui.phone-device #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge > .row-badge-mobile,
+  html.phone-device.phone-landscape #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge > .row-badge-mobile,
+  html.touch-device.touch-landscape:not(.tablet-device) #deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card .row-badge > .row-badge-mobile{
+    display:none!important;
+    visibility:hidden!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v124-mobile-preview-and-piles-parity">
+/* v124 — Mobile preview/piles parity
+   1) In mobile detail preview, the card face must stay visible and the info plaque must not consume the full box height.
+   2) Mobile deck/discard should visually follow the desktop stack treatment instead of the flattened mobile simplification. */
+@media (hover:none), (pointer:coarse){
+  /* ---- Detail preview: restore real card + compact info plaque ---- */
+  html.mobile-ui .rightbar #detail .detail-preview,
+  html.phone-device .rightbar #detail .detail-preview,
+  html.touch-device .rightbar #detail .detail-preview,
+  html.tablet-device .rightbar #detail .detail-preview{
+    width:min(112px,100%)!important;
+    max-width:112px!important;
+    min-width:88px!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0 auto!important;
+    padding:0!important;
+    display:block!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui .rightbar #detail .detail-preview > .card,
+  html.phone-device .rightbar #detail .detail-preview > .card,
+  html.touch-device .rightbar #detail .detail-preview > .card,
+  html.tablet-device .rightbar #detail .detail-preview > .card{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    align-items:start!important;
+    justify-items:stretch!important;
+    gap:0!important;
+    overflow:visible!important;
+    box-shadow:none!important;
+  }
+  html.mobile-ui .rightbar #detail .detail-preview > .card.with-info,
+  html.phone-device .rightbar #detail .detail-preview > .card.with-info,
+  html.touch-device .rightbar #detail .detail-preview > .card.with-info,
+  html.tablet-device .rightbar #detail .detail-preview > .card.with-info{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+  }
+  html.mobile-ui .rightbar #detail .detail-preview > .card > .card-face,
+  html.phone-device .rightbar #detail .detail-preview > .card > .card-face,
+  html.touch-device .rightbar #detail .detail-preview > .card > .card-face,
+  html.tablet-device .rightbar #detail .detail-preview > .card > .card-face{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:2 / 3!important;
+    display:block!important;
+    flex:none!important;
+    justify-self:stretch!important;
+    align-self:start!important;
+    margin:0!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui .rightbar #detail .detail-preview > .card > .card-info-panel,
+  html.phone-device .rightbar #detail .detail-preview > .card > .card-info-panel,
+  html.touch-device .rightbar #detail .detail-preview > .card > .card-info-panel,
+  html.tablet-device .rightbar #detail .detail-preview > .card > .card-info-panel{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    flex:none!important;
+    margin:0!important;
+    padding:4px 6px 6px!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-name,
+  html.phone-device .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-name,
+  html.touch-device .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-name,
+  html.tablet-device .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-name{
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  html.mobile-ui .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-desc,
+  html.phone-device .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-desc,
+  html.touch-device .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-desc,
+  html.tablet-device .rightbar #detail .detail-preview > .card > .card-info-panel .card-info-desc{
+    -webkit-line-clamp:4!important;
+  }
+
+  /* ---- Piles: restore desktop-like stack visuals on mobile ---- */
+  html.mobile-ui .pile-zone,
+  html.phone-device .pile-zone,
+  html.touch-device .pile-zone,
+  html.tablet-device .pile-zone{
+    background:linear-gradient(135deg,#111,#090909 62%)!important;
+    border:1px solid #262626!important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui .pile-zone::after,
+  html.phone-device .pile-zone::after,
+  html.touch-device .pile-zone::after,
+  html.tablet-device .pile-zone::after{
+    display:block!important;
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    pointer-events:none!important;
+    opacity:.42!important;
+    background:repeating-linear-gradient(112deg,rgba(255,255,255,.025) 0 1px,transparent 1px 10px)!important;
+  }
+  html.mobile-ui .pile-inner,
+  html.phone-device .pile-inner,
+  html.touch-device .pile-inner,
+  html.tablet-device .pile-inner{
+    position:relative!important;
+    z-index:1!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:12px!important;
+    height:100%!important;
+    padding:6px 8px!important;
+  }
+  html.mobile-ui .deck-stack,
+  html.mobile-ui .discard-stack,
+  html.phone-device .deck-stack,
+  html.phone-device .discard-stack,
+  html.touch-device .deck-stack,
+  html.touch-device .discard-stack,
+  html.tablet-device .deck-stack,
+  html.tablet-device .discard-stack{
+    width:58px!important;
+    height:82px!important;
+    flex:0 0 58px!important;
+    border-radius:0!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+  html.mobile-ui .deck-stack,
+  html.phone-device .deck-stack,
+  html.touch-device .deck-stack,
+  html.tablet-device .deck-stack{
+    position:relative!important;
+    display:grid!important;
+    place-items:center!important;
+    background:#101010!important;
+    border:2px solid #d9d6ce!important;
+    box-shadow:-3px 3px 0 #444,-6px 6px 0 #171717,4px 5px 0 #000!important;
+    transform:rotate(-1.5deg)!important;
+  }
+  html.mobile-ui .deck-stack::before,
+  html.phone-device .deck-stack::before,
+  html.touch-device .deck-stack::before,
+  html.tablet-device .deck-stack::before{
+    content:""!important;
+    position:absolute!important;
+    inset:5px!important;
+    border:1px solid rgba(255,255,255,.32)!important;
+    background:repeating-linear-gradient(135deg,rgba(255,255,255,.13) 0 2px,transparent 2px 7px)!important;
+  }
+  html.mobile-ui .deck-stack::after,
+  html.phone-device .deck-stack::after,
+  html.touch-device .deck-stack::after,
+  html.tablet-device .deck-stack::after{
+    content:"SOUL"!important;
+    position:absolute!important;
+    inset:0!important;
+    display:grid!important;
+    place-items:center!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;
+    font-size:11px!important;
+    letter-spacing:.09em!important;
+    color:#8b8b8b!important;
+  }
+  html.mobile-ui .discard-stack,
+  html.phone-device .discard-stack,
+  html.touch-device .discard-stack,
+  html.tablet-device .discard-stack{
+    position:relative!important;
+    background:#0e0e0e!important;
+    border:2px solid #888!important;
+    box-shadow:-2px 2px 0 #333,-4px 4px 0 #151515,3px 4px 0 #000!important;
+    transform:rotate(1.5deg)!important;
+  }
+  html.mobile-ui .discard-stack.empty,
+  html.phone-device .discard-stack.empty,
+  html.touch-device .discard-stack.empty,
+  html.tablet-device .discard-stack.empty{
+    border-color:#303030!important;
+    background:rgba(255,255,255,.018)!important;
+    box-shadow:none!important;
+  }
+  html.mobile-ui .discard-stack.empty::before,
+  html.phone-device .discard-stack.empty::before,
+  html.touch-device .discard-stack.empty::before,
+  html.tablet-device .discard-stack.empty::before{
+    content:""!important;
+    position:absolute!important;
+    inset:5px!important;
+    border:1px dashed #303030!important;
+  }
+  html.mobile-ui .discard-stack.has-card,
+  html.phone-device .discard-stack.has-card,
+  html.touch-device .discard-stack.has-card,
+  html.tablet-device .discard-stack.has-card{
+    background:#d8d4ca!important;
+    box-shadow:-2px 2px 0 #777,-4px 4px 0 #222,3px 4px 0 #000!important;
+  }
+  html.mobile-ui .discard-top,
+  html.phone-device .discard-top,
+  html.touch-device .discard-top,
+  html.tablet-device .discard-top{
+    position:absolute!important;
+    inset:3px!important;
+    border:1px solid #111!important;
+    background:linear-gradient(155deg,#e6e2d9 0 63%,#a8a49b 63%)!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui .discard-top::before,
+  html.phone-device .discard-top::before,
+  html.touch-device .discard-top::before,
+  html.tablet-device .discard-top::before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;
+    right:0!important;
+    top:0!important;
+    height:5px!important;
+    background:var(--p)!important;
+  }
+  html.mobile-ui .enemy-pile .discard-top::before,
+  html.phone-device .enemy-pile .discard-top::before,
+  html.touch-device .enemy-pile .discard-top::before,
+  html.tablet-device .enemy-pile .discard-top::before{
+    background:var(--e)!important;
+  }
+  html.mobile-ui .discard-top::after,
+  html.phone-device .discard-top::after,
+  html.touch-device .discard-top::after,
+  html.tablet-device .discard-top::after{
+    content:""!important;
+    position:absolute!important;
+    inset:7px 5px 19px!important;
+    border:1px solid rgba(0,0,0,.25)!important;
+    background:repeating-linear-gradient(135deg,rgba(0,0,0,.08) 0 2px,transparent 2px 7px)!important;
+  }
+  html.mobile-ui .deck-number,
+  html.mobile-ui .discard-number,
+  html.phone-device .deck-number,
+  html.phone-device .discard-number,
+  html.touch-device .deck-number,
+  html.touch-device .discard-number,
+  html.tablet-device .deck-number,
+  html.tablet-device .discard-number{
+    position:absolute!important;
+    right:-8px!important;
+    bottom:-8px!important;
+    z-index:5!important;
+    width:25px!important;
+    height:25px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:50%!important;
+    background:#efede5!important;
+    color:#090909!important;
+    border:2px solid #090909!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;
+    font-size:14px!important;
+    line-height:1!important;
+    box-shadow:0 0 0 2px var(--p),2px 2px 0 #000!important;
+  }
+  html.mobile-ui .enemy-pile .deck-number,
+  html.mobile-ui .enemy-pile .discard-number,
+  html.phone-device .enemy-pile .deck-number,
+  html.phone-device .enemy-pile .discard-number,
+  html.touch-device .enemy-pile .deck-number,
+  html.touch-device .enemy-pile .discard-number,
+  html.tablet-device .enemy-pile .deck-number,
+  html.tablet-device .enemy-pile .discard-number{
+    box-shadow:0 0 0 2px var(--e),2px 2px 0 #000!important;
+  }
+  html.mobile-ui .discard-power,
+  html.phone-device .discard-power,
+  html.touch-device .discard-power,
+  html.tablet-device .discard-power{
+    width:20px!important;
+    height:20px!important;
+    font-size:12px!important;
+    border-radius:50%!important;
+    border:1px solid #090909!important;
+  }
+  html.mobile-ui .discard-name,
+  html.phone-device .discard-name,
+  html.touch-device .discard-name,
+  html.tablet-device .discard-name{
+    left:3px!important;
+    right:3px!important;
+    bottom:4px!important;
+    font-size:5.5px!important;
+    text-align:center!important;
+  }
+
+  /* Compact landscape phones only: keep parity, just scale down. */
+  html.phone-device.phone-landscape .pile-zone,
+  html.touch-device.touch-landscape:not(.tablet-device) .pile-zone{
+    overflow:visible!important;
+  }
+  html.phone-device.phone-landscape .pile-inner,
+  html.touch-device.touch-landscape:not(.tablet-device) .pile-inner{
+    gap:8px!important;
+    padding:3px 5px!important;
+  }
+  html.phone-device.phone-landscape .deck-stack,
+  html.phone-device.phone-landscape .discard-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .deck-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .discard-stack{
+    width:44px!important;
+    height:62px!important;
+    flex-basis:44px!important;
+  }
+  html.phone-device.phone-landscape .deck-stack::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .deck-stack::before{inset:4px!important}
+  html.phone-device.phone-landscape .deck-stack::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .deck-stack::after{font-size:8.5px!important}
+  html.phone-device.phone-landscape .discard-top,
+  html.touch-device.touch-landscape:not(.tablet-device) .discard-top{inset:2px!important}
+  html.phone-device.phone-landscape .discard-top::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .discard-top::after{inset:6px 4px 15px!important}
+  html.phone-device.phone-landscape .deck-number,
+  html.phone-device.phone-landscape .discard-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .deck-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .discard-number{
+    right:-6px!important;
+    bottom:-6px!important;
+    width:20px!important;
+    height:20px!important;
+    font-size:11px!important;
+  }
+  html.phone-device.phone-landscape .discard-power,
+  html.touch-device.touch-landscape:not(.tablet-device) .discard-power{
+    width:16px!important;
+    height:16px!important;
+    font-size:9px!important;
+  }
+  html.phone-device.phone-landscape .discard-name,
+  html.touch-device.touch-landscape:not(.tablet-device) .discard-name{
+    font-size:4.6px!important;
+    bottom:3px!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v125-mobile-battle-ui-width-minus-10">
+/* v125 — mobile battle interface width reduced by 10%.
+   Apply this as a final stage-width override so the whole combat scene becomes narrower
+   on small mobile landscape screens without disturbing the internal layout logic. */
+html.phone-device.phone-landscape .app,
+html.mobile-ui.phone-device.phone-landscape .app{
+  width:calc(var(--phone-stage-width) * .9)!important;
+  max-width:calc(var(--phone-stage-width) * .9)!important;
+}
+
+html.touch-device.touch-landscape:not(.tablet-device) .app,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .app{
+  width:calc(var(--touch-stage-width) * .9)!important;
+  max-width:calc(var(--touch-stage-width) * .9)!important;
 }
 </style>
 
