@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="200-vollstandig44-faction-picker-wanden-arts";
+  const BUILD_VERSION="200-vollstandig48-mobile-ui-fix";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -39329,6 +39329,513 @@ html.mobile-ui #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay
  html.mobile-ui #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay .factions{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(3,minmax(0,1fr))!important}
  html.mobile-ui #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay .faction:last-child:nth-child(odd){grid-column:1/-1!important}
  html.mobile-ui #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay .faction .faction-copy>b{font-size:13px!important}
+}
+</style>
+
+<style id="v402-frame-power-final-unification">
+/*
+  FINAL FRAME/POWER UNIFICATION
+  1) Hero uses exactly the ordinary-card geometry on battlefield/hand/flight/landing ghost.
+     Hero differs only through --card-frame / --card-frame-glow.
+  2) Touch portrait + tablet battlefield power uses the intended 88.4cqw semicircle,
+     replacing the obsolete 136cqw oversize rule.
+  3) Desktop/portrait/tablet hand power is a true 2:1 semicircle, not the old 29x29 circle.
+  4) Mulligan power border always follows --card-frame, so Hero stays gold.
+*/
+
+/* === HERO FRAME GEOMETRY: battlefield / landing ghost === */
+.row-cards .card.hero .card-face,
+.row-cards .network-landing-ghost.hero .card-face,
+.network-landing-ghost.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.15cqw var(--card-ink),
+    0 0 0 2.15cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.4cqw 4.2cqw rgba(0,0,0,.46),
+    0 0 3.6cqw var(--card-frame-glow)!important;
+}
+.row-cards .card.hero .card-face::before,
+.row-cards .network-landing-ghost.hero .card-face::before,
+.network-landing-ghost.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:11!important;
+  inset:2.25cqw!important;
+  pointer-events:none!important;
+  border:.72cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .5cqw rgba(0,0,0,.9)!important;
+  border-radius:0!important;
+}
+.row-cards .card.hero .frame,
+.row-cards .network-landing-ghost.hero .frame,
+.network-landing-ghost.hero .frame{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:none!important;
+}
+
+/* === HERO FRAME GEOMETRY: hand === */
+.hand .card.hero .card-face,
+#hand .card.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.35cqw var(--card-ink),
+    0 0 0 2.25cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.8cqw 5.5cqw rgba(0,0,0,.42),
+    0 0 4.2cqw var(--card-frame-glow)!important;
+}
+.hand .card.hero .card-face::before,
+#hand .card.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:11!important;
+  inset:2.3cqw!important;
+  pointer-events:none!important;
+  border:.75cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88)!important;
+  border-radius:0!important;
+}
+.hand .card.hero .frame,
+#hand .card.hero .frame{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:none!important;
+}
+
+/* === HERO FRAME GEOMETRY: physical card flight === */
+.card-flight.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.15cqw var(--card-ink),
+    0 0 0 2.15cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.4cqw 4.2cqw rgba(0,0,0,.46),
+    0 0 3.6cqw var(--card-frame-glow)!important;
+}
+.card-flight.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:11!important;
+  inset:2.25cqw!important;
+  pointer-events:none!important;
+  border:.72cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .5cqw rgba(0,0,0,.9)!important;
+  border-radius:0!important;
+}
+.card-flight.hero .frame{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:none!important;
+}
+
+/* === BATTLEFIELD POWER: repair portrait + tablet 136cqw regression === */
+html.touch-device:not(.touch-landscape) .row-cards .card .power,
+html.tablet-device .row-cards .card .power,
+html.touch-device:not(.touch-landscape) .row-cards .network-landing-ghost .power,
+html.tablet-device .row-cards .network-landing-ghost .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:88.4cqw!important;
+  min-width:88.4cqw!important;
+  max-width:88.4cqw!important;
+  height:44.2cqw!important;
+  min-height:44.2cqw!important;
+  max-height:44.2cqw!important;
+  padding:4.8cqw 0 0!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  transform:translateX(-50%)!important;
+  clip-path:none!important;
+  border-radius:88.4cqw 88.4cqw 0 0!important;
+  border:1.45cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1cqw var(--card-ink),0 -.8cqw 1.8cqw rgba(0,0,0,.28)!important;
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:33.3cqw!important;
+  line-height:1!important;
+  z-index:4!important;
+}
+
+/* === HAND POWER: replace old 29x29 circle by true semicircle === */
+html:not(.phone-device):not(.tablet-device) #hand .card .power,
+html:not(.phone-device):not(.tablet-device) #hand.hand-expanded .card .power,
+html.phone-device:not(.phone-landscape) #hand .card .power,
+html.phone-device:not(.phone-landscape) #hand.hand-expanded .card .power,
+html.tablet-device #hand .card .power,
+html.tablet-device #hand.hand-expanded .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:34cqw!important;
+  min-width:34cqw!important;
+  max-width:34cqw!important;
+  height:17cqw!important;
+  min-height:17cqw!important;
+  max-height:17cqw!important;
+  padding:1.9cqw 0 0!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  transform:translateX(-50%)!important;
+  clip-path:none!important;
+  border-radius:34cqw 34cqw 0 0!important;
+  border:1.2cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1cqw var(--card-ink),0 -.8cqw 1.8cqw rgba(0,0,0,.28)!important;
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:12.8cqw!important;
+  line-height:1!important;
+  z-index:4!important;
+}
+
+/* === MULLIGAN: Hero power border follows Hero frame, never hard-coded white === */
+html body #mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card.hero > .card-face > .power,
+html body #mulliganOverlay #mulliganGrid.mulligan-grid > .card.hero > .card-face > .power,
+html body #mulliganOverlay .mulligan-grid .card.hero .power{
+  border-top-color:var(--card-frame)!important;
+  border-left-color:var(--card-frame)!important;
+  border-right-color:var(--card-frame)!important;
+  border-bottom-width:0!important;
+}
+
+/* Power must stay visually beneath the frame construction everywhere. */
+.row-cards .card .power,
+.hand .card .power,
+.card-flight .power,
+.network-landing-ghost .power{
+  z-index:4!important;
+}
+.row-cards .card .frame,
+.hand .card .frame,
+.card-flight .frame,
+.network-landing-ghost .frame{
+  z-index:10!important;
+}
+.row-cards .card .card-face::before,
+.hand .card .card-face::before,
+.card-flight .card-face::before,
+.network-landing-ghost .card-face::before{
+  z-index:11!important;
+}
+</style>
+
+
+<style id="v403-frame-power-specificity-lock">
+/* Final specificity lock over legacy mobile/tablet rules. */
+
+/* HERO: square geometry exactly like the ordinary card on battlefield/landing ghost. */
+html.tablet-device body .row-cards .card.hero .card-face,
+html.tablet-device body .row-cards .network-landing-ghost.hero .card-face,
+html.tablet-device body .network-landing-ghost.hero .card-face,
+html.phone-device.phone-landscape body .row-cards .card.hero .card-face,
+html.phone-device.phone-landscape body .row-cards .network-landing-ghost.hero .card-face,
+html.touch-device.touch-landscape body .row-cards .card.hero .card-face,
+html.touch-device.touch-landscape body .row-cards .network-landing-ghost.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.15cqw var(--card-ink),
+    0 0 0 2.15cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.4cqw 4.2cqw rgba(0,0,0,.46),
+    0 0 3.6cqw var(--card-frame-glow)!important;
+}
+html.tablet-device body .row-cards .card.hero .card-face::before,
+html.tablet-device body .row-cards .network-landing-ghost.hero .card-face::before,
+html.tablet-device body .network-landing-ghost.hero .card-face::before,
+html.phone-device.phone-landscape body .row-cards .card.hero .card-face::before,
+html.phone-device.phone-landscape body .row-cards .network-landing-ghost.hero .card-face::before,
+html.touch-device.touch-landscape body .row-cards .card.hero .card-face::before,
+html.touch-device.touch-landscape body .row-cards .network-landing-ghost.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  inset:2.25cqw!important;
+  border:.72cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .5cqw rgba(0,0,0,.9)!important;
+  border-radius:0!important;
+  z-index:11!important;
+}
+
+/* HERO: square hand frame, including touch-landscape and tablet classifications. */
+html.phone-device.phone-landscape body #hand.hand .card.hero .card-face,
+html.touch-device.touch-landscape body #hand.hand .card.hero .card-face,
+html.tablet-device body #hand.hand .card.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.35cqw var(--card-ink),
+    0 0 0 2.25cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.8cqw 5.5cqw rgba(0,0,0,.42),
+    0 0 4.2cqw var(--card-frame-glow)!important;
+}
+html.phone-device.phone-landscape body #hand.hand .card.hero .card-face::before,
+html.touch-device.touch-landscape body #hand.hand .card.hero .card-face::before,
+html.tablet-device body #hand.hand .card.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  inset:2.3cqw!important;
+  border:.75cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88)!important;
+  border-radius:0!important;
+  z-index:11!important;
+}
+
+/* HERO: square physical flight frame. */
+html.phone-device.phone-landscape body .card-flight.hero .card-face,
+html.touch-device.touch-landscape body .card-flight.hero .card-face,
+html.tablet-device body .card-flight.hero .card-face{
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:none!important;
+  background:var(--card-frame)!important;
+  box-shadow:
+    0 0 0 1.15cqw var(--card-ink),
+    0 0 0 2.15cqw var(--card-frame),
+    0 0 0 3.05cqw var(--card-ink),
+    0 2.4cqw 4.2cqw rgba(0,0,0,.46),
+    0 0 3.6cqw var(--card-frame-glow)!important;
+}
+html.phone-device.phone-landscape body .card-flight.hero .card-face::before,
+html.touch-device.touch-landscape body .card-flight.hero .card-face::before,
+html.tablet-device body .card-flight.hero .card-face::before{
+  content:""!important;
+  display:block!important;
+  inset:2.25cqw!important;
+  border:.72cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .5cqw rgba(0,0,0,.9)!important;
+  border-radius:0!important;
+  z-index:11!important;
+}
+
+/* FIELD + NETWORK GHOST: intended 88.4cqw x 44.2cqw semicircle on portrait/tablet. */
+html.touch-device:not(.touch-landscape) body .row-cards .card .power,
+html.phone-device:not(.phone-landscape) body .row-cards .card .power,
+html.tablet-device body .row-cards .card .power,
+html.touch-device:not(.touch-landscape) body .row-cards .network-landing-ghost .power,
+html.phone-device:not(.phone-landscape) body .row-cards .network-landing-ghost .power,
+html.tablet-device body .row-cards .network-landing-ghost .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:88.4cqw!important;
+  min-width:88.4cqw!important;
+  max-width:88.4cqw!important;
+  height:44.2cqw!important;
+  min-height:44.2cqw!important;
+  max-height:44.2cqw!important;
+  padding:4.8cqw 0 0!important;
+  box-sizing:border-box!important;
+  transform:translateX(-50%)!important;
+  border-radius:88.4cqw 88.4cqw 0 0!important;
+  border:1.45cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1cqw var(--card-ink),0 -.8cqw 1.8cqw rgba(0,0,0,.28)!important;
+  font-size:33.3cqw!important;
+  line-height:1!important;
+  z-index:4!important;
+}
+
+/* HAND: true semicircle everywhere. Desktop/portrait/tablet use 34:17 cqw. */
+html:not(.phone-device):not(.tablet-device) body #hand.hand .card .power,
+html:not(.phone-device):not(.tablet-device) body #hand.hand-expanded .card .power,
+html.phone-device:not(.phone-landscape) body #hand.hand .card .power,
+html.phone-device:not(.phone-landscape) body #hand.hand-expanded .card .power,
+html.tablet-device body #hand.hand .card .power,
+html.tablet-device body #hand.hand-expanded .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:34cqw!important;
+  min-width:34cqw!important;
+  max-width:34cqw!important;
+  height:17cqw!important;
+  min-height:17cqw!important;
+  max-height:17cqw!important;
+  padding:1.9cqw 0 0!important;
+  box-sizing:border-box!important;
+  transform:translateX(-50%)!important;
+  border-radius:34cqw 34cqw 0 0!important;
+  border:1.2cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1cqw var(--card-ink),0 -.8cqw 1.8cqw rgba(0,0,0,.28)!important;
+  font-size:12.8cqw!important;
+  line-height:1!important;
+  z-index:4!important;
+}
+
+/* Phone landscape has a larger compact hand semicircle, preserving current readable size. */
+html.phone-device.phone-landscape body #hand.hand .card .power,
+html.phone-device.phone-landscape body #hand.hand-expanded .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) body #hand.hand .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) body #hand.hand-expanded .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:1px!important;
+  width:51cqw!important;
+  min-width:51cqw!important;
+  max-width:51cqw!important;
+  height:26cqw!important;
+  min-height:26cqw!important;
+  max-height:26cqw!important;
+  padding:1px 0 0!important;
+  box-sizing:border-box!important;
+  transform:translateX(-50%)!important;
+  border-radius:51cqw 51cqw 0 0!important;
+  border:1px solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:none!important;
+  font-size:22cqw!important;
+  line-height:1!important;
+  z-index:4!important;
+}
+
+/* MULLIGAN: force both ordinary and Hero power borders to the actual card frame color. */
+html.mobile-ui.phone-device.phone-landscape body #mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card > .card-face > .power,
+html.mobile-ui.touch-device.touch-landscape body #mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card > .card-face > .power,
+html.phone-device.phone-landscape body #mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card > .card-face > .power,
+html.touch-device.touch-landscape body #mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card > .card-face > .power,
+html.tablet-device body #mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card > .card-face > .power{
+  border-top-color:var(--card-frame)!important;
+  border-left-color:var(--card-frame)!important;
+  border-right-color:var(--card-frame)!important;
+  border-bottom-width:0!important;
+}
+</style>
+
+
+<style id="v404-tablet-landscape-hand-power-lock">
+/* Beats legacy html:not(.pwa-standalone).touch-device.touch-landscape #hand... rules. */
+html.touch-device.touch-landscape.tablet-device body #hand.hand .card .power,
+html.touch-device.touch-landscape.tablet-device body #hand.hand-expanded .card .power{
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:2.35cqw!important;
+  width:34cqw!important;
+  min-width:34cqw!important;
+  max-width:34cqw!important;
+  height:17cqw!important;
+  min-height:17cqw!important;
+  max-height:17cqw!important;
+  padding:1.9cqw 0 0!important;
+  box-sizing:border-box!important;
+  transform:translateX(-50%)!important;
+  border-radius:34cqw 34cqw 0 0!important;
+  border:1.2cqw solid var(--card-frame)!important;
+  border-bottom:0!important;
+  background:#050608!important;
+  color:#f7f5ef!important;
+  box-shadow:inset 0 0 0 1cqw var(--card-ink),0 -.8cqw 1.8cqw rgba(0,0,0,.28)!important;
+  font-size:12.8cqw!important;
+  line-height:1!important;
+  z-index:4!important;
+}
+</style>
+
+
+<style id="v405-mobile-ui-cleanup">
+/* MOBILE UI CLEANUP
+   - Cancel is performed by tapping cards (existing mechanic), no extra button.
+   - Remove empty placeholder rectangles around piles and preview panels.
+*/
+@media (max-width: 900px){
+  .choice-cancel,
+  #choiceCancel,
+  [id*="cancel" i].choice-cancel{
+    display:none!important;
+  }
+
+  /* Do not reserve a fake preview frame around the selected card. */
+  .rightbar .detail,
+  .detail,
+  .detail-preview-wrap,
+  .preview-panel,
+  .card-preview-panel{
+    border:0!important;
+    outline:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  .detail-preview{
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  /* Remove empty pile/deck placeholders. Keep the actual deck/discard cards. */
+  .pile-zone,
+  .pile-inner{
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+
+  .deck-stack,
+  .discard-stack.empty{
+    border-color:transparent!important;
+    box-shadow:none!important;
+    background:transparent!important;
+  }
+
+  .deck-stack:before,
+  .deck-stack:after,
+  .discard-stack.empty:before{
+    display:none!important;
+  }
+
+  /* Keep only counters, not the decorative empty card outline. */
+  .deck-number,
+  .discard-number{
+    box-shadow:none!important;
+  }
 }
 </style>
 </body>
