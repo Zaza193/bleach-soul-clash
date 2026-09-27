@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="200-stabilized-v106";
+  const BUILD_VERSION="201-v120-assemble-card-frame-parity";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -72,7 +72,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v114 · ASSEMBLE COUNTERS CLEAN</title>
+<title>BLEACH: Soul Clash — v120 · ASSEMBLE CARD FRAME PARITY</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -16884,6 +16884,27 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
 }
 </style>
 
+
+<style id="bsc-heart-bond-choice-integration-v119">
+/* Heart Bond now uses the exact shared choiceOverlay/Medic presentation. */
+#choiceOverlay .choice-static-preview{
+  pointer-events:none!important;
+  cursor:default!important;
+  transform:none!important;
+  filter:none!important;
+}
+#choiceOverlay .choice-static-preview:hover,
+#choiceOverlay .choice-static-preview:focus-visible{
+  transform:none!important;
+  filter:none!important;
+}
+#choiceOverlay .choice-text-btn:disabled{
+  opacity:.34!important;
+  cursor:not-allowed!important;
+  transform:none!important;
+  filter:grayscale(.4)!important;
+}
+</style>
 </head>
 <body class="front-menu-active">
 <div id="bscLanguageGate" aria-modal="true" role="dialog">
@@ -17066,16 +17087,6 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
 </div>
 
 
-<div id="heartBondOverlay" class="hidden" aria-hidden="true">
-  <section class="heart-bond-shell" role="dialog" aria-modal="true" aria-labelledby="heartBondTitle">
-    <h1 id="heartBondTitle" class="heart-bond-title">СВЯЗЬ СЕРДЕЦ</h1>
-    <p id="heartBondSubtitle" class="heart-bond-subtitle"></p>
-    <div id="heartBondPreview" class="heart-bond-preview"></div>
-    <div id="heartBondActions" class="heart-bond-actions"></div>
-    <div id="heartBondHandGrid" class="heart-bond-hand-grid"></div>
-    <button id="heartBondBack" type="button" class="heart-bond-back" hidden>НАЗАД</button>
-  </section>
-</div>
 
 <div id="choiceOverlay" class="overlay hidden">
   <div class="modal choice-modal">
@@ -20441,130 +20452,58 @@ function isNanaoBarrierActive(card){
   function v159HeartBondAvailable(sideKey){
     return !!state && state.phase==="play" && state?.[sideKey]?.faction==="living" && (state[sideKey].deck?.length||0)>0 && v159HeartBondState()[sideKey]!==state.round;
   }
-  function v159HeartBondUi(){
-    return {
-      overlay:$("#heartBondOverlay"),
-      title:$("#heartBondTitle"),
-      subtitle:$("#heartBondSubtitle"),
-      preview:$("#heartBondPreview"),
-      actions:$("#heartBondActions"),
-      handGrid:$("#heartBondHandGrid"),
-      back:$("#heartBondBack")
-    };
-  }
-  function v159ClearHeartBondUi(ui){
-    if(!ui) return;
-    if(ui.preview) ui.preview.innerHTML="";
-    if(ui.actions){ ui.actions.innerHTML=""; ui.actions.classList.remove("offer-actions"); }
-    if(ui.handGrid) ui.handGrid.innerHTML="";
-    if(ui.back){ ui.back.hidden=true; ui.back.onclick=null; }
-  }
-  function v159HeartBondActionButton(opt,finish){
-    const btn=document.createElement("button");
-    btn.type="button";
-    btn.className="heart-bond-action";
-    const label=document.createElement("b");
-    label.textContent=opt.label||opt.value||"";
-    btn.appendChild(label);
-    if(opt.sub){
-      const sub=document.createElement("span");
-      sub.textContent=opt.sub;
-      btn.appendChild(sub);
-    }
-    btn.disabled=!!opt.disabled;
-    if(!btn.disabled) btn.onclick=()=>finish(opt);
-    return btn;
-  }
-  function v159ShowHeartBondUi(sideKey,stage,{topCard=null,handCards=[]}={}){
-    return new Promise((resolve,reject)=>{
-      const ui=v159HeartBondUi();
-      if(!ui.overlay||!ui.title||!ui.subtitle||!ui.preview||!ui.actions||!ui.handGrid||!ui.back){
-        resolve(stage==="offer"?{value:"skip"}:{value:"keep"});
-        return;
-      }
-      v159ClearHeartBondUi(ui);
-      ui.overlay.dataset.stage=stage;
-      ui.overlay.setAttribute("aria-hidden","false");
-      ui.overlay.classList.remove("hidden");
-      ui.title.textContent=stage==="exchange"?"СВЯЗЬ СЕРДЕЦ — ОБМЕН":"СВЯЗЬ СЕРДЕЦ";
-
-      let settled=false;
-      const close=()=>{
-        document.removeEventListener("keydown",onKey,true);
-        v159ClearHeartBondUi(ui);
-        delete ui.overlay.dataset.stage;
-        ui.overlay.classList.add("hidden");
-        ui.overlay.setAttribute("aria-hidden","true");
-      };
-      const finish=value=>{
-        if(settled) return;
-        settled=true;
-        close();
-        resolve(value);
-      };
-      const cancel=()=>{
-        if(settled) return;
-        settled=true;
-        close();
-        reject(GAMEPLAY_CHOICE_CANCELLED);
-      };
-      const onKey=e=>{
-        if(e.key!=="Escape") return;
-        e.preventDefault();
-        e.stopPropagation();
-        if(stage==="offer") finish({value:"skip"});
-        else if(stage==="action") finish({value:"keep"});
-        else cancel();
-      };
-      document.addEventListener("keydown",onKey,true);
-
+  /* Heart Bond deliberately reuses the shared choiceOverlay used by Medic.
+     This keeps desktop/mobile behavior, card preview geometry, scrolling,
+     navigation and cancellation in one maintained UI system. */
+  async function v159ShowHeartBondUi(sideKey,stage,{topCard=null,handCards=[]}={}){
+    try{
       if(stage==="offer"){
-        ui.subtitle.textContent="Противник разыграл карту. Использовать фракционную способность сейчас?";
-        ui.actions.classList.add("offer-actions");
-        [
-          {value:"use",label:"ПОСМОТРЕТЬ",sub:"Посмотреть верхнюю карту своей колоды"},
-          {value:"skip",label:"НЕ СЕЙЧАС",sub:"Не использовать Связь Сердец в этом раунде"}
-        ].forEach(opt=>ui.actions.appendChild(v159HeartBondActionButton(opt,finish)));
-        return;
+        return await chooseOptionForActor(
+          sideKey,
+          "СВЯЗЬ СЕРДЕЦ",
+          "Противник разыграл карту. Использовать фракционную способность сейчас?",
+          [
+            {value:"use",label:"ПОСМОТРЕТЬ",sub:"Посмотреть верхнюю карту своей колоды"},
+            {value:"skip",label:"НЕ СЕЙЧАС",sub:"Не использовать Связь Сердец в этом раунде"}
+          ],
+          arr=>arr[0]
+        );
       }
 
       if(stage==="action"){
-        ui.subtitle.textContent="";
-        if(topCard){
-          const previewCard=renderCard(topCard,false,sideKey,false,true);
-          previewCard.classList.add("heart-bond-top-card");
-          ui.preview.appendChild(previewCard);
-        }
-        [
-          {value:"keep",label:"ОСТАВИТЬ СВЕРХУ",sub:"Карта останется верхней в колоде"},
-          {value:"bottom",label:"ПОЛОЖИТЬ ВНИЗ",sub:"Переместить просмотренную карту вниз колоды"},
-          {value:"exchange",label:"ОБМЕНЯТЬ С РУКОЙ",sub:handCards.length?"Взять её в руку, а выбранную карту руки положить вниз колоды":"Обмен недоступен: в руке нет карт",disabled:!handCards.length}
-        ].forEach(opt=>ui.actions.appendChild(v159HeartBondActionButton(opt,finish)));
-        return;
+        return await chooseOptionForActor(
+          sideKey,
+          "СВЯЗЬ СЕРДЕЦ",
+          "",
+          [
+            {value:"keep",label:"ОСТАВИТЬ СВЕРХУ",sub:"Карта останется верхней в колоде"},
+            {value:"bottom",label:"ПОЛОЖИТЬ ВНИЗ",sub:"Переместить просмотренную карту вниз колоды"},
+            {value:"exchange",label:"ОБМЕНЯТЬ С РУКОЙ",sub:handCards.length?"Взять её в руку, а выбранную карту руки положить вниз колоды":"Обмен недоступен: в руке нет карт",disabled:!handCards.length}
+          ],
+          arr=>arr[0],
+          {previewCard:topCard,previewSideKey:sideKey}
+        );
       }
 
       if(stage==="exchange"){
-        ui.subtitle.textContent="Выберите карту из руки, которая уйдёт вниз колоды.";
-        handCards.forEach(card=>{
-          const btn=document.createElement("button");
-          btn.type="button";
-          btn.className="heart-bond-hand-card";
-          const cardEl=renderCard(card,false,sideKey,false,false);
-          cardEl.classList.add("heart-bond-hand-preview");
-          /* The generic renderCard click handler stops bubbling. Make the visual
-             card non-interactive so the Heart Bond button reliably owns the tap. */
-          cardEl.style.pointerEvents="none";
-          btn.appendChild(cardEl);
-          btn.onclick=()=>finish({value:card.uid,card});
-          ui.handGrid.appendChild(btn);
-        });
-        ui.back.hidden=false;
-        ui.back.onclick=()=>finish({value:"back"});
-        return;
+        const opts=(handCards||[]).map(card=>({value:card.uid,card,sideKey,caption:card.name}));
+        if(!opts.length) return {value:"back"};
+        return await chooseOptionForActor(
+          sideKey,
+          "СВЯЗЬ СЕРДЕЦ — ОБМЕН",
+          "Выберите карту из руки, которая уйдёт вниз колоды. ОТМЕНА возвращает к предыдущему выбору.",
+          opts,
+          arr=>arr[0]
+        );
       }
 
-      finish({value:"keep"});
-    });
+      return {value:"keep"};
+    }catch(err){
+      if(!isGameplayChoiceCancellation(err)) throw err;
+      if(stage==="offer") return {value:"skip"};
+      if(stage==="action") return {value:"keep"};
+      return {value:"back"};
+    }
   }
   async function v159CollectHeartBondDecision(sideKey){
     const side=state?.[sideKey];
@@ -21585,7 +21524,7 @@ function isNanaoBarrierActive(card){
     return !!(rowCards&&handEl);
   }
 
-  function chooseOptionForActor(sideKey,title,subtitle,options,aiPick){
+  function chooseOptionForActor(sideKey,title,subtitle,options,aiPick,config={}){
     if(!options?.length) return Promise.resolve(null);
     const preflight=cardChoicePreflightContext;
     if(preflight?.phase==="replay" && !preflight.recordingPaused){
@@ -21601,10 +21540,12 @@ function isNanaoBarrierActive(card){
       const prevBtn=$("#choicePrev"), nextBtn=$("#choiceNext");
       const modal=overlay?.querySelector(".choice-modal");
       const isInitiativeChoice = state?.phase==="initiative" || title==="ИНИЦИАТИВА" || title==="INITIATIVE";
-      const hasCards=options.some(opt=>!!opt.card);
+      const hasStaticPreview=!!config?.previewCard;
+      const hasCards=options.some(opt=>!!opt.card) || hasStaticPreview;
       modal?.classList.toggle("initiative-choice", isInitiativeChoice);
       modal?.classList.toggle("card-choice", hasCards);
       modal?.classList.toggle("text-choice", !hasCards);
+      modal?.classList.toggle("preview-stack-choice",hasStaticPreview);
       t.textContent=title||"ВЫБЕРИТЕ ЦЕЛЬ";
       s.textContent=subtitle||"";
       grid.innerHTML="";
@@ -21649,7 +21590,7 @@ function isNanaoBarrierActive(card){
       const finish=opt=>{
         cleanup();
         overlay.classList.add("hidden");
-        modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable");
+        modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable","preview-stack-choice");
         grid.innerHTML="";
         const ctx=cardChoicePreflightContext;
         if(ctx?.phase==="collect" && !ctx.recordingPaused) ctx.choices.push(serializePreflightChoice(opt));
@@ -21658,7 +21599,7 @@ function isNanaoBarrierActive(card){
       const cancelChoice=()=>{
         cleanup();
         overlay.classList.add("hidden");
-        modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable");
+        modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable","preview-stack-choice");
         grid.innerHTML="";
         reject(GAMEPLAY_CHOICE_CANCELLED);
       };
@@ -21674,6 +21615,18 @@ function isNanaoBarrierActive(card){
       grid.addEventListener("scroll",updateNav,{passive:true});
       window.addEventListener("resize",updateNav);
 
+      if(config?.previewCard){
+        const previewWrap=document.createElement("div");
+        previewWrap.className="choice-card-btn choice-static-preview";
+        previewWrap.setAttribute("aria-hidden","true");
+        const previewCard=renderCard(config.previewCard,false,config.previewSideKey||sideKey,false,true);
+        previewCard.classList.add("choice-card-preview");
+        if(config.previewShowRowMark) previewCard.classList.add("show-row-placement");
+        previewCard.style.pointerEvents="none";
+        previewWrap.appendChild(previewCard);
+        grid.appendChild(previewWrap);
+      }
+
       options.forEach(opt=>{
         const btn=document.createElement("button");
         btn.type="button";
@@ -21686,7 +21639,8 @@ function isNanaoBarrierActive(card){
         } else {
           btn.innerHTML=`<b>${opt.label||opt.value}</b>${opt.sub?`<span>${opt.sub}</span>`:""}`;
         }
-        btn.onclick=()=>finish(opt);
+        btn.disabled=!!opt.disabled;
+        if(!btn.disabled) btn.onclick=()=>finish(opt);
         grid.appendChild(btn);
       });
       overlay.classList.remove("hidden");
@@ -23636,6 +23590,25 @@ function isNanaoBarrierActive(card){
       }
     });
   }
+  function releasePlayedCardPreviewForFlight(card,{clearSelection=true}={}){
+    const uid=card?.uid||null;
+    if(!uid) return false;
+    let changed=false;
+    if(transientPlayedCardPreview?.uid===uid){
+      transientPlayedCardPreview=null;
+      transientPlayedCardPreviewActor=null;
+      transientPlayedCardPreviewUid=null;
+      transientPlayedCardPreviewUntil=0;
+      changed=true;
+    }
+    if(state?.previewCard?.uid===uid){ state.previewCard=null; changed=true; }
+    if(clearSelection && state?.selected?.uid===uid){ state.selected=null; changed=true; }
+    /* The flight now owns the visual card. Clear the logical preview before any
+       later render/snapshot can recreate the same card in the detail box. */
+    if(changed && state) renderDetail();
+    return changed;
+  }
+
   function renderDetail(){
     const transient=transientPlayedCardPreview;
     const inspection=resolveOnlineInspectionCard();
@@ -23877,7 +23850,10 @@ function isNanaoBarrierActive(card){
 
   async function animateCardToField(card,row,targetSide,opts={}){
     const hasReturnTarget=!!opts?.targetUid;
-    if((usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)) && hasReturnTarget) return;
+    if((usesReturnTechniqueAnimation(card) || isTargetReturnLandingCard(card)) && hasReturnTarget){
+      releasePlayedCardPreviewForFlight(card);
+      return;
+    }
     const target=measureCardLandingRect(targetSide,row,card,opts);
     if(!target) return;
     const start=previewFlightStartRect(card);
@@ -23895,6 +23871,11 @@ function isNanaoBarrierActive(card){
       await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
       await waitForMs(55);
     }
+
+    /* Handoff boundary: from this frame onward the flyer is the only visual
+       representation of the played card. This prevents mobile re-renders from
+       recreating a stale detail-preview while the card is already travelling. */
+    releasePlayedCardPreviewForFlight(card);
 
     const flyer=renderCard(card,false,targetSide,false,false);
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
@@ -30566,7 +30547,11 @@ function v242CardElement(sideKey,row,uid){
       await waitForMs(55);
     }
 
-    if(previewCard) previewCard.style.visibility='hidden';
+    /* Do not merely hide one DOM node: a mobile render during the flight would
+       build a fresh preview from transientPlayedCardPreview. Release the state
+       itself before the flyer starts. */
+    releasePlayedCardPreviewForFlight(card,{clearSelection:false});
+    if(previewCard?.isConnected) previewCard.style.visibility='hidden';
     const flyer=renderCard(card,false,payload.targetSide,false,false);
     flyer.classList.remove('selected','enter','landed-impact','dragging','with-info');
     flyer.classList.add('card-flight','compact-card');
@@ -30587,8 +30572,8 @@ function v242CardElement(sideKey,row,uid){
       }
     } finally {
       flyer.remove();
-      if(previewCard?.isConnected) previewCard.style.visibility=oldVisibility||'';
-      if(previewRowBadge?.isConnected){ if(oldBadgeDisplay) previewRowBadge.style.setProperty('display',oldBadgeDisplay); else previewRowBadge.style.removeProperty('display'); if(oldBadgeVisibility) previewRowBadge.style.setProperty('visibility',oldBadgeVisibility); else previewRowBadge.style.removeProperty('visibility'); }
+      /* The preview was deliberately released at flight start. Never restore the
+         stale preview node here; later renders may show an unrelated inspection card. */
       if(previewShown) clearRemotePlayedCardPreview(card);
       document.body.classList.remove('card-flight-active');
     }
@@ -36933,13 +36918,13 @@ function v242CardElement(sideKey,row,uid){
   ]);
   const isVfxCardClone=card=>!!card&&[...VFX_FRAME_BYPASS_CLASSES].some(cls=>card.classList?.contains(cls));
   function zoneFor(card){
-    if(!card||card.closest?.("#deckBuilderOverlay")) return null;
+    if(!card) return null;
+    if(card.closest?.("#deckBuilderOverlay")) return "assemble";
     if(card.classList?.contains("card-flight")) return "flight";
     if(card.closest?.("#hand")) return "hand";
     if(card.closest?.("#board")) return "board";
     if(card.closest?.("#mulliganOverlay")) return "mulligan";
     if(card.closest?.("#detail")) return "detail";
-    if(card.closest?.("#heartBondOverlay")) return "heart-bond";
     if(card.closest?.("#choiceOverlay")) return "choice";
     return "misc";
   }
@@ -37087,22 +37072,6 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
   #board .row-cards .card[data-bsc-frame-zone="board"]{transform-origin:50% 50%!important;transition:transform .14s cubic-bezier(.2,.75,.2,1),filter .14s ease!important}
   #board .row:has(.row-cards .card[data-bsc-frame-zone="board"]:hover), #board .row-cards:has(.card[data-bsc-frame-zone="board"]:hover){overflow:visible!important;z-index:40!important}
   body:not(.v370-card-targeting) #board .row-cards .card[data-bsc-frame-zone="board"]:hover, body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]:hover{transform:translateY(-4px) scale(1.035)!important;z-index:60!important}
-}
-/* Heart Bond is a single canonical component now. */
-#heartBondOverlay{position:fixed;inset:0;z-index:1550;display:flex;align-items:center;justify-content:center;padding:clamp(18px,3vh,34px) clamp(18px,3vw,46px);box-sizing:border-box;overflow:hidden;background:rgba(3,5,7,.72);backdrop-filter:grayscale(.58) saturate(.56) brightness(.55) blur(1.2px)}
-#heartBondOverlay.hidden{display:none}#heartBondOverlay .heart-bond-shell{width:min(1120px,96vw);max-height:94vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;color:#f5f3ec;background:transparent}
-#heartBondOverlay .heart-bond-title{margin:0;font-family:Impact,"Arial Narrow",sans-serif;font-size:clamp(38px,4vw,66px);line-height:.95;letter-spacing:.045em;text-transform:uppercase;color:#fff;text-align:center;text-shadow:0 3px 8px rgba(0,0,0,.9)}
-#heartBondOverlay .heart-bond-subtitle{width:min(920px,90vw);margin:12px auto 0;color:rgba(255,255,255,.9);font-size:clamp(13px,1.15vw,18px);font-weight:800;line-height:1.35;text-align:center;text-shadow:0 2px 4px rgba(0,0,0,.9)}#heartBondOverlay .heart-bond-subtitle:empty{display:none;margin:0}
-#heartBondOverlay .heart-bond-preview{width:100%;display:flex;align-items:center;justify-content:center;margin:8px auto 14px;min-height:0}#heartBondOverlay .heart-bond-preview:empty{display:none}
-#heartBondOverlay .heart-bond-preview>.card.with-info{width:clamp(146px,11.5vw,182px)!important;min-width:146px!important;max-width:182px!important;margin:0!important;gap:0!important;pointer-events:none!important}
-#heartBondOverlay .heart-bond-preview>.card.with-info>.card-info-panel{position:relative!important;z-index:2!important;flex:0 0 78cqw!important;width:100%!important;height:78cqw!important;min-height:78cqw!important;max-height:78cqw!important;margin:0!important;padding:3.4cqw 5.5cqw 6.2cqw!important;box-sizing:border-box!important;overflow:hidden!important;background:#eee9df!important;color:#111!important;border:2px solid #111!important;outline:0!important;border-radius:0!important;clip-path:none!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),0 3px 7px rgba(0,0,0,.20)!important}
-#heartBondOverlay .heart-bond-preview .card-info-panel::before{content:none!important;display:none!important}#heartBondOverlay .heart-bond-preview .card-info-name{display:block!important;width:100%!important;margin:0!important;padding:1.1cqw 1.6cqw 1.7cqw!important;color:#080808!important;background:transparent!important;font-family:Georgia,"Times New Roman",serif!important;font-size:9.3cqw!important;font-weight:900!important;line-height:1.02!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;border:0!important}#heartBondOverlay .heart-bond-preview .card-info-desc{display:-webkit-box!important;width:100%!important;margin:0!important;padding:1.5cqw 1cqw 0!important;color:#171717!important;font-size:7.35cqw!important;font-weight:600!important;line-height:1.34!important;text-align:center!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:5!important;overflow:hidden!important}
-#heartBondOverlay .heart-bond-actions{width:min(1080px,94vw);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(10px,1.2vw,18px);margin:0 auto}#heartBondOverlay .heart-bond-actions.offer-actions{width:min(720px,92vw);grid-template-columns:repeat(2,minmax(0,1fr))}
-#heartBondOverlay .heart-bond-action{min-height:132px;padding:20px 22px;box-sizing:border-box;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left;color:#fff;background:rgba(7,9,11,.88);border:1px solid rgba(255,255,255,.26);border-left:5px solid var(--p);box-shadow:0 9px 24px rgba(0,0,0,.38);cursor:pointer}#heartBondOverlay .heart-bond-action b{display:block;font-size:clamp(17px,1.35vw,23px);line-height:1.05;text-transform:uppercase}#heartBondOverlay .heart-bond-action span{display:block;margin-top:10px;color:rgba(255,255,255,.74);font-size:clamp(11px,.86vw,14px);line-height:1.35}
-#heartBondOverlay .heart-bond-hand-grid{width:min(1180px,94vw);max-height:62vh;margin:16px auto 0;padding:8px 12px 18px;display:flex;align-items:flex-start;justify-content:center;gap:14px;overflow-x:auto;overflow-y:hidden;box-sizing:border-box;scrollbar-width:thin}#heartBondOverlay .heart-bond-hand-grid:empty{display:none}#heartBondOverlay .heart-bond-hand-card{flex:0 0 clamp(120px,10vw,158px);width:clamp(120px,10vw,158px);padding:0;border:0;background:transparent;color:#fff;cursor:pointer}#heartBondOverlay .heart-bond-hand-card>.card{width:100%!important;min-width:100%!important;max-width:100%!important}.heart-bond-hand-card>.card>.card-info-panel{display:none!important}
-#heartBondOverlay .heart-bond-back{margin-top:18px;min-width:128px;padding:9px 16px;color:#fff;background:rgba(8,10,12,.76);border:1px solid rgba(255,255,255,.34);font-weight:1000;letter-spacing:.07em;text-transform:uppercase}
-@media (pointer:coarse) and (orientation:landscape){
-  #heartBondOverlay{padding:4px 8px;align-items:flex-start;overflow:auto}#heartBondOverlay .heart-bond-shell{width:100%;max-height:none;min-height:100%;justify-content:flex-start;overflow:visible;padding:2px 0 5px}#heartBondOverlay .heart-bond-title{font-size:clamp(24px,5.8vh,34px)}#heartBondOverlay .heart-bond-preview{margin:2px auto 5px}#heartBondOverlay .heart-bond-preview>.card.with-info{width:clamp(88px,12vw,112px)!important;min-width:88px!important;max-width:112px!important}#heartBondOverlay .heart-bond-actions{width:min(780px,96vw);gap:6px}#heartBondOverlay .heart-bond-actions.offer-actions{width:min(520px,92vw)}#heartBondOverlay .heart-bond-action{min-height:54px;padding:7px 9px;border-left-width:3px}#heartBondOverlay .heart-bond-action b{font-size:clamp(11px,2.2vw,15px)}#heartBondOverlay .heart-bond-action span{margin-top:3px;font-size:clamp(8px,1.45vw,10px);line-height:1.15}#heartBondOverlay .heart-bond-hand-grid{width:96vw;max-height:145px;margin:5px auto 0;padding:3px 4px 6px;gap:6px;justify-content:flex-start;scrollbar-width:none}#heartBondOverlay .heart-bond-hand-grid::-webkit-scrollbar{display:none}#heartBondOverlay .heart-bond-hand-card{flex:0 0 76px;width:76px}#heartBondOverlay .heart-bond-back{margin-top:4px;padding:5px 10px;font-size:10px}
 }
 </style>
 <style id="bsc-mobile-stability">
@@ -37259,7 +37228,7 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
 <style id="bsc-frame-authority-v109">
 /* v109 — one final owner for runtime card frames.
    This intentionally outranks legacy mobile selectors without restoring JS inline !important geometry. */
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"]{
   --card-ink:#07090d!important;
   --card-frame:#fff!important;
@@ -37276,14 +37245,14 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
   box-sizing:border-box!important;
   overflow:visible!important;
 }
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card.hero[data-bsc-hard-card="1"]{
   --card-frame:#f1c84a!important;
   --card-frame-glow:rgba(241,200,74,.48)!important;
 }
 
 /* Exact runtime copy of the accepted ASSEMBLE proportions. */
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"],
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"],
 .card.card.card.card[data-bsc-frame-zone="misc"][data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"]{
@@ -37298,9 +37267,9 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
   clip-path:none!important;
   box-shadow:inset 0 0 0 .67cqw var(--card-frame),inset 0 0 0 1.34cqw var(--card-ink)!important;
 }
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"]::before,
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"]::after,
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"]::before,
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"]::after,
@@ -37309,7 +37278,7 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
   content:none!important;
   display:none!important;
 }
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .art,
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .art,
 .card.card.card.card[data-bsc-frame-zone="misc"][data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .art{
@@ -37326,7 +37295,7 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
   background-repeat:no-repeat!important;
   filter:none!important;
 }
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .frame,
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .frame,
 .card.card.card.card[data-bsc-frame-zone="misc"][data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .frame{
@@ -37336,7 +37305,7 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
   background:none!important;
   box-shadow:none!important;
 }
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .bsc-assemble-inner-frame,
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .bsc-assemble-inner-frame,
 .card.card.card.card[data-bsc-frame-zone="misc"][data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .bsc-assemble-inner-frame{
@@ -37354,7 +37323,7 @@ body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-boa
 }
 
 /* Base power geometry; the real inner frame must cross over its edges. */
-:is(#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#heartBondOverlay#heartBondOverlay#heartBondOverlay,#choiceOverlay#choiceOverlay#choiceOverlay)
+:is(#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay,#hand#hand#hand,#board#board#board,#mulliganOverlay#mulliganOverlay#mulliganOverlay,#detail#detail#detail,#choiceOverlay#choiceOverlay#choiceOverlay)
   .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .power,
 .card.card.card.card.card-flight[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .power,
 .card.card.card.card[data-bsc-frame-zone="misc"][data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .power{
@@ -37427,111 +37396,549 @@ html.touch-device.touch-landscape:not(.tablet-device) body > .card.card-flight[d
 body > .card.card-flight[data-bsc-frame-zone="flight"] > .card-face{width:100%!important;height:100%!important;aspect-ratio:2 / 3!important}
 </style>
 
-<style id="bsc-heart-bond-v113">
-/* v113 — Heart Bond exchange submenu: correct portrait geometry and clean navigation. */
-#heartBondOverlay[data-stage="exchange"] .heart-bond-shell{
-  width:min(1240px,96vw)!important;
-  justify-content:center!important;
+
+
+<style id="bsc-mobile-placement-clean-v116">
+/* v116 — phone landscape only: remove pile wrappers, lower hand cards, make detail preview use its box width. */
+@media (pointer:coarse) and (orientation:landscape){
+  /* 1) Deck / grave: the cards and counters stay; the surrounding rectangles do not. */
+  html.phone-device.phone-landscape .rightbar .pile-zone,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone{
+    border:0!important;
+    border-left:0!important;
+    outline:0!important;
+    background:transparent!important;
+    background-image:none!important;
+    box-shadow:none!important;
+    padding:0!important;
+    overflow:visible!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner{
+    width:100%!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0!important;
+    gap:5px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border:0!important;
+    outline:0!important;
+    background:transparent!important;
+    background-image:none!important;
+    box-shadow:none!important;
+    transform:none!important;
+    overflow:visible!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-zone::before,
+  html.phone-device.phone-landscape .rightbar .pile-zone::after,
+  html.phone-device.phone-landscape .rightbar .pile-inner::before,
+  html.phone-device.phone-landscape .rightbar .pile-inner::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* 2) Hand: keep the current card size; anchor the actual strip to the bottom. */
+  html.phone-device.phone-landscape .hand-wrap,
+  html.touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+    position:relative!important;
+  }
+  html.phone-device.phone-landscape #hand,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand{
+    position:absolute!important;
+    left:0!important;
+    right:44px!important;
+    top:auto!important;
+    bottom:env(safe-area-inset-bottom, 0px)!important;
+    width:auto!important;
+    height:70px!important;
+    min-height:70px!important;
+    max-height:70px!important;
+    margin:0!important;
+    padding:0 2px!important;
+    align-items:flex-end!important;
+    justify-content:flex-start!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+  }
+  html.phone-device.phone-landscape #hand .card,
+  html.phone-device.phone-landscape #hand.hand-expanded .card,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand.hand-expanded .card{
+    align-self:flex-end!important;
+    margin-top:0!important;
+    margin-bottom:0!important;
+  }
+
+  /* 3) Player/detail preview: the card face follows the full preview-box width. */
+  html.phone-device.phone-landscape .rightbar #detail .detail-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+  html.phone-device.phone-landscape .rightbar #detail .detail-preview > .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview > .card{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+  }
+  html.phone-device.phone-landscape .rightbar #detail .detail-preview > .card.with-info,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview > .card.with-info{
+    height:100%!important;
+    min-height:0!important;
+    max-height:100%!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    justify-items:stretch!important;
+    align-items:start!important;
+  }
+  html.phone-device.phone-landscape .rightbar #detail .detail-preview > .card.with-info > .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview > .card.with-info > .card-face{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:2 / 3!important;
+    justify-self:stretch!important;
+    align-self:start!important;
+    margin:0!important;
+  }
+  html.phone-device.phone-landscape .rightbar #detail .detail-preview > .card:not(.with-info),
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview > .card:not(.with-info){
+    height:auto!important;
+    aspect-ratio:2 / 3!important;
+  }
+  html.phone-device.phone-landscape .rightbar #detail .detail-preview > .card:not(.with-info) > .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview > .card:not(.with-info) > .card-face{
+    width:100%!important;
+    height:100%!important;
+    aspect-ratio:auto!important;
+  }
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-title{
-  font-size:clamp(30px,3.35vw,54px)!important;
-  line-height:.96!important;
-  white-space:nowrap!important;
+</style>
+
+<style id="bsc-v120-assemble-card-frame-parity">
+/* v120 — ASSEMBLE YOUR SOUL is the visual source of truth for card chrome.
+   Deck-builder cards now participate in the shared runtime frame authority.
+   On fine-pointer desktop, preserve the already-approved ASSEMBLE outer shell exactly;
+   on mobile/coarse pointers the same chrome scales with cqw instead of legacy fixed pixels. */
+@media (hover:hover) and (pointer:fine){
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-item .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"]{
+    border:2px solid #111!important;
+    box-shadow:inset 0 0 0 2px var(--card-frame),inset 0 0 0 4px var(--card-ink)!important;
+  }
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-subtitle{
-  margin-top:8px!important;
-  font-size:clamp(12px,1vw,16px)!important;
+
+/* Runtime frame normalization owns .art filter, so restore ASSEMBLE lock dimming last. */
+#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-item.excluded .card[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .art{
+  filter:brightness(.62) saturate(.82)!important;
+  transition:filter .14s ease!important;
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-hand-grid{
-  width:min(1260px,96vw)!important;
-  max-height:min(50vh,390px)!important;
-  margin:12px auto 0!important;
-  padding:8px 8px 12px!important;
-  gap:10px!important;
-  align-items:flex-start!important;
-  justify-content:flex-start!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  scrollbar-width:thin!important;
+</style>
+
+<style id="bsc-v118-mulligan-dim-match-assemble">
+/* v118 — CHOOSE YOUR SOUL selected cards use the same dimming as ASSEMBLE YOUR SOUL.
+   This intentionally comes after the runtime frame authority, whose .art filter:none!important
+   previously cancelled the mulligan selected-state dim on both desktop and mobile. */
+#mulliganOverlay #mulliganGrid .mulligan-card-wrap > .card.replace[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .art,
+#mulliganOverlay #mulliganGrid > .card.replace[data-bsc-hard-card="1"] > .card-face[data-bsc-hard-frame="1"] > .art,
+#mulliganOverlay #mulliganGrid .mulligan-card-wrap > .card.replace .art,
+#mulliganOverlay #mulliganGrid > .card.replace .art{
+  filter:brightness(.62) saturate(.82)!important;
+  transition:filter .14s ease!important;
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-hand-card{
-  flex:0 0 clamp(96px,8vw,126px)!important;
-  width:clamp(96px,8vw,126px)!important;
-  min-width:clamp(96px,8vw,126px)!important;
-  max-width:clamp(96px,8vw,126px)!important;
-  height:auto!important;
+</style>
+
+
+<style id="bsc-v121-choose-dim-heart-bond-center">
+/* v121 — CHOOSE YOUR SOUL: selected cards dim exactly like locked ASSEMBLE cards.
+   The lock stays crisp because the dim layer lives behind its badge. */
+#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card.replace > .card-face > .art,
+#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid > .card.replace > .card-face > .art{
+  filter:brightness(.62) saturate(.82)!important;
+  transition:filter .14s ease!important;
+}
+#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid .mulligan-card-wrap > .card.replace > .card-face > .mulligan-lock-overlay,
+#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid > .card.replace > .card-face > .mulligan-lock-overlay{
+  background:rgba(10,10,12,.22)!important;
+}
+
+/* HEART BOND action stage: title/instruction -> centered preview -> action buttons.
+   preview-stack-choice is only enabled when chooseOptionForActor receives previewCard,
+   which currently means the Heart Bond action screen. */
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  align-items:stretch!important;
+  justify-items:center!important;
+  overflow:hidden!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-heading{
+  position:static!important;
+  inset:auto!important;
+  grid-row:1!important;
+  align-self:end!important;
+  width:min(980px,92vw)!important;
+  margin:0 auto!important;
+  transform:none!important;
+  text-align:center!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice #choiceSub{
+  position:static!important;
+  inset:auto!important;
+  grid-row:2!important;
+  align-self:start!important;
+  width:min(900px,88vw)!important;
+  max-width:900px!important;
+  margin:7px auto 5px!important;
   padding:0!important;
-  margin:0!important;
-  border:0!important;
-  background:transparent!important;
-  overflow:visible!important;
+  transform:none!important;
+  font-size:clamp(12px,1vw,16px)!important;
+  line-height:1.25!important;
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-hand-card>.card.heart-bond-hand-preview{
-  display:block!important;
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid{
+  position:relative!important;
+  inset:auto!important;
+  grid-row:3!important;
+  align-self:stretch!important;
+  justify-self:center!important;
+  width:min(1120px,96vw)!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0 auto!important;
+  padding:6px 20px 12px!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(190px,330px))!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  align-content:stretch!important;
+  align-items:center!important;
+  justify-content:center!important;
+  justify-items:stretch!important;
+  column-gap:clamp(10px,1.2vw,18px)!important;
+  row-gap:clamp(10px,1.6vh,16px)!important;
+  overflow:hidden!important;
+  scroll-snap-type:none!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview{
+  grid-column:1 / -1!important;
+  grid-row:1!important;
+  align-self:center!important;
+  justify-self:center!important;
+  flex:none!important;
+  width:clamp(118px,min(10.5vw,17vh),162px)!important;
+  min-width:0!important;
+  max-width:162px!important;
+  margin:0!important;
+  padding:0!important;
+  gap:0!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info,
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview{
   width:100%!important;
   min-width:100%!important;
   max-width:100%!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  aspect-ratio:2 / 3!important;
   margin:0!important;
-  overflow:visible!important;
-  pointer-events:none!important;
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-hand-card>.card.heart-bond-hand-preview>.card-face{
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn{
+  grid-row:2!important;
+  align-self:stretch!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:330px!important;
+  min-height:112px!important;
+  margin:0!important;
+  padding:18px 18px!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel{
+  position:static!important;
+  inset:auto!important;
+  grid-row:4!important;
+  align-self:center!important;
+  justify-self:center!important;
+  margin:0 auto 2px!important;
+  transform:none!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel:hover,
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel:focus-visible,
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel:active{
+  transform:none!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-nav{display:none!important}
+
+/* Phone/mobile landscape: keep all four vertical bands inside the real visual viewport. */
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice,
+html.mobile-ui.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice{
+  width:calc(var(--phone-stage-width,100vw) - 8px)!important;
+  max-width:calc(var(--phone-stage-width,100vw) - 8px)!important;
+  height:calc(var(--app-height,100dvh) - 8px)!important;
+  min-height:0!important;
+  max-height:calc(var(--app-height,100dvh) - 8px)!important;
+  margin:0 auto!important;
+  padding:5px 8px 5px!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto auto minmax(0,1fr) auto!important;
+  gap:0!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-heading,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-heading{
+  width:100%!important;
+  margin:0!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-heading h1,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-heading h1{
+  font-size:clamp(17px,4.8vh,23px)!important;
+  line-height:1!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice #choiceSub,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice #choiceSub{
+  width:min(560px,94%)!important;
+  margin:2px auto 3px!important;
+  padding:0!important;
+  font-size:clamp(7px,2.1vh,9.5px)!important;
+  line-height:1.12!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid{
   width:100%!important;
   height:100%!important;
   min-height:0!important;
-  max-height:100%!important;
-  aspect-ratio:auto!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:2px 5px 4px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  align-content:stretch!important;
+  align-items:center!important;
+  justify-content:stretch!important;
+  justify-items:stretch!important;
+  column-gap:6px!important;
+  row-gap:5px!important;
+  overflow:hidden!important;
 }
-#heartBondOverlay[data-stage="exchange"] .heart-bond-back{
-  margin-top:10px!important;
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview{
+  width:82px!important;
+  min-width:82px!important;
+  max-width:82px!important;
+  height:auto!important;
+  justify-self:center!important;
+  align-self:center!important;
+  padding:0!important;
 }
-@media (pointer:coarse) and (orientation:landscape){
-  #heartBondOverlay[data-stage="exchange"]{
-    overflow:hidden!important;
-    padding:3px 6px!important;
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info{
+  width:82px!important;
+  min-width:82px!important;
+  max-width:82px!important;
+  height:auto!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face{
+  width:82px!important;
+  min-width:82px!important;
+  max-width:82px!important;
+  height:123px!important;
+  min-height:123px!important;
+  max-height:123px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel{
+  width:82px!important;
+  min-width:82px!important;
+  max-width:82px!important;
+  height:50px!important;
+  min-height:50px!important;
+  max-height:50px!important;
+  flex:0 0 50px!important;
+  margin-top:0!important;
+  padding:3px 4px 4px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-name,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-name{
+  font-size:7px!important;
+  padding:1px 1px 2px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-desc,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-desc{
+  font-size:5.7px!important;
+  line-height:1.12!important;
+  padding:1px 1px 0!important;
+  -webkit-line-clamp:4!important;
+  line-clamp:4!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  min-height:50px!important;
+  height:50px!important;
+  max-height:50px!important;
+  padding:5px 6px!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn b,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn b{
+  font-size:8.5px!important;
+  line-height:1.02!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn span,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn span{
+  margin-top:3px!important;
+  font-size:6.2px!important;
+  line-height:1.08!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel{
+  position:static!important;
+  width:auto!important;
+  min-width:96px!important;
+  min-height:27px!important;
+  height:27px!important;
+  margin:2px auto 0!important;
+  padding:3px 10px!important;
+  font-size:8px!important;
+  line-height:1!important;
+  transform:none!important;
+}
+@media (max-height:360px){
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info{
+    width:72px!important;min-width:72px!important;max-width:72px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-shell{
-    min-height:100%!important;
-    max-height:100%!important;
-    justify-content:flex-start!important;
-    overflow:hidden!important;
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face{
+    width:72px!important;min-width:72px!important;max-width:72px!important;height:108px!important;min-height:108px!important;max-height:108px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-title{
-    font-size:clamp(22px,5vh,30px)!important;
-    margin-top:1px!important;
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel{
+    width:72px!important;min-width:72px!important;max-width:72px!important;height:44px!important;min-height:44px!important;max-height:44px!important;flex-basis:44px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-subtitle{
-    margin-top:2px!important;
-    font-size:clamp(9px,1.55vw,11px)!important;
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn{
+    height:44px!important;min-height:44px!important;max-height:44px!important;padding:4px 5px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-hand-grid{
-    flex:1 1 auto!important;
-    width:98vw!important;
-    max-height:none!important;
-    min-height:0!important;
-    margin:3px auto 0!important;
-    padding:2px 4px 3px!important;
-    gap:5px!important;
-    scrollbar-width:none!important;
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel{
+    height:24px!important;min-height:24px!important;margin-top:1px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-hand-grid::-webkit-scrollbar{
-    display:none!important;
+}
+</style>
+
+<style id="bsc-v122-heart-bond-larger-preview">
+/* v122 — Heart Bond action screen: no subtitle; use the freed vertical space
+   for a substantially larger centered preview while keeping actions below it. */
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice{
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice #choiceSub{
+  display:none!important;
+  margin:0!important;
+  padding:0!important;
+  height:0!important;
+  min-height:0!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid{
+  grid-row:2!important;
+  padding:8px 20px 10px!important;
+  row-gap:clamp(10px,1.6vh,16px)!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview{
+  width:clamp(160px,min(15.5vw,25.5vh),230px)!important;
+  max-width:230px!important;
+}
+#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel{
+  grid-row:3!important;
+}
+
+/* Landscape phones: enlarge too, but derive it from the real visual height so
+   the preview never collides with title/actions/cancel on short screens. */
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice,
+html.mobile-ui.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice{
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid{
+  grid-row:2!important;
+  padding:2px 5px 3px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info{
+  width:clamp(86px,26vh,108px)!important;
+  min-width:clamp(86px,26vh,108px)!important;
+  max-width:108px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face{
+  width:clamp(86px,26vh,108px)!important;
+  min-width:clamp(86px,26vh,108px)!important;
+  max-width:108px!important;
+  height:clamp(129px,39vh,162px)!important;
+  min-height:clamp(129px,39vh,162px)!important;
+  max-height:162px!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel{
+  width:clamp(86px,26vh,108px)!important;
+  min-width:clamp(86px,26vh,108px)!important;
+  max-width:108px!important;
+  height:clamp(53px,20.3vh,84px)!important;
+  min-height:clamp(53px,20.3vh,84px)!important;
+  max-height:84px!important;
+  flex-basis:clamp(53px,20.3vh,84px)!important;
+}
+html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel,
+html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel{
+  grid-row:3!important;
+}
+
+@media (max-height:360px){
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview,
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info{
+    width:86px!important;min-width:86px!important;max-width:86px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-hand-card{
-    flex-basis:clamp(58px,8.6vh,76px)!important;
-    width:clamp(58px,8.6vh,76px)!important;
-    min-width:clamp(58px,8.6vh,76px)!important;
-    max-width:clamp(58px,8.6vh,76px)!important;
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-face{
+    width:86px!important;min-width:86px!important;max-width:86px!important;height:129px!important;min-height:129px!important;max-height:129px!important;
   }
-  #heartBondOverlay[data-stage="exchange"] .heart-bond-back{
-    flex:0 0 auto!important;
-    margin-top:2px!important;
-    padding:4px 10px!important;
-    font-size:9px!important;
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview .card-info-panel{
+    width:86px!important;min-width:86px!important;max-width:86px!important;height:53px!important;min-height:53px!important;max-height:53px!important;flex-basis:53px!important;
   }
 }
 </style>
