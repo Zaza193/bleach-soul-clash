@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="200-vollstandig38-mobile-parity";
+  const BUILD_VERSION="200-vollstandig39-browser-height";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -39486,6 +39486,72 @@ html.touch-device button{touch-action:manipulation}
   #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head,
   #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction,
   #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions{flex:0 0 auto!important}
+}
+</style>
+
+
+<style id="browser-board-height-v39">
+/* Browser chrome changes the usable height; do not let row minima overflow
+   the middle track or let an implicit hand track reserve space for the dock. */
+@media (orientation:landscape){
+html.mobile-browser-ui #app#app{
+  height:var(--app-height,100dvh)!important;max-height:var(--app-height,100dvh)!important;
+  min-height:0!important;box-sizing:border-box!important;margin:0 auto!important;
+  overflow:hidden!important;
+  --browser-hand-height:72px;
+  --browser-top-height:28px;
+}
+html.mobile-browser-ui #app#app .board-shell{
+  display:grid!important;grid-template-rows:var(--browser-top-height) minmax(0,1fr) var(--browser-hand-height)!important;
+  height:100%!important;min-height:0!important;max-height:100%!important;
+  gap:0!important;padding:0!important;box-sizing:border-box!important;overflow:hidden!important;
+}
+html.mobile-browser-ui #app#app .board-shell::before{inset:var(--browser-top-height) 0 var(--browser-hand-height)!important}
+html.mobile-browser-ui #app#app .topbar{
+  grid-row:1!important;height:100%!important;min-height:0!important;max-height:100%!important;box-sizing:border-box!important;
+}
+html.mobile-browser-ui #app#app #board{
+  grid-row:2!important;display:grid!important;height:100%!important;min-height:0!important;max-height:100%!important;
+  grid-template-rows:repeat(3,minmax(0,1fr)) 2px repeat(3,minmax(0,1fr))!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+}
+html.mobile-browser-ui #app#app #board .row,
+html.mobile-browser-ui #app#app #board .row-cards{
+  height:100%!important;min-height:0!important;max-height:100%!important;box-sizing:border-box!important;overflow-y:hidden!important;
+}
+html.mobile-browser-ui #app#app #board .row-cards>.card{
+  flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:32px!important;
+  height:min(46px,100%)!important;min-height:0!important;max-height:100%!important;
+  aspect-ratio:2/3!important;transform:none!important;
+}
+html.mobile-browser-ui #app#app #board .row-cards>.card>.card-face{
+  width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+}
+html.mobile-browser-ui #app#app .hand-wrap{
+  grid-row:3!important;position:relative!important;inset:auto!important;transform:none!important;
+  display:grid!important;grid-template-columns:minmax(0,1fr) 44px!important;grid-template-rows:minmax(0,1fr)!important;
+  height:100%!important;min-height:0!important;max-height:100%!important;
+  margin:0!important;padding:0!important;box-sizing:border-box!important;overflow:hidden!important;
+}
+html.mobile-browser-ui #app#app #handScrollDock{display:none!important}
+html.mobile-browser-ui #app#app #hand{
+  grid-row:1!important;grid-column:1!important;position:relative!important;inset:auto!important;
+  height:100%!important;min-height:0!important;max-height:100%!important;
+  box-sizing:border-box!important;padding:3px!important;margin:0!important;
+  align-items:center!important;overflow-x:auto!important;overflow-y:hidden!important;
+}
+html.mobile-browser-ui #app#app #hand>.card{
+  flex:0 0 45px!important;width:45px!important;min-width:45px!important;max-width:45px!important;
+  height:65px!important;min-height:0!important;max-height:100%!important;margin:0!important;
+  transform:none!important;
+}
+html.mobile-browser-ui #app#app #hand>.card>.card-face{
+  width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+}
+html.mobile-browser-ui #app#app .hand-actions{
+  grid-column:2!important;grid-row:1!important;height:100%!important;min-height:0!important;
+  max-height:100%!important;padding:2px!important;box-sizing:border-box!important;
+}
 }
 </style>
 
