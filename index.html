@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="200-vollstandig36-mobile";
+  const BUILD_VERSION="200-vollstandig37-mobile-scroll";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -39152,8 +39152,8 @@ html.network-keyboard-open #networkJoinOverlay{
   #networkOverlay:not(.hidden),
   #networkCreateOverlay:not(.hidden),
   html:not(.network-keyboard-open) #networkJoinOverlay:not(.hidden),
-  #startOverlay:not(.hidden),
-  #deckBuilderOverlay:not(.hidden),
+  #startOverlay#startOverlay#startOverlay:not(.hidden),
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay:not(.hidden),
   #mulliganOverlay:not(.hidden),
   #choiceOverlay:not(.hidden),
   #handoffOverlay:not(.hidden),
@@ -39174,7 +39174,7 @@ html.network-keyboard-open #networkJoinOverlay{
   #networkOverlay>.modal,
   #networkCreateOverlay>.modal,
   html:not(.network-keyboard-open) #networkJoinOverlay>.modal,
-  #startOverlay>.modal,
+  #startOverlay#startOverlay#startOverlay>.modal,
   #mulliganOverlay>.modal,
   #choiceOverlay>.modal,
   #handoffOverlay>.modal,
@@ -39195,11 +39195,11 @@ html.network-keyboard-open #networkJoinOverlay{
   }
 
   /* PATH PICKER — 2 readable columns, never 4/6 tiny columns. */
-  #startOverlay .faction-modal{
+  #startOverlay#startOverlay#startOverlay .faction-modal{
     padding:12px!important;
     clip-path:none!important;
   }
-  #startOverlay .faction-modal .factions{
+  #startOverlay#startOverlay#startOverlay .faction-modal .factions{
     display:grid!important;
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
     grid-template-rows:none!important;
@@ -39211,8 +39211,8 @@ html.network-keyboard-open #networkJoinOverlay{
     overflow:visible!important;
     margin:10px 0!important;
   }
-  #startOverlay .faction-modal .faction,
-  #startOverlay .faction-modal .faction:last-child:nth-child(odd){
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction,
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction:last-child:nth-child(odd){
     grid-column:auto!important;
     width:100%!important;
     height:auto!important;
@@ -39223,8 +39223,8 @@ html.network-keyboard-open #networkJoinOverlay{
     border-radius:0!important;
     align-items:stretch!important;
   }
-  #startOverlay .faction-modal .faction:last-child:nth-child(odd){grid-column:1/-1!important;min-height:180px!important}
-  #startOverlay .faction-modal .faction-copy{
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction:last-child:nth-child(odd){grid-column:1/-1!important;min-height:180px!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction-copy{
     width:100%!important;
     height:auto!important;
     min-height:245px!important;
@@ -39239,8 +39239,8 @@ html.network-keyboard-open #networkJoinOverlay{
     box-sizing:border-box!important;
     background:linear-gradient(180deg,rgba(0,0,0,.76),rgba(0,0,0,.58) 42%,rgba(0,0,0,.82))!important;
   }
-  #startOverlay .faction-modal .faction:last-child:nth-child(odd) .faction-copy{min-height:180px!important}
-  #startOverlay .faction-modal .faction b{
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction:last-child:nth-child(odd) .faction-copy{min-height:180px!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction b{
     display:block!important;
     width:100%!important;
     margin:0!important;
@@ -39252,7 +39252,7 @@ html.network-keyboard-open #networkJoinOverlay{
     overflow:visible!important;
     text-overflow:clip!important;
   }
-  #startOverlay .faction-modal .faction small{
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction small{
     display:block!important;
     width:100%!important;
     height:auto!important;
@@ -39268,7 +39268,7 @@ html.network-keyboard-open #networkJoinOverlay{
     -webkit-line-clamp:unset!important;
     line-clamp:unset!important;
   }
-  #startOverlay .network-actions{
+  #startOverlay#startOverlay#startOverlay .network-actions{
     position:static!important;
     inset:auto!important;
     width:100%!important;
@@ -39279,9 +39279,9 @@ html.network-keyboard-open #networkJoinOverlay{
   }
 
   /* ASSEMBLE — one page scroll on mobile. Header, description, cards, actions all flow normally. */
-  #deckBuilderOverlay{overflow-y:auto!important;overflow-x:hidden!important}
-  #deckBuilderOverlay>.deck-builder-shell,
-  #deckBuilderOverlay.three-worlds-builder>.deck-builder-shell{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay{overflow-y:auto!important;overflow-x:hidden!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay>.deck-builder-shell,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder>.deck-builder-shell{
     display:flex!important;
     flex-direction:column!important;
     width:min(940px,100%)!important;
@@ -39293,8 +39293,8 @@ html.network-keyboard-open #networkJoinOverlay{
     gap:10px!important;
     margin:0 auto!important;
   }
-  #deckBuilderOverlay .deck-builder-modal,
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-modal{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-modal,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-modal{
     width:100%!important;
     height:auto!important;
     min-height:0!important;
@@ -39305,8 +39305,8 @@ html.network-keyboard-open #networkJoinOverlay{
     flex:0 0 auto!important;
     margin:0!important;
   }
-  #deckBuilderOverlay .deck-builder-main-area,
-  #deckBuilderOverlay .deck-builder-scroll-content{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-main-area,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-scroll-content{
     display:block!important;
     width:100%!important;
     height:auto!important;
@@ -39316,20 +39316,20 @@ html.network-keyboard-open #networkJoinOverlay{
     padding:0!important;
     touch-action:pan-y!important;
   }
-  #deckBuilderOverlay .deck-builder-scroll-content>.deck-builder-head,
-  #deckBuilderOverlay .deck-builder-scroll-content>.deck-builder-sub,
-  #deckBuilderOverlay .deck-builder-scroll-content>.deck-builder-grid{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-scroll-content>.deck-builder-head,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-scroll-content>.deck-builder-sub,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-scroll-content>.deck-builder-grid{
     width:100%!important;
   }
-  #deckBuilderOverlay .deck-builder-head{margin:0 0 6px!important}
-  #deckBuilderOverlay .deck-builder-sub{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-head{margin:0 0 6px!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-sub{
     max-height:none!important;
     overflow:visible!important;
     font-size:12px!important;
     line-height:1.35!important;
     margin:0 0 10px!important;
   }
-  #deckBuilderOverlay .deck-builder-grid{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-grid{
     display:grid!important;
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:8px!important;
@@ -39339,8 +39339,8 @@ html.network-keyboard-open #networkJoinOverlay{
     padding:2px!important;
     align-content:start!important;
   }
-  #deckBuilderOverlay .deck-builder-actions,
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-actions{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-actions,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-actions{
     position:static!important;
     display:grid!important;
     grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
@@ -39351,18 +39351,18 @@ html.network-keyboard-open #networkJoinOverlay{
     background:#ece8dd!important;
     z-index:auto!important;
   }
-  #deckBuilderOverlay #deckBuilderBack,
-  #deckBuilderOverlay #deckBuilderConfirm{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay #deckBuilderBack,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay #deckBuilderConfirm{
     grid-column:auto!important;
     order:initial!important;
     min-height:44px!important;
     height:auto!important;
     font-size:10px!important;
   }
-  #deckBuilderOverlay #deckBuilderCounter{display:none!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay #deckBuilderCounter{display:none!important}
 
   /* Three Worlds counter remains a separate card after the main ASSEMBLE card. */
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel{
     display:block!important;
     order:2!important;
     width:100%!important;
@@ -39370,33 +39370,33 @@ html.network-keyboard-open #networkJoinOverlay{
     min-height:0!important;
     flex:0 0 auto!important;
   }
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel-inner{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-side-panel-inner{
     height:auto!important;
     min-height:0!important;
   }
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-faction-stats{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-faction-stats{
     display:grid!important;
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
     gap:6px!important;
     overflow:visible!important;
   }
-  #deckBuilderOverlay.three-worlds-builder .three-deck-stat{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .three-deck-stat{
     min-height:58px!important;
     flex:none!important;
   }
-  #deckBuilderOverlay.three-worlds-builder .three-deck-stat.total{grid-column:1/-1!important}
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-random{min-height:44px!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .three-deck-stat.total{grid-column:1/-1!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-random{min-height:44px!important}
 
   /* Taps select the button itself; card internals must never swallow the tap. */
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-item{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-item{
     pointer-events:auto!important;
     touch-action:manipulation!important;
     cursor:pointer!important;
   }
-  #deckBuilderOverlay.three-worlds-builder .deck-builder-item>.card{
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .deck-builder-item>.card{
     pointer-events:none!important;
   }
-  #deckBuilderOverlay.three-worlds-builder .assemble-lock-overlay{pointer-events:none!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay.three-worlds-builder .assemble-lock-overlay{pointer-events:none!important}
 
   /* Mulligan / choices: no fixed-height crop. */
   #mulliganOverlay .mulligan-grid,
@@ -39409,14 +39409,14 @@ html.network-keyboard-open #networkJoinOverlay{
 }
 
 @media (max-width:700px){
-  #startOverlay .faction-modal .factions{grid-template-columns:1fr!important}
-  #startOverlay .faction-modal .faction,
-  #startOverlay .faction-modal .faction:last-child:nth-child(odd){grid-column:auto!important;min-height:190px!important}
-  #startOverlay .faction-modal .faction-copy,
-  #startOverlay .faction-modal .faction:last-child:nth-child(odd) .faction-copy{min-height:190px!important}
-  #startOverlay .faction-modal .faction b{font-size:16px!important}
-  #startOverlay .faction-modal .faction small{font-size:12px!important}
-  #deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .factions{grid-template-columns:1fr!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction,
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction:last-child:nth-child(odd){grid-column:auto!important;min-height:190px!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction-copy,
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction:last-child:nth-child(odd) .faction-copy{min-height:190px!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction b{font-size:16px!important}
+  #startOverlay#startOverlay#startOverlay .faction-modal .faction small{font-size:12px!important}
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 </style>
 <style id="v326-desktop-layout-restore">
@@ -40126,6 +40126,65 @@ html.touch-device button{touch-action:manipulation}
   },true);
 })();
 </script>
+
+
+<style id="mobile-preparation-scroll-contract">
+@media (max-width:1100px), (pointer:coarse), (hover:none){
+  #startOverlay#startOverlay#startOverlay:not(.hidden),
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay:not(.hidden){
+    position:fixed!important;inset:0!important;width:100%!important;
+    height:var(--app-height,100dvh)!important;max-height:var(--app-height,100dvh)!important;
+    min-height:0!important;transform:none!important;
+    overflow-x:hidden!important;overflow-y:auto!important;
+    align-items:center!important;justify-content:flex-start!important;
+    padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))!important;
+    touch-action:pan-y!important;-webkit-overflow-scrolling:touch;
+  }
+  #startOverlay#startOverlay#startOverlay .faction-modal{
+    display:block!important;width:min(900px,100%)!important;
+    height:auto!important;max-height:none!important;min-height:0!important;
+    flex:none!important;transform:none!important;overflow:visible!important;
+  }
+  #startOverlay#startOverlay#startOverlay .setup-title-line{
+    display:flex!important;flex-wrap:wrap!important;gap:8px!important;
+  }
+  #startOverlay#startOverlay#startOverlay .setup-title-line>h1{
+    font-size:clamp(22px,4vw,32px)!important;white-space:normal!important;
+  }
+  #startOverlay#startOverlay#startOverlay .faction-copy{
+    position:relative!important;inset:auto!important;transform:none!important;
+  }
+  #startOverlay#startOverlay#startOverlay .faction small{
+    -webkit-text-size-adjust:100%;overflow-wrap:anywhere!important;
+  }
+  #startOverlay#startOverlay#startOverlay .network-actions{
+    display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;
+    flex:none!important;transform:none!important;
+  }
+  #startOverlay#startOverlay#startOverlay .network-actions button{
+    min-height:44px!important;height:auto!important;white-space:normal!important;
+  }
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-shell,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-modal,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-main-area,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-scroll-content,
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-grid{
+    position:relative!important;inset:auto!important;transform:none!important;
+    flex:0 0 auto!important;height:auto!important;max-height:none!important;min-height:0!important;
+    overflow:visible!important;touch-action:pan-y!important;
+    overscroll-behavior:auto!important;box-sizing:border-box!important;
+  }
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-modal{
+    padding:12px!important;max-width:100%!important;clip-path:none!important;
+  }
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-actions{
+    flex:0 0 auto!important;transform:none!important;
+  }
+  #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay .deck-builder-item{
+    touch-action:pan-y!important;
+  }
+}
+</style>
 
 </body>
 </html>
