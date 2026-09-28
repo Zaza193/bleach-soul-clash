@@ -34315,39 +34315,99 @@ function v242CardElement(sideKey,row,uid){
     await waitForMs(1425);stage.remove();
   }
 
-  async function v387AnimateSuperstar(sideKey,maskUid,jamesUid=null,mode="cheer"){
+  
+  // v128: shared cinematic helpers imported from the standalone animation test.
+  function v120Stage(){
+    const e=document.createElement('div');e.className='v120-cinematic-stage';
+    Object.assign(e.style,{position:'fixed',inset:'0',zIndex:10336,pointerEvents:'none',overflow:'hidden'});
+    e.setAttribute('aria-hidden','true');document.body.appendChild(e);return e;
+  }
+  function v120Node(stage,style={},tag='div'){
+    const e=document.createElement(tag);Object.assign(e.style,{position:'absolute',pointerEvents:'none',boxSizing:'border-box'},style);stage.appendChild(e);return e;
+  }
+  function v120Anim(e,frames,duration,delay=0,easing='ease-out'){
+    return e.animate(frames,{duration,delay,easing,fill:'both'});
+  }
+  function v120Ring(stage,c,color,delay=0,size=80){
+    const e=v120Node(stage,{left:c.x+'px',top:c.y+'px',width:size+'px',height:size+'px',border:'2px solid '+color,borderRadius:'50%',boxShadow:'0 0 12px '+color});
+    v120Anim(e,[{opacity:0,transform:'translate(-50%,-50%) scale(.2)'},{offset:.15,opacity:.9},{opacity:0,transform:'translate(-50%,-50%) scale(1.7)'}],420,delay);return e;
+  }
+async function v387AnimateSuperstar(sideKey,maskUid,jamesUid=null,mode="cheer"){
     if(cardChoicePreflightContext?.phase==='collect') return;
-    await v366DoubleRaf();
-    const ml=findBoardCardByUid(maskUid);if(!ml)return;
-    const mr=v366CardRect(ml.sideKey,ml.row,maskUid);if(!mr)return;
-    const m=v366RectCenter(mr),stage=document.createElement('div');stage.className='v387-superstar-stage';document.body.appendChild(stage);
-    const star=document.createElement('div');star.className='v387-star';star.style.left=`${m.x}px`;star.style.top=`${m.y}px`;star.innerHTML='<i></i><b>★</b>';stage.appendChild(star);
-    for(let i=0;i<4;i++){const ring=document.createElement('div');ring.className='v387-cheer-ring';ring.style.left=`${m.x}px`;ring.style.top=`${m.y}px`;ring.style.setProperty('--delay',`${i*105}ms`);stage.appendChild(ring);}
-    star.animate?.([{opacity:0,transform:'translate(-50%,-50%) scale(.25) rotate(-24deg)'},{offset:.22,opacity:1,transform:'translate(-50%,-50%) scale(1.08) rotate(0deg)'},{offset:.66,opacity:1,transform:'translate(-50%,-50%) scale(.98) rotate(8deg)'},{opacity:0,transform:'translate(-50%,-50%) scale(1.38) rotate(18deg)'}],{duration:1140,easing:'ease-out',fill:'forwards'});
-    await waitForMs(1200);stage.remove();
+    // Capture James before a guard sacrifice removes his board card.
+    const ml=findBoardCardByUid(maskUid),jl=jamesUid?findBoardCardByUid(jamesUid):null;
+    if(!ml)return;
+    const mr=v366CardRect(ml.sideKey,ml.row,maskUid),jr=jl?v366CardRect(jl.sideKey,jl.row,jamesUid):null;
+    if(!mr)return;
+    const m=v366RectCenter(mr),j=jr?v366RectCenter(jr):{x:m.x,y:m.y+mr.height*.75};
+    const stage=v120Stage(),gold=mode==='guard'?'#fff1cb':'#ffd65c';
+    try{
+      const dx=m.x-j.x,dy=m.y-j.y,distance=Math.hypot(dx,dy)||1;
+      // Words emerge beyond James' edge; his card receives no glow or overlay.
+      const edge=jr?Math.min(Math.abs(dx)>1?(jr.width/2+12)/Math.abs(dx):Infinity,Math.abs(dy)>1?(jr.height/2+12)/Math.abs(dy):Infinity):.2;
+      const launch=Math.min(.65,edge),sx=j.x+dx*launch,sy=j.y+dy*launch;
+      for(let i=0;i<3;i++){
+        const delay=i*190,tx=m.x-sx,ty=m.y-sy;
+        const word=v120Node(stage,{left:sx+'px',top:sy+'px',color:'#fff5ca',font:'italic 900 '+Math.max(15,Math.min(24,mr.width*.2))+'px/1 system-ui',whiteSpace:'nowrap',letterSpacing:'-.035em',textShadow:'1px 2px 0 #5b330d,0 0 7px #ffce55',transformOrigin:'center'});
+        word.textContent='SuperStar';
+        v120Anim(word,[{opacity:0,transform:'translate(-50%,-50%) scale(.35)'},{offset:.12,opacity:1,transform:'translate(-50%,-50%) scale(.72)'},{offset:.66,opacity:1,transform:`translate(calc(-50% + ${tx*.66}px),calc(-50% + ${ty*.66-14}px)) scale(.95) rotate(-6deg)`},{offset:.9,opacity:1,transform:`translate(calc(-50% + ${tx}px),calc(-50% + ${ty}px)) scale(.8)`},{opacity:0,transform:`translate(calc(-50% + ${tx}px),calc(-50% + ${ty}px)) scale(.3)`}],510,delay,'cubic-bezier(.35,0,.7,.55)');
+        v120Ring(stage,m,gold,delay+430,Math.max(mr.width,70));
+      }
+      const crest=v120Node(stage,{left:m.x+'px',top:m.y+'px',width:mr.width*1.1+'px',height:mr.height*.8+'px',background:'linear-gradient(130deg,#fffde4,#ffc139 55%,#a75e0e)',clipPath:'polygon(50% 0,61% 33%,98% 36%,70% 57%,79% 96%,50% 73%,21% 96%,30% 57%,2% 36%,39% 33%)',filter:'drop-shadow(0 0 9px #ffc857)'});
+      v120Anim(crest,[{opacity:0,transform:'translate(-50%,-50%) scale(.1) rotate(-25deg)'},{offset:.15,opacity:1,transform:'translate(-50%,-50%) scale(1.15) rotate(0deg)'},{offset:.35,opacity:.85,transform:'translate(-50%,-50%) scale(.94)'},{opacity:0,transform:'translate(-50%,-50%) scale(1.5)'}],450,690);
+      if(mode==='guard'){
+        const shield=v120Node(stage,{left:mr.left-6+'px',top:mr.top-6+'px',width:mr.width+12+'px',height:mr.height+12+'px',border:'3px solid #fff2b9',background:'linear-gradient(120deg,transparent,#ffd45c44,transparent)',clipPath:'polygon(0 0,100% 0,100% 72%,50% 100%,0 72%)'});
+        v120Anim(shield,[{opacity:0,transform:'scale(.8)'},{offset:.18,opacity:1,transform:'scale(1.08)'},{offset:.35,transform:'scale(1)'},{opacity:0}],700,380);
+      }
+      await waitForMs(1200);
+    }finally{stage.remove();}
   }
 
   async function v388AnimateYhwachAlmighty(sideKey,row,uid){
     if(cardChoicePreflightContext?.phase==='collect') return;
     await v366DoubleRaf();
     const r=v366CardRect(sideKey,row,uid)||v243RowStartRect(sideKey,row);if(!r)return;
-    const c=v366RectCenter(r),stage=document.createElement('div');stage.className='v388-yhwach-stage';document.body.appendChild(stage);
-    const aura=document.createElement('div');aura.className='v388-yhwach-aura';Object.assign(aura.style,{left:`${r.left}px`,top:`${r.top}px`,width:`${r.width}px`,height:`${r.height}px`});stage.appendChild(aura);
-    [-1,0,1].forEach((n,i)=>{const e=document.createElement('div');e.className='v388-yhwach-eye';e.style.left=`${c.x+n*38}px`;e.style.top=`${r.top-28-Math.abs(n)*6}px`;e.style.setProperty('--delay',`${i*82}ms`);e.innerHTML='<i></i>';stage.appendChild(e);});
-    aura.animate?.([{opacity:0,transform:'scale(.78)'},{offset:.28,opacity:.72,transform:'scale(1.04)'},{offset:.72,opacity:.9},{opacity:0,transform:'scale(1.18)'}],{duration:1350,easing:'ease-out',fill:'forwards'});
-    await waitForMs(1395);stage.remove();
+    const c=v366RectCenter(r),stage=v120Stage();
+    try{
+      const shade=v120Node(stage,{inset:'0',background:'radial-gradient(ellipse at '+c.x+'px '+c.y+'px,transparent,#02030be0)'});
+      v120Anim(shade,[{opacity:0},{offset:.16,opacity:.88},{offset:.78,opacity:.88},{opacity:0}],1395);
+      // Flat visual echoes only: no cloned IDs, event handlers or nested animations.
+      const cards=Array.from(document.querySelectorAll('#board .row-cards .card')).filter(e=>e.getBoundingClientRect().width>0).slice(0,24);
+      for(const branch of [-1,0,1]){
+        const layer=v120Node(stage,{inset:'0',filter:branch?'sepia(1) saturate(2) hue-rotate(165deg)':'none'});
+        for(const card of cards){
+          const q=card.getBoundingClientRect(),art=card.querySelector('.art')||card;
+          const bg=getComputedStyle(art);
+          v120Node(layer,{left:q.left+'px',top:q.top+'px',width:q.width+'px',height:q.height+'px',backgroundImage:bg.backgroundImage,backgroundSize:'cover',backgroundPosition:bg.backgroundPosition,backgroundColor:'#15243a',border:'1px solid '+(branch?'#8abbdb':'#f9e4ab'),boxShadow:'0 0 12px '+(branch?'#4094c866':'#ffe3a788'),borderRadius:'5px'});
+        }
+        v120Anim(layer,[{opacity:0,transform:'translate(0,0)'},{offset:.27,opacity:branch?.34:.15,transform:`translate(${branch*25}px,${branch*-13}px)`},{offset:.57,opacity:branch?.45:.35,transform:`translate(${branch*34}px,${branch*-18}px)`},{offset:.72,opacity:branch?0:.7,transform:branch?`translate(${branch*65}px,${branch*-26}px) scaleY(.96)`:'translate(0,0)'},{opacity:0,transform:'translate(0,0)'}],1280);
+      }
+      const cut=v120Node(stage,{left:'0',top:c.y+'px',width:'100%',height:'2px',background:'#fff2ce',boxShadow:'0 0 15px #ffe6ad',transformOrigin:c.x+'px center'});
+      v120Anim(cut,[{opacity:0,transform:'scaleX(0)'},{offset:.14,opacity:1,transform:'scaleX(1)'},{offset:.3,opacity:.9},{opacity:0,transform:'scaleX(1)'}],350,850);
+      v120Ring(stage,c,'#ffe5ac',890,r.width*1.3);
+      await waitForMs(1395);
+    }finally{stage.remove();}
   }
 
   async function v389AnimateCangDuIron(sideKey,row,uid){
     if(cardChoicePreflightContext?.phase==='collect') return;
-    await v366DoubleRaf();
-    const r=v366CardRect(sideKey,row,uid);if(!r)return;
-    const stage=document.createElement('div');stage.className='v389-iron-stage';document.body.appendChild(stage);
-    const shell=document.createElement('div');shell.className='v389-iron-shell';Object.assign(shell.style,{left:`${r.left}px`,top:`${r.top}px`,width:`${r.width}px`,height:`${r.height}px`});
-    shell.innerHTML='<i class="p p1"></i><i class="p p2"></i><i class="p p3"></i><i class="p p4"></i><b>IRON</b>';stage.appendChild(shell);
-    for(let i=0;i<10;i++){const sp=document.createElement('i');sp.className='spark';sp.style.setProperty('--a',`${i*36}deg`);shell.appendChild(sp);}
-    shell.animate?.([{opacity:0,transform:'scale(.86)'},{offset:.16,opacity:1,transform:'scale(1.02)'},{offset:.58,opacity:1},{opacity:0,transform:'scale(1.06)'}],{duration:1080,easing:'ease-out',fill:'forwards'});
-    await waitForMs(1125);stage.remove();
+    await v366DoubleRaf();const r=v366CardRect(sideKey,row,uid);if(!r)return;
+    const card=typeof v242CardElement==='function'?v242CardElement(sideKey,row,uid):document.getElementById(uid);
+    if(!card)return;
+    const stage=v120Stage();
+    try{
+      const face=card.querySelector('.card-face')||card;
+      // A noninteractive visual copy preserves the portrait, frame and lettering.
+      const metal=face.cloneNode(true);
+      for(const e of [metal,...metal.querySelectorAll('*')]){e.removeAttribute('id');e.removeAttribute('onclick');e.style.animation='none';e.style.transition='none';}
+      stage.appendChild(metal);
+      Object.assign(metal.style,{position:'absolute',left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',margin:'0',transform:'none',pointerEvents:'none',filter:'grayscale(1) contrast(1.42) brightness(1.15)',overflow:'hidden',borderRadius:'6px'});
+      const coating=v120Node(metal,{inset:'0',zIndex:'20',borderRadius:'inherit',background:'repeating-linear-gradient(0deg,#e9f0f818 0 1px,#14233712 1px 3px),linear-gradient(115deg,#10223980 0%,#b3c4d260 20%,#f7fcffb0 30%,#4e637999 44%,#dce7ef99 57%,#182b4390 75%,#dce8f499 100%)',mixBlendMode:'hard-light',boxShadow:'inset 1px 1px 2px #f4fbff,inset -2px -2px 3px #142234'});
+      v120Anim(metal,[{opacity:0,clipPath:'inset(100% 0 0 0)'},{offset:.1,opacity:1},{offset:.32,opacity:1,clipPath:'inset(0 0 0 0)'},{offset:.8,opacity:1,clipPath:'inset(0 0 0 0)'},{opacity:0,clipPath:'inset(0 0 0 0)'}],1125);
+      const sheen=v120Node(metal,{inset:'0',zIndex:'21',background:'linear-gradient(112deg,transparent 30%,#eaf7ff22 40%,#ffffffc9 49%,#e2f3ff55 53%,transparent 64%)',mixBlendMode:'screen'});
+      v120Anim(sheen,[{opacity:0,transform:'translateX(-110%)'},{offset:.18,opacity:.9},{offset:.8,opacity:.85},{opacity:0,transform:'translateX(110%)'}],570,310,'linear');
+      await waitForMs(1125);
+    }finally{stage.remove();}
   }
 
   async function v390AnimateSystemAnalysis(sourceSideKey,sourceRow,sourceUid,targets=[]){
@@ -34401,13 +34461,50 @@ function v242CardElement(sideKey,row,uid){
     if(cardChoicePreflightContext?.phase==='collect') return;
     await v366DoubleRaf();
     const nl=findBoardCardByUid(nianzolUid),tl=findBoardCardByUid(targetUid);if(!nl||!tl)return;
-    const nr=v366CardRect(nl.sideKey,nl.row,nianzolUid),tr=v366CardRect(tl.sideKey,tl.row,targetUid);if(!nr||!tr)return;
-    const t=v366RectCenter(tr),stage=document.createElement('div');stage.className='v394-wind-stage';document.body.appendChild(stage);
-    const warp=document.createElement('div');warp.className='v394-wind-warp';Object.assign(warp.style,{left:`${tr.left}px`,top:`${tr.top}px`,width:`${tr.width}px`,height:`${tr.height}px`});stage.appendChild(warp);
-    for(let i=0;i<5;i++){const arc=document.createElement('i');arc.className='v394-wind-arc';arc.style.left=`${t.x}px`;arc.style.top=`${t.y}px`;arc.style.setProperty('--delay',`${i*82}ms`);arc.style.setProperty('--rot',`${-28+i*14}deg`);stage.appendChild(arc);}
-    const nface=v242CardElement(nl.sideKey,nl.row,nianzolUid)?.querySelector?.('.card-face')||v242CardElement(nl.sideKey,nl.row,nianzolUid);
-    nface?.animate?.([{filter:'brightness(1)'},{offset:.35,filter:'brightness(1.55) saturate(.5) drop-shadow(0 0 7px rgba(218,247,255,.8))'},{filter:'brightness(1)'}],{duration:975,easing:'ease-out'});
-    await waitForMs(1080);stage.remove();
+    const tr=v366CardRect(tl.sideKey,tl.row,targetUid);if(!tr)return;
+    const card=typeof v242CardElement==='function'?v242CardElement(tl.sideKey,tl.row,targetUid):document.getElementById(targetUid);
+    const c=v366RectCenter(tr),stage=v120Stage();
+    try{
+      const w=tr.width+48,h=tr.height+48;
+      // Refract a visual copy in continuous horizontal bands. The real card is untouched.
+      if(card){
+        const lens=v120Node(stage,{left:tr.left+'px',top:tr.top+'px',width:tr.width+'px',height:tr.height+'px',overflow:'visible'});
+        const face=card.querySelector('.card-face')||card;
+        const count=16,amplitude=Math.min(12,tr.width*.095);
+        for(let i=0;i<count;i++){
+          const y=i/count,band=v120Node(lens,{inset:'-8px -16px',clipPath:`inset(${8+y*tr.height}px 0 ${8+tr.height*(1-(i+1)/count)-.6}px 0)`});
+          const copy=face.cloneNode(true);
+          for(const e of [copy,...copy.querySelectorAll('*')]){e.removeAttribute('id');e.removeAttribute('onclick');e.style.animation='none';e.style.transition='none';}
+          band.appendChild(copy);
+          Object.assign(copy.style,{position:'absolute',left:'16px',top:'8px',width:tr.width+'px',height:tr.height+'px',margin:'0',transformOrigin:'50% 50%',pointerEvents:'none',filter:'brightness(1.035) saturate(.88)'});
+          const envelope=Math.sin(Math.PI*(i+.5)/count),phase=y*Math.PI*2;
+          const warp=t=>`translateX(${Math.sin(phase+t)*amplitude*envelope}px) scaleX(${1+.08*envelope}) skewY(${Math.cos(phase+t)*1.1}deg)`;
+          v120Anim(copy,[{transform:'translateX(0) scaleX(1)'},{offset:.22,transform:warp(0)},{offset:.45,transform:warp(1.9)},{offset:.68,transform:warp(3.8)},{offset:.84,transform:warp(5.1)},{transform:'translateX(0) scaleX(1)'}],1080,0,'ease-in-out');
+        }
+        v120Anim(lens,[{opacity:0},{offset:.1,opacity:1},{offset:.84,opacity:1},{opacity:0}],1080);
+      }
+      const field=v120Node(stage,{left:c.x+'px',top:c.y+'px',width:w+'px',height:h+'px',transform:'translate(-50%,-50%)',borderRadius:'45% 55% 48% 52% / 53% 44% 56% 47%',background:'radial-gradient(ellipse,transparent 48%,#c5eeff08 61%,#9edcff28 76%,transparent 89%)',boxShadow:'inset 5px 0 12px #bdeeff44,inset -5px 0 12px #8ac9ec44,0 0 14px #84d6f018'});
+      v120Anim(field,[{opacity:0,transform:'translate(-50%,-50%) scale(.9) skewX(-7deg)'},{offset:.2,opacity:1,transform:'translate(-50%,-50%) scale(1.04,.98) skewX(7deg)'},{offset:.48,opacity:.9,transform:'translate(-50%,-50%) scale(.97,1.03) skewX(-8deg)'},{offset:.75,opacity:1,transform:'translate(-50%,-50%) scale(1.03,.99) skewX(5deg)'},{opacity:0,transform:'translate(-50%,-50%) scale(1.08) skewX(0deg)'}],1080);
+      const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+      svg.setAttribute('viewBox','0 0 240 300');svg.setAttribute('width',String(w+32));svg.setAttribute('height',String(h+32));
+      Object.assign(svg.style,{position:'absolute',left:c.x+'px',top:c.y+'px',transform:'translate(-50%,-50%)',overflow:'visible'});stage.appendChild(svg);
+      const shape='M120 18 C190 6 229 80 211 132 C193 175 231 236 168 275 C101 311 24 258 30 203 C36 158 5 100 44 50 C65 24 95 18 120 18 Z';
+      for(let i=0;i<4;i++){
+        const e=document.createElementNS(ns,'path');e.setAttribute('d',shape);e.setAttribute('fill','none');e.setAttribute('stroke',i===1?'#e6f8ff':'#9bc7df');e.setAttribute('stroke-width',i===1?'1.5':'.7');e.setAttribute('pathLength','100');
+        if(i===1)e.setAttribute('stroke-dasharray','17 29 9 45');
+        e.style.transformOrigin='120px 150px';e.style.filter='drop-shadow(0 0 2px #acdfff)';svg.appendChild(e);
+        const sc=.94+i*.045,angle=i%2?1:-1;
+        v120Anim(e,[{opacity:0,strokeDashoffset:'0',transform:`scale(${sc*.92}) skewX(${-angle*7}deg)`},{offset:.23,opacity:i===1?.9:.25,transform:`scale(${sc},${2-sc}) skewX(${angle*8}deg)`},{offset:.52,opacity:i===1?.8:.32,transform:`scale(${2-sc},${sc}) skewX(${-angle*9}deg)`},{offset:.78,opacity:i===1?.85:.25,transform:`scale(${sc}) skewX(${angle*5}deg)`},{opacity:0,strokeDashoffset:'-55',transform:`scale(${sc*1.07}) skewX(0deg)`}],1080,0,'ease-in-out');
+      }
+      // Curved seams outside the card make the surrounding space appear to fold.
+      for(const side of [-1,1]){
+        const seam=document.createElementNS(ns,'path');
+        seam.setAttribute('d',side<0?'M55 36 C-10 90 99 190 42 264':'M186 32 C249 101 139 192 200 262');
+        seam.setAttribute('fill','none');seam.setAttribute('stroke','#d5f1ff');seam.setAttribute('stroke-width','1.1');seam.style.transformOrigin='120px 150px';svg.appendChild(seam);
+        v120Anim(seam,[{opacity:0,transform:'scaleX(.88)'},{offset:.24,opacity:.45,transform:`translateX(${side*5}px) skewX(${side*7}deg)`},{offset:.53,opacity:.25,transform:`translateX(${-side*5}px) skewX(${-side*8}deg)`},{offset:.78,opacity:.4},{opacity:0,transform:'scaleX(1.08)'}],1080);
+      }
+      await waitForMs(1080);
+    }finally{stage.remove();}
   }
 
   async function v381AnimateLiltottoGlutton(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
@@ -38426,5 +38523,219 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .app{
 }
 </style>
 
+
+<style id="bsc-v126-mobile-hand-piles-preview-fix">
+/* v126 mobile-only corrections after v125 */
+@media (hover:none), (pointer:coarse){
+  /* 1. Hand cards: keep full card visible. The previous width reduction changed the
+     available lane but not the card overflow rules. */
+  html.phone-device.phone-landscape #hand,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand{
+    overflow:visible!important;
+    align-items:flex-end!important;
+    height:100%!important;
+    padding-bottom:2px!important;
+  }
+  html.phone-device.phone-landscape #hand .card,
+  html.touch-device.touch-landscape:not(.tablet-device) #hand .card{
+    flex:0 0 auto!important;
+    height:auto!important;
+    aspect-ratio:2 / 3!important;
+    max-height:calc(100% - 8px)!important;
+    overflow:hidden!important;
+  }
+  html.phone-device.phone-landscape .hand-wrap,
+  html.touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+    overflow:visible!important;
+  }
+  
+  /* 2. Restore pile visual from desktop logic: don't use empty placeholders as the
+     final appearance. Keep the stacks narrow but with the same layered card treatment. */
+  html.phone-device.phone-landscape .rightbar .pile-zone,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone{
+    background:#090909!important;
+    border:1px solid #252525!important;
+  }
+  html.phone-device.phone-landscape .rightbar .deck-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .deck-stack,
+  html.phone-device.phone-landscape .rightbar .discard-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .discard-stack{
+    width:54px!important;
+    height:78px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .deck-stack::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .deck-stack::after{
+    font-size:10px!important;
+  }
+
+  /* 3. Detail preview must work for both active player and opponent turn.
+     Do not rely on #detail being in one side only. */
+  html.phone-device.phone-landscape .leader-preview .detail-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) .leader-preview .detail-preview,
+  html.phone-device.phone-landscape .side .detail-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) .side .detail-preview{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    height:auto!important;
+    min-height:0!important;
+    overflow:visible!important;
+  }
+  html.phone-device.phone-landscape .detail-preview .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card{
+    height:auto!important;
+    max-height:none!important;
+    aspect-ratio:2 / 3!important;
+  }
+  html.phone-device.phone-landscape .detail-preview .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) .detail-preview .card-info-panel{
+    height:auto!important;
+    min-height:0!important;
+    max-height:44px!important;
+    overflow:hidden!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v127-mobile-mode-and-mulligan-height">
+/* v127 — mobile overlay proportions
+   1) CHOOSE YOUR BATTLE: make the panel noticeably shorter in width and each mode row taller.
+   2) CHOOSE YOUR SOUL: make the modal itself taller and let the card grid breathe vertically. */
+html.phone-device.phone-landscape #modeOverlay,
+html.touch-device.touch-landscape:not(.tablet-device) #modeOverlay,
+html.mobile-ui.phone-device.phone-landscape #modeOverlay,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #modeOverlay{
+  padding:6px!important;
+}
+
+html.phone-device.phone-landscape .mode-modal,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-modal,
+html.mobile-ui.phone-device.phone-landscape .mode-modal,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-modal{
+  width:min(440px,calc(var(--phone-stage-width) - 14px))!important;
+  max-width:min(440px,calc(var(--phone-stage-width) - 14px))!important;
+  padding:14px 16px 14px!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) .mode-modal,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-modal{
+  width:min(440px,calc(var(--touch-stage-width) - 14px))!important;
+  max-width:min(440px,calc(var(--touch-stage-width) - 14px))!important;
+}
+html.phone-device.phone-landscape .mode-modal h1,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-modal h1,
+html.mobile-ui.phone-device.phone-landscape .mode-modal h1,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-modal h1{
+  margin:0 0 6px!important;
+}
+html.phone-device.phone-landscape .mode-sub,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-sub,
+html.mobile-ui.phone-device.phone-landscape .mode-sub,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-sub{
+  margin:0 auto 10px!important;
+  max-width:100%!important;
+}
+html.phone-device.phone-landscape .mode-grid,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-grid,
+html.mobile-ui.phone-device.phone-landscape .mode-grid,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-grid{
+  gap:8px!important;
+}
+html.phone-device.phone-landscape .mode-card,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-card,
+html.mobile-ui.phone-device.phone-landscape .mode-card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-card{
+  min-height:72px!important;
+  height:auto!important;
+  padding:10px 12px!important;
+  grid-template-columns:112px minmax(0,1fr)!important;
+  border-left:5px solid #777!important;
+  box-shadow:inset 0 -3px 0 #777!important;
+}
+html.phone-device.phone-landscape .mode-card b,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-card b,
+html.mobile-ui.phone-device.phone-landscape .mode-card b,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-card b{
+  font-size:14px!important;
+}
+html.phone-device.phone-landscape .mode-card span,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-card span,
+html.mobile-ui.phone-device.phone-landscape .mode-card span,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-card span{
+  font-size:8.8px!important;
+  line-height:1.22!important;
+}
+html.phone-device.phone-landscape .mode-back,
+html.touch-device.touch-landscape:not(.tablet-device) .mode-back,
+html.mobile-ui.phone-device.phone-landscape .mode-back,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .mode-back,
+html.phone-device.phone-landscape #modeBack,
+html.touch-device.touch-landscape:not(.tablet-device) #modeBack,
+html.mobile-ui.phone-device.phone-landscape #modeBack,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #modeBack{
+  min-height:44px!important;
+  height:44px!important;
+}
+
+html.phone-device.phone-landscape #mulliganOverlay,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  padding:2px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+  width:calc(var(--phone-stage-width) - 4px)!important;
+  max-width:none!important;
+  height:calc(var(--app-height,100dvh) - 4px)!important;
+  min-height:calc(var(--app-height,100dvh) - 4px)!important;
+  max-height:calc(var(--app-height,100dvh) - 4px)!important;
+  padding:9px 10px 10px!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+  width:calc(var(--touch-stage-width) - 4px)!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-title,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-title,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-title,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-title{
+  font-size:22px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-instruction,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-instruction,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-instruction,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-instruction{
+  margin:4px auto 7px!important;
+  font-size:9.5px!important;
+  line-height:1.22!important;
+  max-width:96%!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid{
+  gap:6px 7px!important;
+  padding:5px 2px 7px!important;
+  align-content:center!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap>.card,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap>.card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+  width:min(78px,100%)!important;
+  max-width:78px!important;
+}
+</style>
+
+
+<!-- v128: imported FX: Yhwach Almighty / James Superstar+Guard / Cang Du Iron / Nianzol Wind -->
 </body>
 </html>
