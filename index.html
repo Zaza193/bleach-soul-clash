@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v181-mobile-browser-board-card-proportions";
+  const BUILD_VERSION="v183-graveyard-no-card-power-all-platforms";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v181 · MOBILE BROWSER BOARD CARD PROPORTIONS</title>
+<title>BLEACH: Soul Clash — v183 · GRAVEYARD NO CARD POWER</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -23966,7 +23966,7 @@ function isNanaoBarrierActive(card){
       const side=state[sideKey];
       const top=side.grave.length ? side.grave[side.grave.length-1] : null;
       const discard=top
-        ? `<div class="discard-stack has-card" title="Сброс: ${side.grave.length}. Верхняя карта: ${top.name}"><div class="discard-top" style="background-image:${cardArtBg(top)};background-position:${cardArtPosition(top)}"><span class="discard-power">${top.power}</span><span class="discard-name">${top.name}</span></div><div class="discard-number">${side.grave.length}</div></div>`
+        ? `<div class="discard-stack has-card" title="Сброс: ${side.grave.length}. Верхняя карта: ${top.name}"><div class="discard-top" style="background-image:${cardArtBg(top)};background-position:${cardArtPosition(top)}"><span class="discard-name">${top.name}</span></div><div class="discard-number">${side.grave.length}</div></div>`
         : `<div class="discard-stack empty" title="Сброс пуст"><div class="discard-empty-mark">×</div><div class="discard-number">0</div></div>`;
       return `<div class="pile-inner ${visualSide||sideKey}">${discard}<div class="deck-stack" title="Карт в колоде: ${side.deck.length}"><div class="deck-number">${side.deck.length}</div></div></div>`;
     };
@@ -43635,6 +43635,93 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   max-height:100%!important;
   aspect-ratio:auto!important;
   box-sizing:border-box!important;
+}
+</style>
+
+
+<style id="bsc-v182-mobile-browser-piles-display-spacing">
+/* v182 — MOBILE BROWSER ONLY.
+   Right-rail piles: add breathing room from top/bottom edges and clean up the
+   tiny overlay elements so counters/power markers stop colliding. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar{
+  grid-template-rows:60px minmax(0,1fr) 60px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone{
+  height:52px!important;
+  min-height:52px!important;
+  max-height:52px!important;
+  overflow:visible!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone.enemy-pile{
+  align-self:start!important;
+  margin-top:4px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone.player-pile{
+  align-self:end!important;
+  margin-bottom:4px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone > .pile-inner{
+  height:100%!important;
+  padding:2px 5px!important;
+  gap:6px!important;
+  justify-content:center!important;
+  align-items:center!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-stack{
+  width:34px!important;
+  height:48px!important;
+  min-width:34px!important;
+  max-width:34px!important;
+  flex:0 0 34px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-stack:before{
+  inset:2px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-stack:after{
+  bottom:5px!important;
+  font-size:5.5px!important;
+  letter-spacing:.04em!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-top{
+  inset:2px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-top:before{
+  height:3px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-top:after{
+  inset:6px 4px 12px!important;
+}
+/* Keep only readable essentials on tiny discard cards. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-name{
+  display:none!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-power{
+  left:-2px!important;
+  top:-2px!important;
+  width:12px!important;
+  height:12px!important;
+  min-width:12px!important;
+  min-height:12px!important;
+  font-size:6.5px!important;
+  line-height:1!important;
+  z-index:6!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-number,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-number{
+  right:-2px!important;
+  bottom:-2px!important;
+  width:14px!important;
+  height:14px!important;
+  min-width:14px!important;
+  min-height:14px!important;
+  font-size:7.5px!important;
+  line-height:1!important;
+  border-width:1.5px!important;
+  outline-width:1px!important;
+  box-shadow:none!important;
+  z-index:7!important;
 }
 </style>
 
