@@ -41335,108 +41335,118 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
 
 
 
-<style id="bsc-v147-mobile-mulligan-real-plus25-authority">
-/* v147 — mobile/touch CHOOSE YOUR SOUL authority.
-   Real renderer is #mulliganOverlay / #mulliganGrid, not #choiceOverlay.
-   Force the former 90x130 cards to 113x163 (+25%) for every mobile-ui/touch class,
-   including devices classified as tablet-device by screen dimensions. */
-html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid,
-html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid{
-  display:grid!important;
-  grid-template-columns:repeat(6,113px)!important;
-  grid-template-rows:repeat(2,163px)!important;
-  grid-auto-columns:113px!important;
-  grid-auto-rows:163px!important;
-  column-gap:8px!important;
-  row-gap:10px!important;
-  justify-content:center!important;
-  justify-items:stretch!important;
-  align-content:center!important;
-  align-items:stretch!important;
-  padding:4px 2px 6px!important;
-  min-height:346px!important;
-  height:auto!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  box-sizing:border-box!important;
-}
-html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
-html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap{
-  width:113px!important;
-  min-width:113px!important;
-  max-width:113px!important;
-  height:163px!important;
-  min-height:163px!important;
-  max-height:163px!important;
-  margin:0!important;
-  padding:0!important;
-  display:block!important;
-  overflow:visible!important;
-}
-html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
-html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.card,
-html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
-html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.card{
-  box-sizing:border-box!important;
-  flex:0 0 113px!important;
-  width:113px!important;
-  min-width:113px!important;
-  max-width:113px!important;
-  height:163px!important;
-  min-height:163px!important;
-  max-height:163px!important;
-  aspect-ratio:auto!important;
-  margin:0!important;
-}
-html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card>.card-face,
-html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card>.card-face{
-  width:113px!important;
-  min-width:113px!important;
-  max-width:113px!important;
-  height:163px!important;
-  min-height:163px!important;
-  max-height:163px!important;
-  aspect-ratio:auto!important;
-}
-html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .power,
-html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .power{
-  width:35px!important;
-  min-width:35px!important;
-  max-width:35px!important;
-  height:35px!important;
-  min-height:35px!important;
-  max-height:35px!important;
-  font-size:21px!important;
+
+<style id="bsc-v149-mobile-target-visibility-and-mulligan-plus15">
+/* v149 — MOBILE ONLY target selection: keep every battlefield card at normal visibility.
+   Legal targets are highlighted; non-target cards are not dimmed. */
+@media (hover:none), (pointer:coarse){
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"],
+  html.touch-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"],
+  html.phone-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]{
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]>.card-face{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    filter:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]>.card-face{
+    filter:brightness(1.10) saturate(1.20)!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"]>.card-face,
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"]>.card-face{
+    filter:brightness(1.26) saturate(1.34)!important;
+  }
+
+  /* CHOOSE YOUR SOUL — +15% from the real mobile baseline 90x130 => 104x150. */
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid{
+    display:grid!important;
+    grid-template-columns:repeat(6,104px)!important;
+    grid-template-rows:repeat(2,150px)!important;
+    grid-auto-columns:104px!important;
+    grid-auto-rows:150px!important;
+    column-gap:7px!important;
+    row-gap:9px!important;
+    justify-content:center!important;
+    justify-items:stretch!important;
+    align-content:center!important;
+    align-items:stretch!important;
+    padding:4px 2px 6px!important;
+    min-height:319px!important;
+    height:auto!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap{
+    width:104px!important;min-width:104px!important;max-width:104px!important;
+    height:150px!important;min-height:150px!important;max-height:150px!important;
+    margin:0!important;padding:0!important;display:block!important;overflow:visible!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap>.card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.card{
+    box-sizing:border-box!important;flex:0 0 104px!important;
+    width:104px!important;min-width:104px!important;max-width:104px!important;
+    height:150px!important;min-height:150px!important;max-height:150px!important;
+    aspect-ratio:auto!important;margin:0!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card>.card-face,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card>.card-face{
+    width:104px!important;min-width:104px!important;max-width:104px!important;
+    height:150px!important;min-height:150px!important;max-height:150px!important;
+    aspect-ratio:auto!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .power,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .power{
+    width:32px!important;min-width:32px!important;max-width:32px!important;
+    height:32px!important;min-height:32px!important;max-height:32px!important;
+    font-size:19px!important;
+  }
 }
 </style>
-<script id="bsc-v147-mobile-mulligan-inline-authority">
+<script id="bsc-v149-mobile-mulligan-inline-authority">
 (()=>{
   const root=document.documentElement;
   const overlay=document.getElementById('mulliganOverlay');
   const grid=document.getElementById('mulliganGrid');
   if(!overlay||!grid) return;
-  const isMobile=()=>root.classList.contains('mobile-ui')||root.classList.contains('touch-device')||(matchMedia&&matchMedia('(pointer:coarse)').matches);
+  const isMobile=()=>root.classList.contains('mobile-ui')||root.classList.contains('touch-device')||(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
   const force=()=>{
     if(!isMobile()||overlay.classList.contains('hidden')) return;
     const S=(el,p,v)=>el&&el.style.setProperty(p,v,'important');
     S(grid,'display','grid');
-    S(grid,'grid-template-columns','repeat(6,113px)');
-    S(grid,'grid-template-rows','repeat(2,163px)');
-    S(grid,'column-gap','8px'); S(grid,'row-gap','10px');
+    S(grid,'grid-template-columns','repeat(6,104px)');
+    S(grid,'grid-template-rows','repeat(2,150px)');
+    S(grid,'grid-auto-columns','104px'); S(grid,'grid-auto-rows','150px');
+    S(grid,'column-gap','7px'); S(grid,'row-gap','9px');
     S(grid,'justify-content','center'); S(grid,'align-content','center');
-    S(grid,'min-height','346px'); S(grid,'height','auto');
+    S(grid,'min-height','319px'); S(grid,'height','auto');
     S(grid,'overflow-x','auto'); S(grid,'overflow-y','hidden');
     [...grid.children].forEach(w=>{
       const card=w.matches?.('.card')?w:w.querySelector?.(':scope > .card');
       if(!card) return;
       if(w!==card){
-        for(const [p,v] of [['width','113px'],['min-width','113px'],['max-width','113px'],['height','163px'],['min-height','163px'],['max-height','163px'],['margin','0'],['padding','0']]) S(w,p,v);
+        for(const [p,v] of [['width','104px'],['min-width','104px'],['max-width','104px'],['height','150px'],['min-height','150px'],['max-height','150px'],['margin','0'],['padding','0']]) S(w,p,v);
       }
-      for(const [p,v] of [['flex','0 0 113px'],['width','113px'],['min-width','113px'],['max-width','113px'],['height','163px'],['min-height','163px'],['max-height','163px'],['aspect-ratio','auto'],['margin','0']]) S(card,p,v);
+      for(const [p,v] of [['flex','0 0 104px'],['width','104px'],['min-width','104px'],['max-width','104px'],['height','150px'],['min-height','150px'],['max-height','150px'],['aspect-ratio','auto'],['margin','0']]) S(card,p,v);
       const face=card.querySelector(':scope > .card-face');
-      if(face) for(const [p,v] of [['width','113px'],['min-width','113px'],['max-width','113px'],['height','163px'],['min-height','163px'],['max-height','163px'],['aspect-ratio','auto']]) S(face,p,v);
+      if(face) for(const [p,v] of [['width','104px'],['min-width','104px'],['max-width','104px'],['height','150px'],['min-height','150px'],['max-height','150px'],['aspect-ratio','auto']]) S(face,p,v);
       const power=card.querySelector('.power');
-      if(power) for(const [p,v] of [['width','35px'],['min-width','35px'],['max-width','35px'],['height','35px'],['min-height','35px'],['max-height','35px'],['font-size','21px']]) S(power,p,v);
+      if(power) for(const [p,v] of [['width','32px'],['min-width','32px'],['max-width','32px'],['height','32px'],['min-height','32px'],['max-height','32px'],['font-size','19px']]) S(power,p,v);
     });
   };
   new MutationObserver(()=>requestAnimationFrame(force)).observe(overlay,{attributes:true,attributeFilter:['class'],childList:true,subtree:true});
@@ -41444,50 +41454,6 @@ html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverl
   force();
 })();
 </script>
-
-
-<style id="bsc-v148-mobile-targets-stay-visible">
-/* v148 — MOBILE ONLY: unavailable card targets stay visible during target selection. */
-@media (hover:none), (pointer:coarse){
-  html.mobile-ui body.v370-card-targeting #board .card,
-  html.phone-device body.v370-card-targeting #board .card,
-  html.touch-device body.v370-card-targeting #board .card{
-    visibility:visible!important;
-    opacity:1!important;
-    filter:brightness(.78) saturate(.72) grayscale(.18)!important;
-  }
-
-  html.mobile-ui body.v370-card-targeting #board .card:not(.v370-board-card-target),
-  html.phone-device body.v370-card-targeting #board .card:not(.v370-board-card-target),
-  html.touch-device body.v370-card-targeting #board .card:not(.v370-board-card-target){
-    visibility:visible!important;
-    opacity:.82!important;
-    filter:brightness(.76) saturate(.68) grayscale(.22)!important;
-    transform:none!important;
-    box-shadow:none!important;
-    outline:none!important;
-    cursor:default!important;
-  }
-
-  html.mobile-ui body.v370-card-targeting #board .card:not(.v370-board-card-target) .card-face,
-  html.phone-device body.v370-card-targeting #board .card:not(.v370-board-card-target) .card-face,
-  html.touch-device body.v370-card-targeting #board .card:not(.v370-board-card-target) .card-face,
-  html.mobile-ui body.v370-card-targeting #board .card:not(.v370-board-card-target) .art,
-  html.phone-device body.v370-card-targeting #board .card:not(.v370-board-card-target) .art,
-  html.touch-device body.v370-card-targeting #board .card:not(.v370-board-card-target) .art{
-    visibility:visible!important;
-    opacity:1!important;
-  }
-
-  html.mobile-ui body.v370-card-targeting #board .card.v370-board-card-target,
-  html.phone-device body.v370-card-targeting #board .card.v370-board-card-target,
-  html.touch-device body.v370-card-targeting #board .card.v370-board-card-target{
-    visibility:visible!important;
-    opacity:1!important;
-    filter:brightness(1.08) saturate(1.18)!important;
-  }
-}
-</style>
 
 </body>
 </html>
