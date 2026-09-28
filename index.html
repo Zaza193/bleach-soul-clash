@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v177-mobile-browser-battle-true-minus15-from-current";
+  const BUILD_VERSION="v179-mobile-browser-board-card-row-ratio";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v177 · MOBILE BROWSER BATTLE TRUE -15%</title>
+<title>BLEACH: Soul Clash — v179 · MOBILE BROWSER BOARD CARD ROW RATIO</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -43255,6 +43255,211 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .side,
 html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar{
   width:auto!important;
+}
+</style>
+
+
+<style id="bsc-v178-mobile-browser-battle-rails-hand-piles-tune">
+/* v178 — MOBILE BROWSER ONLY.
+   1) rightbar pile rows occupy half the previous height and sit against their
+      respective top/bottom edges; stack components themselves are scaled down.
+   2) hand band and hand cards are reduced by ~15%.
+   3) left leader rail becomes 20% wider than the current 92px battle rail. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  grid-template-columns:110px minmax(0,1fr) 92px!important;
+}
+
+/* Left leader rail: real width increase without touching battle height. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .side{
+  min-width:110px!important;
+  max-width:110px!important;
+}
+
+/* Right rail: keep preview column width, but halve deck/discard occupancy. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar{
+  grid-template-rows:54px minmax(0,1fr) 54px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone{
+  min-height:54px!important;
+  max-height:54px!important;
+  height:54px!important;
+  overflow:visible!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone.enemy-pile{
+  align-self:start!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone.player-pile{
+  align-self:end!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone > .pile-inner{
+  height:100%!important;
+  gap:7px!important;
+  padding:1px 4px!important;
+  justify-content:center!important;
+  align-items:center!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone.enemy-pile > .pile-inner{
+  padding-top:0!important;
+  padding-bottom:2px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone.player-pile > .pile-inner{
+  padding-top:2px!important;
+  padding-bottom:0!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-stack{
+  width:30px!important;
+  height:42px!important;
+  flex:0 0 30px!important;
+  min-width:30px!important;
+  max-width:30px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-stack:before{
+  inset:2px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-stack:after{
+  font-size:6px!important;
+  letter-spacing:.05em!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-top{
+  inset:1px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-top:before{
+  height:2px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-top:after{
+  inset:5px 3px 10px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-power{
+  left:1px!important;
+  top:1px!important;
+  width:10px!important;
+  height:10px!important;
+  font-size:6px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-name{
+  left:2px!important;
+  right:2px!important;
+  bottom:2px!important;
+  font-size:3.7px!important;
+  max-height:8px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .deck-number,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar > .pile-zone .discard-number{
+  right:1px!important;
+  bottom:1px!important;
+  width:12px!important;
+  height:12px!important;
+  font-size:7px!important;
+  outline-width:1px!important;
+  outline-offset:0!important;
+}
+
+/* Hand row reduced by ~15%. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell{
+  grid-template-rows:30px minmax(0,1fr) 61px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell:before{
+  inset:30px 0 61px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap{
+  height:61px!important;
+  min-height:61px!important;
+  max-height:61px!important;
+  grid-template-columns:minmax(0,1fr) 37px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand{
+  height:61px!important;
+  max-height:61px!important;
+  padding:2px!important;
+  gap:2px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand > .card,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand.hand-expanded > .card{
+  flex:0 0 38px!important;
+  width:38px!important;
+  min-width:38px!important;
+  max-width:38px!important;
+  height:55px!important;
+  min-height:55px!important;
+  max-height:55px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand > .card .power{
+  width:20px!important;
+  min-width:20px!important;
+  max-width:20px!important;
+  height:10px!important;
+  min-height:10px!important;
+  max-height:10px!important;
+  font-size:8.5px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > .hand-actions{
+  width:37px!important;
+  min-width:37px!important;
+  max-width:37px!important;
+  height:61px!important;
+  min-height:61px!important;
+  max-height:61px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > .hand-actions .pass-btn{
+  width:32px!important;
+  min-width:32px!important;
+  height:32px!important;
+  min-height:32px!important;
+  font-size:5.4px!important;
+}
+</style>
+
+
+<style id="bsc-v179-mobile-browser-board-card-row-ratio">
+/* v179 — MOBILE BROWSER ONLY.
+   Board-card height is derived from the actual visible battle height instead
+   of using the old 42px cap. Six battlefield rows share the middle track, so
+   keep every card at ~74% of one row and centered inside it. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active){
+  --mb-board-card-h:
+    clamp(
+      16px,
+      calc(
+        (
+          var(--browser-vv-height,var(--app-height,100dvh))
+          - 30px
+          - 61px
+          - 2px
+        ) / 6 * .74
+      ),
+      34px
+    );
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app > .board-shell > #board#board > .row > .row-cards{
+  align-items:center!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app > .board-shell > #board#board > .row > .row-cards > .card{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:var(--mb-board-card-h)!important;
+  min-height:var(--mb-board-card-h)!important;
+  max-height:var(--mb-board-card-h)!important;
+  aspect-ratio:32 / 46!important;
+  align-self:center!important;
+  margin:0!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app > .board-shell > #board#board > .row > .row-cards > .card > .card-face{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  aspect-ratio:auto!important;
 }
 </style>
 
