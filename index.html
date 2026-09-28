@@ -49178,5 +49178,115 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 }
 </style>
 
+
+<style id="bsc-v149-mobile-browser-piles-canonical">
+/* MOBILE BROWSER ONLY.
+   This layer intentionally outranks the earlier v4.4 pile selectors. */
+
+/* Upper pile: previous canonical value was -5px.
+   Move it DOWN by 3px => final offset -2px. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app#app > .rightbar > #enemyPile#enemyPile#enemyPile.pile-zone{
+  transform:translateY(-2px)!important;
+}
+
+/* All four counters — same geometry, no black rim, thinner faction rim,
+   about 30% larger than the actually-rendered 11px canonical size. */
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner .discard-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner .discard-number{
+  position:absolute!important;
+  top:50%!important;
+  bottom:auto!important;
+
+  width:14.5px!important;
+  height:14.5px!important;
+  min-width:14.5px!important;
+  min-height:14.5px!important;
+  max-width:14.5px!important;
+  max-height:14.5px!important;
+
+  margin:0!important;
+  padding:0!important;
+  transform:translateY(-50%)!important;
+
+  /* remove the black stroke completely */
+  border:0!important;
+
+  /* keep only a much thinner faction-colour ring */
+  outline-width:.6px!important;
+  outline-offset:0!important;
+
+  /* ~30% larger digit than the visible 5.5px version */
+  font-size:7.2px!important;
+  line-height:1!important;
+  font-weight:900!important;
+
+  box-shadow:none!important;
+  filter:none!important;
+  z-index:30!important;
+}
+
+/* Keep badges fully outside the card edges after enlarging them. */
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner > .discard-stack .discard-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner > .discard-stack .discard-number{
+  left:-17px!important;
+  right:auto!important;
+}
+
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner > .deck-stack .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner > .deck-stack .deck-number{
+  right:-17px!important;
+  left:auto!important;
+}
+</style>
+
+
+<style id="bsc-v150-soul-suicide-centered-mobile">
+/* Mobile Browser + PWA only:
+   center the Soul Suicide confirmation plaque in the visible screen. */
+html.mobile-browser #soulSuicideOverlay:not(.hidden),
+html.mobile-pwa #soulSuicideOverlay:not(.hidden){
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  place-items:center!important;
+  overflow:hidden!important;
+}
+
+html.mobile-browser #soulSuicideOverlay:not(.hidden) > .soul-suicide-modal,
+html.mobile-pwa #soulSuicideOverlay:not(.hidden) > .soul-suicide-modal{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  transform:none!important;
+
+  flex:0 0 auto!important;
+  align-self:center!important;
+  margin:auto!important;
+}
+</style>
+
 </body>
 </html>
