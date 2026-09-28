@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v175-mobile-browser-battle-stage-true-width-85";
+  const BUILD_VERSION="v177-mobile-browser-battle-true-minus15-from-current";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v175 · MOBILE BROWSER BATTLE STAGE TRUE WIDTH 85%</title>
+<title>BLEACH: Soul Clash — v177 · MOBILE BROWSER BATTLE TRUE -15%</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -43198,6 +43198,63 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   margin-left:auto!important;
   margin-right:auto!important;
   transform:none!important;
+}
+</style>
+
+
+<style id="bsc-v176-mobile-browser-battle-grid-true-compact">
+/* v176 — MOBILE BROWSER ONLY.
+   Real battle layout compression. The previous app wrapper width did not affect
+   the internal three-column battle grid. Compress the actual game columns.
+   Height is intentionally untouched. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  width:100%!important;
+  max-width:none!important;
+  margin:0 auto!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .side.left{
+  width:auto!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  grid-template-columns:92px minmax(0,1fr) 92px!important;
+}
+</style>
+
+
+<style id="bsc-v177-mobile-browser-battle-true-minus15-from-current">
+/* v177 — MOBILE BROWSER ONLY.
+   v176 accidentally reset #app back to 100%, so the battle never became
+   meaningfully narrower. v173/v172 already targeted 80% width; the requested
+   additional -15% means 80% * .85 = 68% of the visual viewport.
+
+   This is an actual layout-width change, not transform/scale, so height remains
+   unchanged. The three real battle columns are also explicitly shrinkable,
+   preventing legacy min-width rules from expanding the stage back out. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  box-sizing:border-box!important;
+  width:calc(var(--browser-vv-width,var(--app-width,100vw)) * .68)!important;
+  min-width:0!important;
+  max-width:calc(var(--browser-vv-width,var(--app-width,100vw)) * .68)!important;
+  height:100%!important;
+  max-height:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  transform:none!important;
+  transform-origin:50% 0!important;
+  grid-template-columns:92px minmax(0,1fr) 92px!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .side,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar{
+  min-width:0!important;
+  max-width:none!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .side,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .rightbar{
+  width:auto!important;
 }
 </style>
 
