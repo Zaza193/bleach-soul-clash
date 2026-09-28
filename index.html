@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v167-mobile-browser-board-card-height";
+  const BUILD_VERSION="v168-mobile-browser-deep-overlay-adapt";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v167 · MOBILE BROWSER BOARD CARD HEIGHT</title>
+<title>BLEACH: Soul Clash — v168 · MOBILE BROWSER DEEP OVERLAY ADAPT</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -42118,6 +42118,29 @@ html.mobile-browser #mobileCancelTarget{
     root.style.setProperty('--browser-vv-width',`${w}px`);
     root.style.setProperty('--browser-vv-height',`${h}px`);
     root.style.setProperty('--browser-stage-width',`${clamp(stageW,Math.min(320,w),w)}px`);
+
+    /* v168: deep choice UIs are height-driven in mobile browser.  The old mobile
+       rules sized card previews from vw, which is wrong in Safari landscape: the
+       browser chrome makes the visible viewport very shallow while the width stays
+       large.  Derive every deep-choice dimension from the actual visualViewport
+       height so card face + plaque + actions always fit as one layout. */
+    const choicePreviewW=clamp(Math.floor((h-150)/1.5),54,104);
+    const choiceCardW=clamp(Math.floor((h-140)/1.5),54,100);
+    const previewInfoH=clamp(Math.round(choicePreviewW*.40),26,43);
+    const choiceInfoH=clamp(Math.round(choiceCardW*.40),26,42);
+    const choiceActionH=clamp(Math.round(h*.125),32,44);
+    const choiceTextH=clamp(Math.round(h*.18),44,62);
+    const choiceCancelH=clamp(Math.round(h*.078),22,28);
+    const choiceTitlePx=clamp(Math.round(h*.068),16,22);
+    root.style.setProperty('--mb-choice-preview-w',`${choicePreviewW}px`);
+    root.style.setProperty('--mb-choice-card-w',`${choiceCardW}px`);
+    root.style.setProperty('--mb-choice-preview-info-h',`${previewInfoH}px`);
+    root.style.setProperty('--mb-choice-info-h',`${choiceInfoH}px`);
+    root.style.setProperty('--mb-choice-action-h',`${choiceActionH}px`);
+    root.style.setProperty('--mb-choice-text-h',`${choiceTextH}px`);
+    root.style.setProperty('--mb-choice-cancel-h',`${choiceCancelH}px`);
+    root.style.setProperty('--mb-choice-title-px',`${choiceTitlePx}px`);
+
     root.style.setProperty('--app-width',`${w}px`);
     root.style.setProperty('--app-height',`${h}px`);
   };
@@ -42561,24 +42584,14 @@ html.platform-mobile-browser{
 </style>
 
 
-<style id="bsc-v165-mobile-browser-overlay-authority">
-/* v165 — MOBILE BROWSER ONLY.
-   Root cause repaired at the shared overlay layer.
+<style id="bsc-v168-mobile-browser-overlay-authority">
+/* v168 — MOBILE BROWSER ONLY.
+   One authoritative visual-viewport layout for every overlay, including the
+   *internal* geometry of deep choice flows.  In landscape Safari the width can
+   remain large while browser chrome removes a large part of the height, so deep
+   UI sizing must be driven by visualViewport.height, never by vw alone. */
 
-   Legacy mobile-landscape CSS centers every .overlay by combining left:50%
-   with translateX(-50%). The later browser viewport layer changed inset/width
-   to the visual viewport but did not clear that transform. On mobile browser
-   this moves full-width overlays half a viewport off-screen. The same legacy
-   preparation rule also vertically centers START/ASSEMBLE and adds an 8px top
-   gutter with very high ID specificity.
-
-   Keep those legacy rules for PWA. Mobile browser gets one authoritative
-   visual-viewport coordinate system and explicit top anchoring for the two
-   preparation pages. */
-
-/* All mobile-browser overlays use the real visible viewport origin.
-   This fixes Heart Bond and every other modal/choice flow that inherited the
-   old phone-stage translateX(-50%) transform. */
+/* Shared visual viewport coordinate system. */
 html.mobile-browser.mobile-ui.phone-device.phone-landscape .overlay.overlay,
 html.mobile-browser.mobile-ui.touch-device.touch-landscape .overlay.overlay,
 html.mobile-browser .overlay.overlay{
@@ -42591,22 +42604,37 @@ html.mobile-browser .overlay.overlay{
   transform:none!important;
   width:var(--browser-vv-width,100vw)!important;
   min-width:0!important;
-  max-width:none!important;
+  max-width:var(--browser-vv-width,100vw)!important;
   height:var(--browser-vv-height,var(--app-height,100dvh))!important;
   min-height:0!important;
   max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
   margin:0!important;
+  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
   box-sizing:border-box!important;
 }
 
-/* VS AI / faction setup.
-   Match/exceed the old repeated-ID mobile rule instead of trying to nudge the
-   modal after layout. The overlay starts at y=0 and the modal no longer has
-   auto vertical margins, so its top border touches the browser content line. */
+/* No modal may physically exceed the visible browser viewport. */
+html.mobile-browser #networkOverlay>.modal,
+html.mobile-browser #networkCreateOverlay>.modal,
+html.mobile-browser:not(.network-keyboard-open) #networkJoinOverlay>.modal,
+html.mobile-browser #handoffOverlay>.modal,
+html.mobile-browser #resultOverlay>.modal,
+html.mobile-browser #soulSuicideOverlay>.modal,
+html.mobile-browser #mulliganOverlay>.modal{
+  max-width:calc(100% - 2px)!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  box-sizing:border-box!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+
+/* START / VS AI: real top anchoring; no inherited vertical centering. */
 html.mobile-browser #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay#startOverlay:not(.hidden){
   display:flex!important;
   flex-direction:column!important;
-  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
   align-items:center!important;
   justify-content:flex-start!important;
   overflow:hidden!important;
@@ -42619,31 +42647,404 @@ html.mobile-browser #startOverlay#startOverlay#startOverlay#startOverlay#startOv
   align-self:center!important;
 }
 
-/* ASSEMBLE YOUR SOUL: same underlying legacy centering rule, same structural fix. */
+/* ASSEMBLE YOUR SOUL: same top-origin coordinate system. */
 html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay:not(.hidden){
   display:flex!important;
   flex-direction:column!important;
-  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
   align-items:center!important;
   justify-content:flex-start!important;
   overflow:hidden!important;
 }
-html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay>.deck-builder-shell{
+html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay>.deck-builder-shell,
+html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay>.deck-builder-modal{
   position:relative!important;
   inset:auto!important;
   transform:none!important;
   margin:0 auto!important;
   align-self:center!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
 }
 
-/* Choice flows (Heart Bond, medic, special-card choices, etc.) are now anchored
-   to the same viewport box. Their internal layouts remain untouched; only the
-   incorrect parent coordinate system is corrected. */
-html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay:not(.hidden){
-  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
-  align-items:flex-start!important;
-  justify-content:center!important;
+/* ---------------- CHOICE / ABILITY / MEDIC / HEART BOND ----------------
+   The parent was already viewport-clamped in v165, but the children still used
+   old vw-based/fixed heights.  Rebuild the shared choice modal as a definite-height
+   grid so every stage consumes only the space it actually owns. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay:not(.hidden){
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
   overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay>.choice-modal.choice-modal{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  width:calc(100% - 2px)!important;
+  max-width:calc(100% - 2px)!important;
+  height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  min-height:0!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  margin:0 auto!important;
+  padding:4px 6px!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto minmax(0,1fr) auto auto!important;
+  gap:2px!important;
+  align-items:stretch!important;
+  justify-items:stretch!important;
+  overflow:hidden!important;
+  background:transparent!important;
+  border:0!important;
+  outline:0!important;
+  clip-path:none!important;
+  box-shadow:none!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-heading,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-heading,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-heading{
+  position:static!important;
+  inset:auto!important;
+  grid-row:1!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0 4px!important;
+  transform:none!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-heading h1,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal h1,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.initiative-choice h1{
+  margin:0!important;
+  font-size:var(--mb-choice-title-px,19px)!important;
+  line-height:1!important;
+  letter-spacing:.035em!important;
+  white-space:normal!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay #choiceSub,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.initiative-choice #choiceSub{
+  position:static!important;
+  inset:auto!important;
+  grid-row:3!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:1px auto 0!important;
+  padding:0 8px!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+  font-size:clamp(7px,2.2vh,10px)!important;
+  line-height:1.12!important;
+  text-align:center!important;
+  overflow:auto!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-grid,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.choice-scrollable .choice-grid{
+  position:relative!important;
+  inset:auto!important;
+  grid-row:2!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:3px 8px!important;
+  box-sizing:border-box!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:none!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-grid::-webkit-scrollbar{display:none!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-nav{display:none!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-cancel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay #choiceCancel{
+  position:static!important;
+  inset:auto!important;
+  grid-row:4!important;
+  align-self:center!important;
+  justify-self:center!important;
+  width:auto!important;
+  min-width:92px!important;
+  max-width:min(180px,52vw)!important;
+  height:var(--mb-choice-cancel-h,24px)!important;
+  min-height:var(--mb-choice-cancel-h,24px)!important;
+  max-height:var(--mb-choice-cancel-h,24px)!important;
+  margin:1px auto 0!important;
+  padding:2px 10px!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+  font-size:clamp(7px,2vh,9px)!important;
+  line-height:1!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-cancel:hover,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-cancel:focus-visible,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-cancel:active{transform:none!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.initiative-choice .choice-cancel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.initiative-choice #choiceCancel{display:none!important}
+
+/* Text choices: options live in the middle track and scroll horizontally only
+   when there are too many to fit. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.text-choice:not(.preview-stack-choice) .choice-grid{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scroll-snap-type:x proximity!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.text-choice:not(.preview-stack-choice).choice-scrollable .choice-grid{
+  justify-content:flex-start!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.text-choice:not(.preview-stack-choice) .choice-text-btn{
+  flex:0 0 clamp(118px,28vw,190px)!important;
+  width:clamp(118px,28vw,190px)!important;
+  min-width:118px!important;
+  max-width:190px!important;
+  height:var(--mb-choice-text-h,50px)!important;
+  min-height:var(--mb-choice-text-h,50px)!important;
+  max-height:var(--mb-choice-text-h,50px)!important;
+  margin:0!important;
+  padding:5px 7px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  scroll-snap-align:center!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.text-choice:not(.preview-stack-choice) .choice-text-btn b{
+  font-size:clamp(8px,2.4vh,11px)!important;
+  line-height:1.02!important;
+  white-space:normal!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.text-choice:not(.preview-stack-choice) .choice-text-btn span{
+  margin-top:2px!important;
+  font-size:clamp(5.5px,1.7vh,7.5px)!important;
+  line-height:1.08!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* Card pickers shared by Medic, graveyard, future-sight, Heart Bond exchange and
+   every ordinary chooseOptionForActor card list.  Card width is derived from the
+   visible HEIGHT by JS, so face + info plaque cannot be taller than the middle row. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-grid{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scroll-snap-type:x proximity!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice).choice-scrollable .choice-grid{
+  justify-content:flex-start!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-btn{
+  flex:0 0 var(--mb-choice-card-w,82px)!important;
+  width:var(--mb-choice-card-w,82px)!important;
+  min-width:var(--mb-choice-card-w,82px)!important;
+  max-width:var(--mb-choice-card-w,82px)!important;
+  margin:0!important;
+  padding:0!important;
+  gap:0!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;
+  scroll-snap-align:center!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-preview.card.with-info,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-preview{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  gap:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-preview .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:2/3!important;
+  margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-preview .card-info-panel{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:var(--mb-choice-info-h,34px)!important;
+  min-height:var(--mb-choice-info-h,34px)!important;
+  max-height:var(--mb-choice-info-h,34px)!important;
+  flex:0 0 var(--mb-choice-info-h,34px)!important;
+  margin:-1px 0 0!important;
+  padding:2px 3px 3px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-preview .card-info-name{
+  font-size:clamp(6px,2vh,8px)!important;
+  line-height:1!important;
+  padding:0 1px 1px!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.card-choice:not(.preview-stack-choice) .choice-card-preview .card-info-desc{
+  font-size:clamp(4.8px,1.55vh,6px)!important;
+  line-height:1.06!important;
+  padding:1px 1px 0!important;
+  -webkit-line-clamp:4!important;
+  line-clamp:4!important;
+}
+
+/* Preview-stack choices (Heart Bond main action today, reusable by future abilities).
+   The preview is a HEIGHT-derived unit.  The three actions own one fixed compact row;
+   cancellation owns its own row, so nothing can be pushed below the visual viewport. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice{
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  padding:3px 6px!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice #choiceSub{display:none!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-grid,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.choice-scrollable .choice-grid{
+  grid-row:2!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:minmax(0,1fr) var(--mb-choice-action-h,36px)!important;
+  align-items:center!important;
+  align-content:stretch!important;
+  justify-items:stretch!important;
+  justify-content:stretch!important;
+  gap:3px 6px!important;
+  padding:2px 4px!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  align-self:center!important;
+  justify-self:center!important;
+  flex:none!important;
+  width:var(--mb-choice-preview-w,84px)!important;
+  min-width:var(--mb-choice-preview-w,84px)!important;
+  max-width:var(--mb-choice-preview-w,84px)!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  gap:0!important;
+  overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview.card.with-info,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .choice-card-preview{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  gap:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:2/3!important;
+  margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .card-info-panel{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:var(--mb-choice-preview-info-h,34px)!important;
+  min-height:var(--mb-choice-preview-info-h,34px)!important;
+  max-height:var(--mb-choice-preview-info-h,34px)!important;
+  flex:0 0 var(--mb-choice-preview-info-h,34px)!important;
+  margin:-1px 0 0!important;
+  padding:2px 3px 3px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .card-info-name{
+  font-size:clamp(6px,2vh,8px)!important;
+  line-height:1!important;
+  padding:0 1px 1px!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .card-info-desc{
+  font-size:clamp(4.8px,1.55vh,6px)!important;
+  line-height:1.06!important;
+  padding:1px 1px 0!important;
+  -webkit-line-clamp:4!important;
+  line-clamp:4!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn{
+  grid-row:2!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:var(--mb-choice-action-h,36px)!important;
+  min-height:var(--mb-choice-action-h,36px)!important;
+  max-height:var(--mb-choice-action-h,36px)!important;
+  margin:0!important;
+  padding:3px 5px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn b{
+  font-size:clamp(7px,2.1vh,9px)!important;
+  line-height:1!important;
+  white-space:normal!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-text-btn span{
+  margin-top:1px!important;
+  font-size:clamp(5px,1.5vh,6.5px)!important;
+  line-height:1.04!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-cancel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice #choiceCancel{
+  grid-row:3!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* Heart Bond exchange is just the shared card picker plus a guaranteed BACK row. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-cancel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange #choiceCancel{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+/* Extremely shallow Safari landscape: spend every pixel on actionable content. */
+@media (max-height:300px){
+  html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay>.choice-modal.choice-modal{padding:2px 4px!important;gap:1px!important}
+  html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-heading h1{font-size:15px!important}
+  html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay #choiceSub{font-size:6.5px!important;line-height:1.05!important}
+  html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-grid{padding:1px 4px!important}
 }
 </style>
 
