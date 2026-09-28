@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v170-mobile-browser-battle-width-minus-10";
+  const BUILD_VERSION="v171-mobile-browser-start-panel-height-flow";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -16953,6 +16953,54 @@ html.platform-mobile-browser [data-bsc-target-state="valid"]::before,
 html.platform-mobile-browser [data-bsc-target-state="valid"]::after{
   display:none !important;
   content:none !important;
+}
+</style>
+
+<style id="bsc-v171-mobile-browser-start-panel-height-flow">
+/* v171 MOBILE BROWSER ONLY — use full visual viewport height and reserve
+   bottom action area instead of letting it steal description space. */
+html.mobile-browser #startOverlay.start-overlay,
+html.mobile-browser #startOverlay#startOverlay:not(.hidden){
+  height:var(--app-height,100dvh)!important;
+  max-height:var(--app-height,100dvh)!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow:hidden!important;
+}
+
+html.mobile-browser #startOverlay .faction-modal{
+  height:100%!important;
+  max-height:100%!important;
+  width:calc(100vw - 8px)!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:12px 14px 8px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+}
+
+html.mobile-browser #startOverlay .faction-modal>p{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+
+html.mobile-browser #startOverlay .faction-modal .factions{
+  flex:0 0 auto!important;
+}
+
+html.mobile-browser #startOverlay .faction-modal .start-btn,
+html.mobile-browser #startOverlay .faction-modal button{
+  margin-top:auto!important;
+  flex:0 0 auto!important;
+}
+
+/* deck builder follows the same bottom-action rule */
+html.mobile-browser #deckBuilderOverlay .deck-builder-shell{
+  max-height:var(--app-height,100dvh)!important;
 }
 </style>
 </head>
@@ -43128,7 +43176,7 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 </style>
 
 
-<style id="bsc-v170-mobile-browser-battle-width-minus-10">
+<style id="bsc-v171-mobile-browser-start-panel-height-flow">
 /* v170 — MOBILE BROWSER ONLY.
    Battle scene visual width = 90% of the visible browser viewport.
    Keep the existing shallow-viewport vertical compensation from v164: when
@@ -43149,6 +43197,33 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
     transform:scale(.91)!important;
     transform-origin:50% 0!important;
     height:109.9%!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v172-mobile-browser-battle-width-minus-20">
+/* v172 — MOBILE BROWSER ONLY.
+   Battle scene becomes 20% narrower while keeping full height.
+   Undo the shallow-viewport uniform scale so width changes do not shrink height. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  width:80%!important;
+  max-width:80%!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  transform:none!important;
+  transform-origin:50% 0!important;
+  height:100%!important;
+  max-height:100%!important;
+}
+@media (max-height:600px){
+  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+    width:80%!important;
+    max-width:80%!important;
+    transform:none!important;
+    height:100%!important;
+    max-height:100%!important;
   }
 }
 </style>
