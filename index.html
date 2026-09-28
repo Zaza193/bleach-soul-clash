@@ -34039,8 +34039,6 @@ BSC.engine = BSC.engine || Object.create(null);
         const cardEl=v242CardElement(sideKey,row,uid);
         const r=visibleRect(cardEl?.querySelector('.card-face'))||visibleRect(cardEl);
         if(!r){ await waitForMs(1000); return; }
-        const mobileVfx=document.documentElement.classList.contains("mobile-browser");
-        const geomScale=mobileVfx ? Math.max(.42,Math.min(.62,r.width/48)) : 1;
         cardEl.classList.add('v33-book-hit');
         const stage=document.createElement('div'); stage.className='v33-book-stage';
         stage.style.left=`${r.left}px`;stage.style.top=`${r.top}px`;stage.style.width=`${r.width}px`;stage.style.height=`${r.height}px`;
@@ -34048,8 +34046,8 @@ BSC.engine = BSC.engine || Object.create(null);
         for(let i=0;i<18;i++){
           const s=document.createElement('b');s.className='v33-book-spark';
           s.style.setProperty('--r',`${(-78+Math.random()*156).toFixed(1)}deg`);
-          s.style.setProperty('--h',`${((8+Math.random()*18)*geomScale).toFixed(1)}px`);
-          s.style.setProperty('--dy',`${((-13-Math.random()*31)*geomScale).toFixed(1)}px`);
+          s.style.setProperty('--h',`${(8+Math.random()*18).toFixed(1)}px`);
+          s.style.setProperty('--dy',`${(-13-Math.random()*31).toFixed(1)}px`);
           s.style.setProperty('--delay',`${Math.round(190+Math.random()*190)}ms`);
           s.style.setProperty('--d',`${Math.round(340+Math.random()*230)}ms`);
           stage.appendChild(s);
@@ -36412,21 +36410,10 @@ BSC.engine = BSC.engine || Object.create(null);
         const tx=targetRect.left+targetRect.width*.5;
         const ty=targetRect.top+targetRect.height*.5;
         const dx=tx-sx, dy=ty-sy;
-        const mobileVfx=document.documentElement.classList.contains("mobile-browser");
-        const geomScale=mobileVfx ? Math.max(.42,Math.min(.58,targetRect.width/48)) : 1;
-        const len=mobileVfx ? Math.max(targetRect.width*.65,Math.hypot(dx,dy)) : Math.max(110,Math.hypot(dx,dy));
+        const len=Math.max(110,Math.hypot(dx,dy));
         const angle=Math.atan2(dy,dx)*180/Math.PI;
     
         const stage=document.createElement('div'); stage.className='v46-getsuga-flight-stage';
-        stage.style.setProperty('--mobile-geom-scale',String(geomScale));
-        stage.style.setProperty('--mobile-wave-w',`${(132*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-wave-h',`${(82*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-impact',`${(34*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-ring',`${(44*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-trail',`${(18*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-trail2',`${(34*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-trail3',`${(7*geomScale).toFixed(1)}px`);
-        stage.style.setProperty('--mobile-ribbon',`${Math.max(1,4*geomScale).toFixed(1)}px`);
         const setVars=(el)=>{
           el.style.setProperty('--sx',`${sx}px`); el.style.setProperty('--sy',`${sy}px`);
           el.style.setProperty('--tx',`${tx}px`); el.style.setProperty('--ty',`${ty}px`);
@@ -36447,10 +36434,10 @@ BSC.engine = BSC.engine || Object.create(null);
         const ring=setVars(document.createElement('div')); ring.className='impact-ring'; stage.appendChild(ring);
         for(let i=0;i<20;i++){
           const p=setVars(document.createElement('i')); p.className='particle';
-          p.style.setProperty('--w',`${((1.2+Math.random()*1.7)*geomScale).toFixed(1)}px`);
-          p.style.setProperty('--h',`${((10+Math.random()*20)*geomScale).toFixed(0)}px`);
+          p.style.setProperty('--w',`${(1.2+Math.random()*1.7).toFixed(1)}px`);
+          p.style.setProperty('--h',`${(10+Math.random()*20).toFixed(0)}px`);
           p.style.setProperty('--rot',`${(-95+Math.random()*190).toFixed(1)}deg`);
-          const pdy=(-12-Math.random()*28)*geomScale; p.style.setProperty('--pdy',`${pdy.toFixed(1)}px`); p.style.setProperty('--pdy2',`${(pdy*1.32).toFixed(1)}px`);
+          const pdy=-12-Math.random()*28; p.style.setProperty('--pdy',`${pdy.toFixed(1)}px`); p.style.setProperty('--pdy2',`${(pdy*1.32).toFixed(1)}px`);
           p.style.setProperty('--pdelay',`${Math.floor(500+Math.random()*90)}ms`);
           p.style.setProperty('--pd',`${(300+Math.random()*180).toFixed(0)}ms`);
           stage.appendChild(p);
@@ -36555,10 +36542,7 @@ BSC.engine = BSC.engine || Object.create(null);
         el.classList.add('v242-cero-target');
         const fx=document.createElement('div'); fx.className='v242-cero-overlay';
         const ceroViewport=vfxViewportMetrics();
-        const mobileVfx=document.documentElement.classList.contains("mobile-browser");
-        const sourceDx=mobileVfx?Math.max(38,r.width*2.0):220;
-        const sourceDy=mobileVfx?Math.max(32,r.height*1.25):145;
-        const sources=[{x:Math.max(0,tx-sourceDx),y:Math.max(0,ty+sourceDy)},{x:Math.min(ceroViewport.width,tx+sourceDx),y:Math.max(0,ty+sourceDy)}];
+        const sources=[{x:Math.max(0,tx-220),y:Math.max(0,ty+145)},{x:Math.min(ceroViewport.width,tx+220),y:Math.max(0,ty+145)}];
         for(const s of sources){
           const dx=tx-s.x,dy=ty-s.y,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx)*180/Math.PI;
           const beam=document.createElement('i'); beam.className='v242-cero-beam';
@@ -38659,8 +38643,6 @@ BSC.engine = BSC.engine || Object.create(null);
         if(cardChoicePreflightContext?.phase==='collect') return;
         await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
         const thick=!!opts.thick;
-        const mobileVfx=document.documentElement.classList.contains("mobile-browser");
-        const vf=mobileVfx?.5:1;
         const sourceEl=v242CardElement(sourceSideKey,sourceRow,sourceUid);
         const targetEl=v242CardElement(targetSideKey,targetRow,targetUid);
         const sr=visibleRect(sourceEl?.querySelector('.card-face'))||visibleRect(sourceEl);
@@ -38674,14 +38656,13 @@ BSC.engine = BSC.engine || Object.create(null);
         stage.style.cssText='position:fixed;inset:0;z-index:1605;pointer-events:none;overflow:hidden;';
         document.body.appendChild(stage);
         const make=(cls,style)=>{ const el=document.createElement('i'); el.className=cls; el.style.cssText=style; stage.appendChild(el); return el; };
-        const h1=(thick?40:28)*vf, h2=(thick?22:14)*vf, h3=(thick?8:5)*vf;
+        const h1=thick?40:28, h2=thick?22:14, h3=thick?8:5;
         const dur=thick?480:430;
         const glow=make('beam-glow',`position:absolute;left:${sx}px;top:${sy}px;width:${len}px;height:${h1}px;margin-top:${-h1/2}px;transform-origin:0 50%;transform:rotate(${ang}deg) scaleX(0);border-radius:999px;background:linear-gradient(90deg,rgba(60,120,255,.08),rgba(75,170,255,.75) 14%,rgba(30,120,255,.9) 60%,rgba(180,245,255,.18));filter:blur(8px);box-shadow:0 0 26px rgba(70,160,255,.78);`);
         const core=make('beam-core',`position:absolute;left:${sx}px;top:${sy}px;width:${len}px;height:${h2}px;margin-top:${-h2/2}px;transform-origin:0 50%;transform:rotate(${ang}deg) scaleX(0);border-radius:999px;background:linear-gradient(90deg,#0b2e8a 0,#2ba3ff 10%,#86e0ff 46%,#2ca3ff 78%,#0a2c82 100%);box-shadow:0 0 6px #6fe8ff,0 0 14px rgba(50,160,255,.86),inset 0 0 6px rgba(255,255,255,.48);`);
         const hot=make('beam-hot',`position:absolute;left:${sx}px;top:${sy}px;width:${len}px;height:${h3}px;margin-top:${-h3/2}px;transform-origin:0 50%;transform:rotate(${ang}deg) scaleX(0);border-radius:999px;background:linear-gradient(90deg,#ffffff 0,#eaf8ff 14%,#ffffff 42%,#d7f0ff 72%,rgba(255,255,255,.16));box-shadow:0 0 6px rgba(255,255,255,.95);`);
-        const impactSize=(thick?104:82)*vf, ringSize=(thick?28:22)*vf;
-        const impact=make('impact',`position:absolute;left:${tx}px;top:${ty}px;width:${impactSize}px;height:${impactSize}px;margin-left:${-impactSize/2}px;margin-top:${-impactSize/2}px;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff 0 8%,#e9fbff 14%,#7bd3ff 30%,rgba(26,120,255,.72) 48%,rgba(20,55,120,0) 72%);filter:blur(.4px);`);
-        const ring=make('ring',`position:absolute;left:${tx}px;top:${ty}px;width:${ringSize}px;height:${ringSize}px;margin-left:${-ringSize/2}px;margin-top:${-ringSize/2}px;border:${Math.max(1,(thick?4:3)*vf)}px solid rgba(130,214,255,.95);border-radius:50%;box-shadow:0 0 ${14*vf}px rgba(70,160,255,.8);opacity:0;`);
+        const impact=make('impact',`position:absolute;left:${tx}px;top:${ty}px;width:${thick?104:82}px;height:${thick?104:82}px;margin-left:${thick?-52:-41}px;margin-top:${thick?-52:-41}px;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff 0 8%,#e9fbff 14%,#7bd3ff 30%,rgba(26,120,255,.72) 48%,rgba(20,55,120,0) 72%);filter:blur(.4px);`);
+        const ring=make('ring',`position:absolute;left:${tx}px;top:${ty}px;width:${thick?28:22}px;height:${thick?28:22}px;margin-left:${thick?-14:-11}px;margin-top:${thick?-14:-11}px;border:${thick?4:3}px solid rgba(130,214,255,.95);border-radius:50%;box-shadow:0 0 14px rgba(70,160,255,.8);opacity:0;`);
         const all=[glow,core,hot];
         all.forEach((el,i)=>el.animate([
           {transform:`rotate(${ang}deg) scaleX(0)`,opacity:0},
@@ -38700,12 +38681,11 @@ BSC.engine = BSC.engine || Object.create(null);
           {transform:'scale(3.6)',opacity:0}
         ],{duration:520,easing:'ease-out',delay:Math.max(200,dur-70),fill:'forwards'});
         for(let i=0;i<(thick?18:13);i++){
-          const sparkH=(12+Math.random()*26)*vf;
-          const spark=make('spark',`position:absolute;left:${tx}px;top:${ty}px;width:${Math.max(1,2*vf)}px;height:${sparkH}px;margin-left:${-Math.max(1,2*vf)/2}px;margin-top:${-sparkH/2}px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0),#eaf8ff 22%,#5fbfff 60%,rgba(38,138,255,0));box-shadow:0 0 5px rgba(70,160,255,.74);opacity:0;transform:rotate(${-82+Math.random()*164}deg) translateY(0) scaleY(.2);`);
+          const spark=make('spark',`position:absolute;left:${tx}px;top:${ty}px;width:2px;height:${12+Math.random()*26}px;margin-left:-1px;margin-top:-18px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0),#eaf8ff 22%,#5fbfff 60%,rgba(38,138,255,0));box-shadow:0 0 5px rgba(70,160,255,.74);opacity:0;transform:rotate(${-82+Math.random()*164}deg) translateY(0) scaleY(.2);`);
           spark.animate([
             {opacity:0,transform:`rotate(${-82+Math.random()*164}deg) translateY(0) scaleY(.2)`},
             {offset:.24,opacity:1},
-            {opacity:0,transform:`rotate(${-82+Math.random()*164}deg) translateY(${(-24-Math.random()*44)*vf}px) scaleY(1)`}
+            {opacity:0,transform:`rotate(${-82+Math.random()*164}deg) translateY(${-24-Math.random()*44}px) scaleY(1)`}
           ],{duration:320+Math.random()*180,easing:'ease-out',delay:Math.max(180,dur-80)+Math.random()*90,fill:'forwards'});
         }
         targetEl?.animate([
@@ -39657,9 +39637,7 @@ BSC.engine = BSC.engine || Object.create(null);
         const rr=visibleRect(rowEl?.querySelector('.row-cards'))||visibleRect(rowEl)||v243RowStartRect(targetSideKey,row);
         if(!rr){ await waitForMs(320); return; }
     
-        const mobileVfx=document.documentElement.classList.contains("mobile-browser");
-        const padX=mobileVfx?Math.max(4,rr.height*.10):18;
-        const padY=mobileVfx?Math.max(3,rr.height*.08):16;
+        const padX=18, padY=16;
         const w=Math.max(1,rr.width+padX*2), h=Math.max(1,rr.height+padY*2);
         const canvas=document.createElement('canvas');
         canvas.className='v146-kirinji-canvas v369-bazz-fire-canvas';
@@ -39675,7 +39653,7 @@ BSC.engine = BSC.engine || Object.create(null);
         if(!ctx){ canvas.remove(); return; }
         ctx.scale(dpr,dpr);
     
-        const tongues=Array.from({length:mobileVfx?34:68},(_,i)=>({
+        const tongues=Array.from({length:68},(_,i)=>({
           slot:i/67,
           phase:i*.79,
           width:10+(i%7)*2.7,
@@ -39683,7 +39661,7 @@ BSC.engine = BSC.engine || Object.create(null);
           lean:-5+(i%11),
           hot:i%3===0
         }));
-        const smallTongues=Array.from({length:mobileVfx?22:44},(_,i)=>({
+        const smallTongues=Array.from({length:44},(_,i)=>({
           slot:(i+.45)/44,
           phase:i*1.17,
           width:7+(i%5)*2.1,
@@ -39691,7 +39669,7 @@ BSC.engine = BSC.engine || Object.create(null);
           lean:-4+(i%9),
           hot:i%4===0
         }));
-        const embers=Array.from({length:mobileVfx?35:70},(_,i)=>({
+        const embers=Array.from({length:70},(_,i)=>({
           slot:(i%35)/34,
           phase:i*.91,
           r:1.1+(i%4)*.65,
@@ -41150,8 +41128,6 @@ BSC.engine = BSC.engine || Object.create(null);
         const tr=v366CardRect(targetSideKey,targetRow,targetUid);
         if(!sr||!tr){ await waitForMs(260); return; }
         const s=v366RectCenter(sr), t=v366RectCenter(tr);
-        const mobileVfx=document.documentElement.classList.contains("mobile-browser");
-        const vf=mobileVfx?.5:1;
         const stage=document.createElement('div'); stage.className='v366-stage v371-barro-stage'; document.body.appendChild(stage);
         const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
         svg.setAttribute('width',String(window.innerWidth)); svg.setAttribute('height',String(window.innerHeight));
@@ -41176,14 +41152,14 @@ BSC.engine = BSC.engine || Object.create(null);
             ],{duration,delay,easing:'cubic-bezier(.14,.82,.18,1)',fill:'forwards'});
             if(a?.finished) jobs.push(a.finished.catch(()=>{}));
           };
-          add(glow*vf,'rgba(82,194,255,.34)',.72,3.4*vf);
-          add((core+4)*vf,'rgba(151,230,255,.68)',.92,1.4*vf);
-          add(core*vf,'rgba(247,254,255,1)',1,0);
+          add(glow,'rgba(82,194,255,.34)',.72,3.4);
+          add(core+4,'rgba(151,230,255,.68)',.92,1.4);
+          add(core,'rgba(247,254,255,1)',1,0);
           return jobs;
         };
     
         const charge=document.createElement('div');
-        Object.assign(charge.style,{position:'absolute',left:`${s.x}px`,top:`${s.y}px`,width:`${34*vf}px`,height:`${34*vf}px`,transform:'translate(-50%,-50%) rotate(45deg) scale(.25)',border:`${Math.max(1,2*vf)}px solid rgba(220,248,255,.95)`,boxShadow:`0 0 ${18*vf}px rgba(104,211,255,.88), inset 0 0 ${10*vf}px rgba(137,224,255,.45)`,background:'linear-gradient(135deg,rgba(255,255,255,.74),rgba(98,202,255,.18))',opacity:'0'});
+        Object.assign(charge.style,{position:'absolute',left:`${s.x}px`,top:`${s.y}px`,width:'34px',height:'34px',transform:'translate(-50%,-50%) rotate(45deg) scale(.25)',border:'2px solid rgba(220,248,255,.95)',boxShadow:'0 0 18px rgba(104,211,255,.88), inset 0 0 10px rgba(137,224,255,.45)',background:'linear-gradient(135deg,rgba(255,255,255,.74),rgba(98,202,255,.18))',opacity:'0'});
         stage.appendChild(charge);
         const chargeAnim=charge.animate?.([
           {opacity:0,transform:'translate(-50%,-50%) rotate(45deg) scale(.2)'},
@@ -41198,7 +41174,7 @@ BSC.engine = BSC.engine || Object.create(null);
           const jobs=makeBeam(s.x,s.y,t.x,t.y,{delay:150,duration:720,core:3.2,glow:18});
           const angle=Math.atan2(dy,dx)*180/Math.PI;
           const slit=document.createElement('div');
-          Object.assign(slit.style,{position:'absolute',left:`${t.x}px`,top:`${t.y}px`,width:`${Math.max(tr.width*.54,(mobileVfx?tr.width*.72:46))}px`,height:`${Math.max(1,4*vf)}px`,transform:`translate(-50%,-50%) rotate(${angle}deg) scaleX(.08)`,transformOrigin:'50% 50%',background:'linear-gradient(90deg,rgba(99,210,255,0),rgba(157,229,255,.78) 28%,rgba(246,254,255,.98) 50%,rgba(112,216,255,.78) 72%,rgba(99,210,255,0))',boxShadow:'0 0 8px rgba(205,249,255,.88),0 0 17px rgba(85,201,255,.62)',opacity:'0'});
+          Object.assign(slit.style,{position:'absolute',left:`${t.x}px`,top:`${t.y}px`,width:`${Math.max(46,tr.width*.54)}px`,height:'4px',transform:`translate(-50%,-50%) rotate(${angle}deg) scaleX(.08)`,transformOrigin:'50% 50%',background:'linear-gradient(90deg,rgba(99,210,255,0),rgba(157,229,255,.78) 28%,rgba(246,254,255,.98) 50%,rgba(112,216,255,.78) 72%,rgba(99,210,255,0))',boxShadow:'0 0 8px rgba(205,249,255,.88),0 0 17px rgba(85,201,255,.62)',opacity:'0'});
           stage.appendChild(slit);
           const slitAnim=slit.animate?.([
             {opacity:0,transform:`translate(-50%,-50%) rotate(${angle}deg) scaleX(.08)`},
@@ -41209,8 +41185,7 @@ BSC.engine = BSC.engine || Object.create(null);
     
           // Visible puncture left in the card until gameplay removes the destroyed target.
           const hole=document.createElement('div');
-          const holeSize=mobileVfx?Math.max(8,Math.min(18,tr.width*.38)):Math.max(26,Math.min(38,tr.width*.28));
-          Object.assign(hole.style,{position:'absolute',left:`${t.x}px`,top:`${t.y}px`,width:`${holeSize}px`,height:`${holeSize}px`,transform:'translate(-50%,-50%) scale(.05)',borderRadius:'50%',background:'radial-gradient(circle at 48% 48%,#020507 0 34%,#0a1014 40%,rgba(15,29,37,.98) 52%,rgba(171,231,255,.95) 58%,rgba(73,184,231,.62) 65%,rgba(0,0,0,0) 71%)',boxShadow:'0 0 7px rgba(209,247,255,.9),0 0 16px rgba(75,191,239,.58),inset 0 0 8px rgba(0,0,0,.95)',opacity:'0',zIndex:'6'});
+          Object.assign(hole.style,{position:'absolute',left:`${t.x}px`,top:`${t.y}px`,width:`${Math.max(26,Math.min(38,tr.width*.28))}px`,height:`${Math.max(26,Math.min(38,tr.width*.28))}px`,transform:'translate(-50%,-50%) scale(.05)',borderRadius:'50%',background:'radial-gradient(circle at 48% 48%,#020507 0 34%,#0a1014 40%,rgba(15,29,37,.98) 52%,rgba(171,231,255,.95) 58%,rgba(73,184,231,.62) 65%,rgba(0,0,0,0) 71%)',boxShadow:'0 0 7px rgba(209,247,255,.9),0 0 16px rgba(75,191,239,.58),inset 0 0 8px rgba(0,0,0,.95)',opacity:'0',zIndex:'6'});
           for(let i=0;i<6;i++){
             const crack=document.createElement('i');
             Object.assign(crack.style,{position:'absolute',left:'50%',top:'50%',width:`${11+(i%3)*5}px`,height:'1px',transformOrigin:'0 50%',transform:`rotate(${i*60+(i%2?8:-5)}deg) translateX(8px)`,background:'linear-gradient(90deg,rgba(210,247,255,.78),rgba(63,158,199,.28),transparent)',boxShadow:'0 0 3px rgba(145,224,255,.55)'});
@@ -49589,250 +49564,6 @@ html.mobile-browser .combat-effect-layer{
   observer.observe(document.body,{childList:true,subtree:true});
 })();
 </script>
-
-
-<style id="bsc-v157-mobile-browser-vfx-geometry-pass">
-/* Mobile Browser VFX geometry pass.
-   Keep effects tied to the actual compact board geometry. */
-
-html.mobile-browser .bsc-vfx-card-source,
-html.mobile-browser .ability-vfx,
-html.mobile-browser .combat-effect-layer{
-  transform-origin:center center!important;
-}
-
-/* Beam / slash / heart style effects: reduce overflow on compact battlefield. */
-html.mobile-browser .vfx-beam,
-html.mobile-browser .vfx-slash,
-html.mobile-browser .vfx-heart,
-html.mobile-browser .vfx-impact{
-  transform-origin:center center!important;
-}
-</style>
-
-<script id="bsc-v157-mobile-browser-vfx-geometry-pass">
-(() => {
-  if(!document.documentElement.classList.contains('mobile-browser')) return;
-
-  window.BSCMobileVFXGeometry = {
-    rect(el){
-      const r = el?.getBoundingClientRect?.();
-      if(!r) return null;
-      return {
-        x:r.left,
-        y:r.top,
-        w:r.width,
-        h:r.height,
-        cx:r.left+r.width/2,
-        cy:r.top+r.height/2
-      };
-    },
-
-    card(uid){
-      const el = document.querySelector(`.card[data-uid="${uid}"]`);
-      return this.rect(el?.querySelector('.card-face') || el);
-    },
-
-    row(side,row){
-      return this.rect(
-        document.querySelector(`.row[data-side="${side}"][data-row="${row}"]`)
-      );
-    },
-
-    pile(id){
-      return this.rect(document.getElementById(id));
-    },
-
-    scaleForRect(rect, desktopSize){
-      if(!rect || !desktopSize) return 1;
-      return Math.min(
-        rect.w / desktopSize.w,
-        rect.h / desktopSize.h
-      );
-    },
-
-    /* Used by future VFX adapters:
-       effects should ask geometry instead of using fixed px. */
-    fitEffect(source,target,ratio=1){
-      if(!source || !target) return null;
-      return {
-        x:source.cx,
-        y:source.cy,
-        tx:target.cx,
-        ty:target.cy,
-        width:Math.max(8,target.w*ratio),
-        height:Math.max(8,target.h*ratio)
-      };
-    }
-  };
-
-  /* Normalize existing large VFX containers created after load. */
-  const observer = new MutationObserver(() => {
-    document.querySelectorAll(
-      '.vfx-beam,.vfx-slash,.vfx-heart,.vfx-impact,.bsc-lab-vfx-canvas'
-    ).forEach(el => {
-      if(!el.dataset.mobileGeometryPass){
-        el.dataset.mobileGeometryPass='1';
-        el.style.transformOrigin='center center';
-      }
-    });
-  });
-
-  observer.observe(document.body,{childList:true,subtree:true});
-})();
-</script>
-
-
-<style id="bsc-v158-mobile-browser-vfx-adapter-style">
-/* Mobile Browser VFX adapters:
-   keep large attacks inside the compact battlefield area. */
-
-html.mobile-browser .bsc-mobile-vfx-anchor{
-  transform-origin:center center!important;
-  pointer-events:none!important;
-}
-
-html.mobile-browser .bsc-mobile-vfx-large{
-  max-width:55vw!important;
-  max-height:45vh!important;
-}
-
-html.mobile-browser .bsc-mobile-vfx-beam{
-  max-width:70vw!important;
-}
-
-html.mobile-browser .bsc-mobile-vfx-heart,
-html.mobile-browser .bsc-mobile-vfx-slash{
-  max-width:50vw!important;
-  max-height:40vh!important;
-}
-</style>
-
-<script id="bsc-v158-mobile-browser-vfx-adapters">
-(() => {
-  if(!document.documentElement.classList.contains('mobile-browser')) return;
-
-  const api = window.BSCMobileVFXGeometry || {};
-
-  api.anchorToCard = function(uid){
-    const rect = this.card ? this.card(uid) : null;
-    if(!rect) return null;
-    return {
-      x: rect.cx,
-      y: rect.cy,
-      w: rect.w,
-      h: rect.h,
-      scale: Math.min(rect.w/40, rect.h/60)
-    };
-  };
-
-  api.anchorToRow = function(side,row){
-    const rect = this.row ? this.row(side,row) : null;
-    if(!rect) return null;
-    return {
-      x:rect.cx,
-      y:rect.cy,
-      w:rect.w,
-      h:rect.h
-    };
-  };
-
-  api.anchorToPile = function(id){
-    const rect = this.pile ? this.pile(id) : null;
-    if(!rect) return null;
-    return {
-      x:rect.cx,
-      y:rect.cy,
-      w:rect.w,
-      h:rect.h
-    };
-  };
-
-  window.BSCMobileVFXGeometry = api;
-
-  /*
-    New VFX should use these anchors:
-    card -> attack effects
-    row  -> area effects
-    pile -> deck/grave effects
-
-    This prevents desktop pixel constants from leaking into mobile browser.
-  */
-})();
-</script>
-
-
-<style id="bsc-v159-mobile-browser-concrete-vfx">
-/* Getsuga: keep path coordinates intact; only shrink thickness / impact footprint. */
-html.mobile-browser .v46-getsuga-flight-stage .trail{
-  --th:var(--mobile-trail)!important;
-  --blur:2.5px!important;
-}
-html.mobile-browser .v46-getsuga-flight-stage .trail.t2{
-  --th:var(--mobile-trail2)!important;
-  --blur:5px!important;
-}
-html.mobile-browser .v46-getsuga-flight-stage .trail.t3{
-  --th:var(--mobile-trail3)!important;
-  --blur:.8px!important;
-}
-html.mobile-browser .v46-getsuga-flight-stage .v46-getsuga-wave{
-  width:var(--mobile-wave-w)!important;
-  height:var(--mobile-wave-h)!important;
-  filter:drop-shadow(0 0 5px rgba(117,201,255,.70)) drop-shadow(0 0 10px rgba(39,96,233,.48))!important;
-}
-html.mobile-browser .v46-getsuga-flight-stage .ribbon{
-  height:var(--mobile-ribbon)!important;
-  margin-top:calc(var(--mobile-ribbon)/-2)!important;
-}
-html.mobile-browser .v46-getsuga-flight-stage .impact{
-  width:var(--mobile-impact)!important;
-  height:var(--mobile-impact)!important;
-  margin-left:calc(var(--mobile-impact)/-2)!important;
-  margin-top:calc(var(--mobile-impact)/-2)!important;
-}
-html.mobile-browser .v46-getsuga-flight-stage .impact-ring{
-  width:var(--mobile-ring)!important;
-  height:var(--mobile-ring)!important;
-  margin-left:calc(var(--mobile-ring)/-2)!important;
-  margin-top:calc(var(--mobile-ring)/-2)!important;
-  border-width:1px!important;
-}
-
-/* Tsukishima: the stage already matches the target card; halve the oversized slash aura. */
-html.mobile-browser .v33-book-stage .v33-book-line{
-  height:7px!important;
-  filter:blur(2px)!important;
-}
-html.mobile-browser .v33-book-stage .v33-book-core{
-  height:1px!important;
-  box-shadow:0 0 3px #5dffaa,0 0 6px rgba(44,245,139,.78)!important;
-}
-html.mobile-browser .v33-book-stage::before{
-  filter:blur(2px)!important;
-}
-
-/* Pepe: half-sized heart and impact, but same source/target centers. */
-html.mobile-browser .v376-pepe-heart{
-  width:16px!important;
-  height:16px!important;
-  border-radius:3px!important;
-  box-shadow:0 0 5px rgba(255,209,239,.88),0 0 12px rgba(242,65,154,.58)!important;
-  filter:drop-shadow(0 0 4px rgba(255,124,196,.66))!important;
-}
-html.mobile-browser .v376-pepe-heart::before,
-html.mobile-browser .v376-pepe-heart::after{
-  width:16px!important;
-  height:16px!important;
-}
-html.mobile-browser .v376-pepe-heart::before{left:-8px!important}
-html.mobile-browser .v376-pepe-heart::after{top:-8px!important}
-html.mobile-browser .v376-pepe-hit{
-  width:56px!important;
-  height:56px!important;
-  filter:drop-shadow(0 0 9px rgba(255,105,184,.50))!important;
-}
-</style>
 
 </body>
 </html>
