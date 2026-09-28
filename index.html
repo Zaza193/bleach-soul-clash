@@ -30479,7 +30479,9 @@ BSC.engine = BSC.engine || Object.create(null);
               await v381AnimateLiltottoGlutton(ownerKey,row,card.uid,foeKey,target.row,target.card.uid);
               if(destroyCard(foeKey,target.card,"The Glutton",ownerKey)){
                 card.currentPower+=2;
-                await v381AnimateLiltottoGluttonAbsorb(ownerKey,row,card.uid,foeKey,target.row,target.card.uid);
+                if(!globalThis.BSCAnimationLab?.glutton){
+                  await v381AnimateLiltottoGluttonAbsorb(ownerKey,row,card.uid,foeKey,target.row,target.card.uid);
+                }
               }
             }
             break;
@@ -32258,6 +32260,33 @@ BSC.engine = BSC.engine || Object.create(null);
         return el;
       }
     
+
+    /* v5.5.12: Animation Lab uses cards produced by the real game renderer.
+       Cloning a hidden/animated live node copied temporary visibility styles. */
+    globalThis.BSCAnimationCardBridge={
+      make(uid){
+        const loc=findBoardCardByUid(uid);
+        if(!loc?.card) return null;
+
+        const visual={...loc.card};
+        delete visual._manifestHidden;
+        delete visual._returningHidden;
+        delete visual._suppressEntry;
+
+        const el=renderCard(visual,false,loc.sideKey,false,false,"board");
+        el.classList.remove(
+          "manifest-hidden","returning-hidden","enter","landed-impact",
+          "dragging","selected","v242-kamikake-sink","v242-kamikake-emerge"
+        );
+        el.removeAttribute("draggable");
+        for(const prop of ["opacity","visibility","transform","filter","transition","animation","z-index"]){
+          el.style.removeProperty(prop);
+        }
+        el.querySelectorAll(".bsc-target-visual,.row-badge").forEach(n=>n.remove());
+        return el;
+      }
+    };
+
     function leaderArtMarkup(side,isPlayer=false,disabled=false){
         const leader=side.leader||{};
         const meta=leaderUiMeta(leader);
@@ -35201,6 +35230,19 @@ BSC.engine = BSC.engine || Object.create(null);
     
     async function v313AnimateQuincyShadowManifest(sideKey,row,uid){
         if(cardChoicePreflightContext?.phase==='collect') return;
+        if(globalThis.BSCAnimationLab?.soldat){
+          await globalThis.BSCAnimationLab.soldat(sideKey,row,uid);
+          const live=v242CardElement(sideKey,row,uid);
+          if(live){
+            live.classList.remove('manifest-hidden');
+            live.style.opacity='1';
+            live.style.visibility='visible';
+            live.style.transform='none';
+            live.style.filter='none';
+            live.style.transition='none';
+          }
+          return;
+        }
     
         let el=v242CardElement(sideKey,row,uid);
         if(!el){ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))); el=v242CardElement(sideKey,row,uid); }
@@ -36683,6 +36725,10 @@ BSC.engine = BSC.engine || Object.create(null);
       }
     
     async function v242AnimateKamikake(sideKey,row,uid){
+        if(globalThis.BSCAnimationLab?.kamikake){
+          await globalThis.BSCAnimationLab.kamikake(sideKey,row,uid);
+          return;
+        }
         const el=v242CardElement(sideKey,row,uid); if(!el){ await waitForMs(120); return; }
         const stage=v242CreateKamikakeStage(visibleRect(el)||el.getBoundingClientRect(),"sink");
         el.classList.remove('v242-kamikake-emerge');
@@ -36692,6 +36738,20 @@ BSC.engine = BSC.engine || Object.create(null);
       }
     
     async function v242AnimateMimihagiRise(sideKey,row,uid){
+        if(globalThis.BSCAnimationLab?.mimihagi){
+          await globalThis.BSCAnimationLab.mimihagi(sideKey,row,uid);
+          const live=v242CardElement(sideKey,row,uid);
+          if(live){
+            live.classList.remove('manifest-hidden','returning-hidden','v242-kamikake-sink','v242-kamikake-emerge');
+            live.style.setProperty('visibility','visible','important');
+            live.style.setProperty('opacity','1','important');
+            live.style.setProperty('transform','none','important');
+            live.style.setProperty('filter','none','important');
+            live.style.removeProperty('transition');
+            live.style.removeProperty('z-index');
+          }
+          return;
+        }
         await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
         const el=v242CardElement(sideKey,row,uid); if(!el){ await waitForMs(120); return; }
         const stage=v242CreateKamikakeStage(visibleRect(el)||el.getBoundingClientRect(),"rise");
@@ -36937,6 +36997,7 @@ BSC.engine = BSC.engine || Object.create(null);
     
     async function v125AnimateHisagiChains(sideKey,row,uid){
         if(cardChoicePreflightContext?.phase==='collect') return;
+        if(globalThis.BSCAnimationLab?.hisagi) return globalThis.BSCAnimationLab.hisagi(sideKey,row,uid);
         await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
         const {el,rect:r}=v125LiveCardRect(sideKey,row,uid); if(!r){await waitForMs(80);return;}
         const stage=document.createElement('div'); stage.className='v136-kazeshini-stage';
@@ -40624,6 +40685,7 @@ BSC.engine = BSC.engine || Object.create(null);
     
     async function v381AnimateLiltottoGlutton(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
         if(cardChoicePreflightContext?.phase==='collect') return;
+        if(globalThis.BSCAnimationLab?.glutton) return globalThis.BSCAnimationLab.glutton(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid);
         await v366DoubleRaf();
         const tr=v366CardRect(targetSideKey,targetRow,targetUid);
         if(!tr){ await waitForMs(504); return; }
@@ -40708,6 +40770,9 @@ BSC.engine = BSC.engine || Object.create(null);
     
     async function v381AnimateLiltottoGluttonAbsorb(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
         if(cardChoicePreflightContext?.phase==='collect') return;
+        /* Animation Lab Glutton is a complete replacement.
+           Do not append the legacy "particles fly back into Liltotto" tail. */
+        if(globalThis.BSCAnimationLab?.glutton) return;
         await v366DoubleRaf();
         const sr=v366CardRect(sourceSideKey,sourceRow,sourceUid)||v243RowStartRect(sourceSideKey,sourceRow)||v242BoardRect();
         const tr=v366CardRect(targetSideKey,targetRow,targetUid)||v243RowStartRect(targetSideKey,targetRow)||v242BoardRect();
@@ -48776,16 +48841,27 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     return r&&r.width>1&&r.height>1?r:null;
   }
   function cardData(sideKey,uid){
+    const el=document.querySelector(`.card[data-uid="${uid}"]`);
+    if(!el) return null;
+    const powerEl=el.querySelector('.power');
+    const nameEl=el.querySelector('.name');
+    const artEl=el.querySelector('.art');
+    let art=null;
     try{
-      const loc=typeof findBoardCardByUid==="function"?findBoardCardByUid(uid):null;
-      return loc?.card||null;
-    }catch(_){return null}
+      const bg=getComputedStyle(artEl).backgroundImage||'';
+      const m=bg.match(/url\(["']?(.*?)["']?\)/);
+      art=m?.[1]||null;
+    }catch(_){}
+    return {
+      uid,
+      name:(nameEl?.textContent||'').trim(),
+      currentPower:Number((powerEl?.textContent||'').trim())||null,
+      power:Number((powerEl?.textContent||'').trim())||null,
+      __labArt:art
+    };
   }
   function artSrc(card){
-    try{
-      const arr=typeof cardArtCandidates==="function"?cardArtCandidates(card):null;
-      return arr?.[0]||null;
-    }catch(_){return null}
+    return card?.__labArt||null;
   }
   function loadImg(src){
     return new Promise(resolve=>{
@@ -48796,6 +48872,89 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
       im.src=src;
     });
   }
+  function createExactLabCardClone(sourceEl,rect){
+    if(!sourceEl||!rect) return null;
+
+    const uid=sourceEl.dataset?.uid;
+    let card=null;
+    try{
+      card=globalThis.BSCAnimationCardBridge?.make?.(uid)||null;
+    }catch(err){
+      console.error('[BSC Animation Lab] real-card renderer failed',err);
+    }
+    if(!card) card=sourceEl.cloneNode(true);
+
+    /* Preserve the real battlefield CSS context. */
+    const host=document.createElement('div');
+    host.className='row-cards bsc-lab-card-host';
+    Object.assign(host.style,{
+      position:'fixed',
+      left:`${rect.left}px`,
+      top:`${rect.top}px`,
+      width:`${rect.width}px`,
+      height:`${rect.height}px`,
+      minWidth:`${rect.width}px`,
+      minHeight:`${rect.height}px`,
+      padding:'0',
+      margin:'0',
+      gap:'0',
+      overflow:'visible',
+      display:'block',
+      zIndex:'16551',
+      pointerEvents:'none'
+    });
+
+    card.classList.add('bsc-lab-exact-card');
+    card.classList.remove(
+      'manifest-hidden','returning-hidden','enter','landed-impact',
+      'dragging','selected','v242-kamikake-sink','v242-kamikake-emerge'
+    );
+
+    const importantStyles={
+      position:'absolute',left:'0',top:'0',width:'100%',height:'100%',
+      'min-width':'100%','max-width':'100%','min-height':'100%','max-height':'100%',
+      'aspect-ratio':'auto',flex:'none',margin:'0',opacity:'1',visibility:'visible',
+      filter:'none',transform:'none',transition:'none',animation:'none','pointer-events':'none'
+    };
+    for(const [prop,val] of Object.entries(importantStyles)){
+      card.style.setProperty(prop,val,'important');
+    }
+
+    const face=card.querySelector('.card-face');
+    if(face){
+      for(const [prop,val] of Object.entries({
+        width:'100%',height:'100%','min-width':'100%','max-width':'100%',
+        'min-height':'100%','max-height':'100%','aspect-ratio':'auto',
+        opacity:'1',visibility:'visible'
+      })){
+        face.style.setProperty(prop,val,'important');
+      }
+    }
+
+    const art=card.querySelector('.art');
+    if(art){
+      for(const [prop,val] of Object.entries({
+        display:'block',opacity:'1',visibility:'visible',
+        'background-size':'cover','background-repeat':'no-repeat'
+      })){
+        art.style.setProperty(prop,val,'important');
+      }
+    }
+
+    host.appendChild(card);
+    document.body.appendChild(host);
+    return host;
+  }
+
+  function animateExactLabCard(clone,keyframes,options){
+    if(!clone) return null;
+    try{
+      return clone.animate(keyframes,{fill:'both',...options});
+    }catch(_){
+      return null;
+    }
+  }
+
   function drawCard(c,img,x,y,w,h,label,power,alpha=1){
     c.save();c.globalAlpha*=alpha;round(c,x,y,w,h,Math.max(3,w*.06));c.clip();
     c.fillStyle='#182536';c.fillRect(x,y,w,h);
@@ -48926,13 +49085,14 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
 
   // Animation Lab: Soldat / Quincy Shadow.
   function drawSoldat(c,t,s,img,card){
-    if(t===0){drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);return}
+    const exactDom=!!card?.__labExactDom;
+    if(t===0){if(!exactDom) drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);return}
     const open=ease(phase(t,.02,.23))*(1-ease(phase(t,.77,1))),rise=ease(phase(t,.22,.68));
     const cx=s.x+s.w/2,cy=s.y+s.h+Math.max(3,s.h*.03);
     c.save();c.globalAlpha=open;glow(c,cx,cy,s.w*.85,'rgba(114,161,215,.2)');ellipse(c,cx,cy,s.w*.85*open,s.h*.09*open,'#02040b','#587792',1.2);ellipse(c,cx,cy,s.w*.72*open,s.h*.06*open,null,'#b3d6ed66',.7);c.restore();
-    if(rise>0){c.save();c.beginPath();c.rect(s.x-5,s.y+s.h*(1-rise)-4,s.w+10,s.h*rise+8);c.clip();drawCard(c,img,s.x,s.y+(1-rise)*s.h*.16,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);c.fillStyle=`rgba(1,4,13,${(1-ease(phase(t,.5,.82)))*.94})`;c.fillRect(s.x-5,s.y-5,s.w+10,s.h+20);c.restore()}
+    if(rise>0){c.save();c.beginPath();c.rect(s.x-5,s.y+s.h*(1-rise)-4,s.w+10,s.h*rise+8);c.clip();if(!exactDom) drawCard(c,img,s.x,s.y+(1-rise)*s.h*.16,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);c.fillStyle=`rgba(1,4,13,${(1-ease(phase(t,.5,.82)))*.94})`;c.fillRect(s.x-5,s.y-5,s.w+10,s.h+20);c.restore()}
     for(let i=0;i<13;i++){c.save();c.globalAlpha=open*.32*(1-rise*.6);const x=s.x-10+i*(s.w+20)/12;const g=c.createLinearGradient(0,cy,0,cy-s.h*.67);g.addColorStop(0,'#09101d');g.addColorStop(.6,'#45617b');g.addColorStop(1,'transparent');c.fillStyle=g;c.beginPath();c.moveTo(x,cy);c.bezierCurveTo(x+Math.sin(t*8+i)*s.w*.15,cy-s.h*.2,x-s.w*.1,cy-s.h*.4,x+s.w*.03,cy-s.h*(.58+(i%3)*.05));c.bezierCurveTo(x+s.w*.12,cy-s.h*.4,x+Math.cos(i+t*7)*s.w*.1,cy-s.h*.2,x+s.w*.06,cy);c.fill();c.restore()}
-    const cross=Math.sin(phase(t,.65,.87)*Math.PI);if(cross>0){c.save();c.globalAlpha=cross*.85;c.strokeStyle='#c8f2ff';c.lineWidth=1.2;c.beginPath();c.moveTo(cx,s.y+s.h*.17);c.lineTo(cx,s.y+s.h*.38);c.moveTo(cx-s.w*.13,s.y+s.h*.27);c.lineTo(cx+s.w*.13,s.y+s.h*.27);c.stroke();c.restore()}
+    /* exact game card is shown here; no synthetic cross/card marker */
   }
 
   function darkPool(c,cx,y,w,alpha){c.save();c.globalAlpha=alpha;glow(c,cx,y,w*.82,'rgba(153,169,190,.13)');ellipse(c,cx,y,w*.7,Math.max(4,w*.12),'#020408','#738798',.8);for(let k=0;k<3;k++){c.globalAlpha=alpha*(.32-k*.07);ellipse(c,cx,y,w*(.72+k*.11),Math.max(4,w*.12)+k*3,null,'#aec3ce',.65)}c.restore()}
@@ -48946,13 +49106,14 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     }
   }
   function drawKamikake(c,t,s,img,card){
+    const exactDom=!!card?.__labExactDom;
     const cx=s.x+s.w/2,base=s.y+s.h+7;
     const pool=ease(phase(t,.02,.18))*(1-ease(phase(t,.82,1))),cover=ease(phase(t,.12,.47)),sink=ease(phase(t,.42,.8));
     darkPool(c,cx,base,s.w,pool);
     if(sink<1){
       c.save();c.beginPath();c.rect(s.x-8,s.y-25,s.w+16,s.h+31);c.clip();
       const dy=sink*s.h*1.15,sw=s.w*(1-sink*.14),xx=cx-sw/2;
-      drawCard(c,img,xx,s.y+dy,sw,s.h,card?.name||'Джуширо Укитаке',card?.currentPower??card?.power??7,1-sink*.55);
+      if(!exactDom) drawCard(c,img,xx,s.y+dy,sw,s.h,card?.name||'Джуширо Укитаке',card?.currentPower??card?.power??7,1-sink*.55);
       c.save();round(c,xx,s.y+dy,sw,s.h,7);c.clip();
       const ink=c.createLinearGradient(0,s.y+s.h*(1-cover),0,s.y+s.h);ink.addColorStop(0,'rgba(0,3,10,0)');ink.addColorStop(.33,'rgba(2,5,13,.64)');ink.addColorStop(1,'#01030a');c.fillStyle=ink;c.fillRect(xx,s.y+s.h*(1-cover),sw,s.h*cover+dy);c.restore();c.restore();
     }
@@ -48963,36 +49124,157 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
   }
 
   async function labHisagi(sideKey,row,uid){
-    if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
     return overlayFor(rect,Math.round(6200/1.7),drawHisagi,{card,hideEl:el});
   }
   async function labGlutton(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
-    if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     const el=actualCard(targetSideKey,targetRow,targetUid),rect=cardRect(targetSideKey,targetRow,targetUid),card=cardData(targetSideKey,targetUid);
     return overlayFor(rect,Math.round(4350/1.5),drawGlutton,{card,hideEl:el});
   }
   async function labSoldat(sideKey,row,uid){
-    if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
-    return overlayFor(rect,Math.round(4600/1.5),drawSoldat,{card,hideEl:el});
+    if(!el||!rect){ await wait(120); return; }
+
+    /* Use the REAL Soldat card already rendered in the row.
+       Canvas draws only the shadow manifestation around it. */
+    if(card) card.__labExactDom=true;
+
+    const previous={
+      visibility:el.style.visibility,
+      opacity:el.style.opacity,
+      transform:el.style.transform,
+      filter:el.style.filter,
+      transition:el.style.transition,
+      zIndex:el.style.zIndex
+    };
+
+    el.classList.remove('manifest-hidden');
+    el.style.setProperty('visibility','visible','important');
+    el.style.setProperty('opacity','0','important');
+    el.style.setProperty('transform','translateY(18px) scale(.96)','important');
+    el.style.setProperty('filter','brightness(.06) saturate(.16) contrast(1.14)','important');
+    el.style.setProperty('transition','none','important');
+    el.style.setProperty('z-index','30','important');
+
+    const duration=Math.round(4600/1.5);
+    const anim=el.animate([
+      {opacity:0,transform:'translateY(18px) scale(.96)',filter:'brightness(.06) saturate(.16) contrast(1.14)',offset:0},
+      {opacity:.18,transform:'translateY(12px) scale(.97)',filter:'brightness(.16) saturate(.28) contrast(1.1)',offset:.22},
+      {opacity:.78,transform:'translateY(3px) scale(.995)',filter:'brightness(.62) saturate(.72)',offset:.54},
+      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:.72},
+      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:1}
+    ],{duration,easing:'cubic-bezier(.18,.82,.22,1)',fill:'both'});
+
+    try{
+      await overlayFor(rect,duration,drawSoldat,{card,hideEl:null});
+    } finally {
+      try{anim.cancel()}catch(_){}
+      el.classList.remove('manifest-hidden');
+      el.style.setProperty('visibility','visible','important');
+      el.style.setProperty('opacity','1','important');
+      el.style.setProperty('transform','none','important');
+      el.style.setProperty('filter','none','important');
+      el.style.setProperty('transition','none','important');
+      if(previous.zIndex) el.style.zIndex=previous.zIndex;
+      else el.style.removeProperty('z-index');
+      if(card) delete card.__labExactDom;
+    }
   }
   async function labKamikake(sideKey,row,uid){
-    if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
-    return overlayFor(rect,3100,drawKamikake,{card,hideEl:el});
+    if(card) card.__labExactDom=true;
+    const clone=createExactLabCardClone(el,rect);
+    const duration=3100;
+    const anim=animateExactLabCard(clone,[
+      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:0},
+      {opacity:1,transform:'translateY(2px) scale(.99)',filter:'brightness(.8)',offset:.36},
+      {opacity:.62,transform:'translateY(10px) scale(.94,.82)',filter:'brightness(.25) grayscale(.7)',offset:.66},
+      {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.04) grayscale(1)',offset:.82},
+      {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.04) grayscale(1)',offset:1}
+    ],{duration,easing:'cubic-bezier(.22,.78,.28,1)'});
+    try{
+      return await overlayFor(rect,duration,drawKamikake,{card,hideEl:el});
+    } finally {
+      try{anim?.cancel()}catch(_){}
+      clone?.remove();
+      if(card) delete card.__labExactDom;
+    }
   }
   async function labMimihagiReverse(sideKey,row,uid){
-    if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
-    return overlayFor(rect,3100,(c,p,s,img,card)=>drawKamikake(c,1-p,s,img,card),{card,hideEl:el});
+    if(!el||!rect){ await wait(120); return; }
+
+    /* Mimihagi is already the REAL transformed card in game state.
+       Reveal that exact live node by reversing the Kamikake sink geometry. */
+    if(card) card.__labExactDom=true;
+
+    el.classList.remove('manifest-hidden','returning-hidden','v242-kamikake-sink','v242-kamikake-emerge');
+    el.style.setProperty('visibility','visible','important');
+    el.style.setProperty('opacity','0','important');
+    el.style.setProperty('transform','translateY(24px) scale(.82,.42)','important');
+    el.style.setProperty('transform-origin','50% 100%','important');
+    el.style.setProperty('filter','brightness(.05) grayscale(.92)','important');
+    el.style.setProperty('transition','none','important');
+    el.style.setProperty('z-index','30','important');
+
+    const duration=3100;
+    const anim=el.animate([
+      {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.05) grayscale(.92)',offset:0},
+      {opacity:.22,transform:'translateY(17px) scale(.88,.60)',filter:'brightness(.13) grayscale(.82)',offset:.20},
+      {opacity:.62,transform:'translateY(9px) scale(.94,.78)',filter:'brightness(.36) grayscale(.55)',offset:.42},
+      {opacity:.94,transform:'translateY(2px) scale(.99,.97)',filter:'brightness(.82) grayscale(.12)',offset:.68},
+      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:.82},
+      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:1}
+    ],{duration,easing:'cubic-bezier(.18,.82,.22,1)',fill:'both'});
+
+    try{
+      await overlayFor(
+        rect,
+        duration,
+        (c,p,s,img,card)=>drawKamikake(c,1-p,s,img,card),
+        {card,hideEl:null}
+      );
+    } finally {
+      try{anim.cancel()}catch(_){}
+      el.classList.remove('manifest-hidden','returning-hidden','v242-kamikake-sink','v242-kamikake-emerge');
+      el.style.setProperty('visibility','visible','important');
+      el.style.setProperty('opacity','1','important');
+      el.style.setProperty('transform','none','important');
+      el.style.setProperty('filter','none','important');
+      el.style.removeProperty('transform-origin');
+      el.style.removeProperty('z-index');
+      el.style.removeProperty('transition');
+      if(card) delete card.__labExactDom;
+    }
   }
 
+  /* v5.5.5 — expose the Lab renderers.
+     The previous integration tried to reassign game functions from this
+     separate script, but the real functions live inside the main game IIFE
+     and are not visible here.  The main functions now explicitly delegate
+     to this public bridge instead. */
+  const safeLab=(name,fn)=>async(...args)=>{
+    try{
+      return await fn(...args);
+    }catch(err){
+      console.error(`[BSC Animation Lab] ${name} failed`,err);
+      throw err;
+    }
+  };
+  globalThis.BSCAnimationLab=Object.freeze({
+    hisagi:safeLab("hisagi",labHisagi),
+    glutton:safeLab("glutton",labGlutton),
+    soldat:safeLab("soldat",labSoldat),
+    kamikake:safeLab("kamikake",labKamikake),
+    mimihagi:safeLab("mimihagi",labMimihagiReverse)
+  });
+
+  // Legacy replacement attempt kept harmlessly for compatibility.
   // Replace only the requested VFX, keeping gameplay code untouched.
   try{
     if(typeof v303Original==="object"){
@@ -49681,6 +49963,367 @@ html.mobile-pwa #restartBtn::before{
   position:absolute!important;
   inset:-8px -10px!important;
   pointer-events:auto!important;
+}
+</style>
+
+
+<script id="bsc-v1555-animation-lab-routing-marker">
+addEventListener("DOMContentLoaded",()=>{
+  document.documentElement.dataset.animationLabRouting =
+    globalThis.BSCAnimationLab ? "active" : "missing";
+},{once:true});
+</script>
+
+
+<style id="bsc-v1556-pwa-scroll-cue-restart-real">
+/* PWA only */
+
+/* Replace the unreliable iOS scrollbar with a persistent on-screen affordance. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-modal::after{
+  content:none!important;
+  display:none!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-modal{
+  overflow:visible!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid{
+  position:relative!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+html.mobile-pwa .pwa-mulligan-scroll-cue{
+  position:absolute!important;
+  left:50%!important;
+  bottom:62px!important;
+  transform:translateX(-50%)!important;
+  z-index:999!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  min-width:128px!important;
+  height:28px!important;
+  padding:0 12px!important;
+  border:1px solid rgba(255,255,255,.34)!important;
+  border-radius:999px!important;
+  background:rgba(5,5,5,.88)!important;
+  color:#fff!important;
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.48),
+    inset 0 -3px 0 #ff5a16!important;
+  font-family:Impact,"Arial Narrow",sans-serif!important;
+  font-size:10px!important;
+  line-height:1!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+  pointer-events:none!important;
+  opacity:1!important;
+}
+html.mobile-pwa .pwa-mulligan-scroll-cue::after{
+  content:"↓"!important;
+  display:block!important;
+  font-size:17px!important;
+  line-height:1!important;
+  animation:pwaMulliganScrollArrow .72s ease-in-out infinite alternate!important;
+}
+html.mobile-pwa .pwa-mulligan-scroll-cue.is-hidden{
+  display:none!important;
+}
+@keyframes pwaMulliganScrollArrow{
+  from{transform:translateY(-2px)}
+  to{transform:translateY(3px)}
+}
+
+/* Add a bottom fade too, so the clipped next row visibly reads as scrollable. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid{
+  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 24px),rgba(0,0,0,.42) calc(100% - 8px),transparent 100%)!important;
+  mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 24px),rgba(0,0,0,.42) calc(100% - 8px),transparent 100%)!important;
+}
+
+/* "Новая игра": make the button itself visibly/tappably larger,
+   while its layout box in .top-controls stays unchanged. */
+html.mobile-pwa .topbar,
+html.mobile-pwa .top-controls{
+  overflow:visible!important;
+}
+html.mobile-pwa #restartBtn{
+  transform:scale(1.45)!important;
+  transform-origin:center right!important;
+  position:relative!important;
+  z-index:80!important;
+  touch-action:manipulation!important;
+  will-change:transform!important;
+}
+html.mobile-pwa #restartBtn:hover,
+html.mobile-pwa #restartBtn:focus,
+html.mobile-pwa #restartBtn:focus-visible,
+html.mobile-pwa #restartBtn:active{
+  transform:scale(1.45)!important;
+}
+html.mobile-pwa #restartBtn::before{
+  content:none!important;
+  display:none!important;
+}
+</style>
+
+<script id="bsc-v1556-pwa-scroll-cue-runtime">
+(() => {
+  if(!document.documentElement.classList.contains('mobile-pwa')) return;
+
+  const ensureCue = () => {
+    const overlay = document.getElementById('mulliganOverlay');
+    const modal = overlay?.querySelector('.mulligan-modal');
+    const grid = overlay?.querySelector('.mulligan-grid');
+    if(!overlay || !modal || !grid) return;
+
+    let cue = modal.querySelector('.pwa-mulligan-scroll-cue');
+    if(!cue){
+      cue = document.createElement('div');
+      cue.className = 'pwa-mulligan-scroll-cue';
+      cue.textContent = 'ЕЩЁ КАРТЫ';
+      cue.setAttribute('aria-hidden','true');
+      modal.appendChild(cue);
+    }
+
+    const update = () => {
+      const scrollable = grid.scrollHeight > grid.clientHeight + 6;
+      const atBottom = grid.scrollTop + grid.clientHeight >= grid.scrollHeight - 8;
+      cue.classList.toggle('is-hidden', !scrollable || atBottom);
+    };
+
+    if(!grid.dataset.pwaScrollCueBound){
+      grid.dataset.pwaScrollCueBound = '1';
+      grid.addEventListener('scroll', update, {passive:true});
+      addEventListener('resize', update, {passive:true});
+    }
+
+    requestAnimationFrame(()=>requestAnimationFrame(update));
+  };
+
+  const overlay = document.getElementById('mulliganOverlay');
+  if(overlay){
+    new MutationObserver(ensureCue).observe(overlay,{
+      attributes:true,
+      attributeFilter:['class'],
+      childList:true,
+      subtree:true
+    });
+  }
+
+  addEventListener('DOMContentLoaded', ensureCue, {once:true});
+  requestAnimationFrame(ensureCue);
+})();
+</script>
+
+
+<style id="bsc-v1558-pwa-visible-scrollbar">
+/* PWA only — remove the previous "ЕЩЁ КАРТЫ" badge. */
+html.mobile-pwa .pwa-mulligan-scroll-cue{
+  display:none!important;
+}
+
+/* Leave room for a real always-visible custom scrollbar. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid{
+  padding-right:18px!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+
+/* Persistent custom scrollbar track. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar{
+  position:absolute!important;
+  top:112px!important;
+  right:9px!important;
+  bottom:70px!important;
+  width:7px!important;
+  z-index:1000!important;
+  display:block!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.20)!important;
+  border:1px solid rgba(0,0,0,.28)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.20),
+    0 0 0 1px rgba(255,255,255,.08)!important;
+  pointer-events:none!important;
+  opacity:1!important;
+}
+
+/* The orange thumb is visible even before the player scrolls. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar-thumb{
+  position:absolute!important;
+  left:0!important;
+  top:0;
+  width:100%!important;
+  min-height:38px!important;
+  border-radius:999px!important;
+  background:linear-gradient(180deg,#ff9b38 0%,#ff5a16 55%,#d93b00 100%)!important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.38),
+    0 0 7px rgba(255,90,22,.48)!important;
+  transform:translateY(0);
+  will-change:transform,height!important;
+}
+
+/* Small arrows at both ends reinforce that the list moves vertically. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar::before,
+html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar::after{
+  position:absolute!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+  color:#111!important;
+  font-size:8px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  text-shadow:0 1px rgba(255,255,255,.25)!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar::before{
+  content:"▲"!important;
+  top:2px!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar::after{
+  content:"▼"!important;
+  bottom:2px!important;
+}
+</style>
+
+<script id="bsc-v1558-pwa-visible-scrollbar-runtime">
+(() => {
+  if(!document.documentElement.classList.contains('mobile-pwa')) return;
+
+  const setup = () => {
+    const overlay = document.getElementById('mulliganOverlay');
+    const modal = overlay?.querySelector('.mulligan-modal');
+    const grid = overlay?.querySelector('.mulligan-grid');
+    if(!overlay || !modal || !grid) return;
+
+    /* Remove the old badge completely, rather than merely hiding it. */
+    modal.querySelectorAll('.pwa-mulligan-scroll-cue').forEach(el=>el.remove());
+
+    let bar = modal.querySelector('.pwa-mulligan-scrollbar');
+    if(!bar){
+      bar = document.createElement('div');
+      bar.className = 'pwa-mulligan-scrollbar';
+      bar.setAttribute('aria-hidden','true');
+
+      const thumb = document.createElement('div');
+      thumb.className = 'pwa-mulligan-scrollbar-thumb';
+      bar.appendChild(thumb);
+      modal.appendChild(bar);
+    }
+
+    const thumb = bar.querySelector('.pwa-mulligan-scrollbar-thumb');
+
+    const update = () => {
+      const scrollRange = Math.max(0, grid.scrollHeight - grid.clientHeight);
+      const trackH = Math.max(1, bar.clientHeight);
+      const scrollable = scrollRange > 4;
+
+      bar.style.display = scrollable ? 'block' : 'none';
+      if(!scrollable) return;
+
+      const ratio = Math.min(1, grid.clientHeight / Math.max(grid.scrollHeight,1));
+      const thumbH = Math.max(38, Math.round(trackH * ratio));
+      const travel = Math.max(0, trackH - thumbH);
+      const progress = scrollRange ? Math.min(1, Math.max(0, grid.scrollTop / scrollRange)) : 0;
+
+      thumb.style.height = `${thumbH}px`;
+      thumb.style.transform = `translateY(${Math.round(travel * progress)}px)`;
+    };
+
+    if(!grid.dataset.pwaVisibleScrollbarBound){
+      grid.dataset.pwaVisibleScrollbarBound = '1';
+      grid.addEventListener('scroll', update, {passive:true});
+      addEventListener('resize', update, {passive:true});
+    }
+
+    requestAnimationFrame(()=>requestAnimationFrame(update));
+  };
+
+  const overlay = document.getElementById('mulliganOverlay');
+  if(overlay){
+    new MutationObserver(setup).observe(overlay,{
+      attributes:true,
+      attributeFilter:['class'],
+      childList:true,
+      subtree:true
+    });
+  }
+
+  addEventListener('DOMContentLoaded', setup, {once:true});
+  requestAnimationFrame(setup);
+})();
+</script>
+
+
+<style id="bsc-v1559-animation-exact-card-clones">
+.bsc-lab-exact-card{
+  pointer-events:none!important;
+  animation:none!important;
+  transition:none!important;
+}
+.bsc-lab-exact-card:hover,
+.bsc-lab-exact-card:focus,
+.bsc-lab-exact-card:active{
+  filter:none!important;
+}
+.bsc-lab-exact-card > .card-face{
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+}
+</style>
+
+
+<style id="bsc-v15511-real-game-card-snapshots">
+.bsc-lab-exact-card,
+.bsc-lab-exact-card:hover,
+.bsc-lab-exact-card:focus,
+.bsc-lab-exact-card:active{
+  pointer-events:none!important;
+  animation:none!important;
+  transition:none!important;
+  visibility:visible!important;
+}
+.bsc-lab-exact-card .bsc-target-visual,
+.bsc-lab-exact-card .row-badge{
+  display:none!important;
+}
+</style>
+
+
+<style id="bsc-v15512-lab-real-card-render-bridge">
+.bsc-lab-card-host{
+  box-sizing:border-box!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+}
+.bsc-lab-card-host>.bsc-lab-exact-card,
+.bsc-lab-card-host>.bsc-lab-exact-card:hover,
+.bsc-lab-card-host>.bsc-lab-exact-card:focus,
+.bsc-lab-card-host>.bsc-lab-exact-card:active{
+  pointer-events:none!important;
+  animation:none!important;
+  transition:none!important;
+}
+.bsc-lab-card-host>.bsc-lab-exact-card>.card-face{
+  width:100%!important;
+  height:100%!important;
+  aspect-ratio:auto!important;
+}
+.bsc-lab-card-host>.bsc-lab-exact-card>.card-face>.art{
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+</style>
+
+
+<style id="bsc-v15513-live-card-lab-cleanup">
+/* v5.5.13: the only temporary card host still permitted is Kamikake's Ukitake sink.
+   Soldat and Mimihagi animate their actual battlefield nodes. */
+.bsc-lab-card-host{
+  pointer-events:none!important;
 }
 </style>
 
