@@ -34139,6 +34139,9 @@ BSC.engine = BSC.engine || Object.create(null);
         if(!targetRect||!deckRect){ await waitForMs(140); return; }
         const sx=deckRect.left+deckRect.width*.5, sy=deckRect.top+deckRect.height*.48;
         const tx=targetRect.left+targetRect.width*.5, ty=targetRect.top+targetRect.height*.5;
+        const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
+        const pileSpreadX=mobileBrowser?Math.max(3,deckRect.width*.34):12;
+        const pileSpreadY=mobileBrowser?Math.max(4,deckRect.height*.30):10;
         const stage=document.createElement('div'); stage.className='v31-sklaverei-stage';
         document.body.appendChild(stage);
         sourceEl?.classList.add('v31-sklaverei-absorbing'); deckEl?.classList.add('v31-sklaverei-source');
@@ -34146,7 +34149,7 @@ BSC.engine = BSC.engine || Object.create(null);
         const lineCount=14;
         for(let i=0;i<lineCount;i++){
           const line=document.createElement('i'); line.className='v31-reishi-thread';
-          const ox=(-12+Math.random()*24), oy=(-10+Math.random()*20);
+          const ox=(-pileSpreadX+Math.random()*pileSpreadX*2), oy=(-pileSpreadY+Math.random()*pileSpreadY*2);
           const lx=sx+ox, ly=sy+oy, ldx=tx-lx, ldy=ty-ly;
           line.style.left=`${lx}px`; line.style.top=`${ly}px`; line.style.setProperty('--len',`${Math.hypot(ldx,ldy)}px`); line.style.setProperty('--ang',`${Math.atan2(ldy,ldx)*180/Math.PI}deg`); line.style.setProperty('--delay',`${80+i*42}ms`); stage.appendChild(line);
         }
@@ -34386,8 +34389,16 @@ BSC.engine = BSC.engine || Object.create(null);
         const pile=document.getElementById(pileId);
         const r=visibleRect(deck)||visibleRect(pile);
         if(!r) return null;
-        const width=Math.max(34,Math.min(r.width*.92,target.width*1.05));
-        const height=width*1.5;
+        const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
+        /* Mobile Browser: the right rail piles are intentionally tiny now.
+           Start the flight from their real visual footprint instead of expanding
+           the source card to the old 34px minimum. */
+        const width=mobileBrowser
+          ? Math.max(10,Math.min(r.width*.96,target.width*.72))
+          : Math.max(34,Math.min(r.width*.92,target.width*1.05));
+        const height=mobileBrowser
+          ? Math.max(14,Math.min(r.height*.96,width*1.5))
+          : width*1.5;
         return {left:r.left+(r.width-width)/2,top:r.top+(r.height-height)/2,width,height};
       }
     
@@ -34547,8 +34558,15 @@ BSC.engine = BSC.engine || Object.create(null);
         const pile=document.getElementById(pileId);
         const r=visibleRect(discard)||visibleRect(pile);
         if(!r) return null;
-        const width=Math.max(34,Math.min(r.width*.92,(target?.width||r.width)*1.05));
-        const height=width*1.5;
+        const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
+        /* Same rule for graveyard-origin flights: originate from the current
+           discard card itself, not from the historical desktop-sized minimum. */
+        const width=mobileBrowser
+          ? Math.max(10,Math.min(r.width*.96,(target?.width||r.width)*.72))
+          : Math.max(34,Math.min(r.width*.92,(target?.width||r.width)*1.05));
+        const height=mobileBrowser
+          ? Math.max(14,Math.min(r.height*.96,width*1.5))
+          : width*1.5;
         return {
           left:r.left+(r.width-width)/2,
           top:r.top+(r.height-height)/2,
@@ -34880,7 +34898,11 @@ BSC.engine = BSC.engine || Object.create(null);
         ghost.appendChild(name); stage.appendChild(ghost);
     
         const mouth=document.createElement('div');
-        const mw=Math.max(130,r.width*1.9), mh=Math.max(100,r.height*1.35);
+        const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
+        /* Aaroniero used desktop minimums (130×100), which dwarfed the new mobile grave.
+           Scale the mouth from the live grave rect on Mobile Browser. */
+        const mw=mobileBrowser?Math.max(58,Math.min(82,r.width*3.0)):Math.max(130,r.width*1.9);
+        const mh=mobileBrowser?Math.max(64,Math.min(96,r.height*2.45)):Math.max(100,r.height*1.35);
         mouth.style.cssText=`position:fixed;left:${cx-mw/2}px;top:${cy-mh/2}px;width:${mw}px;height:${mh}px;filter:drop-shadow(0 0 12px rgba(88,22,105,.72));`;
         stage.appendChild(mouth);
         const makeJaw=(upper)=>{
@@ -40412,12 +40434,13 @@ BSC.engine = BSC.engine || Object.create(null);
         const view=activeViewSide(),pileRoot=sideKey===view?$("#playerPile"):$("#enemyPile");
         const graveEl=pileRoot?.querySelector?.(".discard-stack");
         const gr=graveEl?.getBoundingClientRect?.()||{left:s.x-25,top:s.y+90,width:50,height:70};
+        const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
         const g={x:gr.left+gr.width/2,y:gr.top+gr.height/2};
         const stage=document.createElement('div');stage.className='v386-zombie-stage';document.body.appendChild(stage);
         const ghost=document.createElement('div');ghost.className='v386-zombie-ghost';
         Object.assign(ghost.style,{left:`${gr.left}px`,top:`${gr.top}px`,width:`${gr.width}px`,height:`${gr.height}px`,backgroundImage:cardArtBg(revivedCard),backgroundPosition:cardArtPosition(revivedCard)});
         stage.appendChild(ghost);
-        for(let i=0;i<7;i++){const th=document.createElement('i');th.className='v386-zombie-thread';const y=g.y-18+i*6;const dx=s.x-g.x,dy=s.y-y,len=Math.hypot(dx,dy),a=Math.atan2(dy,dx)*270/Math.PI;Object.assign(th.style,{left:`${g.x}px`,top:`${y}px`,width:`${len}px`,transform:`rotate(${a}deg)`});th.style.setProperty('--delay',`${i*52}ms`);stage.appendChild(th);}
+        for(let i=0;i<7;i++){const th=document.createElement('i');th.className='v386-zombie-thread';const threadSpan=mobileBrowser?Math.max(10,gr.height*.66):36;const y=g.y-threadSpan/2+i*(threadSpan/6);const dx=s.x-g.x,dy=s.y-y,len=Math.hypot(dx,dy),a=Math.atan2(dy,dx)*270/Math.PI;Object.assign(th.style,{left:`${g.x}px`,top:`${y}px`,width:`${len}px`,transform:`rotate(${a}deg)`});th.style.setProperty('--delay',`${i*52}ms`);stage.appendChild(th);}
         const z=document.createElement('b');z.className='v386-zombie-z';z.textContent='Z';z.style.left=`${g.x}px`;z.style.top=`${g.y}px`;stage.appendChild(z);
         ghost.animate?.([{opacity:0,filter:'grayscale(1) brightness(.45)',transform:'scale(.76)'},{offset:.28,opacity:.75,filter:'grayscale(.8) brightness(.68)',transform:'scale(.92)'},{offset:.66,opacity:1,filter:'grayscale(.2) brightness(1.18)',transform:'translate(0,-12px) scale(1.02)'},{opacity:0,filter:'grayscale(0) brightness(1.5)',transform:`translate(${s.x-g.x}px,${s.y-g.y}px) scale(.38)`}],{duration:1380,easing:'cubic-bezier(.18,.72,.2,1)',fill:'forwards'});
         z.animate?.([{opacity:0,transform:'translate(-50%,-50%) scale(.3)'},{offset:.24,opacity:1,transform:'translate(-50%,-50%) scale(1)'},{offset:.65,opacity:.9},{opacity:0,transform:'translate(-50%,-50%) scale(1.4)'}],{duration:1200,easing:'ease-out',fill:'forwards'});
@@ -45302,7 +45325,17 @@ function v149StartMedicGraveBarrier(sideKey, sourceCard){
     if(cardChoicePreflightContext?.phase==='collect') return null;
     const host=v149GraveBarrierHost(sideKey);
     const rect=visibleRect(host);
-    return rect ? v149CreateMedicBarrierStage(rect, sourceCard, {padX:12,padY:12}) : null;
+    if(!rect) return null;
+    /* Grave barrier padding follows the tiny Mobile Browser grave instead of
+       using the old 12px desktop padding around a ~22×30px element. */
+    const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
+    return v149CreateMedicBarrierStage(
+      rect,
+      sourceCard,
+      mobileBrowser
+        ? {padX:Math.max(2,rect.width*.12),padY:Math.max(2,rect.height*.08)}
+        : {padX:12,padY:12}
+    );
   }
 
 function v62PrepareNigekiSecondStrike(sourceSideKey,sourceUid,targetSideKey,targetRow,targetUid){
@@ -49285,6 +49318,129 @@ html.mobile-pwa #soulSuicideOverlay:not(.hidden) > .soul-suicide-modal{
   flex:0 0 auto!important;
   align-self:center!important;
   margin:auto!important;
+}
+</style>
+
+
+<style id="bsc-v151-mobile-browser-counter-medic-press">
+/* Mobile Browser only */
+
+/* 1) Deck / grave counters:
+   make the white circle about 10% smaller, while making the faction ring a bit stronger. */
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner .discard-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner .discard-number{
+  width:13px!important;
+  height:13px!important;
+  min-width:13px!important;
+  min-height:13px!important;
+  max-width:13px!important;
+  max-height:13px!important;
+
+  /* still no black rim */
+  border:0!important;
+
+  /* slightly thicker faction-colour rim */
+  outline-width:1px!important;
+  outline-offset:0!important;
+
+  font-size:6.8px!important;
+  line-height:1!important;
+}
+
+/* keep the smaller badge visually centered outside the cards */
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner > .discard-stack .discard-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner > .discard-stack .discard-number{
+  left:-16px!important;
+}
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner > .deck-stack .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner > .deck-stack .deck-number{
+  right:-16px!important;
+}
+
+/* 2) MEDIC picker:
+   never enlarge / lift a card on tap, active, focus or sticky mobile :hover. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-btn,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-btn:hover,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-btn:focus,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-btn:focus-visible,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-btn:active{
+  transform:none!important;
+  filter:none!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-preview,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-preview:hover,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-preview:focus,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-preview:focus-visible,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-preview:active,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice .choice-card-preview.card:hover{
+  transform:none!important;
+  filter:none!important;
+}
+</style>
+
+
+<style id="bsc-v152-mobile-browser-vfx-geometry">
+/* Mobile Browser only — scale pile-bound VFX decoration to the compact right rail. */
+html.mobile-browser .v31-sklaverei-source{
+  filter:none!important;
+}
+html.mobile-browser .v182-zanka-grave-flight,
+html.mobile-browser .deck-summon-flight{
+  box-shadow:none!important;
+}
+html.mobile-browser .v386-zombie-thread{
+  height:1px!important;
+}
+html.mobile-browser .v386-zombie-z{
+  font-size:10px!important;
+  text-shadow:0 0 3px rgba(130,190,255,.65)!important;
+}
+</style>
+
+
+<style id="bsc-v153-mobile-browser-rotate-install-hint">
+/* Mobile Browser only:
+   the install hint already exists in the rotate card markup, but an older
+   html.mobile-ui rule hides the entire browser-specific block.
+   Re-enable that block specifically for mobile-browser. */
+html.mobile-browser .rotate-device-card .rotate-browser-copy{
+  display:block!important;
+}
+html.mobile-browser .rotate-device-card .rotate-pwa-copy{
+  display:none!important;
+}
+html.mobile-browser .rotate-device-card .rotate-browser-install{
+  display:block!important;
 }
 </style>
 
