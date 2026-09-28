@@ -17514,6 +17514,47 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
 
   let cardChoicePreflightContext=null;
   const cardChoicePreflightPlans=new Map();
+
+  /* v152 — target picker registry.
+     Legal target identity lives outside transient DOM nodes so a board render can
+     never create an unmarked legal card for even one painted frame. */
+  let activeBoardTargetSession=null;
+  const boardTargetKey=(sideKey,row,uid)=>`${sideKey||""}|${row||""}|${uid||""}`;
+  function clearBoardTargetMarker(el){
+    if(!el) return;
+    el.classList.remove("v370-board-card-target","v370-board-card-linked","v370-board-card-primary");
+    if(el.dataset?.bscTargetPicker==="1"){
+      delete el.dataset.bscTargetPicker;
+      el.removeAttribute("tabindex");
+      el.removeAttribute("aria-label");
+    }
+  }
+  function syncBoardTargetMarker(el,sideKey,row,card){
+    if(!el||!card?.uid) return false;
+    const session=activeBoardTargetSession;
+    const opt=session?.targetsByKey?.get(boardTargetKey(sideKey,row,card.uid))||null;
+    if(!opt){
+      if(el.dataset?.bscTargetPicker==="1") clearBoardTargetMarker(el);
+      return false;
+    }
+    el.classList.add("v370-board-card-target");
+    el.dataset.bscTargetPicker="1";
+    el.setAttribute("tabindex","0");
+    el.setAttribute("aria-label",`${session.title||"ЦЕЛЬ"}: ${opt.card?.name||card.name||"цель"}`);
+    return true;
+  }
+  function clearBoardTargetMarkers(){
+    boardEl?.querySelectorAll?.('.card[data-bsc-target-picker="1"],.card.v370-board-card-target,.card.v370-board-card-linked,.card.v370-board-card-primary')
+      .forEach(clearBoardTargetMarker);
+  }
+  function syncLiveBoardTargetMarkers(){
+    if(!boardEl) return;
+    boardEl.querySelectorAll('.row[data-side][data-row] .card[data-uid]').forEach(el=>{
+      const rowEl=el.closest('.row[data-side][data-row]');
+      if(!rowEl) return;
+      syncBoardTargetMarker(el,rowEl.dataset.side,rowEl.dataset.row,{uid:el.dataset.uid,name:el.querySelector?.('.name')?.textContent||''});
+    });
+  }
   function randomIndex(max){
     if(max<=1) return 0;
     const ctx=cardChoicePreflightContext;
@@ -22276,34 +22317,24 @@ function isNanaoBarrierActive(card){
           return el?{opt,el}:null;
         }).filter(Boolean);
         if(!targets.length){ proxyEls.forEach(el=>el.remove()); resolve(null); return; }
+
+        const targetsByKey=new Map();
+        for(const {opt} of targets){
+          targetsByKey.set(boardTargetKey(opt.sideKey,opt.row,opt.card.uid),opt);
+        }
+        const session={title,targetsByKey};
+        activeBoardTargetSession=session;
+
+        const targetEntryForEl=cardEl=>{
+          if(!cardEl?.dataset?.uid) return null;
+          const rowEl=cardEl.closest?.('.row[data-side][data-row]');
+          if(!rowEl) return null;
+          const key=boardTargetKey(rowEl.dataset.side,rowEl.dataset.row,cardEl.dataset.uid);
+          const opt=targetsByKey.get(key)||null;
+          return opt?{opt,el:cardEl}:null;
+        };
+
         let settled=false;
-        const listeners=[];
-        const finish=opt=>{
-          if(settled) return;
-          settled=true;
-          cleanup();
-          resolve(opt||null);
-        };
-        const onKey=e=>{
-          if(e.key!=="Escape") return;
-          e.preventDefault(); e.stopPropagation();
-          finish(null);
-        };
-        const onCardCancel=e=>{
-          const clickedCard=e.target?.closest?.(".card");
-          if(!clickedCard) return;
-          // A highlighted legal target keeps its normal selection click.
-          // Any other card (the source card, another hand card, or a non-target
-          // battlefield card) cancels the pending choice.
-          if(clickedCard.classList.contains("v370-board-card-target")) return;
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation?.();
-          if(settled) return;
-          settled=true;
-          cleanup();
-          reject(GAMEPLAY_CHOICE_CANCELLED);
-        };
         const clearHoverGroup=()=>{
           boardEl?.querySelectorAll?.(".v370-board-card-linked,.v370-board-card-primary").forEach(el=>el.classList.remove("v370-board-card-linked","v370-board-card-primary"));
         };
@@ -22323,84 +22354,91 @@ function isNanaoBarrierActive(card){
             const linkedEl=boardEl?.querySelector?.(`.row[data-side="${sideKey}"][data-row="${entry.row}"] .card[data-uid="${entry.card.uid}"]`);
             linkedEl?.classList.add("v370-board-card-linked");
           }
-          current.el.classList.add("v370-board-card-primary");
+          current.el?.classList.add("v370-board-card-primary");
         };
-        const boundTargetEls=new WeakSet();
-        let targetObserver=null;
-        const findLiveTargetEl=opt=>{
-          const sideKey=opt?.sideKey;
-          if(!sideKey||!opt?.row||!opt?.card?.uid) return null;
-          return boardEl?.querySelector?.(`.row[data-side="${sideKey}"][data-row="${opt.row}"] .card[data-uid="${opt.card.uid}"]`)||null;
-        };
-        const bindTargetEl=(opt,el)=>{
-          if(!el) return;
-          // A board rerender can replace a legal card node while the choice promise is
-          // still active. Re-assert the target class every time and attach listeners only
-          // once per concrete DOM node.
-          el.classList.add("v370-board-card-target");
-          if(boundTargetEls.has(el)) return;
-          boundTargetEls.add(el);
-          const oldTabIndex=el.getAttribute("tabindex"), oldAriaLabel=el.getAttribute("aria-label");
-          const current={opt,el};
-          const handler=e=>{
-            if(e.type==="keydown" && e.key!=="Enter" && e.key!==" ") return;
-            e.preventDefault(); e.stopPropagation();
-            finish(opt);
-          };
-          const hoverIn=()=>applyHoverGroup(current);
-          const hoverOut=()=>clearHoverGroup();
-          el.setAttribute("tabindex","0");
-          el.setAttribute("aria-label",`${title}: ${opt.card?.name||"цель"}`);
-          el.addEventListener("click",handler,true);
-          el.addEventListener("keydown",handler,true);
-          el.addEventListener("pointerenter",hoverIn,true);
-          el.addEventListener("pointerleave",hoverOut,true);
-          el.addEventListener("focus",hoverIn,true);
-          el.addEventListener("blur",hoverOut,true);
-          listeners.push({opt,el,handler,hoverIn,hoverOut,oldTabIndex,oldAriaLabel});
-        };
-        const refreshLiveTargets=()=>{
-          if(settled) return;
-          for(const item of targets){
-            const live=findLiveTargetEl(item.opt);
-            if(live) bindTargetEl(item.opt,live);
-            else if(item.el?.isConnected) bindTargetEl(item.opt,item.el);
-          }
-        };
+
         const cleanup=()=>{
-          targetObserver?.disconnect();
           document.removeEventListener("keydown",onKey,true);
           document.removeEventListener("click",onCardCancel,true);
+          boardEl?.removeEventListener("click",onBoardActivate,true);
+          boardEl?.removeEventListener("keydown",onBoardActivate,true);
+          boardEl?.removeEventListener("pointerover",onPointerOver,true);
+          boardEl?.removeEventListener("pointerout",onPointerOut,true);
+          boardEl?.removeEventListener("focusin",onFocusIn,true);
+          boardEl?.removeEventListener("focusout",onFocusOut,true);
           document.body.classList.remove("v370-card-targeting");
           clearHoverGroup();
-          for(const item of listeners){
-            item.el.removeEventListener("click",item.handler,true);
-            item.el.removeEventListener("keydown",item.handler,true);
-            item.el.removeEventListener("pointerenter",item.hoverIn,true);
-            item.el.removeEventListener("pointerleave",item.hoverOut,true);
-            item.el.removeEventListener("focus",item.hoverIn,true);
-            item.el.removeEventListener("blur",item.hoverOut,true);
-            item.el.classList.remove("v370-board-card-target");
-            if(item.oldTabIndex==null) item.el.removeAttribute("tabindex"); else item.el.setAttribute("tabindex",item.oldTabIndex);
-            if(item.oldAriaLabel==null) item.el.removeAttribute("aria-label"); else item.el.setAttribute("aria-label",item.oldAriaLabel);
-          }
+          if(activeBoardTargetSession===session) activeBoardTargetSession=null;
+          clearBoardTargetMarkers();
           proxyEls.forEach(el=>el.remove());
         };
-        // Bind legal targets BEFORE the global targeting state is enabled. This prevents
-        // legal cards from spending even one rendered frame in the dimmed non-target state.
-        for(const {opt,el} of targets) bindTargetEl(opt,el);
+        const finish=opt=>{
+          if(settled) return;
+          settled=true;
+          cleanup();
+          resolve(opt||null);
+        };
+        const onKey=e=>{
+          if(e.key!=="Escape") return;
+          e.preventDefault(); e.stopPropagation();
+          finish(null);
+        };
+        const onCardCancel=e=>{
+          const clickedCard=e.target?.closest?.(".card");
+          if(!clickedCard) return;
+          // Legality is checked against the persistent target registry, not a transient
+          // CSS class, so a render can never turn a valid tap into cancellation.
+          if(targetEntryForEl(clickedCard)) return;
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation?.();
+          if(settled) return;
+          settled=true;
+          cleanup();
+          reject(GAMEPLAY_CHOICE_CANCELLED);
+        };
+        const onBoardActivate=e=>{
+          if(e.type==="keydown" && e.key!=="Enter" && e.key!==" ") return;
+          const cardEl=e.target?.closest?.('.card[data-uid]');
+          const current=targetEntryForEl(cardEl);
+          if(!current) return;
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation?.();
+          finish(current.opt);
+        };
+        const onPointerOver=e=>{
+          const cardEl=e.target?.closest?.('.card[data-uid]');
+          const current=targetEntryForEl(cardEl);
+          if(!current || cardEl?.contains?.(e.relatedTarget)) return;
+          applyHoverGroup(current);
+        };
+        const onPointerOut=e=>{
+          const cardEl=e.target?.closest?.('.card[data-uid]');
+          if(!targetEntryForEl(cardEl) || cardEl?.contains?.(e.relatedTarget)) return;
+          clearHoverGroup();
+        };
+        const onFocusIn=e=>{
+          const current=targetEntryForEl(e.target?.closest?.('.card[data-uid]'));
+          if(current) applyHoverGroup(current);
+        };
+        const onFocusOut=e=>{
+          const cardEl=e.target?.closest?.('.card[data-uid]');
+          if(targetEntryForEl(cardEl)) clearHoverGroup();
+        };
+
+        // Mark all currently mounted targets before the global targeting class is enabled.
+        // Future renderRow() calls use the same registry and create legal cards already marked.
+        syncLiveBoardTargetMarkers();
         document.body.classList.add("v370-card-targeting");
         document.addEventListener("keydown",onKey,true);
-        // All direct battlefield choices use the same cancel contract:
-        // click a legal highlighted target to confirm; click any other card to cancel.
         document.addEventListener("click",onCardCancel,true);
-        if(boardEl){
-          targetObserver=new MutationObserver(()=>refreshLiveTargets());
-          targetObserver.observe(boardEl,{childList:true,subtree:true});
-        }
-        // One extra refresh on the next animation frame covers synchronous render() calls
-        // made immediately after the targeting prompt is opened.
-        requestAnimationFrame(refreshLiveTargets);
+        boardEl?.addEventListener("click",onBoardActivate,true);
+        boardEl?.addEventListener("keydown",onBoardActivate,true);
+        boardEl?.addEventListener("pointerover",onPointerOver,true);
+        boardEl?.addEventListener("pointerout",onPointerOut,true);
+        boardEl?.addEventListener("focusin",onFocusIn,true);
+        boardEl?.addEventListener("focusout",onFocusOut,true);
         toast(`${title}: ${subtitle||"КЛИКНИТЕ ПО ЦЕЛИ НА ПОЛЕ"}`,1800);
       });
     } finally {
@@ -22556,7 +22594,11 @@ function isNanaoBarrierActive(card){
     const stagnationTag=isMimihagiStagnationActive(sideKey,row)?'<em class="row-effect-tag stagnation-tag">STAGNATION</em>':'';
     el.innerHTML=`<div class="row-label"><strong>${name}</strong><span>${sub}</span>${pressureTag}${hogyokuTag}${rowEffectTag}${stagnationTag}</div><div class="row-cards"></div><div class="${scoreClass}">${rowPower(side,row)}</div>`;
     const cards=el.querySelector(".row-cards");
-    side.board[row].forEach(c=>cards.appendChild(renderCachedCard(c,false,sideKey,sideKey===viewSide)));
+    side.board[row].forEach(c=>{
+      const cardEl=renderCachedCard(c,false,sideKey,sideKey===viewSide);
+      syncBoardTargetMarker(cardEl,sideKey,row,c);
+      cards.appendChild(cardEl);
+    });
     return el;
   }
 
@@ -41544,34 +41586,76 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
 </style>
 
 
-<style id="bsc-v151-mobile-target-visual-authority">
-/* v151 — MOBILE ONLY. Illegal targets remain dim; legal targets stay visible and highlighted. */
-html.mobile-ui body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
-html.touch-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
-html.phone-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
-html.tablet-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
-  opacity:1!important;
-  visibility:visible!important;
-  filter:brightness(.46) saturate(.52)!important;
-  transition:none!important;
-}
-html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
-html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
-html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
-html.tablet-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
-  opacity:1!important;
-  visibility:visible!important;
-  filter:brightness(1.13) saturate(1.22)!important;
-  outline:2px solid rgba(196,246,255,.98)!important;
-  outline-offset:1px!important;
-  box-shadow:inset 0 0 0 .67cqw var(--card-frame),inset 0 0 0 1.34cqw var(--card-ink),0 0 0 3px rgba(87,215,255,.95),0 0 18px rgba(63,202,255,.92)!important;
-}
-html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
-html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
-html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
-html.tablet-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
-  border-color:rgba(225,252,255,.98)!important;
-  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88),0 0 0 1.2cqw rgba(89,220,255,.98),0 0 5.5cqw 1.2cqw rgba(54,196,255,.9)!important;
+
+<style id="bsc-v152-mobile-target-no-filter-flicker">
+/* v152 — MOBILE ONLY target visuals.
+   Avoid nested CSS filters: mobile WebKit can flash card layers while recompositing them.
+   Illegal targets are dimmed by a normal overlay; legal targets stay fully painted and get a static glow. */
+@media (hover:none), (pointer:coarse){
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+
+  /* Only NON-targets get the dimmer. No filter/opacity animation = no white/black flash. */
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:40!important;
+    pointer-events:none!important;
+    background:rgba(2,3,5,.56)!important;
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transition:none!important;
+  }
+
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Legal target: static cyan frame, no brightness/saturation filter. */
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
+    outline:2px solid rgba(211,250,255,.98)!important;
+    outline-offset:1px!important;
+    box-shadow:inset 0 0 0 .67cqw var(--card-frame),inset 0 0 0 1.34cqw var(--card-ink),0 0 0 3px rgba(80,216,255,.96),0 0 14px rgba(52,197,255,.88)!important;
+    cursor:crosshair!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
+    border-color:rgba(225,252,255,.98)!important;
+    box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88),0 0 0 1.15cqw rgba(91,220,255,.98),0 0 4.8cqw 1cqw rgba(55,195,255,.76)!important;
+  }
 }
 </style>
 
