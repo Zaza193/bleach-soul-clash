@@ -49511,59 +49511,59 @@ html.mobile-browser #app#app#app#app#app#app .rightbar
 </style>
 
 
-<style id="bsc-v156-mobile-browser-vfx-scale">
+<style id="bsc-v1551-mobile-browser-counter-offset">
 /* Mobile Browser only:
-   combat VFX are designed around desktop battlefield space.
-   Reduce the visual footprint without changing timing or gameplay. */
+   move all four number bubbles a couple of pixels farther away
+   from the deck / grave cards without changing their size. */
 
-/* Canvas based effects */
-html.mobile-browser .bsc-lab-vfx-canvas{
-  transform:scale(.5)!important;
-  transform-origin:center center!important;
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner > .discard-stack .discard-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner > .discard-stack .discard-number{
+  left:-18px!important;
+  right:auto!important;
 }
 
-/* DOM based VFX stages */
-html.mobile-browser .v31-sklaverei-stage,
-html.mobile-browser .v33-target-halo,
-html.mobile-browser .v90-row-target-pulse,
-html.mobile-browser .v182-zanka-grave-flight,
-html.mobile-browser .v242-kamikake-stage,
-html.mobile-browser .v260-lanza-stage,
-html.mobile-browser .v273-cero-stage,
-html.mobile-browser .v366-askin-stage,
-html.mobile-browser .v371-barro-stage,
-html.mobile-browser .v386-zombie-stage{
-  transform:scale(.5)!important;
-  transform-origin:center center!important;
-}
-
-/* Particle/effect containers that are attached to cards */
-html.mobile-browser .vfx-layer,
-html.mobile-browser .ability-vfx,
-html.mobile-browser .combat-effect-layer{
-  transform:scale(.5)!important;
-  transform-origin:center center!important;
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#enemyPile#enemyPile#enemyPile .pile-inner > .deck-stack .deck-number,
+html.mobile-browser
+#app#app#app#app#app#app .rightbar
+#playerPile#playerPile#playerPile .pile-inner > .deck-stack .deck-number{
+  right:-18px!important;
+  left:auto!important;
 }
 </style>
-<script id="bsc-v156-mobile-browser-vfx-scale-runtime">
-(() => {
-  if(!document.documentElement.classList.contains('mobile-browser')) return;
 
-  /* Keep newly created VFX layers compact as well. */
-  const observer = new MutationObserver(() => {
-    document.querySelectorAll(
-      '.v31-sklaverei-stage,.v33-target-halo,.v90-row-target-pulse,.v182-zanka-grave-flight,'+
-      '.v242-kamikake-stage,.v260-lanza-stage,.v273-cero-stage,.v366-askin-stage,'+
-      '.v371-barro-stage,.v386-zombie-stage'
-    ).forEach(el => {
-      el.style.transform = 'scale(.5)';
-      el.style.transformOrigin = 'center center';
-    });
-  });
 
-  observer.observe(document.body,{childList:true,subtree:true});
-})();
-</script>
+<style id="bsc-v1552-mobile-browser-heart-bond-plus13">
+/* Mobile Browser only:
+   first Heart Bond interface — enlarge preview card and its info plaque by ~13%. */
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-action .choice-static-preview{
+  width:113%!important;
+  max-width:113%!important;
+  transform:scale(1.13)!important;
+  transform-origin:center center!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-action .choice-static-preview .choice-card-preview,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-action .choice-static-preview .card.with-info{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-action .choice-static-preview .card-info-panel{
+  font-size:113%!important;
+}
+</style>
 
 </body>
 </html>
