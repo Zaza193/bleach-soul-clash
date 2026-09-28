@@ -20481,7 +20481,7 @@ function isNanaoBarrierActive(card){
             {value:"exchange",label:"ОБМЕНЯТЬ С РУКОЙ",sub:handCards.length?"Взять её в руку, а выбранную карту руки положить вниз колоды":"Обмен недоступен: в руке нет карт",disabled:!handCards.length}
           ],
           arr=>arr[0],
-          {previewCard:topCard,previewSideKey:sideKey}
+          {previewCard:topCard,previewSideKey:sideKey,modalClass:"heart-bond-action"}
         );
       }
 
@@ -20491,9 +20491,10 @@ function isNanaoBarrierActive(card){
         return await chooseOptionForActor(
           sideKey,
           "СВЯЗЬ СЕРДЕЦ — ОБМЕН",
-          "Выберите карту из руки, которая уйдёт вниз колоды. ОТМЕНА возвращает к предыдущему выбору.",
+          "",
           opts,
-          arr=>arr[0]
+          arr=>arr[0],
+          {modalClass:"heart-bond-exchange"}
         );
       }
 
@@ -21540,12 +21541,14 @@ function isNanaoBarrierActive(card){
       const prevBtn=$("#choicePrev"), nextBtn=$("#choiceNext");
       const modal=overlay?.querySelector(".choice-modal");
       const isInitiativeChoice = state?.phase==="initiative" || title==="ИНИЦИАТИВА" || title==="INITIATIVE";
+      const extraModalClass=typeof config?.modalClass==="string" ? config.modalClass.trim() : "";
       const hasStaticPreview=!!config?.previewCard;
       const hasCards=options.some(opt=>!!opt.card) || hasStaticPreview;
       modal?.classList.toggle("initiative-choice", isInitiativeChoice);
       modal?.classList.toggle("card-choice", hasCards);
       modal?.classList.toggle("text-choice", !hasCards);
       modal?.classList.toggle("preview-stack-choice",hasStaticPreview);
+      if(extraModalClass) modal?.classList.add(extraModalClass);
       t.textContent=title||"ВЫБЕРИТЕ ЦЕЛЬ";
       s.textContent=subtitle||"";
       grid.innerHTML="";
@@ -21591,6 +21594,7 @@ function isNanaoBarrierActive(card){
         cleanup();
         overlay.classList.add("hidden");
         modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable","preview-stack-choice");
+        if(extraModalClass) modal?.classList.remove(extraModalClass);
         grid.innerHTML="";
         const ctx=cardChoicePreflightContext;
         if(ctx?.phase==="collect" && !ctx.recordingPaused) ctx.choices.push(serializePreflightChoice(opt));
@@ -21600,6 +21604,7 @@ function isNanaoBarrierActive(card){
         cleanup();
         overlay.classList.add("hidden");
         modal?.classList.remove("initiative-choice","card-choice","text-choice","choice-scrollable","preview-stack-choice");
+        if(extraModalClass) modal?.classList.remove(extraModalClass);
         grid.innerHTML="";
         reject(GAMEPLAY_CHOICE_CANCELLED);
       };
@@ -22390,7 +22395,8 @@ function isNanaoBarrierActive(card){
   async function chooseGraveTarget(actorKey,sideKey,predicate,title){
 
     const opts=state[sideKey].grave.filter(predicate).map(card=>({card,sideKey,caption:card.name,showRowMark:true}));
-    return chooseOptionForActor(actorKey,title,"",opts,arr=>[...arr].sort((a,b)=>b.card.power-a.card.power)[0]);
+    const graveChoiceClass=/МЕДИК|MEDIC/i.test(String(title||"")) ? "medic-choice" : "";
+    return chooseOptionForActor(actorKey,title,"",opts,arr=>[...arr].sort((a,b)=>b.card.power-a.card.power)[0],graveChoiceClass?{modalClass:graveChoiceClass}:{});
   }
   let toastHideTimer=null; function toast(t,ms=900){ const el=$("#toast"); el.textContent=t; el.classList.add("show"); if(toastHideTimer) clearTimeout(toastHideTimer); toastHideTimer=setTimeout(()=>{ el.classList.remove("show"); toastHideTimer=null; },ms); }
   async function animateSpecialCardCast(effectKind="generic") {
@@ -39582,6 +39588,724 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
     max-height:100%!important;
     aspect-ratio:2 / 3!important;
     margin:0!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v132-mobile-soul-preview-cancel-heart-bond-fix">
+/* v132 — mobile-only corrections. */
+@media (pointer:coarse), (hover:none){
+  /* 1) CHOOSE YOUR SOUL: keep the narrower modal, but spend the freed space on larger cards. */
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay > .mulligan-modal,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay > .mulligan-modal,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay > .mulligan-modal{
+    width:min(580px,92vw)!important;
+    max-width:min(580px,92vw)!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    grid-template-rows:repeat(2,minmax(0,1fr))!important;
+    gap:5px 6px!important;
+    padding:4px 2px 6px!important;
+    align-items:center!important;
+    justify-items:center!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap > .card,
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid > .card,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap > .card,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid > .card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap > .card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid > .card{
+    width:min(86px,22vh,100%)!important;
+    min-width:0!important;
+    max-width:86px!important;
+    height:auto!important;
+    max-height:100%!important;
+    aspect-ratio:2 / 3!important;
+    margin:0 auto!important;
+  }
+
+  /* 2) Mobile detail preview: full text plaque is never clipped; the detail box scrolls if text is long. */
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail::-webkit-scrollbar,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail::-webkit-scrollbar,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail::-webkit-scrollbar{display:none!important}
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail > .detail-preview,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail > .detail-preview,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail > .detail-preview,
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail > .detail-preview > .card.with-info{
+    overflow:visible!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    flex:0 0 auto!important;
+    margin:0!important;
+    padding:4px 5px 6px!important;
+    overflow:visible!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail .card-info-panel::before,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail .card-info-panel::before,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail .card-info-panel::before{display:none!important}
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail .card-info-name,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail .card-info-name,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail .card-info-name{
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    padding:1px 1px 3px!important;
+    font-size:clamp(6px,1.8cqw,8px)!important;
+    line-height:1.05!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail .card-info-desc,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail .card-info-desc,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail .card-info-desc{
+    display:block!important;
+    -webkit-box-orient:initial!important;
+    -webkit-line-clamp:unset!important;
+    line-clamp:unset!important;
+    overflow:visible!important;
+    padding:1px 1px 0!important;
+    font-size:clamp(5.2px,1.55cqw,7px)!important;
+    line-height:1.16!important;
+  }
+
+  /* 3) Pending ability cancellation: cards must remain tappable while a row/card target is pending. */
+  html.mobile-ui body.action-locked.row-targeting .board-shell #hand#hand#hand#hand#hand > .card,
+  html.phone-device body.action-locked.row-targeting .board-shell #hand#hand#hand#hand#hand > .card,
+  html.touch-device body.action-locked.row-targeting .board-shell #hand#hand#hand#hand#hand > .card,
+  html.mobile-ui body.action-locked.v370-card-targeting .board-shell #hand#hand#hand#hand#hand > .card,
+  html.phone-device body.action-locked.v370-card-targeting .board-shell #hand#hand#hand#hand#hand > .card,
+  html.touch-device body.action-locked.v370-card-targeting .board-shell #hand#hand#hand#hand#hand > .card{
+    pointer-events:auto!important;
+    touch-action:pan-x!important;
+    cursor:pointer!important;
+  }
+  html.mobile-ui body.action-locked.row-targeting #board .card,
+  html.phone-device body.action-locked.row-targeting #board .card,
+  html.touch-device body.action-locked.row-targeting #board .card,
+  html.mobile-ui body.action-locked.v370-card-targeting #board .card,
+  html.phone-device body.action-locked.v370-card-targeting #board .card,
+  html.touch-device body.action-locked.v370-card-targeting #board .card{
+    pointer-events:auto!important;
+    touch-action:manipulation!important;
+  }
+
+  /* 4a) HEART BOND action: compact mobile geometry that always fits the viewport. */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.heart-bond-action,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.heart-bond-action,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.heart-bond-action{
+    width:calc(100vw - 8px)!important;
+    max-width:calc(100vw - 8px)!important;
+    height:calc(var(--app-height,100dvh) - 8px)!important;
+    max-height:calc(var(--app-height,100dvh) - 8px)!important;
+    min-height:0!important;
+    padding:3px 6px 4px!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1{
+    font-size:clamp(17px,4.7vh,21px)!important;
+    line-height:1!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action #choiceSub,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action #choiceSub,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action #choiceSub{display:none!important;height:0!important;margin:0!important;padding:0!important}
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid{
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    padding:2px 4px 3px!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-template-rows:minmax(0,1fr) 44px!important;
+    gap:3px 5px!important;
+    overflow:hidden!important;
+    align-items:center!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview{
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    width:clamp(76px,22vh,100px)!important;
+    min-width:0!important;
+    max-width:100px!important;
+    margin:0!important;
+    padding:0!important;
+    gap:0!important;
+    align-self:center!important;
+    justify-self:center!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    margin:0!important;
+    gap:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face{
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:2/3!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel{
+    width:100%!important;
+    height:52px!important;
+    min-height:52px!important;
+    max-height:52px!important;
+    flex:0 0 52px!important;
+    margin:-2px 0 0!important;
+    padding:3px 4px 4px!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn{
+    grid-row:2!important;
+    height:44px!important;
+    min-height:44px!important;
+    max-height:44px!important;
+    margin:0!important;
+    padding:4px 6px!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b{font-size:8.5px!important;line-height:1!important}
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span{font-size:6px!important;line-height:1.05!important;margin-top:2px!important}
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel{
+    height:24px!important;
+    min-height:24px!important;
+    margin:1px auto 0!important;
+    padding:2px 9px!important;
+    font-size:7.5px!important;
+  }
+
+  /* 4b) HEART BOND — EXCHANGE: dedicated horizontal card picker, no card/plaque gap and no vertical overflow. */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange{
+    width:calc(100vw - 8px)!important;
+    max-width:calc(100vw - 8px)!important;
+    height:calc(var(--app-height,100dvh) - 8px)!important;
+    min-height:0!important;
+    max-height:calc(var(--app-height,100dvh) - 8px)!important;
+    padding:4px 6px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading{
+    position:relative!important;
+    inset:auto!important;
+    transform:none!important;
+    flex:0 0 auto!important;
+    width:100%!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1{
+    font-size:clamp(16px,4.5vh,20px)!important;
+    line-height:1!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub{
+    position:relative!important;
+    inset:auto!important;
+    transform:none!important;
+    flex:0 0 auto!important;
+    width:100%!important;
+    margin:2px auto 3px!important;
+    padding:0 24px!important;
+    font-size:clamp(6.5px,1.9vh,8.5px)!important;
+    line-height:1.1!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    width:100%!important;
+    margin:0!important;
+    padding:3px 30px 4px!important;
+    display:flex!important;
+    flex-flow:row nowrap!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:6px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:none!important;
+    scroll-snap-type:x proximity!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid::-webkit-scrollbar,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid::-webkit-scrollbar,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid::-webkit-scrollbar{display:none!important}
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn{
+    flex:0 0 clamp(82px,22vh,96px)!important;
+    width:clamp(82px,22vh,96px)!important;
+    min-width:clamp(82px,22vh,96px)!important;
+    max-width:96px!important;
+    margin:0!important;
+    padding:0!important;
+    gap:0!important;
+    overflow:visible!important;
+    scroll-snap-align:center!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    margin:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    gap:0!important;
+    overflow:visible!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:2/3!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:56px!important;
+    min-height:56px!important;
+    max-height:56px!important;
+    flex:0 0 56px!important;
+    margin:-2px 0 0!important;
+    padding:3px 4px 4px!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-name,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-name,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-name{
+    font-size:7px!important;
+    line-height:1.02!important;
+    padding:1px 1px 2px!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-desc,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-desc,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-desc{
+    font-size:5.5px!important;
+    line-height:1.08!important;
+    padding:1px 1px 0!important;
+    -webkit-line-clamp:4!important;
+    line-clamp:4!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel{
+    position:relative!important;
+    inset:auto!important;
+    transform:none!important;
+    flex:0 0 24px!important;
+    min-height:24px!important;
+    height:24px!important;
+    margin:2px auto 0!important;
+    padding:2px 10px!important;
+    font-size:7.5px!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v133-mobile-desktop-piles-medic-gap-fix">
+/* v133 — MOBILE ONLY.
+   Piles are no longer a separately-designed mobile component. Their internal geometry
+   is the approved desktop pile component, uniformly scaled as one finished unit. */
+@media (pointer:coarse) and (orientation:landscape){
+  /* Give the desktop pile miniature enough vertical room and make rightbar use its grid track. */
+  html.phone-device.phone-landscape .app .rightbar,
+  html.touch-device.touch-landscape:not(.tablet-device) .app .rightbar,
+  html.mobile-ui.phone-device.phone-landscape .app .rightbar,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .app .rightbar{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    grid-template-rows:72px minmax(0,1fr) 72px!important;
+    padding:3px!important;
+    gap:3px!important;
+  }
+
+  /* Desktop pile-zone shell: transparent; only the two physical stacks are visible. */
+  html.phone-device.phone-landscape .rightbar .pile-zone,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-zone,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone{
+    position:relative!important;
+    width:100%!important;
+    height:72px!important;
+    min-height:72px!important;
+    max-height:72px!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+    border-left:0!important;
+    outline:0!important;
+    background:transparent!important;
+    background-image:none!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-zone::before,
+  html.phone-device.phone-landscape .rightbar .pile-zone::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone::after,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-zone::before,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-zone::after,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone::before,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Exact desktop internal canvas: 58 + 14 + 58 = 130px, 82px tall.
+     Scale the completed canvas, never individual pieces. */
+  html.phone-device.phone-landscape .rightbar .pile-inner,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner{
+    position:absolute!important;
+    z-index:2!important;
+    left:50%!important;
+    top:50%!important;
+    width:130px!important;
+    height:82px!important;
+    min-width:130px!important;
+    min-height:82px!important;
+    max-width:none!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:14px!important;
+    border:0!important;
+    outline:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+    transform:translate(-50%,-50%) scale(.72)!important;
+    transform-origin:center center!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner::before,
+  html.phone-device.phone-landscape .rightbar .pile-inner::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner::after,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner::before,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner::after,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner::before,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* DESKTOP GEOMETRY — copied as the authority, not approximated. */
+  html.phone-device.phone-landscape .rightbar .pile-inner .deck-stack,
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .deck-stack,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-stack,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack{
+    position:relative!important;
+    width:58px!important;
+    min-width:58px!important;
+    max-width:58px!important;
+    height:82px!important;
+    min-height:82px!important;
+    max-height:82px!important;
+    flex:0 0 58px!important;
+    margin:0!important;
+    transform:none!important;
+    border-radius:2px!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-stack,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack{order:1!important}
+  html.phone-device.phone-landscape .rightbar .pile-inner .deck-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .deck-stack,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack{order:2!important}
+
+  html.phone-device.phone-landscape .rightbar .pile-inner .deck-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .deck-stack,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack{
+    display:grid!important;
+    place-items:center!important;
+    background:#0a0a0a!important;
+    border:1px solid #d7d4cb!important;
+    box-shadow:-2px 2px 0 #3a3a3a,-4px 4px 0 #121212,0 0 0 1px #000!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .deck-stack::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack::before,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .deck-stack::before,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack::before{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    inset:4px!important;
+    border:1px solid #777!important;
+    background:linear-gradient(135deg,transparent 0 42%,rgba(255,255,255,.08) 42% 44%,transparent 44% 100%),repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px)!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .deck-stack::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack::after,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .deck-stack::after,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-stack::after{
+    content:"SOUL"!important;
+    display:grid!important;
+    position:absolute!important;
+    inset:0!important;
+    place-items:center!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;
+    font-size:11px!important;
+    letter-spacing:.09em!important;
+    color:#8b8b8b!important;
+  }
+
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-stack,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-stack,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack{
+    background:#0b0b0b!important;
+    border:1px solid #333!important;
+    box-shadow:-2px 2px 0 #242424,-4px 4px 0 #111,0 0 0 1px #000!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-stack.empty,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack.empty,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-stack.empty,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack.empty{
+    border-color:#303030!important;
+    background:rgba(255,255,255,.018)!important;
+    box-shadow:none!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-stack.empty::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack.empty::before,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-stack.empty::before,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack.empty::before{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    inset:5px!important;
+    border:1px dashed #303030!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-empty-mark,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-empty-mark,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-empty-mark,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-empty-mark{display:none!important}
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-stack.has-card,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack.has-card,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-stack.has-card,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-stack.has-card{
+    background:#dad7ce!important;
+    border-color:#111!important;
+    box-shadow:-2px 2px 0 #777,-4px 4px 0 #222,0 0 0 1px #000!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-top,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-top,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-top,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-top{
+    position:absolute!important;
+    inset:2px!important;
+    overflow:hidden!important;
+    border:1px solid #101010!important;
+    background-color:#111!important;
+    background-size:cover!important;
+    background-repeat:no-repeat!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-top::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-top::before,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-top::before,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-top::before{
+    content:""!important;
+    position:absolute!important;
+    left:0!important;right:0!important;top:0!important;height:4px!important;
+    background:var(--p)!important;
+  }
+  html.phone-device.phone-landscape .rightbar .enemy-pile .discard-top::before,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .enemy-pile .discard-top::before,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .enemy-pile .discard-top::before,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .enemy-pile .discard-top::before{background:var(--e)!important}
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-top::after,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-top::after,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-top::after,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-top::after{
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    border:0!important;
+    background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.78) 100%)!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-power,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-power,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-power,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-power{
+    position:absolute!important;
+    z-index:3!important;
+    left:3px!important;top:3px!important;right:auto!important;bottom:auto!important;
+    width:19px!important;height:19px!important;min-width:19px!important;min-height:19px!important;max-width:19px!important;max-height:19px!important;
+    border-radius:50%!important;display:grid!important;place-items:center!important;
+    background:#efede5!important;color:#090909!important;border:1px solid #090909!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;font-size:11px!important;line-height:1!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-name,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-name,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-name,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-name{
+    position:absolute!important;z-index:3!important;left:4px!important;right:4px!important;bottom:5px!important;
+    font-size:5.5px!important;font-weight:1000!important;text-transform:uppercase!important;color:#fff!important;
+    overflow:hidden!important;text-align:center!important;text-shadow:0 1px 2px #000!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner .deck-number,
+  html.phone-device.phone-landscape .rightbar .pile-inner .discard-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-number,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .deck-number,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner .discard-number,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .deck-number,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner .discard-number{
+    position:absolute!important;
+    right:4px!important;bottom:4px!important;left:auto!important;top:auto!important;
+    z-index:6!important;width:22px!important;height:22px!important;min-width:22px!important;min-height:22px!important;max-width:22px!important;max-height:22px!important;
+    display:grid!important;place-items:center!important;border-radius:50%!important;
+    background:#efede5!important;color:#080808!important;border:1px solid #080808!important;
+    font-family:Impact,"Arial Narrow",sans-serif!important;font-size:13px!important;line-height:1!important;
+    box-shadow:none!important;
+  }
+  html.phone-device.phone-landscape .rightbar .enemy-pile .deck-number,
+  html.phone-device.phone-landscape .rightbar .enemy-pile .discard-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .enemy-pile .deck-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .enemy-pile .discard-number,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .enemy-pile .deck-number,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .enemy-pile .discard-number,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .enemy-pile .deck-number,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .enemy-pile .discard-number{
+    outline:2px solid var(--e)!important;outline-offset:1px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .player-pile .deck-number,
+  html.phone-device.phone-landscape .rightbar .player-pile .discard-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .player-pile .deck-number,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .player-pile .discard-number,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .player-pile .deck-number,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .player-pile .discard-number,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .player-pile .deck-number,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .player-pile .discard-number{
+    outline:2px solid var(--p)!important;outline-offset:1px!important;
+  }
+
+  /* Medic grave-selection cards: the info plaque must physically touch the card face. */
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview.card.with-info,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview.card.with-info,
+  html.mobile-ui.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview.card.with-info,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview.card.with-info{
+    gap:0!important;
+  }
+  html.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview .card-info-panel,
+  html.mobile-ui.phone-device.phone-landscape #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview .card-info-panel,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #choiceOverlay#choiceOverlay .choice-modal.medic-choice .choice-card-preview .card-info-panel{
+    margin-top:0!important;
+    transform:none!important;
+  }
+}
+
+@media (pointer:coarse) and (orientation:landscape) and (max-height:360px){
+  html.phone-device.phone-landscape .app .rightbar,
+  html.touch-device.touch-landscape:not(.tablet-device) .app .rightbar,
+  html.mobile-ui.phone-device.phone-landscape .app .rightbar,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .app .rightbar{
+    grid-template-rows:64px minmax(0,1fr) 64px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-zone,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-zone,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-zone{
+    height:64px!important;min-height:64px!important;max-height:64px!important;
+  }
+  html.phone-device.phone-landscape .rightbar .pile-inner,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner,
+  html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner{
+    transform:translate(-50%,-50%) scale(.66)!important;
   }
 }
 </style>
