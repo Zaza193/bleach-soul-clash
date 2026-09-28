@@ -48721,5 +48721,462 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
 }
 </style>
 
+
+<script id="bsc-v145-animation-lab-integration">
+(() => {
+  const TAU=Math.PI*2;
+  const clamp=x=>Math.max(0,Math.min(1,x));
+  const phase=(t,a,b)=>clamp((t-a)/(b-a));
+  const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
+  const round=(c,x,y,w,h,r)=>{c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()};
+  const ellipse=(c,x,y,rx,ry,color,stroke,width=1)=>{c.beginPath();c.ellipse(x,y,Math.max(.01,rx),Math.max(.01,ry),0,0,TAU);if(color){c.fillStyle=color;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=width;c.stroke()}};
+  const glow=(c,x,y,r,color)=>{const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,color);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2)};
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+  function actualCard(sideKey,row,uid){
+    return document.querySelector(`.row[data-side="${sideKey}"][data-row="${row}"] .card[data-uid="${uid}"]`);
+  }
+  function cardRect(sideKey,row,uid){
+    const el=actualCard(sideKey,row,uid);
+    const face=el?.querySelector?.('.card-face')||el;
+    const r=face?.getBoundingClientRect?.();
+    return r&&r.width>1&&r.height>1?r:null;
+  }
+  function cardData(sideKey,uid){
+    try{
+      const loc=typeof findBoardCardByUid==="function"?findBoardCardByUid(uid):null;
+      return loc?.card||null;
+    }catch(_){return null}
+  }
+  function artSrc(card){
+    try{
+      const arr=typeof cardArtCandidates==="function"?cardArtCandidates(card):null;
+      return arr?.[0]||null;
+    }catch(_){return null}
+  }
+  function loadImg(src){
+    return new Promise(resolve=>{
+      if(!src){resolve(null);return}
+      const im=new Image();
+      im.onload=()=>resolve(im);
+      im.onerror=()=>resolve(null);
+      im.src=src;
+    });
+  }
+  function drawCard(c,img,x,y,w,h,label,power,alpha=1){
+    c.save();c.globalAlpha*=alpha;round(c,x,y,w,h,Math.max(3,w*.06));c.clip();
+    c.fillStyle='#182536';c.fillRect(x,y,w,h);
+    if(img){
+      const sc=Math.max(w/img.width,h/img.height),iw=img.width*sc,ih=img.height*sc;
+      c.drawImage(img,x+(w-iw)/2,y+(h-ih)*.22,iw,ih);
+    }
+    const g=c.createLinearGradient(0,y+h*.5,0,y+h);
+    g.addColorStop(0,'transparent');g.addColorStop(1,'rgba(3,8,21,.96)');
+    c.fillStyle=g;c.fillRect(x,y,w,h);
+    c.fillStyle='#fff';c.textAlign='center';c.font=`600 ${Math.max(5,w*.09)}px sans-serif`;
+    c.fillText(label||'',x+w/2,y+h-Math.max(5,h*.06),w-6);
+    c.restore();
+    c.save();c.globalAlpha*=alpha;round(c,x,y,w,h,Math.max(3,w*.06));
+    c.strokeStyle='rgba(200,216,230,.65)';c.lineWidth=1;c.stroke();
+    ellipse(c,x+w/2,y+Math.max(2,h*.01),Math.max(5,w*.10),Math.max(5,w*.10),'#111c2b','#bfa67a');
+    c.font=`bold ${Math.max(6,w*.10)}px sans-serif`;c.textAlign='center';c.fillStyle='#fff';
+    c.fillText(String(power??''),x+w/2,y+Math.max(4,w*.025));
+    c.restore();
+  }
+  async function overlayFor(rect,duration,drawer,{card=null,hideEl=null}={}){
+    if(!rect){await wait(Math.min(duration,120));return}
+    const canvas=document.createElement('canvas');
+    canvas.className='bsc-lab-vfx-canvas';
+    Object.assign(canvas.style,{
+      position:'fixed',inset:'0',width:'100vw',height:'100vh',
+      zIndex:'16550',pointerEvents:'none'
+    });
+    document.body.appendChild(canvas);
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    const resize=()=>{
+      canvas.width=Math.max(1,Math.round(innerWidth*dpr));
+      canvas.height=Math.max(1,Math.round(innerHeight*dpr));
+    };
+    resize();
+    const ctx=canvas.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const img=await loadImg(artSrc(card));
+    const oldVis=hideEl?.style?.visibility;
+    if(hideEl) hideEl.style.setProperty('visibility','hidden','important');
+    const pad=Math.max(50,Math.max(rect.width,rect.height)*.8);
+    const s={x:rect.left,y:rect.top,w:rect.width,h:rect.height,pad};
+    const start=performance.now();
+    return new Promise(resolve=>{
+      const frame=now=>{
+        const p=clamp((now-start)/duration);
+        ctx.clearRect(0,0,innerWidth,innerHeight);
+        drawer(ctx,p,s,img,card);
+        if(p<1) requestAnimationFrame(frame);
+        else{
+          if(hideEl){
+            if(oldVis) hideEl.style.visibility=oldVis;
+            else hideEl.style.removeProperty('visibility');
+          }
+          canvas.remove();
+          resolve();
+        }
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+
+  // Animation Lab: Hisagi / Kazeshini.
+  function drawHisagi(c,t,s,img,card){
+    const cx=s.x+s.w/2,cy=s.y+s.h/2;
+    const fade=(1-ease(phase(t,.96,1)))*clamp(t*18),tight=ease(phase(t,.42,.62));
+    function strand(k,front){
+      const reveal=phase(t,.045+k*.075,.34+k*.075),snapAt=.72+k*.024;
+      const tension=Math.sin(phase(t,snapAt-.06,snapAt)*Math.PI);
+      const rx=s.w*(.7-.13*tight)-tension*4,ry=Math.max(6,s.h*.075)-Math.max(2,s.h*.026)*tight,mid=cy+(k-1)*s.h*.265;
+      const tilt=k===1?-.22:.17;
+      c.save();c.globalAlpha=fade*(front?1:.48);
+      for(let i=0;i<64;i++){
+        if(i/64>reveal)continue;
+        const a=i/64*TAU+(k%2?0:Math.PI),isFront=Math.sin(a)>=0;
+        if(isFront!==front)continue;
+        const side=Math.cos(a)>=0?1:-1;
+        const q=phase(t,snapAt+Math.abs(Math.cos(a))*.035,.985);
+        const whip=Math.sin(q*9-Math.abs(Math.cos(a))*3)*Math.sin(q*Math.PI);
+        const x=cx+Math.cos(a)*rx+side*s.w*(q*.6+q*q*4.1);
+        const y=mid+Math.sin(a)*ry+Math.cos(a)*rx*tilt+whip*(s.h*.09+Math.abs(Math.cos(a))*s.h*.09)+(k-1)*q*q*s.h*.27;
+        const dx=-Math.sin(a)*rx,dy=Math.cos(a)*ry-Math.sin(a)*rx*tilt;
+        const turn=Math.atan2(dy,dx)+side*q*1.7+whip*.25,perspective=.45+.55*Math.abs(Math.sin(a));
+        c.save();c.translate(x,y);c.rotate(turn);
+        const lw=(i%2?4.7:6.3)*perspective*Math.max(.45,s.w/120),lh=(i%2?1.6:3.9)*Math.max(.45,s.w/120);
+        const steel=c.createLinearGradient(0,-5,0,5);
+        steel.addColorStop(0,'#f1f4ef');steel.addColorStop(.22,'#becbc9');steel.addColorStop(.45,'#506368');steel.addColorStop(.64,'#1b303a');steel.addColorStop(.85,'#8e9fa1');steel.addColorStop(1,'#e2e9e5');
+        ellipse(c,0,1,lw,lh,null,'#030a10',Math.max(1,4.3*s.w/120));
+        ellipse(c,0,0,lw,lh,null,steel,Math.max(.8,2.5*s.w/120));
+        c.restore();
+      }
+      c.restore();
+    }
+    if(t>0)for(let k=0;k<3;k++)strand(k,false);
+    drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Шухей Хисаги',card?.currentPower??3);
+    if(t>0){
+      c.save();c.globalAlpha=fade*.18;round(c,s.x,s.y,s.w,s.h,7);c.fillStyle='#001518';c.fill();c.restore();
+      for(let k=0;k<3;k++)strand(k,true);
+      for(let k=0;k<3;k++){
+        const q=phase(t,.72+k*.024,.86+k*.024);if(q<=0||q>=1)continue;
+        const y=cy+(k-1)*s.h*.265+s.h*.048;
+        c.save();c.globalAlpha=Math.pow(1-q,1.3);glow(c,cx,y,s.w*.18,'rgba(228,255,227,.55)');
+        for(let j=0;j<12;j++){const a=j/12*TAU+.13*k,d=q*(s.w*.15+j%4*s.w*.07);c.beginPath();c.moveTo(cx+Math.cos(a)*d,y+Math.sin(a)*d+q*q*s.h*.03);c.lineTo(cx+Math.cos(a)*(d+3+6*(1-q)),y+Math.sin(a)*(d+3+6*(1-q))+q*q*s.h*.03);c.strokeStyle=j%3?'#a7c9c9':'#eef7de';c.lineWidth=j%3?.8:1.3;c.stroke()}
+        c.restore();
+      }
+    }
+  }
+
+  // Animation Lab: Liltotto / The Glutton.
+  const bites=[[.02,.10,.43,.23],[.99,.31,.44,.30],[.11,.86,.51,.36],[.88,.94,.51,.35],[.52,.38,.79,.54]];
+  function bitePath(c,x,y,rx,ry,size){c.beginPath();for(let i=0;i<=96;i++){const a=i/96*TAU,teeth=1+(i%6===2||i%6===3?.085:0),xx=x+Math.cos(a)*rx*size*teeth,yy=y+Math.sin(a)*ry*size*teeth;i?c.lineTo(xx,yy):c.moveTo(xx,yy)}c.closePath()}
+  function drawGlutton(c,t,s,img,card){
+    const off=document.createElement('canvas');off.width=360;off.height=540;const oc=off.getContext('2d');
+    drawCard(oc,img,0,0,360,540,card?.name||'',card?.currentPower??card?.power??0);
+    for(let i=0;i<bites.length;i++){
+      const start=.1+i*.16,p=ease(phase(t,start,start+.045));if(p<=0)continue;
+      const [nx,ny,nrx,nry]=bites[i];oc.save();oc.globalCompositeOperation='destination-out';
+      bitePath(oc,nx*360,ny*540,nrx*360,nry*540,p);oc.fill();oc.restore();
+    }
+    const finish=1-ease(phase(t,.94,.985));c.save();c.globalAlpha=finish;c.drawImage(off,s.x,s.y,s.w,s.h);c.restore();
+    for(let i=0;i<bites.length;i++){
+      const p=phase(t,.1+i*.16,.1+i*.16+.09);if(p<=0||p>=1)continue;
+      const [nx,ny,nrx,nry]=bites[i];
+      for(let k=0;k<9;k++){const ang=k/9*TAU;c.globalAlpha=Math.sin(p*Math.PI)*.75;c.fillStyle=k%2?'#a89674':'#e9d8b6';const x=s.x+(nx+Math.cos(ang)*nrx*.6)*s.w,y=s.y+(ny+Math.sin(ang)*nry*.6)*s.h;c.fillRect(x+Math.cos(ang)*p*7,y+p*9,2.5*(1-p),3*(1-p))}
+    }
+    c.globalAlpha=1;
+  }
+
+  // Animation Lab: Soldat / Quincy Shadow.
+  function drawSoldat(c,t,s,img,card){
+    if(t===0){drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);return}
+    const open=ease(phase(t,.02,.23))*(1-ease(phase(t,.77,1))),rise=ease(phase(t,.22,.68));
+    const cx=s.x+s.w/2,cy=s.y+s.h+Math.max(3,s.h*.03);
+    c.save();c.globalAlpha=open;glow(c,cx,cy,s.w*.85,'rgba(114,161,215,.2)');ellipse(c,cx,cy,s.w*.85*open,s.h*.09*open,'#02040b','#587792',1.2);ellipse(c,cx,cy,s.w*.72*open,s.h*.06*open,null,'#b3d6ed66',.7);c.restore();
+    if(rise>0){c.save();c.beginPath();c.rect(s.x-5,s.y+s.h*(1-rise)-4,s.w+10,s.h*rise+8);c.clip();drawCard(c,img,s.x,s.y+(1-rise)*s.h*.16,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);c.fillStyle=`rgba(1,4,13,${(1-ease(phase(t,.5,.82)))*.94})`;c.fillRect(s.x-5,s.y-5,s.w+10,s.h+20);c.restore()}
+    for(let i=0;i<13;i++){c.save();c.globalAlpha=open*.32*(1-rise*.6);const x=s.x-10+i*(s.w+20)/12;const g=c.createLinearGradient(0,cy,0,cy-s.h*.67);g.addColorStop(0,'#09101d');g.addColorStop(.6,'#45617b');g.addColorStop(1,'transparent');c.fillStyle=g;c.beginPath();c.moveTo(x,cy);c.bezierCurveTo(x+Math.sin(t*8+i)*s.w*.15,cy-s.h*.2,x-s.w*.1,cy-s.h*.4,x+s.w*.03,cy-s.h*(.58+(i%3)*.05));c.bezierCurveTo(x+s.w*.12,cy-s.h*.4,x+Math.cos(i+t*7)*s.w*.1,cy-s.h*.2,x+s.w*.06,cy);c.fill();c.restore()}
+    const cross=Math.sin(phase(t,.65,.87)*Math.PI);if(cross>0){c.save();c.globalAlpha=cross*.85;c.strokeStyle='#c8f2ff';c.lineWidth=1.2;c.beginPath();c.moveTo(cx,s.y+s.h*.17);c.lineTo(cx,s.y+s.h*.38);c.moveTo(cx-s.w*.13,s.y+s.h*.27);c.lineTo(cx+s.w*.13,s.y+s.h*.27);c.stroke();c.restore()}
+  }
+
+  function darkPool(c,cx,y,w,alpha){c.save();c.globalAlpha=alpha;glow(c,cx,y,w*.82,'rgba(153,169,190,.13)');ellipse(c,cx,y,w*.7,Math.max(4,w*.12),'#020408','#738798',.8);for(let k=0;k<3;k++){c.globalAlpha=alpha*(.32-k*.07);ellipse(c,cx,y,w*(.72+k*.11),Math.max(4,w*.12)+k*3,null,'#aec3ce',.65)}c.restore()}
+  function inkStreams(c,s,amount,t){
+    const base=s.y+s.h+7;
+    for(let i=0;i<11;i++){
+      const x=s.x-8+i*(s.w+16)/10,h=(s.h+45)*amount*(.8+(i%4)*.065),wave=Math.sin(t*8+i*1.7)*12;
+      c.save();c.globalAlpha=amount*.9;const g=c.createLinearGradient(x,base,x,base-h);g.addColorStop(0,'#01030a');g.addColorStop(.63,'#091322');g.addColorStop(1,'rgba(108,133,157,0)');
+      c.beginPath();c.moveTo(x-7,base);c.bezierCurveTo(x+wave-18,base-h*.32,x-wave+20,base-h*.74,x+wave,base-h);c.bezierCurveTo(x-wave+28,base-h*.63,x+wave+8,base-h*.3,x+7,base);c.closePath();c.fillStyle=g;c.fill();
+      c.beginPath();c.moveTo(x-4,base);c.bezierCurveTo(x+wave-14,base-h*.34,x-wave+15,base-h*.72,x+wave,base-h);c.strokeStyle='rgba(160,182,200,.3)';c.lineWidth=.65;c.stroke();c.restore();
+    }
+  }
+  function drawKamikake(c,t,s,img,card){
+    const cx=s.x+s.w/2,base=s.y+s.h+7;
+    const pool=ease(phase(t,.02,.18))*(1-ease(phase(t,.82,1))),cover=ease(phase(t,.12,.47)),sink=ease(phase(t,.42,.8));
+    darkPool(c,cx,base,s.w,pool);
+    if(sink<1){
+      c.save();c.beginPath();c.rect(s.x-8,s.y-25,s.w+16,s.h+31);c.clip();
+      const dy=sink*s.h*1.15,sw=s.w*(1-sink*.14),xx=cx-sw/2;
+      drawCard(c,img,xx,s.y+dy,sw,s.h,card?.name||'Джуширо Укитаке',card?.currentPower??card?.power??7,1-sink*.55);
+      c.save();round(c,xx,s.y+dy,sw,s.h,7);c.clip();
+      const ink=c.createLinearGradient(0,s.y+s.h*(1-cover),0,s.y+s.h);ink.addColorStop(0,'rgba(0,3,10,0)');ink.addColorStop(.33,'rgba(2,5,13,.64)');ink.addColorStop(1,'#01030a');c.fillStyle=ink;c.fillRect(xx,s.y+s.h*(1-cover),sw,s.h*cover+dy);c.restore();c.restore();
+    }
+    inkStreams(c,s,Math.sin(phase(t,.06,.91)*Math.PI),t);
+    const pull=phase(t,.25,.83);
+    if(pull>0&&pull<1){c.save();for(let i=0;i<21;i++){const u=(pull+i*.047)%1,x=cx+Math.sin(i*2.4)*(s.w*.48)*(1-u),y=s.y-18+u*(s.h+24);c.globalAlpha=Math.sin(u*Math.PI)*Math.sin(pull*Math.PI)*.54;c.strokeStyle='#c2cbd5';c.lineWidth=.8;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+3+u*7);c.stroke()}c.restore()}
+    const pulse=Math.sin(phase(t,.68,.9)*Math.PI);if(pulse>0){c.save();c.globalAlpha=pulse*.7;ellipse(c,cx,base,s.w*.32,Math.max(2,s.w*.04),null,'#d9e5e9',.9);c.restore()}
+  }
+
+  async function labHisagi(sideKey,row,uid){
+    if(cardChoicePreflightContext?.phase==='collect') return;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
+    return overlayFor(rect,Math.round(6200/1.7),drawHisagi,{card,hideEl:el});
+  }
+  async function labGlutton(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
+    if(cardChoicePreflightContext?.phase==='collect') return;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const el=actualCard(targetSideKey,targetRow,targetUid),rect=cardRect(targetSideKey,targetRow,targetUid),card=cardData(targetSideKey,targetUid);
+    return overlayFor(rect,Math.round(4350/1.5),drawGlutton,{card,hideEl:el});
+  }
+  async function labSoldat(sideKey,row,uid){
+    if(cardChoicePreflightContext?.phase==='collect') return;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
+    return overlayFor(rect,Math.round(4600/1.5),drawSoldat,{card,hideEl:el});
+  }
+  async function labKamikake(sideKey,row,uid){
+    if(cardChoicePreflightContext?.phase==='collect') return;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
+    return overlayFor(rect,3100,drawKamikake,{card,hideEl:el});
+  }
+  async function labMimihagiReverse(sideKey,row,uid){
+    if(cardChoicePreflightContext?.phase==='collect') return;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
+    return overlayFor(rect,3100,(c,p,s,img,card)=>drawKamikake(c,1-p,s,img,card),{card,hideEl:el});
+  }
+
+  // Replace only the requested VFX, keeping gameplay code untouched.
+  try{
+    if(typeof v303Original==="object"){
+      v303Original.v125AnimateHisagiChains=labHisagi;
+      v303Original.v242AnimateKamikake=labKamikake;
+      v303Original.v242AnimateMimihagiRise=labMimihagiReverse;
+    }
+    if(typeof v125AnimateHisagiChains!=="undefined") v125AnimateHisagiChains=async function(sideKey,row,uid){
+      if(typeof broadcastNetworkVfx==="function") broadcastNetworkVfx("hisagi-chains",{sideKey,row,uid});
+      return labHisagi(sideKey,row,uid);
+    };
+    if(typeof v381AnimateLiltottoGlutton!=="undefined") v381AnimateLiltottoGlutton=labGlutton;
+    if(typeof v313AnimateQuincyShadowManifest!=="undefined") v313AnimateQuincyShadowManifest=labSoldat;
+    if(typeof v242AnimateKamikake!=="undefined") v242AnimateKamikake=async function(sideKey,row,uid){
+      if(typeof broadcastNetworkVfx==="function") broadcastNetworkVfx("kamikake",{sideKey,row,uid});
+      return labKamikake(sideKey,row,uid);
+    };
+    if(typeof v242AnimateMimihagiRise!=="undefined") v242AnimateMimihagiRise=async function(sideKey,row,uid){
+      if(typeof broadcastNetworkVfx==="function") broadcastNetworkVfx("mimihagi-rise",{sideKey,row,uid});
+      return labMimihagiReverse(sideKey,row,uid);
+    };
+  }catch(err){console.error("[BSC Animation Lab integration]",err)}
+})();
+</script>
+
+
+<style id="bsc-v146-mobile-browser-heart-bond-medic-ui">
+/* Mobile Browser only */
+
+/* 1) Heart Bond — EXCHANGE:
+   touch browsers can leave :hover latched after a tap.  Do not enlarge cards here. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-btn,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-btn:hover,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-btn:focus,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-btn:focus-visible,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-btn:active{
+  transform:none!important;
+  filter:none!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-preview,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-preview:hover,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-preview:focus,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-preview:focus-visible,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-preview:active,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange .choice-card-preview.card:hover{
+  transform:none!important;
+  filter:none!important;
+}
+
+/* 2) MEDIC card picker:
+   info plaques grow naturally with their own text, exactly like the corrected
+   Heart Bond exchange plaques instead of sharing one fixed --mb-choice-info-h. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-grid{
+  align-items:flex-start!important;
+  overflow-y:hidden!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-card-btn{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  align-self:flex-start!important;
+  overflow:visible!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-card-preview.card.with-info,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-card-preview{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  gap:0!important;
+  overflow:visible!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-card-preview .card-info-panel{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  flex:0 0 auto!important;
+  margin:-1px 0 0!important;
+  padding:3px 4px 4px!important;
+  overflow:visible!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-card-preview .card-info-name{
+  display:block!important;
+  height:auto!important;
+  max-height:none!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  -webkit-box-orient:initial!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.medic-choice.card-choice:not(.preview-stack-choice) .choice-card-preview .card-info-desc{
+  display:block!important;
+  height:auto!important;
+  max-height:none!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  -webkit-box-orient:initial!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+}
+</style>
+
+
+<style id="bsc-v147-mobile-browser-pile-counters">
+/* Mobile Browser only */
+
+/* 1) Bring the upper deck / graveyard pair back down into the viewport. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #enemyPile.pile-zone{
+  transform:translateY(0px)!important;
+}
+
+/* 2) All four deck/grave counters:
+   remove black rim, thin the faction-color rim, then enlarge the whole badge by ~30%. */
+html.mobile-browser #app#app#app .rightbar #enemyPile .pile-inner .deck-number,
+html.mobile-browser #app#app#app .rightbar #enemyPile .pile-inner .discard-number,
+html.mobile-browser #app#app#app .rightbar #playerPile .pile-inner .deck-number,
+html.mobile-browser #app#app#app .rightbar #playerPile .pile-inner .discard-number{
+  width:16px!important;
+  height:16px!important;
+  min-width:16px!important;
+  min-height:16px!important;
+  max-width:16px!important;
+  max-height:16px!important;
+
+  /* no black ring */
+  border:0!important;
+
+  /* thinner faction-colored ring */
+  outline-width:1px!important;
+  outline-offset:0!important;
+
+  /* larger number to match larger badge */
+  font-size:8px!important;
+  line-height:1!important;
+  font-weight:900!important;
+
+  /* keep them centered beside the cards */
+  top:50%!important;
+  bottom:auto!important;
+  transform:translateY(-50%)!important;
+
+  box-shadow:none!important;
+}
+
+/* Preserve the outside placement with the larger 16px circles. */
+html.mobile-browser #app#app#app .rightbar .pile-inner .discard-number{
+  left:-8px!important;
+  right:auto!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner .deck-number{
+  right:-8px!important;
+  left:auto!important;
+}
+</style>
+
+
+<style id="bsc-v148-mobile-browser-row-card-fit">
+/* Mobile Browser only:
+   row cards follow the REAL row height instead of a fixed 51px.
+   One pixel remains free above and below the card. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .board-shell > #board#board#board#board#board > .row > .row-cards{
+  padding-top:0!important;
+  padding-bottom:0!important;
+  align-items:center!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .board-shell > #board#board#board#board#board > .row > .row-cards > .card{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:none!important;
+
+  height:calc(100% - 2px)!important;
+  min-height:0!important;
+  max-height:calc(100% - 2px)!important;
+
+  aspect-ratio:2 / 3!important;
+  margin:0!important;
+  align-self:center!important;
+  transform:none!important;
+  box-sizing:border-box!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .board-shell > #board#board#board#board#board > .row > .row-cards > .card > .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+
+  aspect-ratio:auto!important;
+  box-sizing:border-box!important;
+}
+</style>
+
 </body>
 </html>
