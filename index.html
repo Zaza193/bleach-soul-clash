@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v187-mobile-browser-preview-fill-fullscreen";
+  const BUILD_VERSION="v189-mobile-browser-safari-scroll-collapse";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v187 · MOBILE BROWSER PREVIEW FILL + FULLSCREEN</title>
+<title>BLEACH: Soul Clash — v189 · MOBILE BROWSER SAFARI SCROLL COLLAPSE</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -22219,18 +22219,21 @@ function isNanaoBarrierActive(card){
   let v31AbilityTargetLockToken=0;
   function v31ApplyAbilityTargetLock(sideKey,row,uid){
     if(!uid) return;
-    /* v186: desktop no longer shows the old post-action blue target-lock VFX.
-       Mobile/PWA keep their existing behavior. */
-    if(document.documentElement.classList.contains("desktop-ui")){
-      v31ClearAbilityTargetLock();
-      return;
-    }
     const token=++v31AbilityTargetLockToken;
     v31AbilityTargetLock={sideKey,row,uid,token};
     document.querySelectorAll('.card.ability-target-locked').forEach(el=>el.classList.remove('ability-target-locked'));
     const el=document.querySelector(`.row[data-side="${sideKey}"][data-row="${row}"] .card[data-uid="${uid}"]`);
     el?.classList.add('ability-target-locked');
-    v33EnsureTargetHalo(); v33SyncTargetHalo();
+
+    /* v188: desktop keeps the normal post-action target-lock state, but the
+       separate blue animated halo is intentionally not created there. */
+    if(!document.documentElement.classList.contains("desktop-ui")){
+      v33EnsureTargetHalo();
+      v33SyncTargetHalo();
+    }else{
+      v33RemoveTargetHalo();
+    }
+
     setTimeout(()=>{ if(v31AbilityTargetLock?.token===token) v31ClearAbilityTargetLock(uid); },5200);
   }
   function v31ClearAbilityTargetLock(uid=null){
@@ -43792,67 +43795,45 @@ html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#cho
 </style>
 
 
-<style id="bsc-v186-desktop-target-outline-authority">
-/* v186 — DESKTOP ONLY.
-   During target selection, legal battlefield cards get one clean blue frame.
-   No dimming, glow bloom, brightness/filter pumping, scaling or animated halo. */
+<style id="bsc-v188-desktop-targeting-authority">
+/* v188 — DESKTOP ONLY.
+   Restore the original target-selection language completely:
+   dimming of blocked cards, brightness/saturation, glow and scale all come
+   from the existing v370 target CSS again.
 
-html.desktop-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
-html.desktop-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
-  filter:none!important;
-  opacity:1!important;
-  transform:none!important;
-  transition:none!important;
-  box-shadow:none!important;
-  outline:0!important;
+   Add only a crisp readable frame to LEGAL targets.
+   After an ability resolves, suppress only the separate animated blue halo. */
+
+/* Do not neutralize filter / glow / transform here. Existing v370 rules own them. */
+html.desktop-ui body.v370-card-targeting
+#board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]
+> .card-face > .bsc-assemble-inner-frame{
+  border-width:2px!important;
+  border-style:solid!important;
+  border-color:rgba(205,246,255,.99)!important;
 }
 
-html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]{
-  filter:none!important;
-  transform:none!important;
-  box-shadow:none!important;
-  outline:0!important;
-  z-index:30!important;
-  cursor:pointer!important;
+/* A second clean outer line makes the legal target readable even on bright art,
+   while leaving the existing glow/brightness/scale untouched. */
+html.desktop-ui body.v370-card-targeting
+#board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]
+> .card-face{
+  outline:2px solid rgba(91,211,255,.98)!important;
+  outline-offset:1px!important;
 }
 
-html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
-  filter:none!important;
-  transform:none!important;
-  box-shadow:none!important;
-  outline:0!important;
-}
-
-html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
-  border:2px solid rgba(46,184,255,.98)!important;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.9)!important;
-  opacity:1!important;
-}
-
-html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame::after{
-  content:none!important;
-  display:none!important;
-}
-
-/* Remove the old blue post-action target-lock treatment on desktop even if a
-   legacy class/halo survives from an older render. */
-html.desktop-ui .card.ability-target-locked,
-html.desktop-ui .card.ability-target-locked > .card-face,
-html.desktop-ui .card.ability-target-locked > .card-face > .bsc-assemble-inner-frame{
-  animation:none!important;
-  filter:none!important;
-  transform:none!important;
-  outline:0!important;
-  box-shadow:none!important;
-}
-
-html.desktop-ui .card.ability-target-locked::before,
-html.desktop-ui .card.ability-target-locked::after,
+/* Only the POST-ACTION animated halo is removed on desktop. */
 html.desktop-ui .v33-target-halo{
-  content:none!important;
   display:none!important;
   visibility:hidden!important;
   opacity:0!important;
+  animation:none!important;
+}
+html.desktop-ui .v33-target-halo::before,
+html.desktop-ui .v33-target-halo::after,
+html.desktop-ui .v33-target-halo .v33-target-core,
+html.desktop-ui .v33-target-halo .v33-target-ring,
+html.desktop-ui .v33-target-halo .v33-target-sheen{
   animation:none!important;
 }
 </style>
@@ -44017,30 +43998,114 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 }
 </style>
 
-<script id="bsc-v187-mobile-browser-fullscreen-attempt">
-/* Browser chrome (Safari address/tab bars) is not CSS owned. On iPad-class Safari,
-   Fullscreen API can hide it, but fullscreen requires a real user gesture.
-   Try once on the first game interaction; unsupported iPhones simply keep the
-   normal browser UI with no behavior change. */
+
+
+<style id="bsc-v189-mobile-browser-safari-scroll-collapse">
+/* v189 — MOBILE BROWSER ONLY.
+   Safari collapses its toolbar/tab chrome only when the DOCUMENT can actually
+   scroll. Earlier mobile-browser patches locked body at overflow:hidden, which
+   removed that browser behavior entirely.
+
+   Give Safari a small real page scroll range, while pinning the game to the
+   top of the visible area. The battle itself does not move and keeps using the
+   live visualViewport height. PWA/desktop remain unchanged. */
+
+html.mobile-browser{
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+
+html.mobile-browser body{
+  height:auto!important;
+  min-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) + var(--bsc-browser-collapse-range,132px))!important;
+  overflow-x:hidden!important;
+  overflow-y:visible!important;
+  margin:0!important;
+}
+
+/* Keep the actual game visually stationary while the document scrolls behind it. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  position:sticky!important;
+  top:0!important;
+  height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  min-height:0!important;
+  z-index:1!important;
+}
+
+/* Real scroll runway used only to let Safari minimize its own UI. */
+html.mobile-browser #bscSafariCollapseSpacer{
+  display:block!important;
+  position:relative!important;
+  width:1px!important;
+  height:var(--bsc-browser-collapse-range,132px)!important;
+  min-height:var(--bsc-browser-collapse-range,132px)!important;
+  max-height:var(--bsc-browser-collapse-range,132px)!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  user-select:none!important;
+}
+
+/* Preparation/choice screens are fixed overlays, so page scrolling must not
+   translate their own coordinate system. Their existing visualViewport sizing
+   remains authoritative. */
+html.mobile-browser .overlay{
+  position:fixed!important;
+}
+</style>
+
+<script id="bsc-v189-mobile-browser-safari-scroll-collapse-script">
 (()=>{
   const root=document.documentElement;
   if(!root.classList.contains('mobile-browser')) return;
 
-  let tried=false;
-  const request=()=>{
-    if(tried) return;
-    tried=true;
-    const el=document.documentElement;
-    const fn=el.requestFullscreen || el.webkitRequestFullscreen;
-    if(typeof fn!=='function') return;
-    try{
-      const result=fn.call(el,{navigationUI:'hide'});
-      if(result && typeof result.catch==='function') result.catch(()=>{});
-    }catch(_e){}
+  /* A normal-flow spacer creates real document scrollability. */
+  let spacer=document.getElementById('bscSafariCollapseSpacer');
+  if(!spacer){
+    spacer=document.createElement('div');
+    spacer.id='bscSafariCollapseSpacer';
+    spacer.setAttribute('aria-hidden','true');
+    document.body.appendChild(spacer);
+  }
+
+  const sync=()=>{
+    const vv=window.visualViewport;
+    if(vv){
+      root.style.setProperty('--browser-vv-height',`${Math.round(vv.height)}px`);
+      root.style.setProperty('--browser-vv-width',`${Math.round(vv.width)}px`);
+      root.style.setProperty('--browser-vv-offset-top',`${Math.round(vv.offsetTop||0)}px`);
+    }
   };
 
-  window.addEventListener('pointerup',request,{capture:true,once:true,passive:true});
-  window.addEventListener('touchend',request,{capture:true,once:true,passive:true});
+  sync();
+  window.visualViewport?.addEventListener('resize',sync,{passive:true});
+  window.visualViewport?.addEventListener('scroll',sync,{passive:true});
+  window.addEventListener('orientationchange',()=>setTimeout(sync,120),{passive:true});
+
+  /* Old iOS Safari historically responded to a tiny programmatic page nudge;
+     current Safari may ignore it for chrome purposes, but it is harmless and
+     leaves the real user-scroll path available. Do it only after a user gesture. */
+  let nudged=false;
+  const nudge=()=>{
+    if(nudged) return;
+    nudged=true;
+    const max=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+    if(max<=0) return;
+    const target=Math.min(72,max);
+    requestAnimationFrame(()=>{
+      try{ window.scrollTo({top:target,left:0,behavior:'auto'}); }
+      catch(_e){ window.scrollTo(0,target); }
+      setTimeout(sync,80);
+    });
+  };
+
+  window.addEventListener('touchend',nudge,{capture:false,once:true,passive:true});
+  window.addEventListener('pointerup',nudge,{capture:false,once:true,passive:true});
 })();
 </script>
 
