@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v192-mobile-browser-piles-plus30";
+  const BUILD_VERSION="v193-mobile-browser-piles-plus40-spaced";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v192 · MOBILE BROWSER PILES +30%</title>
+<title>BLEACH: Soul Clash — v193 · MOBILE BROWSER PILES +40% SPACED</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -44077,6 +44077,55 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   min-width:18px!important;
   min-height:18px!important;
   font-size:9px!important;
+}
+</style>
+
+
+<style id="bsc-v193-mobile-browser-piles-plus40-spaced">
+/* v193 — MOBILE BROWSER ONLY.
+   Piles become +10% from v192, but the preview gets a breathing gap.
+   Preview geometry from v191/v192 is preserved. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #enemyPile.pile-zone,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  height:68px!important;
+  min-height:68px!important;
+  max-height:68px!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .discard-stack{
+  width:48px!important;
+  height:68px!important;
+  min-width:48px!important;
+  max-width:48px!important;
+  flex-basis:48px!important;
+}
+
+/* Pull piles away from the preview box without reducing their size. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #enemyPile.pile-zone{
+  transform:translateY(-5px)!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  transform:translateY(5px)!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .deck-number,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .discard-number{
+  width:19px!important;
+  height:19px!important;
+  min-width:19px!important;
+  min-height:19px!important;
+  font-size:10px!important;
 }
 </style>
 
