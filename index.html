@@ -22325,7 +22325,50 @@ function isNanaoBarrierActive(card){
           }
           current.el.classList.add("v370-board-card-primary");
         };
+        const boundTargetEls=new WeakSet();
+        let targetObserver=null;
+        const findLiveTargetEl=opt=>{
+          const sideKey=opt?.sideKey;
+          if(!sideKey||!opt?.row||!opt?.card?.uid) return null;
+          return boardEl?.querySelector?.(`.row[data-side="${sideKey}"][data-row="${opt.row}"] .card[data-uid="${opt.card.uid}"]`)||null;
+        };
+        const bindTargetEl=(opt,el)=>{
+          if(!el) return;
+          // A board rerender can replace a legal card node while the choice promise is
+          // still active. Re-assert the target class every time and attach listeners only
+          // once per concrete DOM node.
+          el.classList.add("v370-board-card-target");
+          if(boundTargetEls.has(el)) return;
+          boundTargetEls.add(el);
+          const oldTabIndex=el.getAttribute("tabindex"), oldAriaLabel=el.getAttribute("aria-label");
+          const current={opt,el};
+          const handler=e=>{
+            if(e.type==="keydown" && e.key!=="Enter" && e.key!==" ") return;
+            e.preventDefault(); e.stopPropagation();
+            finish(opt);
+          };
+          const hoverIn=()=>applyHoverGroup(current);
+          const hoverOut=()=>clearHoverGroup();
+          el.setAttribute("tabindex","0");
+          el.setAttribute("aria-label",`${title}: ${opt.card?.name||"цель"}`);
+          el.addEventListener("click",handler,true);
+          el.addEventListener("keydown",handler,true);
+          el.addEventListener("pointerenter",hoverIn,true);
+          el.addEventListener("pointerleave",hoverOut,true);
+          el.addEventListener("focus",hoverIn,true);
+          el.addEventListener("blur",hoverOut,true);
+          listeners.push({opt,el,handler,hoverIn,hoverOut,oldTabIndex,oldAriaLabel});
+        };
+        const refreshLiveTargets=()=>{
+          if(settled) return;
+          for(const item of targets){
+            const live=findLiveTargetEl(item.opt);
+            if(live) bindTargetEl(item.opt,live);
+            else if(item.el?.isConnected) bindTargetEl(item.opt,item.el);
+          }
+        };
         const cleanup=()=>{
+          targetObserver?.disconnect();
           document.removeEventListener("keydown",onKey,true);
           document.removeEventListener("click",onCardCancel,true);
           document.body.classList.remove("v370-card-targeting");
@@ -22343,32 +22386,21 @@ function isNanaoBarrierActive(card){
           }
           proxyEls.forEach(el=>el.remove());
         };
+        // Bind legal targets BEFORE the global targeting state is enabled. This prevents
+        // legal cards from spending even one rendered frame in the dimmed non-target state.
+        for(const {opt,el} of targets) bindTargetEl(opt,el);
         document.body.classList.add("v370-card-targeting");
         document.addEventListener("keydown",onKey,true);
         // All direct battlefield choices use the same cancel contract:
         // click a legal highlighted target to confirm; click any other card to cancel.
         document.addEventListener("click",onCardCancel,true);
-        for(const {opt,el} of targets){
-          const oldTabIndex=el.getAttribute("tabindex"), oldAriaLabel=el.getAttribute("aria-label");
-          const current={opt,el};
-          const handler=e=>{
-            if(e.type==="keydown" && e.key!=="Enter" && e.key!==" ") return;
-            e.preventDefault(); e.stopPropagation();
-            finish(opt);
-          };
-          const hoverIn=()=>applyHoverGroup(current);
-          const hoverOut=()=>clearHoverGroup();
-          el.classList.add("v370-board-card-target");
-          el.setAttribute("tabindex","0");
-          el.setAttribute("aria-label",`${title}: ${opt.card?.name||"цель"}`);
-          el.addEventListener("click",handler,true);
-          el.addEventListener("keydown",handler,true);
-          el.addEventListener("pointerenter",hoverIn,true);
-          el.addEventListener("pointerleave",hoverOut,true);
-          el.addEventListener("focus",hoverIn,true);
-          el.addEventListener("blur",hoverOut,true);
-          listeners.push({opt,el,handler,hoverIn,hoverOut,oldTabIndex,oldAriaLabel});
+        if(boardEl){
+          targetObserver=new MutationObserver(()=>refreshLiveTargets());
+          targetObserver.observe(boardEl,{childList:true,subtree:true});
         }
+        // One extra refresh on the next animation frame covers synchronous render() calls
+        // made immediately after the targeting prompt is opened.
+        requestAnimationFrame(refreshLiveTargets);
         toast(`${title}: ${subtitle||"КЛИКНИТЕ ПО ЦЕЛИ НА ПОЛЕ"}`,1800);
       });
     } finally {
@@ -23733,12 +23765,12 @@ function isNanaoBarrierActive(card){
     if(ep){
       ep.innerHTML=makePile(foe,"enemy");
       const top=state[foe].grave.length?state[foe].grave[state[foe].grave.length-1]:null;
-      if(top) applyCardArtElement(ep.querySelector(".discard-top"),top);
+      if(top) applyCardArtElement(ep.querySelector(".discard-top"),top,true);
     }
     if(pp){
       pp.innerHTML=makePile(view,"player");
       const top=state[view].grave.length?state[view].grave[state[view].grave.length-1]:null;
-      if(top) applyCardArtElement(pp.querySelector(".discard-top"),top);
+      if(top) applyCardArtElement(pp.querySelector(".discard-top"),top,true);
     }
   }
 
@@ -41372,21 +41404,21 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid,
   html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid{
     display:grid!important;
-    grid-template-columns:repeat(6,104px)!important;
-    grid-template-rows:repeat(2,150px)!important;
+    grid-template-columns:repeat(4,104px)!important;
+    grid-template-rows:repeat(3,150px)!important;
     grid-auto-columns:104px!important;
     grid-auto-rows:150px!important;
-    column-gap:7px!important;
-    row-gap:9px!important;
+    column-gap:10px!important;
+    row-gap:8px!important;
     justify-content:center!important;
     justify-items:stretch!important;
-    align-content:center!important;
+    align-content:start!important;
     align-items:stretch!important;
-    padding:4px 2px 6px!important;
-    min-height:319px!important;
-    height:auto!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
+    padding:5px 4px 8px!important;
+    min-height:0!important;
+    height:100%!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
     box-sizing:border-box!important;
   }
   html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid>.mulligan-card-wrap,
@@ -41429,13 +41461,13 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
     if(!isMobile()||overlay.classList.contains('hidden')) return;
     const S=(el,p,v)=>el&&el.style.setProperty(p,v,'important');
     S(grid,'display','grid');
-    S(grid,'grid-template-columns','repeat(6,104px)');
-    S(grid,'grid-template-rows','repeat(2,150px)');
+    S(grid,'grid-template-columns','repeat(4,104px)');
+    S(grid,'grid-template-rows','repeat(3,150px)');
     S(grid,'grid-auto-columns','104px'); S(grid,'grid-auto-rows','150px');
-    S(grid,'column-gap','7px'); S(grid,'row-gap','9px');
-    S(grid,'justify-content','center'); S(grid,'align-content','center');
-    S(grid,'min-height','319px'); S(grid,'height','auto');
-    S(grid,'overflow-x','auto'); S(grid,'overflow-y','hidden');
+    S(grid,'column-gap','10px'); S(grid,'row-gap','8px');
+    S(grid,'justify-content','center'); S(grid,'align-content','start');
+    S(grid,'min-height','0'); S(grid,'height','100%');
+    S(grid,'overflow-x','hidden'); S(grid,'overflow-y','auto');
     [...grid.children].forEach(w=>{
       const card=w.matches?.('.card')?w:w.querySelector?.(':scope > .card');
       if(!card) return;
@@ -41454,6 +41486,94 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   force();
 })();
 </script>
+
+
+<style id="bsc-v150-mobile-mulligan-roman-parity">
+/* v150 — CHOOSE YOUR SOUL: 4 columns x 3 rows; Roman row badge matches desktop. */
+@media (hover:none), (pointer:coarse){
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .row-badge,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .row-badge{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    top:clamp(5px,4.25cqw,7px)!important;
+    right:clamp(5px,4.25cqw,7px)!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:calc(100% - 12px)!important;
+    height:auto!important;
+    padding:0!important;
+    margin:0!important;
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+    font-family:"Times New Roman",Georgia,serif!important;
+    font-size:clamp(15px,11.8cqw,19px)!important;
+    font-weight:700!important;
+    line-height:.9!important;
+    letter-spacing:0!important;
+    word-spacing:0!important;
+    text-align:right!important;
+    white-space:nowrap!important;
+    -webkit-text-stroke:clamp(.7px,.65cqw,1px) #000!important;
+    paint-order:stroke fill!important;
+    text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 3px rgba(0,0,0,.82)!important;
+    pointer-events:none!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .row-badge > .row-badge-desktop,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .row-badge > .row-badge-desktop{
+    display:inline!important;
+    visibility:visible!important;
+    opacity:1!important;
+    color:inherit!important;
+    -webkit-text-fill-color:inherit!important;
+    font:inherit!important;
+    line-height:inherit!important;
+    letter-spacing:inherit!important;
+    word-spacing:inherit!important;
+    -webkit-text-stroke:inherit!important;
+    paint-order:inherit!important;
+    text-shadow:inherit!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .row-badge > .row-badge-mobile,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid .card .row-badge > .row-badge-mobile{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v151-mobile-target-visual-authority">
+/* v151 — MOBILE ONLY. Illegal targets remain dim; legal targets stay visible and highlighted. */
+html.mobile-ui body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+html.touch-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+html.phone-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+html.tablet-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:brightness(.46) saturate(.52)!important;
+  transition:none!important;
+}
+html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+html.tablet-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:brightness(1.13) saturate(1.22)!important;
+  outline:2px solid rgba(196,246,255,.98)!important;
+  outline-offset:1px!important;
+  box-shadow:inset 0 0 0 .67cqw var(--card-frame),inset 0 0 0 1.34cqw var(--card-ink),0 0 0 3px rgba(87,215,255,.95),0 0 18px rgba(63,202,255,.92)!important;
+}
+html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+html.tablet-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
+  border-color:rgba(225,252,255,.98)!important;
+  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88),0 0 0 1.2cqw rgba(89,220,255,.98),0 0 5.5cqw 1.2cqw rgba(54,196,255,.9)!important;
+}
+</style>
 
 </body>
 </html>
