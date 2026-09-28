@@ -49565,5 +49565,124 @@ html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
 }
 </style>
 
+
+<style id="bsc-v1553-mobile-browser-heart-bond-tune-soul-center">
+/* Mobile Browser only */
+
+/* 1) Heart Bond first interface:
+   use a balanced size between the previous too-small and too-large variants. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-action .choice-static-preview{
+  width:99%!important;
+  max-width:99%!important;
+  transform:scale(.99)!important;
+  transform-origin:center center!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-action .choice-static-preview .card-info-panel{
+  font-size:99%!important;
+}
+
+/* 2) Deck label "SOUL":
+   vertically center the text inside the tiny deck card. */
+html.mobile-browser #app#app#app#app#app#app .rightbar .pile-inner > .deck-stack::after{
+  inset:0!important;
+  bottom:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+  padding:0!important;
+  text-align:center!important;
+}
+</style>
+
+
+<style id="bsc-v1554-pwa-mulligan-heartbond-restart">
+/* PWA only */
+
+/* 1) CHOOSE YOUR SOUL:
+   make vertical scrolling visually obvious. */
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid{
+  overflow-y:auto!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:rgba(255,122,24,.95) rgba(0,0,0,.18)!important;
+  padding-right:10px!important;
+  position:relative!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid::-webkit-scrollbar{
+  display:block!important;
+  width:8px!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid::-webkit-scrollbar-track{
+  background:rgba(0,0,0,.14)!important;
+  border-radius:999px!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#ff8c2a 0%,#ff5a00 100%)!important;
+  border-radius:999px!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-modal{
+  position:relative!important;
+}
+html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-modal::after{
+  content:"↓ SCROLL ↓"!important;
+  position:absolute!important;
+  right:12px!important;
+  bottom:66px!important;
+  z-index:8!important;
+  padding:2px 7px!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.62)!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:900!important;
+  letter-spacing:.08em!important;
+  line-height:1.1!important;
+  pointer-events:none!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset!important;
+}
+
+/* 2) Heart Bond interface 2:
+   no card enlargement on tap / active / sticky hover. */
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-btn,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-btn:hover,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-btn:focus,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-btn:focus-visible,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-btn:active,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-preview,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-preview:hover,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-preview:focus,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-preview:focus-visible,
+html.mobile-pwa #choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange .choice-card-preview:active{
+  transform:none!important;
+  filter:none!important;
+}
+
+/* 3) "Новая игра":
+   enlarge the tappable hit area without increasing the surrounding box. */
+html.mobile-pwa #restartBtn{
+  position:relative!important;
+  z-index:1!important;
+  touch-action:manipulation!important;
+}
+html.mobile-pwa #restartBtn::before{
+  content:""!important;
+  position:absolute!important;
+  inset:-8px -10px!important;
+  pointer-events:auto!important;
+}
+</style>
+
 </body>
 </html>
