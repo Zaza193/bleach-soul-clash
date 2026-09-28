@@ -40753,6 +40753,390 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
     display:none!important;
   }
 }
+
+/* v138: CHOOSE YOUR SOUL mobile cards enlarged */
+@media (pointer: coarse), (max-width: 1100px){
+  .mulligan-modal{
+    width:96vw !important;
+    max-width:none !important;
+    padding:22px !important;
+  }
+  .mulligan-grid{
+    gap:12px !important;
+    padding:10px 4px 18px !important;
+    min-height:0 !important;
+    max-height:70vh !important;
+    overflow-y:auto !important;
+  }
+  .mulligan-grid .card{
+    flex:0 0 290px !important;
+    width:290px !important;
+    height:420px !important;
+  }
+  .mulligan-grid .card .power{
+    width:58px !important;
+    height:58px !important;
+    font-size:34px !important;
+  }
+  .mulligan-grid .card .name{
+    font-size:17px !important;
+    padding:34px 10px 12px !important;
+  }
+}
+</style>
+
+
+<style id="bsc-v139-mobile-preview-edge-to-edge">
+/* v139 — MOBILE ONLY: preview card/plaque fill the entire middle rightbar cell.
+   v133 leaves 3px rightbar padding on each side; compensate for it here instead of
+   shrinking the card inside an already inset #detail. */
+@media (pointer:coarse) and (orientation:landscape){
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail{
+    width:calc(100% + 6px)!important;
+    min-width:calc(100% + 6px)!important;
+    max-width:none!important;
+    margin-left:-3px!important;
+    margin-right:-3px!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face,
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+  }
+
+  html.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.mobile-ui.phone-device.phone-landscape .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel{
+    margin:-1px 0 0!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v140-mobile-heart-bond-buttons-back-fix">
+@media (hover:none), (pointer:coarse){
+  /* MOBILE ONLY — Heart Bond main action: three compact centered buttons. */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid{
+    grid-template-columns:repeat(3,clamp(120px,24vw,190px))!important;
+    justify-content:center!important;
+    justify-items:stretch!important;
+    column-gap:8px!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview{
+    grid-column:1 / -1!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn{
+    width:100%!important;
+    min-width:0!important;
+    max-width:190px!important;
+    justify-self:center!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span{
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  /* MOBILE ONLY — Heart Bond exchange: keep cards inside viewport and expose real BACK button. */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange{
+    width:calc(100vw - 8px)!important;
+    max-width:calc(100vw - 8px)!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    padding:4px 12px 6px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-x:contain!important;
+    touch-action:pan-x!important;
+  }
+
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel,
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    visibility:visible!important;
+    opacity:1!important;
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:clamp(110px,28vw,160px)!important;
+    min-width:110px!important;
+    max-width:160px!important;
+    height:30px!important;
+    min-height:30px!important;
+    flex:0 0 30px!important;
+    margin:5px auto 0!important;
+    padding:4px 14px!important;
+    box-sizing:border-box!important;
+    font-size:9px!important;
+    line-height:1!important;
+    z-index:20!important;
+  }
+}
+</style>
+<script id="bsc-v140-heart-bond-back-label-authority">
+(function(){
+  const modal=document.querySelector('#choiceOverlay .choice-modal');
+  const cancel=document.getElementById('choiceCancel');
+  if(!modal||!cancel) return;
+  const sync=()=>{
+    const exchange=modal.classList.contains('heart-bond-exchange');
+    cancel.textContent=exchange?'НАЗАД':'ОТМЕНА';
+    if(exchange){
+      cancel.hidden=false;
+      cancel.removeAttribute('hidden');
+      cancel.style.removeProperty('display');
+    }
+  };
+  new MutationObserver(sync).observe(modal,{attributes:true,attributeFilter:['class']});
+  sync();
+})();
+</script>
+
+
+<style id="bsc-v141-mobile-info-plaque-desktop-parity">
+/* v141 — MOBILE ONLY: use desktop card-info visual language and typography. */
+@media (hover:none), (pointer:coarse){
+  /* RIGHTBAR PREVIEW: desktop parity. Name is intentionally hidden here on desktop too. */
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    flex:0 0 auto!important;
+    margin:-1px 0 0!important;
+    padding:8px 9px 10px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    box-sizing:border-box!important;
+    clip-path:none!important;
+    border:2px solid #111!important;
+    outline:0!important;
+    border-radius:0!important;
+    background:#eee9df!important;
+    color:#111!important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),0 3px 7px rgba(0,0,0,.20)!important;
+    overflow:visible!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-panel::before,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-panel::before,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-panel::before{
+    content:none!important;
+    display:none!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-name,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-name,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-name{
+    display:none!important;
+    height:0!important;
+    min-height:0!important;
+    max-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-desc,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-desc,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail .card-info-desc{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    color:#444!important;
+    background:transparent!important;
+    border:0!important;
+    font-family:"Arial Narrow","Roboto Condensed","Yu Gothic",Arial,sans-serif!important;
+    font-size:clamp(8px,7.2cqw,11px)!important;
+    font-weight:600!important;
+    line-height:1.28!important;
+    letter-spacing:0!important;
+    text-align:left!important;
+    text-transform:none!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    -webkit-box-orient:initial!important;
+    -webkit-line-clamp:unset!important;
+    line-clamp:unset!important;
+    text-shadow:none!important;
+  }
+
+  /* Choice/medic/Heart Bond plaques keep the card name, but use the same desktop plaque shell. */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview.card.with-info > .card-info-panel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview.card.with-info > .card-info-panel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview.card.with-info > .card-info-panel{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    flex:0 0 auto!important;
+    margin:-1px 0 0!important;
+    padding:5px 6px 7px!important;
+    box-sizing:border-box!important;
+    clip-path:none!important;
+    border:2px solid #111!important;
+    outline:0!important;
+    border-radius:0!important;
+    background:#eee9df!important;
+    color:#111!important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),0 2px 5px rgba(0,0,0,.18)!important;
+    overflow:visible!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-panel::before,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-panel::before,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-panel::before{
+    content:none!important;
+    display:none!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-name,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-name,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-name{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0 1px 3px!important;
+    color:#111!important;
+    background:transparent!important;
+    border:0!important;
+    font-family:Georgia,"Times New Roman",serif!important;
+    font-size:clamp(8px,8.1cqw,11px)!important;
+    font-weight:900!important;
+    line-height:1.05!important;
+    letter-spacing:.005em!important;
+    text-align:center!important;
+    text-transform:none!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    text-shadow:none!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-desc,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-desc,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-card-preview .card-info-desc{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0 1px!important;
+    color:#333!important;
+    font-family:"Arial Narrow","Roboto Condensed","Yu Gothic",Arial,sans-serif!important;
+    font-size:clamp(7px,6.2cqw,9px)!important;
+    font-weight:600!important;
+    line-height:1.22!important;
+    letter-spacing:0!important;
+    text-align:center!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    -webkit-box-orient:initial!important;
+    -webkit-line-clamp:unset!important;
+    line-clamp:unset!important;
+    text-shadow:none!important;
+  }
+
+  /* Opponent played preview still intentionally has no information plaque. */
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel{
+    display:none!important;
+  }
+}
 </style>
 
 </body>
