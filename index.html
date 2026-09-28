@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v189-mobile-browser-safari-scroll-collapse";
+  const BUILD_VERSION="v191-mobile-browser-preview-height-plus10";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v189 · MOBILE BROWSER SAFARI SCROLL COLLAPSE</title>
+<title>BLEACH: Soul Clash — v191 · MOBILE BROWSER PREVIEW HEIGHT +10%</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -43735,35 +43735,6 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 </style>
 
 
-<style id="bsc-v184-mobile-browser-visual-viewport-fix">
-/* v184 — MOBILE BROWSER ONLY. Use the real Safari visible viewport. */
-html.mobile-browser body{
-  height:100dvh!important;
-  min-height:0!important;
-  overflow:hidden!important;
-}
-html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-  height:100dvh!important;
-  max-height:100dvh!important;
-  min-height:0!important;
-  margin-top:0!important;
-}
-</style>
-<script id="bsc-v184-visual-viewport-script">
-(function(){
-  if(!window.visualViewport) return;
-  function syncVV(){
-    var vv=window.visualViewport;
-    document.documentElement.style.setProperty('--browser-vv-height', vv.height+'px');
-    document.documentElement.style.setProperty('--browser-vv-width', vv.width+'px');
-  }
-  syncVV();
-  window.visualViewport.addEventListener('resize',syncVV);
-  window.visualViewport.addEventListener('scroll',syncVV);
-})();
-</script>
-
-
 <style id="bsc-v185-mobile-browser-preview-use-free-space">
 /* v185 — MOBILE BROWSER ONLY.
    Preview boxes were still using the old fixed card width after the pile rail
@@ -44000,114 +43971,77 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 
 
 
-<style id="bsc-v189-mobile-browser-safari-scroll-collapse">
-/* v189 — MOBILE BROWSER ONLY.
-   Safari collapses its toolbar/tab chrome only when the DOCUMENT can actually
-   scroll. Earlier mobile-browser patches locked body at overflow:hidden, which
-   removed that browser behavior entirely.
 
-   Give Safari a small real page scroll range, while pinning the game to the
-   top of the visible area. The battle itself does not move and keeps using the
-   live visualViewport height. PWA/desktop remain unchanged. */
+<style id="bsc-v190-mobile-browser-browser-ui-experiments-removed">
+/* v190 — MOBILE BROWSER ONLY.
+   Revert every Safari-chrome experiment. The page no longer creates a fake
+   document scroll range, no sticky game root is used, and no special 100dvh
+   override is used to try to influence browser UI. Safari chrome is accepted
+   as external browser UI; the game only lays out inside the space Safari gives it. */
 
 html.mobile-browser{
-  height:auto!important;
-  min-height:100%!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  -webkit-overflow-scrolling:touch!important;
+  height:100%!important;
+  min-height:0!important;
+  overflow:hidden!important;
 }
 
 html.mobile-browser body{
-  height:auto!important;
-  min-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) + var(--bsc-browser-collapse-range,132px))!important;
-  overflow-x:hidden!important;
-  overflow-y:visible!important;
-  margin:0!important;
-}
-
-/* Keep the actual game visually stationary while the document scrolls behind it. */
-html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-  position:sticky!important;
-  top:0!important;
-  height:var(--browser-vv-height,var(--app-height,100dvh))!important;
-  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  height:100%!important;
   min-height:0!important;
-  z-index:1!important;
-}
-
-/* Real scroll runway used only to let Safari minimize its own UI. */
-html.mobile-browser #bscSafariCollapseSpacer{
-  display:block!important;
-  position:relative!important;
-  width:1px!important;
-  height:var(--bsc-browser-collapse-range,132px)!important;
-  min-height:var(--bsc-browser-collapse-range,132px)!important;
-  max-height:var(--bsc-browser-collapse-range,132px)!important;
+  overflow:hidden!important;
   margin:0!important;
-  padding:0!important;
-  opacity:0!important;
-  pointer-events:none!important;
-  user-select:none!important;
 }
 
-/* Preparation/choice screens are fixed overlays, so page scrolling must not
-   translate their own coordinate system. Their existing visualViewport sizing
-   remains authoritative. */
-html.mobile-browser .overlay{
-  position:fixed!important;
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  position:relative!important;
+  top:auto!important;
+  bottom:auto!important;
+}
+
+/* Restore independent scrolling of the preview description plaque.
+   It must consume vertical swipes itself instead of handing them to the page. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail
+> .detail-preview > .card.with-info > .card-info-panel{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  touch-action:pan-y!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  pointer-events:auto!important;
 }
 </style>
 
-<script id="bsc-v189-mobile-browser-safari-scroll-collapse-script">
-(()=>{
-  const root=document.documentElement;
-  if(!root.classList.contains('mobile-browser')) return;
 
-  /* A normal-flow spacer creates real document scrollability. */
-  let spacer=document.getElementById('bscSafariCollapseSpacer');
-  if(!spacer){
-    spacer=document.createElement('div');
-    spacer.id='bscSafariCollapseSpacer';
-    spacer.setAttribute('aria-hidden','true');
-    document.body.appendChild(spacer);
-  }
+<style id="bsc-v191-mobile-browser-preview-height-plus10">
+/* v191 — MOBILE BROWSER ONLY.
+   Increase the right-side preview area's vertical share by ~10% without
+   changing its width. The pile cards keep their own size and are allowed to
+   protrude from their smaller grid tracks, so the extra height is genuinely
+   transferred to the preview instead of being lost as empty rail space. */
 
-  const sync=()=>{
-    const vv=window.visualViewport;
-    if(vv){
-      root.style.setProperty('--browser-vv-height',`${Math.round(vv.height)}px`);
-      root.style.setProperty('--browser-vv-width',`${Math.round(vv.width)}px`);
-      root.style.setProperty('--browser-vv-offset-top',`${Math.round(vv.offsetTop||0)}px`);
-    }
-  };
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar{
+  grid-template-rows:32px minmax(0,1fr) 32px!important;
+}
 
-  sync();
-  window.visualViewport?.addEventListener('resize',sync,{passive:true});
-  window.visualViewport?.addEventListener('scroll',sync,{passive:true});
-  window.addEventListener('orientationchange',()=>setTimeout(sync,120),{passive:true});
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #enemyPile.pile-zone,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  position:relative!important;
+  z-index:3!important;
+}
 
-  /* Old iOS Safari historically responded to a tiny programmatic page nudge;
-     current Safari may ignore it for chrome purposes, but it is harmless and
-     leaves the real user-scroll path available. Do it only after a user gesture. */
-  let nudged=false;
-  const nudge=()=>{
-    if(nudged) return;
-    nudged=true;
-    const max=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
-    if(max<=0) return;
-    const target=Math.min(72,max);
-    requestAnimationFrame(()=>{
-      try{ window.scrollTo({top:target,left:0,behavior:'auto'}); }
-      catch(_e){ window.scrollTo(0,target); }
-      setTimeout(sync,80);
-    });
-  };
-
-  window.addEventListener('touchend',nudge,{capture:false,once:true,passive:true});
-  window.addEventListener('pointerup',nudge,{capture:false,once:true,passive:true});
-})();
-</script>
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail{
+  position:relative!important;
+  z-index:1!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+}
+</style>
 
 </body>
 </html>
