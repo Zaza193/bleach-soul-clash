@@ -22531,8 +22531,26 @@ function isNanaoBarrierActive(card){
   const SPECIAL_INTERACTIVE_CHOICE_ABILITIES=new Set([
     "returnTechnique","reiatsuPressure","overcome","hogyoku","ceroSincretico","soulVacuumIce","soulKamikake","glotoneriaCopiedAbility","sklaverei","loydCopiedAbility","roydCopiedAbility"
   ]);
+  /* v143 — Return/movement cards (Shunpo / Sonido / Hirenkyaku variants) must
+     never auto-commit on their first tap just because there is no legal return
+     target. With a target they keep the existing target-picker flow; without a
+     target the first tap only selects/inspects the card and a second action is
+     required to commit it. This rule is shared by desktop and mobile. */
+  const RETURN_STYLE_CONFIRM_ABILITIES=new Set([
+    "returnTechnique","yoruichiShunpo","omaedaShunpoGuard","soulByakuyaShunpo","gemelosSonido","ulquiorraSonido"
+  ]);
+  function hasReturnStyleTarget(sideKey,card){
+    if(!card || !state?.[sideKey]) return false;
+    return fieldTargetOptions(sideKey,c=>isReturnableBoardCard(c,card.uid)).length>0;
+  }
   function cardNeedsRowOrTargetChoice(sideKey,card){
     if(!card) return true;
+    if(RETURN_STYLE_CONFIRM_ABILITIES.has(card.ability)){
+      const hasTarget=hasReturnStyleTarget(sideKey,card);
+      if(card.special) return hasTarget;
+      if(hasTarget) return true;
+      return validRows(card).length!==1;
+    }
     if(card.special) return SPECIAL_INTERACTIVE_CHOICE_ABILITIES.has(card.ability);
     if(isUlquiorraSegundaLandingCard(card) && ulquiorraBaseLandingTarget(sideKey)) return true;
     if(isTargetReturnLandingCard(card) && hasReturnLandingTarget(sideKey,card)) return true;
@@ -41135,6 +41153,182 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel,
   html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel{
     display:none!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v142-mobile-soul-plus40-back-bottom">
+/* v142 — MOBILE LANDSCAPE ONLY
+   1) CHOOSE YOUR SOUL actual active size was 90x130; increase exactly 40% -> 126x182.
+   2) HEART BOND — EXCHANGE: place BACK after the card strip, centered at the bottom. */
+@media (pointer:coarse) and (orientation:landscape){
+  /* CHOOSE YOUR SOUL: final authority over older triple-ID 90x130 rules. */
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-modal,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-modal,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-modal{
+    width:min(780px,calc(100vw - 6px))!important;
+    max-width:min(780px,calc(100vw - 6px))!important;
+    height:calc(100dvh - 4px)!important;
+    max-height:calc(100dvh - 4px)!important;
+    min-height:0!important;
+    padding:6px 8px 7px!important;
+    display:grid!important;
+    grid-template-rows:auto minmax(0,1fr) auto!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head{
+    gap:6px!important;
+    margin:0!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-title,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-title,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-title{
+    font-size:clamp(21px,5vh,27px)!important;
+    line-height:1!important;
+    margin:0!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction{
+    margin:1px auto 3px!important;
+    font-size:clamp(8px,1.85vh,10px)!important;
+    line-height:1.08!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid{
+    display:grid!important;
+    grid-template-columns:repeat(6,126px)!important;
+    grid-template-rows:repeat(2,182px)!important;
+    justify-content:center!important;
+    justify-items:center!important;
+    align-content:center!important;
+    align-items:center!important;
+    gap:4px!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:3px 0 4px!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap{
+    width:126px!important;
+    min-width:126px!important;
+    max-width:126px!important;
+    height:182px!important;
+    min-height:182px!important;
+    max-height:182px!important;
+    display:flex!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap>.card,
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap>.card,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap>.card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card{
+    flex:0 0 126px!important;
+    width:126px!important;
+    min-width:126px!important;
+    max-width:126px!important;
+    height:182px!important;
+    min-height:182px!important;
+    max-height:182px!important;
+    margin:0!important;
+    transform:none;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card .power,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card .power,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card .power{
+    width:39px!important;
+    height:39px!important;
+    font-size:24px!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions{
+    min-height:32px!important;
+    height:32px!important;
+    margin:3px 0 0!important;
+    gap:6px!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions button,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions button,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions button{
+    min-height:32px!important;
+    height:32px!important;
+    padding:3px 8px!important;
+    font-size:8px!important;
+  }
+
+  /* HEART BOND — EXCHANGE: DOM has cancel before grid; flex order puts it at the bottom. */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    height:calc(100dvh - 6px)!important;
+    max-height:calc(100dvh - 6px)!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading{
+    order:0!important;
+    flex:0 0 auto!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid{
+    order:10!important;
+    flex:1 1 auto!important;
+    min-height:0!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub{
+    display:none!important;
+    order:20!important;
+    height:0!important;
+    margin:0!important;
+    padding:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel{
+    order:99!important;
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    position:relative!important;
+    inset:auto!important;
+    transform:none!important;
+    align-self:center!important;
+    flex:0 0 30px!important;
+    width:150px!important;
+    min-width:150px!important;
+    max-width:150px!important;
+    height:30px!important;
+    min-height:30px!important;
+    max-height:30px!important;
+    margin:6px auto 0!important;
+    padding:3px 14px!important;
+    z-index:50!important;
   }
 }
 </style>
