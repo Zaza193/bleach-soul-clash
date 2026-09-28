@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v161-mobile-browser-board-hand-geometry";
+  const BUILD_VERSION="v167-mobile-browser-board-card-height";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v161 · MOBILE BROWSER BOARD/HAND GEOMETRY</title>
+<title>BLEACH: Soul Clash — v167 · MOBILE BROWSER BOARD CARD HEIGHT</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -16934,96 +16934,7 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
 }
 </style>
 
-<style id="bsc-v160-mobile-browser-prep-pages-top-anchor">
-/* v160 — mobile browser only. Prep screens use CHOOSE YOUR SOUL top geometry.
-   Remove vertical centering source, not the content itself. */
-html.mobile-browser #modeOverlay:not(.hidden),
-html.mobile-browser #startOverlay:not(.hidden),
-html.mobile-browser #deckBuilderOverlay:not(.hidden){
-  align-items:flex-start!important;
-  justify-content:center!important;
-  place-items:initial!important;
-  padding-top:0!important;
-}
 
-html.mobile-browser #modeOverlay>.mode-modal,
-html.mobile-browser #startOverlay>.faction-modal,
-html.mobile-browser #deckBuilderOverlay>.deck-builder-shell{
-  margin:0 auto!important;
-  transform:none!important;
-}
-</style>
-
-<style id="bsc-v164-mobile-browser-battle-stage-preview-fix">
-/* v162 — mobile browser only.
-   Global overlay containment: browser viewport can be narrower than CSS layout
-   after previous desktop-scale rules. Keep every modal inside visual viewport. */
-
-html.mobile-browser .overlay{
-  width:100vw!important;
-  max-width:100vw!important;
-  overflow:hidden!important;
-}
-
-html.mobile-browser .overlay>.modal,
-html.mobile-browser .overlay>.choice-modal,
-html.mobile-browser .overlay>.deck-builder-shell{
-  max-width:100vw!important;
-  box-sizing:border-box!important;
-}
-
-html.mobile-browser #choiceOverlay.overlay{
-  width:100vw!important;
-  height:var(--app-height,100dvh)!important;
-  min-height:0!important;
-  overflow:hidden!important;
-  align-items:stretch!important;
-}
-
-html.mobile-browser #choiceOverlay .choice-modal{
-  width:100%!important;
-  height:100%!important;
-  min-width:0!important;
-  overflow:hidden!important;
-  justify-content:flex-start!important;
-}
-
-html.mobile-browser #choiceOverlay .choice-heading{
-  top:3vh!important;
-  width:calc(100vw - 32px)!important;
-  max-width:calc(100vw - 32px)!important;
-}
-
-html.mobile-browser #choiceOverlay .choice-grid{
-  width:100%!important;
-  max-width:100vw!important;
-  padding-left:16px!important;
-  padding-right:16px!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  box-sizing:border-box!important;
-}
-
-html.mobile-browser #choiceOverlay .choice-card-btn,
-html.mobile-browser #choiceOverlay .choice-text-btn{
-  max-width:calc(100vw - 32px)!important;
-}
-
-html.mobile-browser #choiceOverlay .choice-nav-prev{
-  left:6px!important;
-}
-
-html.mobile-browser #choiceOverlay .choice-nav-next{
-  right:6px!important;
-}
-
-/* Same containment for every other modal flow. */
-html.mobile-browser .modal{
-  width:min(94vw,790px)!important;
-  max-height:calc(var(--app-height,100dvh) - 24px)!important;
-  overflow:auto!important;
-}
-</style>
 
 
 <style id="v164-mobile-browser-battle-stage-preview-fix">
@@ -17692,26 +17603,29 @@ html.platform-mobile-browser [data-bsc-target-state="valid"]::after{
     }
     const face=el.querySelector?.(':scope > .card-face');
     const layer=face?.querySelector?.(':scope > .bsc-target-visual');
+    const mobileBrowser=document.documentElement.classList.contains("mobile-browser");
     el.dataset.bscTargetState=isLegal?"legal":"blocked";
     if(!face||!layer) return;
 
-    /* Never use filter/opacity for target dimming on mobile WebKit: it causes compositing flashes. */
+    /* Mobile browser uses a deliberately quiet target language: legal cards get
+       one blue outline; everything else stays visually unchanged. PWA keeps the
+       existing stronger target treatment. */
     face.style.setProperty("filter","none","important");
     face.style.setProperty("transition","none","important");
-    face.style.setProperty("outline",isLegal?"2px solid rgba(218,252,255,.98)":"none","important");
-    face.style.setProperty("outline-offset",isLegal?"1px":"0","important");
+    face.style.setProperty("outline",mobileBrowser?"none":(isLegal?"2px solid rgba(218,252,255,.98)":"none"),"important");
+    face.style.setProperty("outline-offset",mobileBrowser?"0":(isLegal?"1px":"0"),"important");
 
-    layer.style.setProperty("display","block","important");
+    layer.style.setProperty("display",mobileBrowser&&!isLegal?"none":"block","important");
     layer.style.setProperty("visibility","visible","important");
     layer.style.setProperty("opacity","1","important");
     layer.style.setProperty("transition","none","important");
     layer.style.setProperty("z-index","90","important");
     if(isLegal){
-      layer.style.setProperty("background","rgba(31,207,255,.07)","important");
-      layer.style.setProperty("border","3px solid rgba(218,252,255,.98)","important");
-      layer.style.setProperty("box-shadow","inset 0 0 0 2px rgba(59,207,255,.98), inset 0 0 18px 5px rgba(44,190,255,.55)","important");
+      layer.style.setProperty("background",mobileBrowser?"transparent":"rgba(31,207,255,.07)","important");
+      layer.style.setProperty("border",mobileBrowser?"2px solid rgba(46,184,255,.98)":"3px solid rgba(218,252,255,.98)","important");
+      layer.style.setProperty("box-shadow",mobileBrowser?"none":"inset 0 0 0 2px rgba(59,207,255,.98), inset 0 0 18px 5px rgba(44,190,255,.55)","important");
     }else{
-      layer.style.setProperty("background","rgba(0,0,0,.58)","important");
+      layer.style.setProperty("background",mobileBrowser?"transparent":"rgba(0,0,0,.58)","important");
       layer.style.setProperty("border","0","important");
       layer.style.setProperty("box-shadow","none","important");
     }
@@ -42634,45 +42548,7 @@ html.platform-mobile-browser{
   --mobile-browser-stage-scale:.91;
 }
 
-@media (max-width:900px){
-  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-    grid-template-columns:
-      minmax(0,23vw)
-      minmax(0,1fr)
-      minmax(132px,19vw)!important;
-  }
-
-  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell{
-    min-width:0!important;
-  }
-
-  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .rightbar{
-    width:100%!important;
-    min-width:0!important;
-    padding:5px!important;
-  }
-
-  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .rightbar .detail{
-    width:100%!important;
-    min-width:0!important;
-    overflow:hidden!important;
-  }
-
-  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .detail-preview{
-    width:100%!important;
-    max-width:none!important;
-    aspect-ratio:2 / 3!important;
-    height:auto!important;
-    margin:0 auto 6px!important;
-  }
-
-  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .detail-preview .card{
-    width:100%!important;
-    height:100%!important;
-    max-width:100%!important;
-    max-height:100%!important;
-  }
-}
+/* v165: the v164 right-rail/preview widening experiment was reverted. */
 
 @media (max-height:600px){
   html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
@@ -42681,6 +42557,170 @@ html.platform-mobile-browser{
     width:109.9%!important;
     height:109.9%!important;
   }
+}
+</style>
+
+
+<style id="bsc-v165-mobile-browser-overlay-authority">
+/* v165 — MOBILE BROWSER ONLY.
+   Root cause repaired at the shared overlay layer.
+
+   Legacy mobile-landscape CSS centers every .overlay by combining left:50%
+   with translateX(-50%). The later browser viewport layer changed inset/width
+   to the visual viewport but did not clear that transform. On mobile browser
+   this moves full-width overlays half a viewport off-screen. The same legacy
+   preparation rule also vertically centers START/ASSEMBLE and adds an 8px top
+   gutter with very high ID specificity.
+
+   Keep those legacy rules for PWA. Mobile browser gets one authoritative
+   visual-viewport coordinate system and explicit top anchoring for the two
+   preparation pages. */
+
+/* All mobile-browser overlays use the real visible viewport origin.
+   This fixes Heart Bond and every other modal/choice flow that inherited the
+   old phone-stage translateX(-50%) transform. */
+html.mobile-browser.mobile-ui.phone-device.phone-landscape .overlay.overlay,
+html.mobile-browser.mobile-ui.touch-device.touch-landscape .overlay.overlay,
+html.mobile-browser .overlay.overlay{
+  position:fixed!important;
+  inset:0!important;
+  left:0!important;
+  right:0!important;
+  top:0!important;
+  bottom:0!important;
+  transform:none!important;
+  width:var(--browser-vv-width,100vw)!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  min-height:0!important;
+  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+
+/* VS AI / faction setup.
+   Match/exceed the old repeated-ID mobile rule instead of trying to nudge the
+   modal after layout. The overlay starts at y=0 and the modal no longer has
+   auto vertical margins, so its top border touches the browser content line. */
+html.mobile-browser #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay#startOverlay:not(.hidden){
+  display:flex!important;
+  flex-direction:column!important;
+  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay#startOverlay>.faction-modal.faction-modal{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  margin:0 auto!important;
+  align-self:center!important;
+}
+
+/* ASSEMBLE YOUR SOUL: same underlying legacy centering rule, same structural fix. */
+html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay:not(.hidden){
+  display:flex!important;
+  flex-direction:column!important;
+  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay>.deck-builder-shell{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  margin:0 auto!important;
+  align-self:center!important;
+}
+
+/* Choice flows (Heart Bond, medic, special-card choices, etc.) are now anchored
+   to the same viewport box. Their internal layouts remain untouched; only the
+   incorrect parent coordinate system is corrected. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay:not(.hidden){
+  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+}
+</style>
+
+
+<style id="bsc-v166-mobile-browser-target-outline-authority">
+/* v166 — MOBILE BROWSER ONLY.
+   Target selection is intentionally minimal: no dimming, tint, glow, scale or
+   brightness changes. A legal target receives one blue border on the dedicated
+   target layer. PWA/desktop retain their existing visuals. */
+html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  transform:none!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  transform:none!important;
+  transition:none!important;
+  outline:0!important;
+  outline-offset:0!important;
+  box-shadow:inset 0 0 0 .67cqw var(--card-frame),inset 0 0 0 1.34cqw var(--card-ink)!important;
+}
+html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face::after{
+  content:none!important;
+  display:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
+  border:.75cqw solid color-mix(in srgb,var(--card-frame) 72%,#fff 28%)!important;
+  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88)!important;
+}
+html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame::after{
+  content:none!important;
+  display:none!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face > .bsc-target-visual{
+  display:none!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face > .bsc-target-visual{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:90!important;
+  pointer-events:none!important;
+  background:transparent!important;
+  border:2px solid rgba(46,184,255,.98)!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transition:none!important;
+}
+</style>
+
+
+<style id="bsc-v167-mobile-browser-board-card-height">
+/* v167 — MOBILE BROWSER ONLY.
+   Battlefield cards scale vertically with the actual row height. The previous
+   46px / (100% - 4px) rule left almost no vertical breathing room after the
+   mobile-browser battle stage was compacted. Keep the card aspect ratio, but
+   reduce its vertical cap by the same ~9% and reserve 8px inside every row. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app > .board-shell > #board#board > .row > .row-cards > .card{
+  height:min(42px,calc(100% - 8px))!important;
+  max-height:42px!important;
+  aspect-ratio:32 / 46!important;
 }
 </style>
 
