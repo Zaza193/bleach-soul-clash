@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v159-mobile-browser-layout-repair";
+  const BUILD_VERSION="v161-mobile-browser-board-hand-geometry";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v155 · MOBILE BROWSER VIEWPORT ADAPT</title>
+<title>BLEACH: Soul Clash — v161 · MOBILE BROWSER BOARD/HAND GEOMETRY</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -13814,78 +13814,78 @@ radial-gradient(ellipse at 18% 28%,rgba(247,178,221,.96) 0 28%,rgba(255,255,255,
   28%{opacity:.42}
   100%{opacity:0;transform:translate(-50%,-34%) scale(1.28)}
 }
-.v163-zabimaru-canvas{
+.v164-zabimaru-canvas{
   position:fixed;inset:0;width:100vw;height:100vh;z-index:10570;
   pointer-events:none;overflow:visible;
 }
-.v163-zabimaru-split-stage{
+.v164-zabimaru-split-stage{
   position:fixed;pointer-events:none;z-index:10574;overflow:visible;isolation:isolate;
   perspective:800px;
 }
-.v163-zabimaru-split-stage .piece{
+.v164-zabimaru-split-stage .piece{
   position:absolute;inset:0;overflow:hidden;will-change:transform,opacity,filter;
   filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));
 }
-.v163-zabimaru-split-stage .piece.top{clip-path:polygon(0 0,100% 0,100% 31%,0 73%)}
-.v163-zabimaru-split-stage .piece.bottom{clip-path:polygon(0 73%,100% 31%,100% 100%,0 100%)}
-.v163-zabimaru-split-stage .piece>.card-face{
+.v164-zabimaru-split-stage .piece.top{clip-path:polygon(0 0,100% 0,100% 31%,0 73%)}
+.v164-zabimaru-split-stage .piece.bottom{clip-path:polygon(0 73%,100% 31%,100% 100%,0 100%)}
+.v164-zabimaru-split-stage .piece>.card-face{
   position:absolute!important;left:0!important;top:0!important;margin:0!important;
   max-width:none!important;max-height:none!important;transform:none!important;
   pointer-events:none!important;box-sizing:border-box!important;
 }
-.v163-zabimaru-split-stage .cut-shadow{
+.v164-zabimaru-split-stage .cut-shadow{
   position:absolute;left:-12%;top:51%;width:124%;height:8px;border-radius:999px;
   transform:translateY(-50%) rotate(-24deg) scaleX(0);transform-origin:50% 50%;opacity:0;
   background:linear-gradient(90deg,transparent,rgba(25,0,0,.72) 10%,rgba(20,0,0,.9) 50%,rgba(25,0,0,.72) 90%,transparent);
-  filter:blur(2.4px);animation:v163CutShadow 460ms ease-out both;
+  filter:blur(2.4px);animation:v164CutShadow 460ms ease-out both;
 }
-.v163-zabimaru-split-stage .cut-core{
+.v164-zabimaru-split-stage .cut-core{
   position:absolute;left:-14%;top:51%;width:128%;height:2px;border-radius:999px;
   transform:translateY(-50%) rotate(-24deg) scaleX(.02);transform-origin:50% 50%;opacity:0;
   background:linear-gradient(90deg,transparent 0,rgba(255,75,57,.20) 5%,#ff3b2d 27%,#fff2e8 49%,#ff392a 71%,rgba(255,67,48,.18) 95%,transparent 100%);
   box-shadow:0 0 5px rgba(255,52,38,.95),0 0 12px rgba(171,8,6,.62);
-  animation:v163CutCore 520ms cubic-bezier(.08,.9,.15,1) both;
+  animation:v164CutCore 520ms cubic-bezier(.08,.9,.15,1) both;
 }
-.v163-zabimaru-split-stage .impact-flash{
+.v164-zabimaru-split-stage .impact-flash{
   position:absolute;left:50%;top:50%;width:44%;aspect-ratio:1;border-radius:50%;
   transform:translate(-50%,-50%) scale(.15);opacity:0;
   background:radial-gradient(circle,rgba(255,255,255,.96) 0 5%,rgba(255,205,194,.76) 11%,rgba(244,48,34,.28) 31%,rgba(104,0,0,0) 68%);
-  animation:v163ImpactFlash 260ms ease-out both;
+  animation:v164ImpactFlash 260ms ease-out both;
 }
-.v163-zabimaru-split-stage .chip{
+.v164-zabimaru-split-stage .chip{
   position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);
   opacity:0;background:linear-gradient(135deg,#f9e4d8 0 22%,#8b1915 27% 42%,#261315 46% 100%);
   clip-path:polygon(0 20%,78% 0,100% 72%,26% 100%);
   filter:drop-shadow(0 1px 1px rgba(0,0,0,.45));
-  animation:v163Chip var(--dur) cubic-bezier(.14,.72,.18,1) var(--delay) both;
+  animation:v164Chip var(--dur) cubic-bezier(.14,.72,.18,1) var(--delay) both;
 }
-.v163-zabimaru-split-stage .red-mote{
+.v164-zabimaru-split-stage .red-mote{
   position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;
   opacity:0;background:#ff5945;box-shadow:0 0 5px rgba(255,43,31,.75);
-  animation:v163Mote var(--dur) ease-out var(--delay) both;
+  animation:v164Mote var(--dur) ease-out var(--delay) both;
 }
-@keyframes v163CutShadow{
+@keyframes v164CutShadow{
   0%{opacity:0;transform:translateY(-50%) rotate(-24deg) scaleX(.02)}
   25%{opacity:.9}
   100%{opacity:.28;transform:translateY(-50%) rotate(-24deg) scaleX(1)}
 }
-@keyframes v163CutCore{
+@keyframes v164CutCore{
   0%{opacity:0;transform:translateY(-50%) rotate(-24deg) scaleX(.02)}
   14%{opacity:1}
   67%{opacity:1;transform:translateY(-50%) rotate(-24deg) scaleX(1)}
   100%{opacity:0;transform:translateY(-50%) rotate(-24deg) scaleX(1.04)}
 }
-@keyframes v163ImpactFlash{
+@keyframes v164ImpactFlash{
   0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}
   24%{opacity:.9}
   100%{opacity:0;transform:translate(-50%,-50%) scale(1.24)}
 }
-@keyframes v163Chip{
+@keyframes v164Chip{
   0%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(.6)}
   12%{opacity:1}
   100%{opacity:0;transform:translate3d(var(--dx),var(--dy),0) rotate(var(--rot)) scale(.16)}
 }
-@keyframes v163Mote{
+@keyframes v164Mote{
   0%{opacity:0;transform:translate3d(0,0,0) scale(.35)}
   18%{opacity:.95}
   100%{opacity:0;transform:translate3d(var(--dx),var(--dy),0) scale(.05)}
@@ -16931,6 +16931,117 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
   cursor:not-allowed!important;
   transform:none!important;
   filter:grayscale(.4)!important;
+}
+</style>
+
+<style id="bsc-v160-mobile-browser-prep-pages-top-anchor">
+/* v160 — mobile browser only. Prep screens use CHOOSE YOUR SOUL top geometry.
+   Remove vertical centering source, not the content itself. */
+html.mobile-browser #modeOverlay:not(.hidden),
+html.mobile-browser #startOverlay:not(.hidden),
+html.mobile-browser #deckBuilderOverlay:not(.hidden){
+  align-items:flex-start!important;
+  justify-content:center!important;
+  place-items:initial!important;
+  padding-top:0!important;
+}
+
+html.mobile-browser #modeOverlay>.mode-modal,
+html.mobile-browser #startOverlay>.faction-modal,
+html.mobile-browser #deckBuilderOverlay>.deck-builder-shell{
+  margin:0 auto!important;
+  transform:none!important;
+}
+</style>
+
+<style id="bsc-v164-mobile-browser-battle-stage-preview-fix">
+/* v162 — mobile browser only.
+   Global overlay containment: browser viewport can be narrower than CSS layout
+   after previous desktop-scale rules. Keep every modal inside visual viewport. */
+
+html.mobile-browser .overlay{
+  width:100vw!important;
+  max-width:100vw!important;
+  overflow:hidden!important;
+}
+
+html.mobile-browser .overlay>.modal,
+html.mobile-browser .overlay>.choice-modal,
+html.mobile-browser .overlay>.deck-builder-shell{
+  max-width:100vw!important;
+  box-sizing:border-box!important;
+}
+
+html.mobile-browser #choiceOverlay.overlay{
+  width:100vw!important;
+  height:var(--app-height,100dvh)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  align-items:stretch!important;
+}
+
+html.mobile-browser #choiceOverlay .choice-modal{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  justify-content:flex-start!important;
+}
+
+html.mobile-browser #choiceOverlay .choice-heading{
+  top:3vh!important;
+  width:calc(100vw - 32px)!important;
+  max-width:calc(100vw - 32px)!important;
+}
+
+html.mobile-browser #choiceOverlay .choice-grid{
+  width:100%!important;
+  max-width:100vw!important;
+  padding-left:16px!important;
+  padding-right:16px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  box-sizing:border-box!important;
+}
+
+html.mobile-browser #choiceOverlay .choice-card-btn,
+html.mobile-browser #choiceOverlay .choice-text-btn{
+  max-width:calc(100vw - 32px)!important;
+}
+
+html.mobile-browser #choiceOverlay .choice-nav-prev{
+  left:6px!important;
+}
+
+html.mobile-browser #choiceOverlay .choice-nav-next{
+  right:6px!important;
+}
+
+/* Same containment for every other modal flow. */
+html.mobile-browser .modal{
+  width:min(94vw,790px)!important;
+  max-height:calc(var(--app-height,100dvh) - 24px)!important;
+  overflow:auto!important;
+}
+</style>
+
+
+<style id="v164-mobile-browser-battle-stage-preview-fix">
+/* v164: soften target highlight only in mobile browser */
+html.platform-mobile-browser .bsc-target-visual,
+html.platform-mobile-browser [data-bsc-target-state="valid"],
+html.platform-mobile-browser .target-valid{
+  filter:none !important;
+  background:transparent !important;
+  box-shadow:0 0 0 3px #28a9ff,0 0 12px rgba(40,169,255,.55) !important;
+}
+
+html.platform-mobile-browser .bsc-target-visual::before,
+html.platform-mobile-browser .bsc-target-visual::after,
+html.platform-mobile-browser [data-bsc-target-state="valid"]::before,
+html.platform-mobile-browser [data-bsc-target-state="valid"]::after{
+  display:none !important;
+  content:none !important;
 }
 </style>
 </head>
@@ -25325,7 +25436,7 @@ function isNanaoBarrierActive(card){
         for(const r of ROWS) for(const c of state[foeKey].board[r]){ const p=fieldPower(foeKey,r,c); if(!c.hero&&p>=0&&p<=4) candidates.push({card:c,row:r}); }
         if(candidates.length){
           const target=candidates[randomIndex(candidates.length)];
-          await v163AnimateRenjiZabimaruStrike(ownerKey,row,card.uid,foeKey,target.row,target.card.uid);
+          await v164AnimateRenjiZabimaruStrike(ownerKey,row,card.uid,foeKey,target.row,target.card.uid);
           const live=findBoardCardByUid(target.card.uid); if(live) destroyCard(live.sideKey,live.card,"Zabimaru",ownerKey);
         }
         break;
@@ -32296,7 +32407,7 @@ function v242CardElement(sideKey,row,uid){
     ],{duration:360,easing:'cubic-bezier(.18,.72,.2,1)'}).finished.catch(()=>{});
   }
 
-  async function v163AnimateRenjiZabimaruStrike(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
+  async function v164AnimateRenjiZabimaruStrike(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
     if(cardChoicePreflightContext?.phase==='collect') return;
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
 
@@ -35975,7 +36086,7 @@ async function v387AnimateSuperstar(sideKey,maskUid,jamesUid=null,mode="cheer"){
     v136AnimateIchibeAnt,
     v158AnimateKageoni,
     v158AnimateBushogoma,
-    v163AnimateRenjiZabimaruStrike,
+    v164AnimateRenjiZabimaruStrike,
     v159AnimateRenjiZabimaruBurn,
     v159AnimateSooZabimaruAsh,
     v159AnimateYamamotoInferno,
@@ -36368,9 +36479,9 @@ async function v387AnimateSuperstar(sideKey,maskUid,jamesUid=null,mode="cheer"){
     if(cardChoicePreflightContext?.phase!=="collect") broadcastNetworkVfx("shunsui-bushogoma-v158",{sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid});
     return v303Original.v158AnimateBushogoma(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid);
   };
-  v163AnimateRenjiZabimaruStrike=async function(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
-    if(cardChoicePreflightContext?.phase!=="collect") broadcastNetworkVfx("renji-zabimaru-v163",{sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid});
-    return v303Original.v163AnimateRenjiZabimaruStrike(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid);
+  v164AnimateRenjiZabimaruStrike=async function(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
+    if(cardChoicePreflightContext?.phase!=="collect") broadcastNetworkVfx("renji-zabimaru-v164",{sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid});
+    return v303Original.v164AnimateRenjiZabimaruStrike(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid);
   };
 
   v159AnimateRenjiZabimaruBurn=async function(targetSideKey,targetRow,targetUid){
@@ -36456,7 +36567,7 @@ async function v387AnimateSuperstar(sideKey,maskUid,jamesUid=null,mode="cheer"){
       if(payload.kind==="ichibe-ant-v136") return await v303Original.v136AnimateIchibeAnt(payload.sideKey,payload.row,payload.uid);
       if(payload.kind==="shunsui-kageoni-v158") return await v303Original.v158AnimateKageoni(payload.targetSideKey,payload.row,payload.targetUids||[]);
       if(payload.kind==="shunsui-bushogoma-v158") return await v303Original.v158AnimateBushogoma(payload.sourceSideKey,payload.sourceRow,payload.sourceUid,payload.targetSideKey,payload.targetRow,payload.targetUid);
-      if(payload.kind==="renji-zabimaru-v163") return await v303Original.v163AnimateRenjiZabimaruStrike(payload.sourceSideKey,payload.sourceRow,payload.sourceUid,payload.targetSideKey,payload.targetRow,payload.targetUid);
+      if(payload.kind==="renji-zabimaru-v164") return await v303Original.v164AnimateRenjiZabimaruStrike(payload.sourceSideKey,payload.sourceRow,payload.sourceUid,payload.targetSideKey,payload.targetRow,payload.targetUid);
       if(payload.kind==="renji-zabimaru-burn-v159") return await v303Original.v159AnimateRenjiZabimaruBurn(payload.targetSideKey,payload.targetRow,payload.targetUid);
       if(payload.kind==="renji-soo-ash-v159") return await v303Original.v159AnimateSooZabimaruAsh(payload.targetSideKey,payload.targetRow,payload.targetUid);
       if(payload.kind==="nozarashi-cleave-v169") return await v303Original.v169AnimateNozarashiCleave(payload.sourceSideKey,payload.sourceRow,payload.sourceUid,payload.targetSideKey,payload.targetRow,payload.targetUid);
@@ -42292,11 +42403,13 @@ html.mobile-browser:not(.network-keyboard-open) #networkJoinOverlay .start-btn{
 
 
 
-<style id="bsc-v159-mobile-browser-layout-repair">
-/* v159 — MOBILE BROWSER ONLY.
-   Repair two structural bugs:
-   1) CHOOSE YOUR BATTLE grid collapsed because its flex child had no definite parent height.
-   2) The battlefield has THREE grid tracks: topbar + board + hand. */
+<style id="bsc-v161-mobile-browser-layout-repair">
+/* v161 — MOBILE BROWSER ONLY.
+   Structural mobile-browser layout authority.
+   1) CHOOSE YOUR BATTLE keeps a definite full-height parent.
+   2) The battlefield has THREE grid tracks: topbar + board + hand.
+   3) The board itself must be allowed to compress inside its middle track; legacy
+      42px row minimums otherwise make the lower rows run beneath the hand. */
 
 /* CHOOSE YOUR BATTLE: definite full visible-height parent, flush to visual viewport top. */
 html.mobile-browser #modeOverlay#modeOverlay#modeOverlay:not(.hidden){
@@ -42392,6 +42505,43 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   min-height:30px!important;
   max-height:30px!important;
 }
+
+/* BOARD: the middle grid track owns only the space between topbar and hand.
+   Legacy mobile rules used minmax(42px,1fr) for each of six rows, forcing a
+   minimum board taller than shallow browser viewports. Let the rows share the
+   actual middle-track height, and make board cards follow their row height. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > #board#board{
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  grid-template-rows:repeat(3,minmax(0,1fr)) 2px repeat(3,minmax(0,1fr))!important;
+  align-content:stretch!important;
+  overflow:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > #board#board > .row{
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > #board#board > .row > .row-cards{
+  min-height:0!important;
+  height:100%!important;
+  align-items:center!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > #board#board > .row > .row-cards > .card{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  max-width:32px!important;
+  height:min(46px,calc(100% - 4px))!important;
+  min-height:0!important;
+  max-height:46px!important;
+  aspect-ratio:32 / 46!important;
+  margin:0!important;
+}
 html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap{
   width:100%!important;
   height:72px!important;
@@ -42474,6 +42624,63 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap,
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand,
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > .hand-actions{height:68px!important;min-height:68px!important;max-height:68px!important}
+}
+
+
+/* v164: mobile browser battle stage compensation.
+   Compensate Safari/browser chrome viewport loss without touching PWA/desktop.
+   Keep preview cards sized by their own box, but give the right rail more room. */
+html.platform-mobile-browser{
+  --mobile-browser-stage-scale:.91;
+}
+
+@media (max-width:900px){
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+    grid-template-columns:
+      minmax(0,23vw)
+      minmax(0,1fr)
+      minmax(132px,19vw)!important;
+  }
+
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell{
+    min-width:0!important;
+  }
+
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .rightbar{
+    width:100%!important;
+    min-width:0!important;
+    padding:5px!important;
+  }
+
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .rightbar .detail{
+    width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .detail-preview{
+    width:100%!important;
+    max-width:none!important;
+    aspect-ratio:2 / 3!important;
+    height:auto!important;
+    margin:0 auto 6px!important;
+  }
+
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) .detail-preview .card{
+    width:100%!important;
+    height:100%!important;
+    max-width:100%!important;
+    max-height:100%!important;
+  }
+}
+
+@media (max-height:600px){
+  html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+    transform:scale(.91)!important;
+    transform-origin:center center!important;
+    width:109.9%!important;
+    height:109.9%!important;
+  }
 }
 </style>
 
