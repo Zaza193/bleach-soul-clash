@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v183-graveyard-no-card-power-all-platforms";
+  const BUILD_VERSION="v185-mobile-browser-preview-use-free-space";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v183 · GRAVEYARD NO CARD POWER</title>
+<title>BLEACH: Soul Clash — v185 · MOBILE BROWSER PREVIEW USE FREE SPACE</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -43722,6 +43722,66 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   outline-width:1px!important;
   box-shadow:none!important;
   z-index:7!important;
+}
+</style>
+
+
+<style id="bsc-v184-mobile-browser-visual-viewport-fix">
+/* v184 — MOBILE BROWSER ONLY. Use the real Safari visible viewport. */
+html.mobile-browser body{
+  height:100dvh!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  height:100dvh!important;
+  max-height:100dvh!important;
+  min-height:0!important;
+  margin-top:0!important;
+}
+</style>
+<script id="bsc-v184-visual-viewport-script">
+(function(){
+  if(!window.visualViewport) return;
+  function syncVV(){
+    var vv=window.visualViewport;
+    document.documentElement.style.setProperty('--browser-vv-height', vv.height+'px');
+    document.documentElement.style.setProperty('--browser-vv-width', vv.width+'px');
+  }
+  syncVV();
+  window.visualViewport.addEventListener('resize',syncVV);
+  window.visualViewport.addEventListener('scroll',syncVV);
+})();
+</script>
+
+
+<style id="bsc-v185-mobile-browser-preview-use-free-space">
+/* v185 — MOBILE BROWSER ONLY.
+   Preview boxes were still using the old fixed card width after the pile rail
+   was compacted. Let the preview consume the freed vertical area while keeping
+   the card ratio. */
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice{
+  --mb-choice-preview-w:118px!important;
+  --mb-choice-preview-info-h:56px!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview{
+  width:var(--mb-choice-preview-w)!important;
+  min-width:var(--mb-choice-preview-w)!important;
+  max-width:var(--mb-choice-preview-w)!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .card-face{
+  width:100%!important;
+  aspect-ratio:2/3!important;
+  height:auto!important;
+}
+
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice .choice-static-preview .card-info-panel{
+  height:var(--mb-choice-preview-info-h)!important;
+  min-height:var(--mb-choice-preview-info-h)!important;
+  max-height:var(--mb-choice-preview-info-h)!important;
 }
 </style>
 
