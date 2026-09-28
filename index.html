@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v153-three-platforms-mobile-browser-clone";
+  const BUILD_VERSION="v155-mobile-browser-viewport-adapt";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v153 · THREE PLATFORMS</title>
+<title>BLEACH: Soul Clash — v155 · MOBILE BROWSER VIEWPORT ADAPT</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -41776,6 +41776,266 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   }
 }
 </style>
+
+
+<style id="bsc-v155-mobile-browser-viewport-adapt">
+/* v155 — MOBILE BROWSER ONLY.
+   The browser chrome reduces the visual viewport height in landscape.
+   Keep standalone/PWA and desktop untouched. */
+html.mobile-browser,
+html.mobile-browser body{
+  width:100%!important;
+  height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  min-height:0!important;
+  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  overflow:hidden!important;
+  background:#000!important;
+}
+
+/* GAME: use the real visible browser viewport, and make the whole stage
+   a little narrower on very wide/shallow browser viewports. */
+html.mobile-browser .app{
+  width:var(--browser-stage-width,var(--app-width,100vw))!important;
+  max-width:var(--browser-stage-width,var(--app-width,100vw))!important;
+  height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  overflow:hidden!important;
+}
+
+/* Every full-screen page/overlay must fit the visible part below Safari/Chrome UI. */
+html.mobile-browser #modeOverlay,
+html.mobile-browser #networkOverlay,
+html.mobile-browser #networkCreateOverlay,
+html.mobile-browser #networkJoinOverlay,
+html.mobile-browser #startOverlay,
+html.mobile-browser #deckBuilderOverlay,
+html.mobile-browser #mulliganOverlay,
+html.mobile-browser #choiceOverlay,
+html.mobile-browser #handoffOverlay,
+html.mobile-browser #resultOverlay,
+html.mobile-browser #soulSuicideOverlay{
+  position:fixed!important;
+  inset:0!important;
+  width:var(--browser-vv-width,100vw)!important;
+  max-width:var(--browser-vv-width,100vw)!important;
+  height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+  min-height:0!important;
+  padding:4px 6px 6px!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+
+/* Common browser-stage width for preparation screens. */
+html.mobile-browser #modeOverlay>.modal,
+html.mobile-browser #networkOverlay>.modal,
+html.mobile-browser #networkCreateOverlay>.modal,
+html.mobile-browser #networkJoinOverlay>.modal,
+html.mobile-browser #startOverlay>.modal,
+html.mobile-browser #mulliganOverlay>.modal,
+html.mobile-browser #choiceOverlay>.modal,
+html.mobile-browser #handoffOverlay>.modal,
+html.mobile-browser #resultOverlay>.modal,
+html.mobile-browser #soulSuicideOverlay>.modal,
+html.mobile-browser #deckBuilderOverlay>.deck-builder-shell{
+  width:min(var(--browser-stage-width,94vw),calc(100% - 4px))!important;
+  max-width:min(var(--browser-stage-width,94vw),calc(100% - 4px))!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  min-height:0!important;
+  margin:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* CHOOSE YOUR BATTLE — fit all rows into the shallow browser viewport. */
+html.mobile-browser #modeOverlay>.mode-modal{
+  width:min(500px,var(--browser-stage-width,94vw))!important;
+  max-width:min(500px,var(--browser-stage-width,94vw))!important;
+  padding:8px 10px 9px!important;
+  overflow:auto!important;
+}
+html.mobile-browser #modeOverlay .mode-modal h1{
+  font-size:20px!important;
+  line-height:1!important;
+  margin:0 0 3px!important;
+}
+html.mobile-browser #modeOverlay .mode-sub{
+  font-size:8px!important;
+  line-height:1.12!important;
+  margin:0 auto 6px!important;
+  max-width:96%!important;
+}
+html.mobile-browser #modeOverlay .mode-grid{
+  gap:5px!important;
+  margin:0!important;
+}
+html.mobile-browser #modeOverlay .mode-card{
+  min-height:54px!important;
+  height:auto!important;
+  padding:7px 9px!important;
+  grid-template-columns:88px minmax(0,1fr)!important;
+  column-gap:10px!important;
+}
+html.mobile-browser #modeOverlay .mode-card b{
+  font-size:12px!important;
+  line-height:1!important;
+  margin:0!important;
+}
+html.mobile-browser #modeOverlay .mode-card span{
+  font-size:7.5px!important;
+  line-height:1.15!important;
+}
+html.mobile-browser #modeOverlay .mode-back,
+html.mobile-browser #modeOverlay #modeBack,
+html.mobile-browser #modeOverlay .bsc-mode-language-back{
+  min-height:34px!important;
+  height:34px!important;
+  margin-top:5px!important;
+  font-size:8px!important;
+}
+
+/* FACTION / SETUP: keep header/actions visible and let only content scroll if needed. */
+html.mobile-browser #startOverlay>.faction-modal{
+  height:auto!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding:8px!important;
+}
+html.mobile-browser #startOverlay .setup-title-line{gap:5px!important;margin:0!important}
+html.mobile-browser #startOverlay .setup-title-line>h1{font-size:20px!important;line-height:1!important}
+html.mobile-browser #startOverlay .factions{gap:6px!important;margin:6px 0!important}
+html.mobile-browser #startOverlay .faction{min-height:52px!important;padding:6px!important}
+html.mobile-browser #startOverlay .network-actions{gap:5px!important}
+html.mobile-browser #startOverlay .network-actions button{min-height:34px!important;padding:5px 7px!important}
+
+/* DECK BUILDER: use visible height, preserve its own internal scrolling. */
+html.mobile-browser #deckBuilderOverlay{
+  overflow:hidden!important;
+}
+html.mobile-browser #deckBuilderOverlay>.deck-builder-shell{
+  height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #deckBuilderOverlay .deck-builder-modal{
+  height:100%!important;
+  max-height:100%!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #deckBuilderOverlay .deck-builder-main-area,
+html.mobile-browser #deckBuilderOverlay .deck-builder-scroll-content{
+  min-height:0!important;
+}
+html.mobile-browser #deckBuilderOverlay .deck-builder-scroll-content{
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+
+/* CHOOSE YOUR SOUL: preserve the 4x3 mobile layout, but fit it to browser height. */
+html.mobile-browser #mulliganOverlay>.mulligan-modal{
+  height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  min-height:0!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  overflow:hidden!important;
+  padding:6px 8px!important;
+}
+html.mobile-browser #mulliganOverlay .mulligan-head{
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+html.mobile-browser #mulliganOverlay .mulligan-title{font-size:18px!important;line-height:1!important}
+html.mobile-browser #mulliganOverlay .mulligan-instruction{
+  flex:0 0 auto!important;
+  margin:2px auto 4px!important;
+  font-size:7.8px!important;
+  line-height:1.1!important;
+}
+html.mobile-browser #mulliganOverlay #mulliganGrid{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  align-content:start!important;
+  gap:5px!important;
+  padding:4px 2px!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+html.mobile-browser #mulliganOverlay .mulligan-actions{
+  flex:0 0 auto!important;
+  gap:5px!important;
+  margin-top:4px!important;
+}
+html.mobile-browser #mulliganOverlay .mulligan-actions button{
+  min-height:32px!important;
+  height:32px!important;
+  padding:4px 8px!important;
+  font-size:8px!important;
+}
+
+/* Choice screens / Heart Bond / medic etc.: cap by visible height and scroll inside. */
+html.mobile-browser #choiceOverlay>.choice-modal,
+html.mobile-browser #handoffOverlay>.modal,
+html.mobile-browser #resultOverlay>.modal,
+html.mobile-browser #soulSuicideOverlay>.modal,
+html.mobile-browser #networkOverlay>.modal,
+html.mobile-browser #networkCreateOverlay>.modal,
+html.mobile-browser #networkJoinOverlay>.modal{
+  height:auto!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 8px)!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+html.mobile-browser #choiceOverlay .choice-grid{
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 88px)!important;
+  overflow-y:auto!important;
+  overflow-x:auto!important;
+}
+
+/* Keep browser-only cancel/utility buttons inside the visible viewport. */
+html.mobile-browser #mobileCancelTarget{
+  bottom:6px!important;
+  right:max(6px,env(safe-area-inset-right,0px))!important;
+}
+</style>
+
+<script id="bsc-v155-mobile-browser-viewport-sync">
+(() => {
+  const root=document.documentElement;
+  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+  const sync=()=>{
+    if(!root.classList.contains('mobile-browser')) return;
+    const vv=window.visualViewport;
+    const w=Math.max(1,Math.round((vv&&vv.width)||window.innerWidth||document.documentElement.clientWidth||1));
+    const h=Math.max(1,Math.round((vv&&vv.height)||window.innerHeight||document.documentElement.clientHeight||1));
+    /* A browser landscape viewport can be extremely wide and shallow because of browser chrome.
+       Limit stage aspect ratio so every page feels balanced instead of stretched edge-to-edge. */
+    const aspectCap=2.08;
+    const stageW=Math.round(Math.min(w*.94,h*aspectCap));
+    root.style.setProperty('--browser-vv-width',`${w}px`);
+    root.style.setProperty('--browser-vv-height',`${h}px`);
+    root.style.setProperty('--browser-stage-width',`${clamp(stageW,Math.min(320,w),w)}px`);
+    root.style.setProperty('--app-width',`${w}px`);
+    root.style.setProperty('--app-height',`${h}px`);
+  };
+  sync();
+  window.addEventListener('resize',sync,{passive:true});
+  window.addEventListener('orientationchange',()=>setTimeout(sync,60),{passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',sync,{passive:true});
+    window.visualViewport.addEventListener('scroll',sync,{passive:true});
+  }
+})();
+</script>
 
 </body>
 </html>
