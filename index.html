@@ -38737,5 +38737,303 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
 
 
 <!-- v128: imported FX: Yhwach Almighty / James Superstar+Guard / Cang Du Iron / Nianzol Wind -->
+
+<style id="bsc-v129-mobile-hand-preview-mulligan-fix">
+/* v129 — mobile fixes
+   1) hand cards stay inside the hand box and can scroll horizontally even when action-locked
+   2) enemy preview stays confined to the right preview box on mobile
+   3) CHOOSE YOUR SOUL becomes ~1.3x narrower on mobile while keeping the taller layout */
+
+/* ---- Mobile hand: contain the row, restore horizontal scroll, keep cards smaller ---- */
+html.phone-device.phone-landscape .hand-wrap,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-wrap,
+html.mobile-ui.phone-device.phone-landscape .hand-wrap,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+  width:100%!important;
+  min-width:0!important;
+  height:96px!important;
+  min-height:96px!important;
+  max-height:96px!important;
+  grid-template-columns:minmax(0,1fr) 54px!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .hand,
+html.touch-device.touch-landscape:not(.tablet-device) .hand,
+html.mobile-ui.phone-device.phone-landscape .hand,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  justify-content:flex-start!important;
+  align-items:flex-end!important;
+  gap:4px!important;
+  padding:4px 5px 4px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  scroll-behavior:smooth!important;
+  scrollbar-width:none!important;
+  overscroll-behavior-x:contain!important;
+  touch-action:pan-x!important;
+  contain:none!important;
+}
+html.phone-device.phone-landscape .hand::-webkit-scrollbar,
+html.touch-device.touch-landscape:not(.tablet-device) .hand::-webkit-scrollbar,
+html.mobile-ui.phone-device.phone-landscape .hand::-webkit-scrollbar,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand::-webkit-scrollbar{
+  display:none!important;
+}
+html.phone-device.phone-landscape .hand .card,
+html.phone-device.phone-landscape .hand.hand-expanded .card,
+html.touch-device.touch-landscape:not(.tablet-device) .hand .card,
+html.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card,
+html.mobile-ui.phone-device.phone-landscape .hand .card,
+html.mobile-ui.phone-device.phone-landscape .hand.hand-expanded .card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand .card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card{
+  flex:0 0 56px!important;
+  width:56px!important;
+  min-width:56px!important;
+  max-width:56px!important;
+  height:81px!important;
+  min-height:81px!important;
+  max-height:81px!important;
+  margin:0!important;
+  align-self:flex-end!important;
+}
+html.phone-device.phone-landscape .hand .card:hover,
+html.touch-device.touch-landscape:not(.tablet-device) .hand .card:hover,
+html.mobile-ui.phone-device.phone-landscape .hand .card:hover,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand .card:hover{
+  transform:none!important;
+}
+html.phone-device.phone-landscape .hand .card.selected,
+html.phone-device.phone-landscape .hand.hand-expanded .card.selected,
+html.touch-device.touch-landscape:not(.tablet-device) .hand .card.selected,
+html.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card.selected,
+html.mobile-ui.phone-device.phone-landscape .hand .card.selected,
+html.mobile-ui.phone-device.phone-landscape .hand.hand-expanded .card.selected,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand .card.selected,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card.selected{
+  transform:translateY(-3px) scale(1.02)!important;
+}
+html.phone-device.phone-landscape .hand .card .power,
+html.phone-device.phone-landscape .hand.hand-expanded .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) .hand .card .power,
+html.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card .power,
+html.mobile-ui.phone-device.phone-landscape .hand .card .power,
+html.mobile-ui.phone-device.phone-landscape .hand.hand-expanded .card .power,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand .card .power,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card .power{
+  width:22px!important;
+  height:22px!important;
+  font-size:13px!important;
+}
+html.phone-device.phone-landscape .hand .card .name,
+html.phone-device.phone-landscape .hand.hand-expanded .card .name,
+html.touch-device.touch-landscape:not(.tablet-device) .hand .card .name,
+html.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card .name,
+html.mobile-ui.phone-device.phone-landscape .hand .card .name,
+html.mobile-ui.phone-device.phone-landscape .hand.hand-expanded .card .name,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand .card .name,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card .name{
+  font-size:6px!important;
+  padding:7px 2px 3px!important;
+}
+html.phone-device.phone-landscape .hand-actions,
+html.touch-device.touch-landscape:not(.tablet-device) .hand-actions,
+html.mobile-ui.phone-device.phone-landscape .hand-actions,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand-actions{
+  padding:3px!important;
+}
+html.phone-device.phone-landscape .pass-btn,
+html.touch-device.touch-landscape:not(.tablet-device) .pass-btn,
+html.mobile-ui.phone-device.phone-landscape .pass-btn,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .pass-btn{
+  width:42px!important;
+  height:42px!important;
+  font-size:9px!important;
+  line-height:.9!important;
+  margin:auto!important;
+}
+/* Keep horizontal scrolling possible during action lock, but cards themselves remain non-interactive. */
+html.phone-device body.action-locked .hand,
+html.touch-device body.action-locked .hand,
+html.mobile-ui body.action-locked .hand{
+  pointer-events:auto!important;
+}
+html.phone-device body.action-locked .hand .card,
+html.touch-device body.action-locked .hand .card,
+html.mobile-ui body.action-locked .hand .card,
+html.phone-device body.action-locked .hand-actions,
+html.touch-device body.action-locked .hand-actions,
+html.mobile-ui body.action-locked .hand-actions{
+  pointer-events:none!important;
+}
+
+/* ---- Enemy preview: force it to stay confined to the mobile rightbar preview box ---- */
+html.phone-device.phone-landscape .rightbar .detail,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail,
+html.mobile-ui.phone-device.phone-landscape .rightbar .detail,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .detail{
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  display:block!important;
+}
+html.phone-device.phone-landscape .rightbar #detail .detail-preview,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview,
+html.mobile-ui.phone-device.phone-landscape .rightbar #detail .detail-preview,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview{
+  position:relative!important;
+  width:100%!important;
+  max-width:76px!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0 auto 3px!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .rightbar #detail .detail-preview .card,
+html.phone-device.phone-landscape .rightbar #detail .detail-preview .card.with-info,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card.with-info,
+html.mobile-ui.phone-device.phone-landscape .rightbar #detail .detail-preview .card,
+html.mobile-ui.phone-device.phone-landscape .rightbar #detail .detail-preview .card.with-info,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card.with-info{
+  position:relative!important;
+  left:auto!important;
+  top:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  margin:0 auto!important;
+  transform:none!important;
+  width:100%!important;
+  max-width:76px!important;
+  min-width:0!important;
+  height:auto!important;
+  max-height:none!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  grid-template-rows:auto auto!important;
+  overflow:hidden!important;
+  pointer-events:none!important;
+}
+html.phone-device.phone-landscape .rightbar #detail .detail-preview .card>.card-face,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card>.card-face,
+html.mobile-ui.phone-device.phone-landscape .rightbar #detail .detail-preview .card>.card-face,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card>.card-face{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:2 / 3!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .rightbar #detail .detail-preview .card>.card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card>.card-info-panel,
+html.mobile-ui.phone-device.phone-landscape .rightbar #detail .detail-preview .card>.card-info-panel,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview .card>.card-info-panel{
+  width:100%!important;
+  min-width:0!important;
+  padding:4px 5px 6px!important;
+  overflow:hidden!important;
+}
+html.phone-device.phone-landscape .rightbar #detail .detail-preview.opponent-play-preview .card>.card-info-panel,
+html.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview.opponent-play-preview .card>.card-info-panel,
+html.mobile-ui.phone-device.phone-landscape .rightbar #detail .detail-preview.opponent-play-preview .card>.card-info-panel,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar #detail .detail-preview.opponent-play-preview .card>.card-info-panel{
+  display:none!important;
+}
+
+/* ---- CHOOSE YOUR SOUL: make the mobile modal ~1.3x narrower while keeping it tall ---- */
+html.phone-device.phone-landscape #mulliganOverlay,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay{
+  padding:6px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-modal{
+  width:min(520px,calc((var(--phone-stage-width) - 14px) / 1.3))!important;
+  max-width:min(520px,calc((var(--phone-stage-width) - 14px) / 1.3))!important;
+  height:calc(var(--app-height,100dvh) - 12px)!important;
+  min-height:calc(var(--app-height,100dvh) - 12px)!important;
+  max-height:calc(var(--app-height,100dvh) - 12px)!important;
+  padding:10px 12px!important;
+}
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+  width:min(520px,calc((var(--touch-stage-width) - 14px) / 1.3))!important;
+  max-width:min(520px,calc((var(--touch-stage-width) - 14px) / 1.3))!important;
+  height:calc(var(--app-height,100dvh) - 12px)!important;
+  min-height:calc(var(--app-height,100dvh) - 12px)!important;
+  max-height:calc(var(--app-height,100dvh) - 12px)!important;
+  padding:10px 12px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-grid,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid{
+  gap:6px 7px!important;
+  padding:6px 1px 8px!important;
+  align-content:center!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-card-wrap,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-card-wrap{
+  flex:0 0 78px!important;
+  width:78px!important;
+  min-width:78px!important;
+  max-width:78px!important;
+}
+html.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card,
+html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-grid .card,
+html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-grid .card{
+  width:78px!important;
+  min-width:78px!important;
+  max-width:78px!important;
+  height:112px!important;
+  max-height:112px!important;
+}
+
+/* Very short mobile landscape screens: shave a little more so nothing spills. */
+@media (max-height:430px){
+  html.phone-device.phone-landscape .hand-wrap,
+  html.touch-device.touch-landscape:not(.tablet-device) .hand-wrap,
+  html.mobile-ui.phone-device.phone-landscape .hand-wrap,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand-wrap{
+    height:90px!important;min-height:90px!important;max-height:90px!important;
+  }
+  html.phone-device.phone-landscape .hand .card,
+  html.phone-device.phone-landscape .hand.hand-expanded .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .hand .card,
+  html.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card,
+  html.mobile-ui.phone-device.phone-landscape .hand .card,
+  html.mobile-ui.phone-device.phone-landscape .hand.hand-expanded .card,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand .card,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .hand.hand-expanded .card{
+    flex-basis:52px!important;width:52px!important;min-width:52px!important;max-width:52px!important;height:76px!important;min-height:76px!important;max-height:76px!important;
+  }
+  html.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+  html.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal,
+  html.mobile-ui.phone-device.phone-landscape #mulliganOverlay .mulligan-modal,
+  html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay .mulligan-modal{
+    height:calc(var(--app-height,100dvh) - 8px)!important;
+    min-height:calc(var(--app-height,100dvh) - 8px)!important;
+    max-height:calc(var(--app-height,100dvh) - 8px)!important;
+  }
+}
+</style>
+
 </body>
 </html>
