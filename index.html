@@ -26126,6 +26126,462 @@ body.v370-card-targeting #board#board .row-cards .card[data-bsc-target-state="le
 .card.ability-target-locked::before,.card.ability-target-locked::after{content:none!important;display:none!important}
 .v33-target-halo{display:none!important;visibility:hidden!important;opacity:0!important;animation:none!important}
 </style>
+
+<style id="bsc-v142-mobile-browser-board-heart-bond-tuning">
+/* Mobile Browser only — board row cards slightly larger and closer to row bounds. */
+html.mobile-browser.phone-device.phone-landscape .row-cards,
+html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards{
+  align-items:center!important;
+  padding:0 1px!important;
+  gap:1px!important;
+}
+html.mobile-browser.phone-device.phone-landscape .row-cards .card,
+html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
+  flex:0 0 30px!important;
+  width:30px!important;
+  min-width:30px!important;
+  max-width:30px!important;
+  height:45px!important;
+  min-height:45px!important;
+  max-height:45px!important;
+  margin:0!important;
+  align-self:center!important;
+}
+html.mobile-browser.phone-device.phone-landscape .row-cards .card .card-face,
+html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .card-face{
+  width:30px!important;
+  min-width:30px!important;
+  max-width:30px!important;
+  height:45px!important;
+  min-height:45px!important;
+  max-height:45px!important;
+  aspect-ratio:auto!important;
+}
+html.mobile-browser.phone-device.phone-landscape .row-cards .card .power,
+html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .power{
+  width:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  height:9px!important;
+  min-height:9px!important;
+  max-height:9px!important;
+  border-radius:16px 16px 0 0!important;
+  font-size:8px!important;
+  line-height:1!important;
+  padding-top:0!important;
+}
+html.mobile-browser.phone-device.phone-landscape .row-cards .card .name,
+html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .name{
+  font-size:4.4px!important;
+  line-height:1!important;
+  padding:3px 1px 1px!important;
+}
+@media (max-height:395px){
+  html.mobile-browser.phone-device.phone-landscape .row-cards .card,
+  html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards .card{
+    flex-basis:29px!important;
+    width:29px!important;
+    min-width:29px!important;
+    max-width:29px!important;
+    height:43.5px!important;
+    min-height:43.5px!important;
+    max-height:43.5px!important;
+  }
+  html.mobile-browser.phone-device.phone-landscape .row-cards .card .card-face,
+  html.mobile-browser.touch-device.touch-landscape:not(.tablet-device) .row-cards .card .card-face{
+    width:29px!important;
+    min-width:29px!important;
+    max-width:29px!important;
+    height:43.5px!important;
+    min-height:43.5px!important;
+    max-height:43.5px!important;
+  }
+}
+
+/* Mobile Browser only — Heart Bond action/exchange should fully fit the viewport. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-action,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange{
+  width:calc(100vw - 8px)!important;
+  max-width:calc(100vw - 8px)!important;
+  height:calc(var(--app-height,100dvh) - 8px)!important;
+  max-height:calc(var(--app-height,100dvh) - 8px)!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+
+/* Heart Bond main action */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-action{
+  padding:4px 6px 6px!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  align-items:stretch!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  left:auto!important;
+  transform:none!important;
+  width:100%!important;
+  margin:0 0 1px!important;
+  padding-top:1px!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1{
+  font-size:clamp(15px,4vh,18px)!important;
+  line-height:1!important;
+  margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action #choiceSub{
+  display:none!important;
+  height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid{
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  padding:2px 1px 3px!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  gap:4px 5px!important;
+  align-items:end!important;
+  justify-items:stretch!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  width:clamp(70px,18vh,84px)!important;
+  min-width:0!important;
+  max-width:84px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  gap:0!important;
+  align-self:center!important;
+  justify-self:center!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card.with-info{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:2/3!important;
+  margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:40px!important;
+  max-height:none!important;
+  flex:0 0 auto!important;
+  margin:-2px 0 0!important;
+  padding:3px 4px 4px!important;
+  overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn{
+  grid-row:2!important;
+  min-height:42px!important;
+  height:auto!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:4px 5px!important;
+  overflow:hidden!important;
+  align-self:stretch!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b{
+  font-size:7.5px!important;
+  line-height:1.05!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span{
+  font-size:5.4px!important;
+  line-height:1.12!important;
+  margin-top:2px!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel{
+  position:relative!important;
+  top:auto!important;
+  right:auto!important;
+  left:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:clamp(100px,28vw,138px)!important;
+  min-width:100px!important;
+  max-width:138px!important;
+  height:24px!important;
+  min-height:24px!important;
+  max-height:24px!important;
+  margin:2px auto 0!important;
+  padding:2px 10px!important;
+  font-size:7.5px!important;
+  line-height:1!important;
+}
+
+/* Heart Bond exchange */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange{
+  padding:4px 4px 6px!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  left:auto!important;
+  transform:none!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  margin:0 0 2px!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1{
+  font-size:clamp(15px,4vh,18px)!important;
+  line-height:1!important;
+  margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceSub{
+  display:none!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  margin:0!important;
+  padding:2px 8px 4px!important;
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  gap:6px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:none!important;
+  scroll-snap-type:x proximity!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid::-webkit-scrollbar{display:none!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn{
+  flex:0 0 72px!important;
+  width:72px!important;
+  min-width:72px!important;
+  max-width:72px!important;
+  margin:0!important;
+  padding:0!important;
+  gap:0!important;
+  overflow:visible!important;
+  scroll-snap-align:center!important;
+  align-self:flex-start!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .card.with-info{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:0!important;
+  overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:2/3!important;
+  margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .card-info-panel{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:44px!important;
+  max-height:none!important;
+  flex:0 0 auto!important;
+  margin:-2px 0 0!important;
+  padding:3px 4px 4px!important;
+  overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .card-info-name{
+  display:block!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  padding:0 0 2px!important;
+  font-size:5.7px!important;
+  line-height:1.08!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .card-info-desc{
+  display:block!important;
+  -webkit-box-orient:initial!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  font-size:4.9px!important;
+  line-height:1.12!important;
+  padding:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange #choiceCancel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:clamp(100px,28vw,138px)!important;
+  min-width:100px!important;
+  max-width:138px!important;
+  height:26px!important;
+  min-height:26px!important;
+  max-height:26px!important;
+  flex:0 0 26px!important;
+  margin:3px auto 0!important;
+  padding:3px 12px!important;
+  box-sizing:border-box!important;
+  font-size:8px!important;
+  line-height:1!important;
+  z-index:20!important;
+}
+</style>
+
+
+<style id="bsc-v143-mobile-browser-piles-fix">
+/* Mobile Browser only — right rail deck / graveyard cleanup. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #enemyPile.pile-zone{
+  transform:translateY(-3px)!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #enemyPile.pile-zone > .pile-inner,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #playerPile.pile-zone > .pile-inner{
+  gap:6px!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #enemyPile.pile-zone .pile-inner > .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #enemyPile.pile-zone .pile-inner > .discard-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #playerPile.pile-zone .pile-inner > .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .rightbar > #playerPile.pile-zone .pile-inner > .discard-stack{
+  position:relative!important;
+  box-sizing:border-box!important;
+  flex:0 0 22px!important;
+  width:22px!important;
+  min-width:22px!important;
+  max-width:22px!important;
+  height:30px!important;
+  min-height:30px!important;
+  max-height:30px!important;
+  aspect-ratio:11 / 15!important;
+  margin:0!important;
+  transform:none!important;
+  overflow:visible!important;
+  border-radius:2px!important;
+}
+
+/* Remove the tiny heavy fake stack shadows. */
+html.mobile-browser #app#app#app .rightbar .pile-inner > .deck-stack,
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack,
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack.has-card,
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack.empty{
+  box-shadow:none!important;
+}
+
+/* Keep deck and grave visually equal in footprint. */
+html.mobile-browser #app#app#app .rightbar .pile-inner > .deck-stack{
+  border:1px solid #d7d4cb!important;
+  background:#0a0a0a!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack{
+  border:1px solid #333!important;
+  background:#0b0b0b!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack.has-card{
+  border-color:#111!important;
+  background:#dad7ce!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack.empty{
+  border-color:#303030!important;
+  background:rgba(255,255,255,.018)!important;
+}
+
+html.mobile-browser #app#app#app .rightbar .pile-inner > .deck-stack::before{inset:2px!important}
+html.mobile-browser #app#app#app .rightbar .pile-inner > .deck-stack::after{
+  inset:0!important;
+  bottom:auto!important;
+  font-size:5px!important;
+  letter-spacing:.04em!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner > .discard-stack.empty::before{inset:3px!important}
+
+/* Count badges: smaller and moved to the side, vertically centered. */
+html.mobile-browser #app#app#app .rightbar #enemyPile .pile-inner .deck-number,
+html.mobile-browser #app#app#app .rightbar #playerPile .pile-inner .deck-number,
+html.mobile-browser #app#app#app .rightbar #enemyPile .pile-inner .discard-number,
+html.mobile-browser #app#app#app .rightbar #playerPile .pile-inner .discard-number{
+  top:50%!important;
+  bottom:auto!important;
+  width:12px!important;
+  height:12px!important;
+  min-width:12px!important;
+  min-height:12px!important;
+  max-width:12px!important;
+  max-height:12px!important;
+  transform:translateY(-50%)!important;
+  border-width:1px!important;
+  outline-width:1px!important;
+  outline-offset:0!important;
+  font-size:6px!important;
+  line-height:1!important;
+  box-shadow:none!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner .discard-number{
+  left:-6px!important;
+  right:auto!important;
+}
+html.mobile-browser #app#app#app .rightbar .pile-inner .deck-number{
+  right:-6px!important;
+  left:auto!important;
+}
+</style>
+
 </head>
 <body class="front-menu-active">
 
