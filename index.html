@@ -36811,7 +36811,8 @@ async function v387AnimateSuperstar(sideKey,maskUid,jamesUid=null,mode="cheer"){
     const name=document.createElement("strong"), ability=document.createElement("span");
     name.textContent=FACTIONS[selectedFaction].name;
     ability.textContent=(FACTIONS[selectedFaction].factionAbility||"").trim();
-    summary.append(name,ability);
+    if(globalThis.BSC_PLATFORM==="mobile-browser") summary.append(ability);
+    else summary.append(name,ability);
     summary.scrollTop=0;
   }
 
@@ -43221,6 +43222,32 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
     width:80%!important;
     max-width:80%!important;
+    transform:none!important;
+    height:100%!important;
+    max-height:100%!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v174-mobile-browser-battle-width-minus-15">
+/* v174 — MOBILE BROWSER ONLY.
+   Battle scene becomes 15% narrower while keeping full height. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  width:85%!important;
+  max-width:85%!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  transform:none!important;
+  transform-origin:50% 0!important;
+  height:100%!important;
+  max-height:100%!important;
+}
+@media (max-height:600px){
+  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+    width:85%!important;
+    max-width:85%!important;
     transform:none!important;
     height:100%!important;
     max-height:100%!important;
