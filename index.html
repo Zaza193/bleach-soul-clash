@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="204-v131-mobile-layout-authority-fix";
+  const BUILD_VERSION="v153-three-platforms-mobile-browser-clone";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -27,18 +27,46 @@
   const mobileLike=/android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent||"")
     || (navigator.maxTouchPoints||0)>0
     || !!(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches);
+
+  /* v153: explicit three-platform split.
+     Existing mobile-ui/touch/phone rules remain the shared mobile baseline,
+     so mobile browser starts as an exact clone of standalone/PWA. */
+  const platformMobilePwa=!!mobileLike&&!!standalone;
+  const platformMobileBrowser=!!mobileLike&&!standalone;
+  const platformDesktop=!mobileLike;
+
   root.classList.toggle("mobile-ui",!!mobileLike);
+  root.classList.toggle("platform-mobile-pwa",platformMobilePwa);
+  root.classList.toggle("platform-mobile-browser",platformMobileBrowser);
+  root.classList.toggle("platform-desktop",platformDesktop);
+
+  /* short aliases for future platform-specific overrides */
+  root.classList.toggle("mobile-pwa",platformMobilePwa);
+  root.classList.toggle("mobile-browser",platformMobileBrowser);
+  root.classList.toggle("desktop-ui",platformDesktop);
+
+  root.dataset.platform=platformMobilePwa
+    ? "mobile-pwa"
+    : platformMobileBrowser
+      ? "mobile-browser"
+      : "desktop";
+
+  globalThis.BSC_PLATFORM=root.dataset.platform;
 
   const syncResponsiveDevice=()=>{
     const vv=window.visualViewport;
     const h=Math.round((vv&&vv.height)||window.innerHeight||document.documentElement.clientHeight||0);
     const w=Math.round((vv&&vv.width)||window.innerWidth||document.documentElement.clientWidth||0);
     const coarse=(window.matchMedia&&window.matchMedia("(pointer: coarse)").matches)||(navigator.maxTouchPoints||0)>0;
+    /* Mobile browser must receive the same responsive classes as mobile PWA.
+       Use the already resolved mobile platform as a fallback when a browser
+       reports pointer media features inconsistently. */
+    const mobileTouchLike=!!coarse||!!mobileLike;
     const sw=(window.screen&&Number(window.screen.width))||w;
     const sh=(window.screen&&Number(window.screen.height))||h;
     const shortSide=Math.min(sw||w,sh||h);
-    const phone=!!coarse&&shortSide>0&&shortSide<=600;
-    const tablet=!!coarse&&!phone&&shortSide>0&&shortSide<=1100;
+    const phone=mobileTouchLike&&shortSide>0&&shortSide<=600;
+    const tablet=mobileTouchLike&&!phone&&shortSide>0&&shortSide<=1100;
     const portrait=window.matchMedia?window.matchMedia("(orientation: portrait)").matches:h>=w;
 
     if(h) root.style.setProperty("--app-height",`${h}px`);
@@ -51,12 +79,12 @@
       root.style.setProperty("--tablet-stage-width",`${Math.min(w,1180)}px`);
     }
 
-    root.classList.toggle("touch-device",!!coarse);
+    root.classList.toggle("touch-device",mobileTouchLike);
     root.classList.toggle("phone-device",phone);
     root.classList.toggle("tablet-device",tablet);
     root.classList.toggle("phone-portrait",phone&&portrait);
     root.classList.toggle("phone-landscape",phone&&!portrait);
-    root.classList.toggle("touch-landscape",!!coarse&&!portrait);
+    root.classList.toggle("touch-landscape",mobileTouchLike&&!portrait);
   };
 
   syncResponsiveDevice();
@@ -72,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v131 · MOBILE LAYOUT AUTHORITY FIX</title>
+<title>BLEACH: Soul Clash — v153 · THREE PLATFORMS</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -22682,7 +22710,7 @@ function isNanaoBarrierActive(card){
     const senjumaruCloth=(!inHand && isSenjumaruSealActive(card))?`<div class="v199-senjumaru-persistent" aria-hidden="true"><i class="fold f1"></i><i class="fold f2"></i><i class="stitch h1"></i><i class="stitch h2"></i><i class="stitch v1"></i><i class="vline"></i><i class="seal"></i></div>`:"";
     const barroColumnPuncture=(!inHand && card._barroColumnPuncture)?`<div class="v371-column-puncture" aria-hidden="true"></div>`:"";
     const quilgeJailOverlay=(!inHand && isQuilgeJailActive(card))?`<div class="v374-jail-persistent" aria-hidden="true"><i class="jail-glow"></i><i class="jail-bars"></i><i class="jail-cross"></i></div>`:"";
-    el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div>${sodeIce}${dollhouseOverlay}${nigekiMark}${nanaoBarrier}${dirtyBootsOverlay}${ichibeAntMark}${senjumaruCloth}${barroColumnPuncture}<div class="power">${shown}</div>${rowBadge}${inHand&&isFreeTransformationCard(card)?`<div class="transform-badge">FREE</div>`:""}</div>${quilgeJailOverlay}${infoPanel}`;
+    el.innerHTML=`<div class="card-face"><div class="art"></div><div class="frame"></div>${sodeIce}${dollhouseOverlay}${nigekiMark}${nanaoBarrier}${dirtyBootsOverlay}${ichibeAntMark}${senjumaruCloth}${barroColumnPuncture}<i class="bsc-target-visual" aria-hidden="true"></i><div class="power">${shown}</div>${rowBadge}${inHand&&isFreeTransformationCard(card)?`<div class="transform-badge">FREE</div>`:""}</div>${quilgeJailOverlay}${infoPanel}`;
     applyCardArtElement(el.querySelector(".art"),yourselfVisual);
     if(enableDetail && inHand) el.addEventListener("mouseenter",()=>{});
     el.addEventListener("click",e=>{
@@ -41655,6 +41683,96 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
     border-color:rgba(225,252,255,.98)!important;
     box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88),0 0 0 1.15cqw rgba(91,220,255,.98),0 0 4.8cqw 1cqw rgba(55,195,255,.76)!important;
+  }
+}
+</style>
+
+
+<script id="bsc-v153-platform-debug-marker">
+(() => {
+  const publish=()=>{
+    const root=document.documentElement;
+    const platform=root.dataset.platform||"desktop";
+    document.body?.setAttribute("data-bsc-platform",platform);
+  };
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",publish,{once:true});
+  }else{
+    publish();
+  }
+})();
+</script>
+
+
+<style id="bsc-v154-mobile-target-visual-layer">
+/* v154 — stable target visuals for BOTH mobile platforms.
+   Uses a real DOM layer instead of filters/pseudo-elements/frame timing. */
+.bsc-target-visual{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:90;
+  pointer-events:none;
+  box-sizing:border-box;
+  border:0;
+  background:transparent;
+}
+
+@media (hover:none), (pointer:coarse){
+  /* Disable every legacy target filter/pseudo visual on mobile. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card{
+    visibility:visible!important;
+    opacity:1!important;
+    filter:none!important;
+    transition:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card > .card-face,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card > .card-face,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card > .card-face{
+    visibility:visible!important;
+    opacity:1!important;
+    filter:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card > .card-face::after,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card > .card-face::after,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card > .card-face::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Every battlefield card gets a visual state layer while choosing a target. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card > .card-face > .bsc-target-visual,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card > .card-face > .bsc-target-visual,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card > .card-face > .bsc-target-visual{
+    display:block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    background:rgba(2,3,5,.58)!important;
+    border:0!important;
+    box-shadow:none!important;
+    transition:none!important;
+  }
+
+  /* Legal target: remove dimmer and draw a strong cyan frame/glow. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target > .card-face > .bsc-target-visual,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card.v370-board-card-target > .card-face > .bsc-target-visual,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card.v370-board-card-target > .card-face > .bsc-target-visual{
+    background:rgba(45,210,255,.06)!important;
+    border:3px solid rgba(207,249,255,.98)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(53,201,255,.95),
+      inset 0 0 18px 4px rgba(47,190,255,.58)!important;
+  }
+
+  /* Keep the legal target itself above its row neighbours. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card.v370-board-card-target,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card.v370-board-card-target{
+    z-index:70!important;
   }
 }
 </style>
