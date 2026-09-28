@@ -20461,7 +20461,7 @@ function isNanaoBarrierActive(card){
         return await chooseOptionForActor(
           sideKey,
           "СВЯЗЬ СЕРДЕЦ",
-          "Противник разыграл карту. Использовать фракционную способность сейчас?",
+          "",
           [
             {value:"use",label:"ПОСМОТРЕТЬ",sub:"Посмотреть верхнюю карту своей колоды"},
             {value:"skip",label:"НЕ СЕЙЧАС",sub:"Не использовать Связь Сердец в этом раунде"}
@@ -40306,6 +40306,451 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   html.mobile-ui.phone-device.phone-landscape .rightbar .pile-inner,
   html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) .rightbar .pile-inner{
     transform:translate(-50%,-50%) scale(.66)!important;
+  }
+}
+</style>
+
+
+<style id="bsc-v135-mobile-heart-bond-and-soul-layout-refinement">
+@media (hover:none), (pointer:coarse){
+  /* 1) CHOOSE YOUR SOUL — use the freed space for larger cards on mobile landscape */
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-modal,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-modal,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-modal{
+    width:min(640px,calc(100vw - 14px))!important;
+    max-width:min(640px,calc(100vw - 14px))!important;
+    padding:10px 12px 9px!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-head{
+    align-items:flex-start!important;
+    gap:10px!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-title,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-title,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-title{
+    font-size:clamp(24px,5.4vh,30px)!important;
+    line-height:1!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-count,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-count,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-count{
+    font-size:clamp(18px,4.1vh,24px)!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-instruction{
+    font-size:clamp(10px,2.2vh,12px)!important;
+    line-height:1.14!important;
+    margin:4px auto 8px!important;
+    max-width:92%!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    grid-template-rows:repeat(2,minmax(0,1fr))!important;
+    gap:8px 10px!important;
+    padding:6px 2px 8px!important;
+    align-content:center!important;
+    justify-items:center!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    display:flex!important;
+    justify-content:center!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap>.card,
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap>.card,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-card-wrap>.card,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card{
+    width:90px!important;
+    min-width:90px!important;
+    max-width:90px!important;
+    height:130px!important;
+    min-height:130px!important;
+    max-height:130px!important;
+    margin:0!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card .power,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card .power,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-grid .card .power{
+    width:28px!important;height:28px!important;font-size:17px!important;
+  }
+  html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions,
+  html.phone-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions,
+  html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay .mulligan-actions{
+    margin-top:6px!important;
+  }
+
+  /* 2) HEART BOND main action — bigger preview, title lower, buttons much closer */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.heart-bond-action,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.heart-bond-action,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.preview-stack-choice.heart-bond-action{
+    padding:6px 8px 6px!important;
+    display:grid!important;
+    grid-template-rows:auto auto auto!important;
+    align-content:start!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading{
+    margin:2px 0 0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-heading h1{
+    font-size:clamp(19px,4.9vh,24px)!important;
+    line-height:1!important;
+    margin:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-grid{
+    height:auto!important;
+    min-height:0!important;
+    padding:4px 2px 0!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-template-rows:auto auto!important;
+    gap:8px 8px!important;
+    align-items:start!important;
+    align-content:start!important;
+    overflow:visible!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview{
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    width:clamp(112px,29vw,138px)!important;
+    max-width:138px!important;
+    justify-self:center!important;
+    align-self:start!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .choice-card-preview{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-face{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-static-preview .card-info-panel{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    height:64px!important;
+    min-height:64px!important;
+    max-height:64px!important;
+    flex:0 0 64px!important;
+    margin:-1px 0 0!important;
+    padding:4px 5px 5px!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn{
+    grid-row:2!important;
+    height:54px!important;
+    min-height:54px!important;
+    max-height:54px!important;
+    padding:6px 8px!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn b{font-size:10px!important;line-height:1!important}
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-text-btn span{font-size:7px!important;line-height:1.08!important;margin-top:3px!important}
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-action .choice-cancel{
+    height:28px!important;
+    min-height:28px!important;
+    margin:6px auto 0!important;
+    padding:3px 16px!important;
+    font-size:8px!important;
+  }
+
+  /* 3) HEART BOND exchange — wider cards, plaque width exactly matches card width, centered BACK button */
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .choice-modal.heart-bond-exchange{
+    padding:6px 8px 6px!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading{
+    margin:2px 0 0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-heading h1{
+    font-size:clamp(18px,4.8vh,23px)!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-grid{
+    padding:4px 30px 6px!important;
+    gap:8px!important;
+    align-items:flex-start!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-btn{
+    flex:0 0 clamp(96px,24vw,112px)!important;
+    width:clamp(96px,24vw,112px)!important;
+    min-width:clamp(96px,24vw,112px)!important;
+    max-width:112px!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview.card.with-info{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:0!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-face{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-panel{
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    height:66px!important;
+    min-height:66px!important;
+    max-height:66px!important;
+    flex:0 0 66px!important;
+    margin:-1px 0 0!important;
+    padding:4px 5px 5px!important;
+    overflow:hidden!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-name,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-name,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-name{
+    font-size:8px!important;
+    line-height:1.03!important;
+    padding:1px 1px 2px!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-desc,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-desc,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-card-preview .card-info-desc{
+    font-size:6px!important;
+    line-height:1.08!important;
+    -webkit-line-clamp:4!important;
+    line-clamp:4!important;
+  }
+  html.mobile-ui #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel,
+  html.phone-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel,
+  html.touch-device #choiceOverlay#choiceOverlay#choiceOverlay .heart-bond-exchange .choice-cancel{
+    position:relative!important;
+    inset:auto!important;
+    transform:none!important;
+    flex:0 0 28px!important;
+    min-height:28px!important;
+    height:28px!important;
+    margin:6px auto 0!important;
+    padding:4px 18px!important;
+    font-size:8px!important;
+  }
+}
+</style>
+<script id="bsc-v135-mobile-heart-bond-button-label">
+(function(){
+  const overlay=document.getElementById('choiceOverlay');
+  if(!overlay) return;
+  const modal=overlay.querySelector('.choice-modal');
+  const cancelBtn=document.getElementById('choiceCancel');
+  if(!modal || !cancelBtn) return;
+  const sync=()=>{
+    if(modal.classList.contains('heart-bond-exchange')) cancelBtn.textContent='НАЗАД';
+    else cancelBtn.textContent='ОТМЕНА';
+  };
+  new MutationObserver(sync).observe(modal,{attributes:true,attributeFilter:['class']});
+  new MutationObserver(sync).observe(overlay,{attributes:true,attributeFilter:['class']});
+  sync();
+})();
+</script>
+
+
+<style id="bsc-v137-mobile-preview-unclipped-scroll">
+@media (hover:none), (pointer:coarse){
+  /* FINAL mobile preview authority: the middle preview row is a real vertical scroll viewport. */
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail{
+    position:relative!important;
+    width:100%!important;
+    min-width:0!important;
+    height:100%!important;
+    min-height:0!important;
+    max-height:100%!important;
+    padding:3px!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+    touch-action:pan-y!important;
+    pointer-events:auto!important;
+    scrollbar-width:thin!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar{
+    width:3px!important;
+    display:block!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar-track,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar-track,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar-track{
+    background:transparent!important;
+    border:0!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar-thumb,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar-thumb,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.22)!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview{
+    position:relative!important;
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0 auto!important;
+    padding:0 1px 6px!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info{
+    position:relative!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    gap:0!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0!important;
+    aspect-ratio:auto!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+    pointer-events:none!important;
+  }
+
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card > .card-face{
+    flex:0 0 auto!important;
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:2 / 3!important;
+    margin:0!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel{
+    position:relative!important;
+    flex:0 0 auto!important;
+    display:block!important;
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:-1px 0 0!important;
+    padding:5px 6px 7px!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail .card-info-name,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail .card-info-name,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail .card-info-name{
+    display:block!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    max-height:none!important;
+    padding:1px 1px 3px!important;
+    line-height:1.08!important;
+  }
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail .card-info-desc,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail .card-info-desc,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail .card-info-desc{
+    display:block!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    max-height:none!important;
+    -webkit-line-clamp:unset!important;
+    line-clamp:unset!important;
+    -webkit-box-orient:initial!important;
+    padding:1px 1px 0!important;
+    line-height:1.16!important;
+  }
+
+  /* Opponent played preview intentionally has no plaque. */
+  html.mobile-ui .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel,
+  html.phone-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel,
+  html.touch-device .rightbar #detail#detail#detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card > .card-info-panel{
+    display:none!important;
   }
 }
 </style>
