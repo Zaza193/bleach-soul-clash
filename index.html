@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v168-mobile-browser-deep-overlay-adapt";
+  const BUILD_VERSION="v170-mobile-browser-battle-width-minus-10";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v168 · MOBILE BROWSER DEEP OVERLAY ADAPT</title>
+<title>BLEACH: Soul Clash — v170 · MOBILE BROWSER BATTLE WIDTH -10%</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -42576,7 +42576,7 @@ html.platform-mobile-browser{
 @media (max-height:600px){
   html.platform-mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
     transform:scale(.91)!important;
-    transform-origin:center center!important;
+    transform-origin:50% 0!important;
     width:109.9%!important;
     height:109.9%!important;
   }
@@ -42637,6 +42637,7 @@ html.mobile-browser #startOverlay#startOverlay#startOverlay#startOverlay#startOv
   flex-direction:column!important;
   align-items:center!important;
   justify-content:flex-start!important;
+  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
   overflow:hidden!important;
 }
 html.mobile-browser #startOverlay#startOverlay#startOverlay#startOverlay#startOverlay#startOverlay>.faction-modal.faction-modal{
@@ -42653,6 +42654,7 @@ html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#de
   flex-direction:column!important;
   align-items:center!important;
   justify-content:flex-start!important;
+  padding:0 max(4px,env(safe-area-inset-right,0px)) max(4px,env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))!important;
   overflow:hidden!important;
 }
 html.mobile-browser #deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay#deckBuilderOverlay>.deck-builder-shell,
@@ -43122,6 +43124,32 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   height:min(42px,calc(100% - 8px))!important;
   max-height:42px!important;
   aspect-ratio:32 / 46!important;
+}
+</style>
+
+
+<style id="bsc-v170-mobile-browser-battle-width-minus-10">
+/* v170 — MOBILE BROWSER ONLY.
+   Battle scene visual width = 90% of the visible browser viewport.
+   Keep the existing shallow-viewport vertical compensation from v164: when
+   the stage is scaled to .91, use a 98.9011% layout width so the final painted
+   width remains exactly 90% (98.9011% * .91 = 90%). */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+  width:90%!important;
+  max-width:90%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+@media (max-height:600px){
+  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
+    width:98.9011%!important;
+    max-width:98.9011%!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    transform:scale(.91)!important;
+    transform-origin:50% 0!important;
+    height:109.9%!important;
+  }
 }
 </style>
 
