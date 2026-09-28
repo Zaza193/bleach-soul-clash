@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v179-mobile-browser-board-card-row-ratio";
+  const BUILD_VERSION="v181-mobile-browser-board-card-proportions";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v179 · MOBILE BROWSER BOARD CARD ROW RATIO</title>
+<title>BLEACH: Soul Clash — v181 · MOBILE BROWSER BOARD CARD PROPORTIONS</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -43460,6 +43460,181 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   min-height:0!important;
   max-height:100%!important;
   aspect-ratio:auto!important;
+}
+</style>
+
+
+<style id="bsc-v180-mobile-browser-piles-hand-geometry-repair">
+/* v180 — MOBILE BROWSER ONLY.
+   Final geometry authority for the two regressions in v178/v179:
+   - pile components must shrink in BOTH axes, preserving their original 58:82 ratio;
+   - hand cards must be vertically centered inside the hand band instead of bottom-aligned. */
+
+/* PILES — use the original desktop 58x82 ratio at exactly half size. Repeated
+   #app specificity intentionally beats the older mobile "desktop geometry" rules. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile.pile-zone .pile-inner > .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile.pile-zone .pile-inner > .discard-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile.pile-zone .pile-inner > .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile.pile-zone .pile-inner > .discard-stack{
+  box-sizing:border-box!important;
+  flex:0 0 29px!important;
+  width:29px!important;
+  min-width:29px!important;
+  max-width:29px!important;
+  height:41px!important;
+  min-height:41px!important;
+  max-height:41px!important;
+  aspect-ratio:58 / 82!important;
+  transform:none!important;
+  margin:0!important;
+}
+
+/* Keep pile rows compact and pull them toward their respective viewport edges. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar{
+  grid-template-rows:46px minmax(0,1fr) 46px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile.pile-zone,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile.pile-zone > .pile-inner{
+  height:46px!important;
+  padding:0 3px 5px!important;
+  align-items:flex-start!important;
+  gap:6px!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile.pile-zone > .pile-inner{
+  height:46px!important;
+  padding:5px 3px 0!important;
+  align-items:flex-end!important;
+  gap:6px!important;
+}
+
+/* Scale the pile internals with the half-size shell instead of leaving desktop
+   decoration dimensions inside a narrow rectangle. */
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack::before{inset:2px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack::after{font-size:5.5px!important;letter-spacing:.04em!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack.empty::before{inset:3px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack > .discard-top{inset:1px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack > .discard-top::before{height:2px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack > .discard-top::after{inset:4px 3px 10px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack .discard-power{left:1px!important;top:1px!important;width:10px!important;height:10px!important;font-size:6px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack .discard-name{left:2px!important;right:2px!important;bottom:2px!important;font-size:3.4px!important;line-height:1!important;max-height:7px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner .deck-number,
+html.mobile-browser #app#app#app#app .rightbar .pile-inner .discard-number{right:1px!important;bottom:1px!important;width:11px!important;height:11px!important;font-size:6.5px!important;outline-width:1px!important;outline-offset:0!important}
+
+/* HAND — center the complete card vertically. The previous mobile rules use
+   flex-end on both the hand and every card; in the shortened 61px band that
+   pushes the card into the clipped lower edge. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > .hand-wrap{
+  height:61px!important;
+  min-height:61px!important;
+  max-height:61px!important;
+  overflow:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand#hand{
+  height:61px!important;
+  min-height:61px!important;
+  max-height:61px!important;
+  padding:3px 2px!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand#hand > .card,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand#hand.hand-expanded > .card{
+  flex:0 0 36px!important;
+  width:36px!important;
+  min-width:36px!important;
+  max-width:36px!important;
+  height:52px!important;
+  min-height:52px!important;
+  max-height:52px!important;
+  align-self:center!important;
+  margin:0!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand#hand > .card > .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  overflow:hidden!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand#hand > .card.selected{
+  transform:translateY(-1px) scale(1.01)!important;
+}
+</style>
+
+
+<style id="bsc-v181-mobile-browser-board-card-proportions">
+/* v181 — MOBILE BROWSER ONLY.
+   v179 changed only the board-card height while width could still be inherited
+   from older mobile rules. Define BOTH dimensions from the same row-derived
+   geometry so the original 32:46 card proportion is preserved. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active){
+  --mb-board-card-row-base:
+    calc(
+      (
+        var(--browser-vv-height,var(--app-height,100dvh))
+        - 30px
+        - 61px
+        - 2px
+      ) / 6
+    );
+  --mb-board-card-h:
+    clamp(16px,calc(var(--mb-board-card-row-base) * .74),34px);
+  --mb-board-card-w:
+    clamp(11px,calc(var(--mb-board-card-row-base) * .5147826087),24px);
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .board-shell > #board#board#board > .row > .row-cards > .card[data-bsc-frame-zone="board"]{
+  flex:0 0 var(--mb-board-card-w)!important;
+  width:var(--mb-board-card-w)!important;
+  min-width:var(--mb-board-card-w)!important;
+  max-width:var(--mb-board-card-w)!important;
+  height:var(--mb-board-card-h)!important;
+  min-height:var(--mb-board-card-h)!important;
+  max-height:var(--mb-board-card-h)!important;
+  aspect-ratio:32 / 46!important;
+  box-sizing:border-box!important;
+  align-self:center!important;
+  margin:0!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app > .board-shell > #board#board#board > .row > .row-cards > .card[data-bsc-frame-zone="board"] > .card-face{
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:100%!important;
+  aspect-ratio:auto!important;
+  box-sizing:border-box!important;
 }
 </style>
 
