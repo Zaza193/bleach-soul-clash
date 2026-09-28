@@ -17549,42 +17549,60 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
   let activeBoardTargetSession=null;
   const boardTargetKey=(sideKey,row,uid)=>`${sideKey||""}|${row||""}|${uid||""}`;
 
-  /* v160 — target legality is shared across all platforms.
-     Do not paint a separate mobile effect here: the existing common target CSS
-     is the single visual source of truth for desktop, mobile PWA and mobile browser. */
+  /* v156 — target visuals are state, not a pointer/hover media-query side effect.
+     Both mobile platforms receive an explicit LEGAL/BLOCKED state on every board card.
+     Inline !important is intentional: the file contains many historical target CSS layers. */
+  function isMobileTargetPlatform(){
+    const root=document.documentElement;
+    return root.classList.contains("mobile-pwa") || root.classList.contains("mobile-browser") || root.classList.contains("mobile-ui");
+  }
   function resetBoardTargetVisual(el){
     if(!el) return;
     delete el.dataset.bscTargetState;
     const face=el.querySelector?.(':scope > .card-face');
     const layer=face?.querySelector?.(':scope > .bsc-target-visual');
-    if(face){
-      for(const p of ["filter","transition","outline","outline-offset","opacity","visibility","transform","box-shadow"]){
-        face.style.removeProperty(p);
+    if(layer){
+      for(const p of ["display","visibility","opacity","background","border","box-shadow","transition","z-index"]){
+        layer.style.removeProperty(p);
       }
     }
-    if(layer){
-      for(const p of ["display","visibility","opacity","background","border","box-shadow","transition","z-index","inset","position"]){
-        layer.style.removeProperty(p);
+    if(face){
+      for(const p of ["filter","transition","outline","outline-offset"]){
+        face.style.removeProperty(p);
       }
     }
   }
   function applyBoardTargetVisual(el,isLegal){
     if(!el) return;
-    /* State is retained only for diagnostics. Visuals come from the shared
-       v370-board-card-target / primary / linked classes used on desktop. */
-    if(activeBoardTargetSession) el.dataset.bscTargetState=isLegal?"legal":"blocked";
-    else delete el.dataset.bscTargetState;
+    const session=activeBoardTargetSession;
+    if(!session || !isMobileTargetPlatform()){
+      resetBoardTargetVisual(el);
+      return;
+    }
     const face=el.querySelector?.(':scope > .card-face');
     const layer=face?.querySelector?.(':scope > .bsc-target-visual');
-    if(face){
-      for(const p of ["filter","transition","outline","outline-offset","opacity","visibility","transform","box-shadow"]){
-        face.style.removeProperty(p);
-      }
-    }
-    if(layer){
-      for(const p of ["display","visibility","opacity","background","border","box-shadow","transition","z-index","inset","position"]){
-        layer.style.removeProperty(p);
-      }
+    el.dataset.bscTargetState=isLegal?"legal":"blocked";
+    if(!face||!layer) return;
+
+    /* Never use filter/opacity for target dimming on mobile WebKit: it causes compositing flashes. */
+    face.style.setProperty("filter","none","important");
+    face.style.setProperty("transition","none","important");
+    face.style.setProperty("outline",isLegal?"2px solid rgba(218,252,255,.98)":"none","important");
+    face.style.setProperty("outline-offset",isLegal?"1px":"0","important");
+
+    layer.style.setProperty("display","block","important");
+    layer.style.setProperty("visibility","visible","important");
+    layer.style.setProperty("opacity","1","important");
+    layer.style.setProperty("transition","none","important");
+    layer.style.setProperty("z-index","90","important");
+    if(isLegal){
+      layer.style.setProperty("background","rgba(31,207,255,.07)","important");
+      layer.style.setProperty("border","3px solid rgba(218,252,255,.98)","important");
+      layer.style.setProperty("box-shadow","inset 0 0 0 2px rgba(59,207,255,.98), inset 0 0 18px 5px rgba(44,190,255,.55)","important");
+    }else{
+      layer.style.setProperty("background","rgba(0,0,0,.58)","important");
+      layer.style.setProperty("border","0","important");
+      layer.style.setProperty("box-shadow","none","important");
     }
   }
   function clearBoardTargetMarker(el){
@@ -41490,8 +41508,37 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
 
 
 <style id="bsc-v149-mobile-target-visibility-and-mulligan-plus15">
-/* v160: legacy mobile target visuals removed; this block now keeps only CHOOSE YOUR SOUL layout. */
+/* v149 — MOBILE ONLY target selection: keep every battlefield card at normal visibility.
+   Legal targets are highlighted; non-target cards are not dimmed. */
 @media (hover:none), (pointer:coarse){
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"],
+  html.touch-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"],
+  html.phone-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]{
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card[data-bsc-frame-zone="board"]>.card-face{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    filter:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]>.card-face{
+    filter:brightness(1.10) saturate(1.20)!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"]>.card-face,
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"]>.card-face,
+  html.touch-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"]>.card-face,
+  html.phone-device body.v370-card-targeting #board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"]>.card-face{
+    filter:brightness(1.26) saturate(1.34)!important;
+  }
+
   /* CHOOSE YOUR SOUL — +15% from the real mobile baseline 90x130 => 104x150. */
   html.mobile-ui #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid,
   html.touch-device #mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay#mulliganOverlay #mulliganGrid.mulligan-grid{
@@ -41637,6 +41684,79 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
 
 
 
+<style id="bsc-v152-mobile-target-no-filter-flicker">
+/* v152 — MOBILE ONLY target visuals.
+   Avoid nested CSS filters: mobile WebKit can flash card layers while recompositing them.
+   Illegal targets are dimmed by a normal overlay; legal targets stay fully painted and get a static glow. */
+@media (hover:none), (pointer:coarse){
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+
+  /* Only NON-targets get the dimmer. No filter/opacity animation = no white/black flash. */
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]:not(.v370-board-card-target) > .card-face::after{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:40!important;
+    pointer-events:none!important;
+    background:rgba(2,3,5,.56)!important;
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    transition:none!important;
+  }
+
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Legal target: static cyan frame, no brightness/saturation filter. */
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
+    outline:2px solid rgba(211,250,255,.98)!important;
+    outline-offset:1px!important;
+    box-shadow:inset 0 0 0 .67cqw var(--card-frame),inset 0 0 0 1.34cqw var(--card-ink),0 0 0 3px rgba(80,216,255,.96),0 0 14px rgba(52,197,255,.88)!important;
+    cursor:crosshair!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+  html.touch-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+  html.phone-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
+  html.tablet-device body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
+    border-color:rgba(225,252,255,.98)!important;
+    box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88),0 0 0 1.15cqw rgba(91,220,255,.98),0 0 4.8cqw 1cqw rgba(55,195,255,.76)!important;
+  }
+}
+</style>
+
+
 <script id="bsc-v153-platform-debug-marker">
 (() => {
   const publish=()=>{
@@ -41651,6 +41771,80 @@ html.mobile-ui.touch-device.touch-landscape:not(.tablet-device) #mulliganOverlay
   }
 })();
 </script>
+
+
+<style id="bsc-v154-mobile-target-visual-layer">
+/* v154 — stable target visuals for BOTH mobile platforms.
+   Uses a real DOM layer instead of filters/pseudo-elements/frame timing. */
+.bsc-target-visual{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:90;
+  pointer-events:none;
+  box-sizing:border-box;
+  border:0;
+  background:transparent;
+}
+
+@media (hover:none), (pointer:coarse){
+  /* Disable every legacy target filter/pseudo visual on mobile. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card{
+    visibility:visible!important;
+    opacity:1!important;
+    filter:none!important;
+    transition:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card > .card-face,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card > .card-face,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card > .card-face{
+    visibility:visible!important;
+    opacity:1!important;
+    filter:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card > .card-face::after,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card > .card-face::after,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card > .card-face::after{
+    content:none!important;
+    display:none!important;
+  }
+
+  /* Every battlefield card gets a visual state layer while choosing a target. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card > .card-face > .bsc-target-visual,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card > .card-face > .bsc-target-visual,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card > .card-face > .bsc-target-visual{
+    display:block!important;
+    opacity:1!important;
+    visibility:visible!important;
+    background:rgba(2,3,5,.58)!important;
+    border:0!important;
+    box-shadow:none!important;
+    transition:none!important;
+  }
+
+  /* Legal target: remove dimmer and draw a strong cyan frame/glow. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target > .card-face > .bsc-target-visual,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card.v370-board-card-target > .card-face > .bsc-target-visual,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card.v370-board-card-target > .card-face > .bsc-target-visual{
+    background:rgba(45,210,255,.06)!important;
+    border:3px solid rgba(207,249,255,.98)!important;
+    box-shadow:
+      inset 0 0 0 2px rgba(53,201,255,.95),
+      inset 0 0 18px 4px rgba(47,190,255,.58)!important;
+  }
+
+  /* Keep the legal target itself above its row neighbours. */
+  html.mobile-ui body.v370-card-targeting #board .row-cards .card.v370-board-card-target,
+  html.mobile-pwa body.v370-card-targeting #board .row-cards .card.v370-board-card-target,
+  html.mobile-browser body.v370-card-targeting #board .row-cards .card.v370-board-card-target{
+    z-index:70!important;
+  }
+}
+</style>
 
 
 <style id="bsc-v155-mobile-browser-viewport-adapt">
@@ -41911,6 +42105,37 @@ html.mobile-browser #mobileCancelTarget{
   }
 })();
 </script>
+
+
+<style id="bsc-v156-mobile-target-platform-authority">
+/* v156 — BOTH mobile platforms. No pointer/hover media queries.
+   The JS target registry writes data-bsc-target-state synchronously before a card is painted. */
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face,
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face{
+  filter:none!important; opacity:1!important; visibility:visible!important; transition:none!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state] > .card-face > .bsc-target-visual,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state] > .card-face > .bsc-target-visual{
+  display:block!important; visibility:visible!important; opacity:1!important; pointer-events:none!important;
+  position:absolute!important; inset:0!important; z-index:90!important; transition:none!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face > .bsc-target-visual,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face > .bsc-target-visual{
+  background:rgba(0,0,0,.58)!important; border:0!important; box-shadow:none!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face > .bsc-target-visual,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face > .bsc-target-visual{
+  background:rgba(31,207,255,.07)!important;
+  border:3px solid rgba(218,252,255,.98)!important;
+  box-shadow:inset 0 0 0 2px rgba(59,207,255,.98),inset 0 0 18px 5px rgba(44,190,255,.55)!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face{
+  outline:2px solid rgba(218,252,255,.98)!important; outline-offset:1px!important;
+}
+</style>
 
 
 <style id="bsc-v157-mobile-browser-top-flush-more-space">
@@ -42249,99 +42474,6 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap,
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > #hand#hand#hand#hand#hand,
   html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app > .board-shell > .hand-wrap > .hand-actions{height:68px!important;min-height:68px!important;max-height:68px!important}
-}
-</style>
-
-
-<style id="bsc-v160-mobile-target-desktop-parity-and-restart">
-/* v160 — BOTH MOBILE PLATFORMS.
-   Target selection deliberately mirrors the existing shared/desktop v370 styling. */
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"]{
-  visibility:visible!important;
-  opacity:1!important;
-  filter:brightness(.48) saturate(.55)!important;
-  transition:filter .14s ease,transform .14s ease,box-shadow .14s ease!important;
-}
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card:not(.v370-board-card-target)[data-bsc-frame-zone="board"],
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card:not(.v370-board-card-target)[data-bsc-frame-zone="board"]{
-  transform:none!important;
-  box-shadow:none!important;
-  outline:none!important;
-  cursor:default!important;
-  z-index:1!important;
-}
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"],
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]{
-  filter:brightness(1.08) saturate(1.18)!important;
-  cursor:crosshair!important;
-  box-shadow:0 0 0 2px rgba(121,225,255,.95),0 0 18px rgba(72,201,255,.72)!important;
-  transform:translateY(-2px)!important;
-  z-index:25!important;
-}
-/* Visible card face: exact shared desktop values. */
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face,
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
-  filter:brightness(.46) saturate(.52)!important;
-  transition:filter .14s ease,transform .14s ease!important;
-  visibility:visible!important;
-  opacity:1!important;
-  outline:none!important;
-}
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face,
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
-  filter:brightness(1.10) saturate(1.20)!important;
-  cursor:crosshair!important;
-}
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame,
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
-  border-color:rgba(205,246,255,.98)!important;
-  box-shadow:inset 0 0 0 .55cqw rgba(0,0,0,.88),0 0 0 1.15cqw rgba(104,220,255,.96),0 0 5.2cqw 1.2cqw rgba(62,195,255,.78)!important;
-}
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame::after,
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame::after{
-  content:""!important;
-  display:block!important;
-  position:absolute!important;
-  inset:-2cqw!important;
-  pointer-events:none!important;
-  border:1cqw solid rgba(226,251,255,.96)!important;
-  box-shadow:0 0 4.6cqw rgba(66,203,255,.92),inset 0 0 3.4cqw rgba(88,213,255,.52)!important;
-  opacity:.95!important;
-}
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"] > .card-face,
-html.mobile-pwa body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"] > .card-face,
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target.v370-board-card-primary[data-bsc-frame-zone="board"] > .card-face,
-html.mobile-browser body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target.v370-board-card-linked[data-bsc-frame-zone="board"] > .card-face{
-  filter:brightness(1.26) saturate(1.34)!important;
-  transform:translateY(-2px) scale(1.025)!important;
-}
-/* The abandoned mobile-only visual layer must never participate again. */
-html.mobile-pwa #board#board .bsc-target-visual,
-html.mobile-browser #board#board .bsc-target-visual{
-  display:none!important;
-  visibility:hidden!important;
-  opacity:0!important;
-  background:none!important;
-  border:0!important;
-  box-shadow:none!important;
-}
-
-/* Bigger, reliable NEW GAME touch target on both mobile platforms. */
-html.mobile-pwa #restartBtn,
-html.mobile-browser #restartBtn{
-  min-width:108px!important;
-  width:auto!important;
-  height:38px!important;
-  min-height:38px!important;
-  padding:0 14px!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  font-size:10.5px!important;
-  line-height:1!important;
-  letter-spacing:.055em!important;
-  touch-action:manipulation!important;
 }
 </style>
 
