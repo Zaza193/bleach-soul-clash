@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v185-mobile-browser-preview-use-free-space";
+  const BUILD_VERSION="v187-mobile-browser-preview-fill-fullscreen";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v185 · MOBILE BROWSER PREVIEW USE FREE SPACE</title>
+<title>BLEACH: Soul Clash — v187 · MOBILE BROWSER PREVIEW FILL + FULLSCREEN</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -22219,6 +22219,12 @@ function isNanaoBarrierActive(card){
   let v31AbilityTargetLockToken=0;
   function v31ApplyAbilityTargetLock(sideKey,row,uid){
     if(!uid) return;
+    /* v186: desktop no longer shows the old post-action blue target-lock VFX.
+       Mobile/PWA keep their existing behavior. */
+    if(document.documentElement.classList.contains("desktop-ui")){
+      v31ClearAbilityTargetLock();
+      return;
+    }
     const token=++v31AbilityTargetLockToken;
     v31AbilityTargetLock={sideKey,row,uid,token};
     document.querySelectorAll('.card.ability-target-locked').forEach(el=>el.classList.remove('ability-target-locked'));
@@ -43784,6 +43790,259 @@ html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#cho
   max-height:var(--mb-choice-preview-info-h)!important;
 }
 </style>
+
+
+<style id="bsc-v186-desktop-target-outline-authority">
+/* v186 — DESKTOP ONLY.
+   During target selection, legal battlefield cards get one clean blue frame.
+   No dimming, glow bloom, brightness/filter pumping, scaling or animated halo. */
+
+html.desktop-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"],
+html.desktop-ui body.v370-card-targeting #board#board .row-cards .card[data-bsc-frame-zone="board"] > .card-face{
+  filter:none!important;
+  opacity:1!important;
+  transform:none!important;
+  transition:none!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+
+html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"]{
+  filter:none!important;
+  transform:none!important;
+  box-shadow:none!important;
+  outline:0!important;
+  z-index:30!important;
+  cursor:pointer!important;
+}
+
+html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face{
+  filter:none!important;
+  transform:none!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+
+html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame{
+  border:2px solid rgba(46,184,255,.98)!important;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.9)!important;
+  opacity:1!important;
+}
+
+html.desktop-ui body.v370-card-targeting #board#board .row-cards .card.v370-board-card-target[data-bsc-frame-zone="board"] > .card-face > .bsc-assemble-inner-frame::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* Remove the old blue post-action target-lock treatment on desktop even if a
+   legacy class/halo survives from an older render. */
+html.desktop-ui .card.ability-target-locked,
+html.desktop-ui .card.ability-target-locked > .card-face,
+html.desktop-ui .card.ability-target-locked > .card-face > .bsc-assemble-inner-frame{
+  animation:none!important;
+  filter:none!important;
+  transform:none!important;
+  outline:0!important;
+  box-shadow:none!important;
+}
+
+html.desktop-ui .card.ability-target-locked::before,
+html.desktop-ui .card.ability-target-locked::after,
+html.desktop-ui .v33-target-halo{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  animation:none!important;
+}
+</style>
+
+
+<style id="bsc-v187-mobile-browser-rightbar-preview-fill">
+/* v187 — MOBILE BROWSER ONLY.
+   Root cause: an old phone-landscape authority still fixes #detail to 220px and
+   .detail-preview to 72px. The compacted pile rows therefore free vertical space,
+   but the preview can never claim it. This final authority makes the middle
+   rightbar track the preview's actual containing block and lets the card/plaque
+   occupy that whole track. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar{
+  grid-template-rows:50px minmax(0,1fr) 50px!important;
+  align-content:stretch!important;
+  gap:0!important;
+  padding:3px!important;
+}
+
+/* Keep the compact piles inside their own rows with a little breathing room. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #enemyPile.pile-zone,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  width:100%!important;
+  height:46px!important;
+  min-height:46px!important;
+  max-height:46px!important;
+  margin:0!important;
+  overflow:visible!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #enemyPile.pile-zone{
+  align-self:start!important;
+  transform:translateY(2px)!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  align-self:end!important;
+  transform:translateY(-2px)!important;
+}
+
+/* The preview viewport now owns 100% of the middle grid track. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail{
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  align-self:stretch!important;
+  justify-self:stretch!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  overflow:hidden!important;
+  background:#0b0b0b!important;
+  border:0!important;
+  box-sizing:border-box!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview{
+  position:relative!important;
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  align-items:stretch!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview > .card,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview > .card.with-info{
+  position:relative!important;
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  overflow:hidden!important;
+  aspect-ratio:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Image keeps the true card ratio and finally uses the whole rightbar width. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview > .card > .card-face{
+  position:relative!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:2 / 3!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+
+/* The description plaque consumes all vertical space freed by the small piles. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel{
+  position:relative!important;
+  flex:1 1 0!important;
+  width:100%!important;
+  min-width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:-1px 0 0!important;
+  padding:6px 6px 7px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  box-sizing:border-box!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:contain!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview > .card.with-info > .card-info-panel .card-info-desc{
+  display:block!important;
+  width:100%!important;
+  max-height:none!important;
+  overflow:visible!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+}
+
+/* Opponent-play preview has no plaque; center the proportional face in the free track. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #detail#detail#detail#detail#detail > .detail-preview.opponent-play-preview > .card{
+  justify-content:center!important;
+}
+</style>
+
+<script id="bsc-v187-mobile-browser-fullscreen-attempt">
+/* Browser chrome (Safari address/tab bars) is not CSS owned. On iPad-class Safari,
+   Fullscreen API can hide it, but fullscreen requires a real user gesture.
+   Try once on the first game interaction; unsupported iPhones simply keep the
+   normal browser UI with no behavior change. */
+(()=>{
+  const root=document.documentElement;
+  if(!root.classList.contains('mobile-browser')) return;
+
+  let tried=false;
+  const request=()=>{
+    if(tried) return;
+    tried=true;
+    const el=document.documentElement;
+    const fn=el.requestFullscreen || el.webkitRequestFullscreen;
+    if(typeof fn!=='function') return;
+    try{
+      const result=fn.call(el,{navigationUI:'hide'});
+      if(result && typeof result.catch==='function') result.catch(()=>{});
+    }catch(_e){}
+  };
+
+  window.addEventListener('pointerup',request,{capture:true,once:true,passive:true});
+  window.addEventListener('touchend',request,{capture:true,once:true,passive:true});
+})();
+</script>
 
 </body>
 </html>
