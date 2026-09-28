@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v171-mobile-browser-start-panel-height-flow";
+  const BUILD_VERSION="v175-mobile-browser-battle-stage-true-width-85";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v170 · MOBILE BROWSER BATTLE WIDTH -10%</title>
+<title>BLEACH: Soul Clash — v175 · MOBILE BROWSER BATTLE STAGE TRUE WIDTH 85%</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -16961,8 +16961,6 @@ html.platform-mobile-browser [data-bsc-target-state="valid"]::after{
    bottom action area instead of letting it steal description space. */
 html.mobile-browser #startOverlay.start-overlay,
 html.mobile-browser #startOverlay#startOverlay:not(.hidden){
-  height:var(--app-height,100dvh)!important;
-  max-height:var(--app-height,100dvh)!important;
   padding-top:0!important;
   padding-bottom:0!important;
   align-items:center!important;
@@ -43177,81 +43175,29 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
 </style>
 
 
-<style id="bsc-v171-mobile-browser-start-panel-height-flow">
-/* v170 — MOBILE BROWSER ONLY.
-   Battle scene visual width = 90% of the visible browser viewport.
-   Keep the existing shallow-viewport vertical compensation from v164: when
-   the stage is scaled to .91, use a 98.9011% layout width so the final painted
-   width remains exactly 90% (98.9011% * .91 = 90%). */
-html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-  width:90%!important;
-  max-width:90%!important;
-  margin-left:auto!important;
-  margin-right:auto!important;
-}
-@media (max-height:600px){
-  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-    width:98.9011%!important;
-    max-width:98.9011%!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
-    transform:scale(.91)!important;
-    transform-origin:50% 0!important;
-    height:109.9%!important;
-  }
-}
-</style>
 
 
-<style id="bsc-v172-mobile-browser-battle-width-minus-20">
-/* v172 — MOBILE BROWSER ONLY.
-   Battle scene becomes 20% narrower while keeping full height.
-   Undo the shallow-viewport uniform scale so width changes do not shrink height. */
+
+
+
+
+
+
+
+<style id="bsc-v175-mobile-browser-battle-stage-true-width-85">
+/* v175 — MOBILE BROWSER ONLY.
+   Real battle-stage width authority. Percent widths were resolved against the
+   layout/body box and visually stayed near the old 90% mobile stage. Tie the
+   complete combat wrapper directly to visualViewport width instead. Height and
+   all vertical battle geometry remain untouched. */
 html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-  width:80%!important;
-  max-width:80%!important;
+  box-sizing:border-box!important;
+  width:calc(var(--browser-vv-width,var(--app-width,100vw)) * .85)!important;
   min-width:0!important;
+  max-width:calc(var(--browser-vv-width,var(--app-width,100vw)) * .85)!important;
   margin-left:auto!important;
   margin-right:auto!important;
   transform:none!important;
-  transform-origin:50% 0!important;
-  height:100%!important;
-  max-height:100%!important;
-}
-@media (max-height:600px){
-  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-    width:80%!important;
-    max-width:80%!important;
-    transform:none!important;
-    height:100%!important;
-    max-height:100%!important;
-  }
-}
-</style>
-
-
-<style id="bsc-v174-mobile-browser-battle-width-minus-15">
-/* v174 — MOBILE BROWSER ONLY.
-   Battle scene becomes 15% narrower while keeping full height. */
-html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-  width:85%!important;
-  max-width:85%!important;
-  min-width:0!important;
-  margin-left:auto!important;
-  margin-right:auto!important;
-  transform:none!important;
-  transform-origin:50% 0!important;
-  height:100%!important;
-  max-height:100%!important;
-}
-@media (max-height:600px){
-  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active) #app#app{
-    width:85%!important;
-    max-width:85%!important;
-    transform:none!important;
-    height:100%!important;
-    max-height:100%!important;
-  }
 }
 </style>
 
