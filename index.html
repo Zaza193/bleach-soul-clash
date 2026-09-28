@@ -17548,32 +17548,98 @@ html.touch-device .rightbar .detail-preview .card.with-info > .card-info-panel, 
      never create an unmarked legal card for even one painted frame. */
   let activeBoardTargetSession=null;
   const boardTargetKey=(sideKey,row,uid)=>`${sideKey||""}|${row||""}|${uid||""}`;
+
+  /* v156 — target visuals are state, not a pointer/hover media-query side effect.
+     Both mobile platforms receive an explicit LEGAL/BLOCKED state on every board card.
+     Inline !important is intentional: the file contains many historical target CSS layers. */
+  function isMobileTargetPlatform(){
+    const root=document.documentElement;
+    return root.classList.contains("mobile-pwa") || root.classList.contains("mobile-browser") || root.classList.contains("mobile-ui");
+  }
+  function resetBoardTargetVisual(el){
+    if(!el) return;
+    delete el.dataset.bscTargetState;
+    const face=el.querySelector?.(':scope > .card-face');
+    const layer=face?.querySelector?.(':scope > .bsc-target-visual');
+    if(layer){
+      for(const p of ["display","visibility","opacity","background","border","box-shadow","transition","z-index"]){
+        layer.style.removeProperty(p);
+      }
+    }
+    if(face){
+      for(const p of ["filter","transition","outline","outline-offset"]){
+        face.style.removeProperty(p);
+      }
+    }
+  }
+  function applyBoardTargetVisual(el,isLegal){
+    if(!el) return;
+    const session=activeBoardTargetSession;
+    if(!session || !isMobileTargetPlatform()){
+      resetBoardTargetVisual(el);
+      return;
+    }
+    const face=el.querySelector?.(':scope > .card-face');
+    const layer=face?.querySelector?.(':scope > .bsc-target-visual');
+    el.dataset.bscTargetState=isLegal?"legal":"blocked";
+    if(!face||!layer) return;
+
+    /* Never use filter/opacity for target dimming on mobile WebKit: it causes compositing flashes. */
+    face.style.setProperty("filter","none","important");
+    face.style.setProperty("transition","none","important");
+    face.style.setProperty("outline",isLegal?"2px solid rgba(218,252,255,.98)":"none","important");
+    face.style.setProperty("outline-offset",isLegal?"1px":"0","important");
+
+    layer.style.setProperty("display","block","important");
+    layer.style.setProperty("visibility","visible","important");
+    layer.style.setProperty("opacity","1","important");
+    layer.style.setProperty("transition","none","important");
+    layer.style.setProperty("z-index","90","important");
+    if(isLegal){
+      layer.style.setProperty("background","rgba(31,207,255,.07)","important");
+      layer.style.setProperty("border","3px solid rgba(218,252,255,.98)","important");
+      layer.style.setProperty("box-shadow","inset 0 0 0 2px rgba(59,207,255,.98), inset 0 0 18px 5px rgba(44,190,255,.55)","important");
+    }else{
+      layer.style.setProperty("background","rgba(0,0,0,.58)","important");
+      layer.style.setProperty("border","0","important");
+      layer.style.setProperty("box-shadow","none","important");
+    }
+  }
   function clearBoardTargetMarker(el){
     if(!el) return;
     el.classList.remove("v370-board-card-target","v370-board-card-linked","v370-board-card-primary");
-    if(el.dataset?.bscTargetPicker==="1"){
-      delete el.dataset.bscTargetPicker;
-      el.removeAttribute("tabindex");
-      el.removeAttribute("aria-label");
-    }
+    delete el.dataset.bscTargetPicker;
+    el.removeAttribute("tabindex");
+    el.removeAttribute("aria-label");
+    resetBoardTargetVisual(el);
   }
   function syncBoardTargetMarker(el,sideKey,row,card){
     if(!el||!card?.uid) return false;
     const session=activeBoardTargetSession;
-    const opt=session?.targetsByKey?.get(boardTargetKey(sideKey,row,card.uid))||null;
+    if(!session){
+      clearBoardTargetMarker(el);
+      return false;
+    }
+    const opt=session.targetsByKey?.get(boardTargetKey(sideKey,row,card.uid))||null;
+    el.classList.remove("v370-board-card-linked","v370-board-card-primary");
     if(!opt){
-      if(el.dataset?.bscTargetPicker==="1") clearBoardTargetMarker(el);
+      el.classList.remove("v370-board-card-target");
+      delete el.dataset.bscTargetPicker;
+      el.removeAttribute("tabindex");
+      el.removeAttribute("aria-label");
+      applyBoardTargetVisual(el,false);
       return false;
     }
     el.classList.add("v370-board-card-target");
     el.dataset.bscTargetPicker="1";
     el.setAttribute("tabindex","0");
     el.setAttribute("aria-label",`${session.title||"ЦЕЛЬ"}: ${opt.card?.name||card.name||"цель"}`);
+    applyBoardTargetVisual(el,true);
     return true;
   }
   function clearBoardTargetMarkers(){
-    boardEl?.querySelectorAll?.('.card[data-bsc-target-picker="1"],.card.v370-board-card-target,.card.v370-board-card-linked,.card.v370-board-card-primary')
-      .forEach(clearBoardTargetMarker);
+    /* Clear ALL battlefield cards, not only legal ones: blocked cards also own visual state. */
+    boardEl?.querySelectorAll?.('.row[data-side][data-row] .card[data-uid]').forEach(clearBoardTargetMarker);
   }
   function syncLiveBoardTargetMarkers(){
     if(!boardEl) return;
@@ -22344,12 +22410,15 @@ function isNanaoBarrierActive(card){
           }
           return el?{opt,el}:null;
         }).filter(Boolean);
-        if(!targets.length){ proxyEls.forEach(el=>el.remove()); resolve(null); return; }
-
+        /* Registry must come from the game options themselves, not from whichever
+           DOM nodes happened to be mounted at this instant. A render between those two
+           moments must not erase a legal target from the visual/interaction model. */
         const targetsByKey=new Map();
-        for(const {opt} of targets){
+        for(const opt of options){
+          if(!opt?.sideKey||!opt?.row||!opt?.card?.uid) continue;
           targetsByKey.set(boardTargetKey(opt.sideKey,opt.row,opt.card.uid),opt);
         }
+        if(!targetsByKey.size){ proxyEls.forEach(el=>el.remove()); resolve(null); return; }
         const session={title,targetsByKey};
         activeBoardTargetSession=session;
 
@@ -42036,6 +42105,263 @@ html.mobile-browser #mobileCancelTarget{
   }
 })();
 </script>
+
+
+<style id="bsc-v156-mobile-target-platform-authority">
+/* v156 — BOTH mobile platforms. No pointer/hover media queries.
+   The JS target registry writes data-bsc-target-state synchronously before a card is painted. */
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face,
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face{
+  filter:none!important; opacity:1!important; visibility:visible!important; transition:none!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state] > .card-face > .bsc-target-visual,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state] > .card-face > .bsc-target-visual{
+  display:block!important; visibility:visible!important; opacity:1!important; pointer-events:none!important;
+  position:absolute!important; inset:0!important; z-index:90!important; transition:none!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face > .bsc-target-visual,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="blocked"] > .card-face > .bsc-target-visual{
+  background:rgba(0,0,0,.58)!important; border:0!important; box-shadow:none!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face > .bsc-target-visual,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face > .bsc-target-visual{
+  background:rgba(31,207,255,.07)!important;
+  border:3px solid rgba(218,252,255,.98)!important;
+  box-shadow:inset 0 0 0 2px rgba(59,207,255,.98),inset 0 0 18px 5px rgba(44,190,255,.55)!important;
+}
+html.mobile-pwa #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face,
+html.mobile-browser #board#board .row-cards .card[data-bsc-target-state="legal"] > .card-face{
+  outline:2px solid rgba(218,252,255,.98)!important; outline-offset:1px!important;
+}
+</style>
+
+
+<style id="bsc-v157-mobile-browser-top-flush-more-space">
+/* v157 — MOBILE BROWSER ONLY.
+   CHOOSE YOUR SOUL is the vertical reference: no artificial top gap.
+   Other browser-mobile pages start at visualViewport top and use the freed height. */
+
+/* Remove the browser-only top gutter from every preparation/page overlay except
+   mulligan, which already has the desired geometry. visualViewport already starts
+   below the browser chrome, so adding safe/top padding here only wastes space. */
+html.mobile-browser #modeOverlay:not(.hidden),
+html.mobile-browser #networkOverlay:not(.hidden),
+html.mobile-browser #networkCreateOverlay:not(.hidden),
+html.mobile-browser:not(.network-keyboard-open) #networkJoinOverlay:not(.hidden),
+html.mobile-browser #startOverlay:not(.hidden),
+html.mobile-browser #deckBuilderOverlay:not(.hidden),
+html.mobile-browser #choiceOverlay:not(.hidden),
+html.mobile-browser #handoffOverlay:not(.hidden),
+html.mobile-browser #resultOverlay:not(.hidden),
+html.mobile-browser #soulSuicideOverlay:not(.hidden){
+  padding-top:0!important;
+  padding-right:max(4px,env(safe-area-inset-right,0px))!important;
+  padding-bottom:max(4px,env(safe-area-inset-bottom,0px))!important;
+  padding-left:max(4px,env(safe-area-inset-left,0px))!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  place-items:initial!important;
+}
+
+/* The old browser adaptation used margin:auto, which vertically re-centered short
+   panels and recreated the large black strip. Anchor every page panel to the top. */
+html.mobile-browser #modeOverlay>.modal,
+html.mobile-browser #networkOverlay>.modal,
+html.mobile-browser #networkCreateOverlay>.modal,
+html.mobile-browser:not(.network-keyboard-open) #networkJoinOverlay>.modal,
+html.mobile-browser #startOverlay>.modal,
+html.mobile-browser #choiceOverlay>.modal,
+html.mobile-browser #handoffOverlay>.modal,
+html.mobile-browser #resultOverlay>.modal,
+html.mobile-browser #soulSuicideOverlay>.modal,
+html.mobile-browser #deckBuilderOverlay>.deck-builder-shell,
+html.mobile-browser #deckBuilderOverlay>.deck-builder-modal{
+  margin:0 auto!important;
+  align-self:center!important;
+  max-height:var(--browser-vv-height,var(--app-height,100dvh))!important;
+}
+
+/* CHOOSE YOUR BATTLE: use the full available browser height rather than centering
+   a compressed panel in it. The three mode plaques receive the recovered space. */
+html.mobile-browser #modeOverlay>.mode-modal{
+  height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+  padding:8px 10px 7px!important;
+}
+html.mobile-browser #modeOverlay .mode-modal h1,
+html.mobile-browser #modeOverlay .mode-sub,
+html.mobile-browser #modeOverlay .bsc-mode-language-back{
+  flex:0 0 auto!important;
+}
+html.mobile-browser #modeOverlay .mode-grid{
+  flex:1 1 0!important;
+  min-height:0!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+  gap:6px!important;
+  margin:0!important;
+  overflow:hidden!important;
+}
+html.mobile-browser #modeOverlay .mode-card{
+  min-height:0!important;
+  height:100%!important;
+  padding:8px 10px!important;
+  align-content:center!important;
+}
+html.mobile-browser #modeOverlay .mode-back,
+html.mobile-browser #modeOverlay #modeBack,
+html.mobile-browser #modeOverlay .bsc-mode-language-back{
+  margin-top:6px!important;
+  min-height:36px!important;
+  height:36px!important;
+}
+
+/* FACTION / PATH: stretch the panel to the available height and let faction
+   plaques share the freed vertical space instead of leaving it above the panel. */
+html.mobile-browser #startOverlay>.faction-modal{
+  height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+  padding:8px!important;
+}
+html.mobile-browser #startOverlay .setup-title-line,
+html.mobile-browser #startOverlay .network-actions{
+  flex:0 0 auto!important;
+}
+html.mobile-browser #startOverlay .factions{
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  align-content:stretch!important;
+  grid-auto-rows:minmax(0,1fr)!important;
+  overflow:auto!important;
+  margin:6px 0!important;
+}
+html.mobile-browser #startOverlay .faction{
+  min-height:0!important;
+  height:100%!important;
+}
+
+/* DECK BUILDER: reclaim the former 8px top/bottom reserve for the card area. */
+html.mobile-browser #deckBuilderOverlay>.deck-builder-shell,
+html.mobile-browser #deckBuilderOverlay>.deck-builder-modal{
+  height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  min-height:0!important;
+}
+html.mobile-browser #deckBuilderOverlay .deck-builder-main-area,
+html.mobile-browser #deckBuilderOverlay .deck-builder-scroll-content{
+  min-height:0!important;
+  max-height:none!important;
+}
+
+/* Choice/Heart Bond/network/result pages stay content-sized, but now start flush
+   at the top and can use the full visible height before scrolling. */
+html.mobile-browser #choiceOverlay>.choice-modal,
+html.mobile-browser #handoffOverlay>.modal,
+html.mobile-browser #resultOverlay>.modal,
+html.mobile-browser #soulSuicideOverlay>.modal,
+html.mobile-browser #networkOverlay>.modal,
+html.mobile-browser #networkCreateOverlay>.modal,
+html.mobile-browser:not(.network-keyboard-open) #networkJoinOverlay>.modal{
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - max(4px,env(safe-area-inset-bottom,0px)))!important;
+  margin-top:0!important;
+}
+html.mobile-browser #choiceOverlay .choice-grid{
+  max-height:calc(var(--browser-vv-height,var(--app-height,100dvh)) - 68px)!important;
+}
+
+/* Give the simple online plaques a little of the reclaimed room as well. */
+html.mobile-browser #networkOverlay .start-btn,
+html.mobile-browser #networkCreateOverlay .start-btn,
+html.mobile-browser:not(.network-keyboard-open) #networkJoinOverlay .start-btn{
+  min-height:38px!important;
+}
+</style>
+
+
+<style id="bsc-v158-mobile-browser-hand-one-row">
+/* v158: mobile-browser battlefield hand should not cover two rows */
+html.platform-mobile-browser.phone-device.phone-landscape .board-shell,
+html.mobile-browser.phone-device.phone-landscape .board-shell{
+  grid-template-rows:minmax(0,1fr) 118px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .board-shell:before,
+html.mobile-browser.phone-device.phone-landscape .board-shell:before{
+  inset:0 0 118px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand-wrap,
+html.mobile-browser.phone-device.phone-landscape .hand-wrap{
+  min-height:118px !important;
+  height:118px !important;
+  max-height:118px !important;
+  grid-template-columns:minmax(0,1fr) 92px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand,
+html.mobile-browser.phone-device.phone-landscape .hand{
+  padding:4px 6px 4px !important;
+  gap:4px !important;
+  align-items:flex-end !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand .card,
+html.mobile-browser.phone-device.phone-landscape .hand .card{
+  flex:0 0 74px !important;
+  width:74px !important;
+  min-width:74px !important;
+  max-width:74px !important;
+  height:107px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand .card .name,
+html.mobile-browser.phone-device.phone-landscape .hand .card .name{
+  font-size:6.8px !important;
+  padding:8px 3px 4px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand .card .power,
+html.mobile-browser.phone-device.phone-landscape .hand .card .power{
+  width:22px !important;
+  height:22px !important;
+  font-size:14px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand .card.selected,
+html.mobile-browser.phone-device.phone-landscape .hand .card.selected{
+  transform:translateY(-4px) scale(1.03) !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand-wrap:before,
+html.mobile-browser.phone-device.phone-landscape .hand-wrap:before{
+  top:3px !important;
+  left:7px !important;
+  font-size:6px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand-actions,
+html.mobile-browser.phone-device.phone-landscape .hand-actions{
+  padding:6px 5px !important;
+  gap:4px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape .hand-actions .start-btn,
+html.mobile-browser.phone-device.phone-landscape .hand-actions .start-btn,
+html.platform-mobile-browser.phone-device.phone-landscape .hand-actions button,
+html.mobile-browser.phone-device.phone-landscape .hand-actions button{
+  min-height:30px !important;
+  height:30px !important;
+  font-size:8px !important;
+  padding:0 6px !important;
+}
+html.platform-mobile-browser.phone-device.phone-landscape #handScrollDock.hand-scroll-dock,
+html.mobile-browser.phone-device.phone-landscape #handScrollDock.hand-scroll-dock{
+  height:18px !important;
+  padding:2px 6px !important;
+}
+</style>
 
 </body>
 </html>
