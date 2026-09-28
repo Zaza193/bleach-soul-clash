@@ -15,7 +15,7 @@
 
 <script id="v77-responsive-pwa-bootstrap">(() => {
   const root=document.documentElement;
-  const BUILD_VERSION="v191-mobile-browser-preview-height-plus10";
+  const BUILD_VERSION="v192-mobile-browser-piles-plus30";
   globalThis.BSC_BUILD_VERSION=BUILD_VERSION;
   root.dataset.buildVersion=BUILD_VERSION;
 
@@ -100,7 +100,7 @@
   }
 })();</script>
 
-<title>BLEACH: Soul Clash — v191 · MOBILE BROWSER PREVIEW HEIGHT +10%</title>
+<title>BLEACH: Soul Clash — v192 · MOBILE BROWSER PILES +30%</title>
 
 <style id="app-styles">
 /* ===== merged legacy section: app-styles ===== */
@@ -44040,6 +44040,43 @@ html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):no
   height:100%!important;
   min-height:0!important;
   max-height:none!important;
+}
+</style>
+
+
+<style id="bsc-v192-mobile-browser-piles-plus30">
+/* v192 — MOBILE BROWSER ONLY.
+   Preview box size from v191 is kept. Increase only deck/discard visual size. */
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #enemyPile.pile-zone,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > #playerPile.pile-zone{
+  height:62px!important;
+  min-height:62px!important;
+  max-height:62px!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .discard-stack{
+  width:44px!important;
+  height:62px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  flex-basis:44px!important;
+}
+
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .deck-number,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app#app > .rightbar > .pile-zone .discard-number{
+  width:18px!important;
+  height:18px!important;
+  min-width:18px!important;
+  min-height:18px!important;
+  font-size:9px!important;
 }
 </style>
 
