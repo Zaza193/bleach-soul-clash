@@ -48433,5 +48433,293 @@ BSC.engine.domain=Object.freeze({
   BSC.bodyPlatformMarker=new BodyPlatformMarker().mount();
 })();
 </script>
+
+<style id="bsc-v144-mobile-browser-canonical-fixes">
+/* FINAL MOBILE-BROWSER AUTHORITY — intentionally placed at the end of <body>. */
+
+/* 1) Battlefield row cards: visibly larger and nearly fill the row height. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards{
+  padding:0 1px!important;
+  gap:2px!important;
+  align-items:center!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card{
+  flex:0 0 34px!important;
+  width:34px!important;
+  min-width:34px!important;
+  max-width:34px!important;
+  height:51px!important;
+  min-height:51px!important;
+  max-height:51px!important;
+  margin:0!important;
+  transform:none!important;
+  align-self:center!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card > .card-face{
+  width:34px!important;
+  min-width:34px!important;
+  max-width:34px!important;
+  height:51px!important;
+  min-height:51px!important;
+  max-height:51px!important;
+  aspect-ratio:auto!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card .power{
+  width:18px!important;
+  min-width:18px!important;
+  max-width:18px!important;
+  height:10px!important;
+  min-height:10px!important;
+  max-height:10px!important;
+  border-radius:18px 18px 0 0!important;
+  font-size:8.5px!important;
+  line-height:1!important;
+  padding-top:0!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card .name{
+  font-size:4.5px!important;
+  line-height:1!important;
+  padding:3px 1px 1px!important;
+}
+@media (max-height:395px){
+  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+  #app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card,
+  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+  #app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card > .card-face{
+    width:32px!important;min-width:32px!important;max-width:32px!important;
+    height:48px!important;min-height:48px!important;max-height:48px!important;
+  }
+  html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+  #app#app#app#app > .board-shell > #board#board#board#board > .row > .row-cards > .card{
+    flex-basis:32px!important;
+  }
+}
+
+/* 2) HEART BOND — ACTION. Beat every older shared/mobile preview rule. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.preview-stack-choice.heart-bond-action{
+  width:calc(100vw - 8px)!important;
+  max-width:calc(100vw - 8px)!important;
+  height:calc(var(--app-height,100dvh) - 8px)!important;
+  max-height:calc(var(--app-height,100dvh) - 8px)!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:4px 6px 5px!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-heading{
+  position:relative!important;inset:auto!important;top:auto!important;left:auto!important;
+  width:100%!important;transform:none!important;margin:0!important;padding:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-heading h1{
+  font-size:18px!important;line-height:1!important;margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action #choiceSub{display:none!important;height:0!important;margin:0!important;padding:0!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-grid{
+  width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;
+  padding:2px 2px 3px!important;margin:0!important;
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:minmax(0,1fr) auto!important;gap:4px 5px!important;
+  align-items:end!important;justify-items:stretch!important;overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview{
+  grid-column:1/-1!important;grid-row:1!important;
+  flex:none!important;width:82px!important;min-width:82px!important;max-width:82px!important;
+  height:auto!important;margin:0 auto!important;padding:0!important;gap:0!important;
+  align-self:center!important;justify-self:center!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview .choice-card-preview,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview .card.with-info{
+  flex:none!important;width:82px!important;min-width:82px!important;max-width:82px!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview .card-face{
+  width:82px!important;min-width:82px!important;max-width:82px!important;
+  height:123px!important;min-height:123px!important;max-height:123px!important;
+  aspect-ratio:auto!important;margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview .card-info-panel{
+  width:82px!important;min-width:82px!important;max-width:82px!important;
+  height:auto!important;min-height:42px!important;max-height:none!important;flex:0 0 auto!important;
+  margin:-1px 0 0!important;padding:3px 4px 4px!important;overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview .card-info-name{
+  font-size:6px!important;line-height:1.05!important;padding:0 0 2px!important;
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-static-preview .card-info-desc{
+  display:block!important;font-size:5px!important;line-height:1.1!important;padding:0!important;
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+  -webkit-line-clamp:unset!important;line-clamp:unset!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-text-btn{
+  grid-row:2!important;min-height:42px!important;height:auto!important;max-height:none!important;
+  margin:0!important;padding:4px 5px!important;overflow:hidden!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-text-btn b{font-size:8px!important;line-height:1.05!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-text-btn span{
+  font-size:5.5px!important;line-height:1.1!important;margin-top:2px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-action .choice-cancel{
+  position:relative!important;inset:auto!important;transform:none!important;
+  width:120px!important;min-width:120px!important;max-width:120px!important;
+  height:24px!important;min-height:24px!important;max-height:24px!important;
+  margin:2px auto 0!important;padding:2px 10px!important;font-size:7.5px!important;
+}
+
+/* 3) HEART BOND — EXCHANGE. Variable plaque heights; nothing may be clipped. */
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.choice-modal.heart-bond-exchange{
+  width:calc(100vw - 8px)!important;max-width:calc(100vw - 8px)!important;
+  height:calc(var(--app-height,100dvh) - 8px)!important;max-height:calc(var(--app-height,100dvh) - 8px)!important;
+  min-height:0!important;margin:0!important;padding:4px 4px 5px!important;
+  display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-heading{
+  position:relative!important;inset:auto!important;top:auto!important;left:auto!important;
+  transform:none!important;flex:0 0 auto!important;width:100%!important;margin:0 0 3px!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-heading h1{font-size:18px!important;line-height:1!important;margin:0!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange #choiceSub{display:none!important;height:0!important;margin:0!important;padding:0!important}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-grid{
+  flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+  width:100%!important;margin:0!important;padding:4px 10px 4px!important;
+  display:flex!important;flex-flow:row nowrap!important;align-items:flex-start!important;justify-content:flex-start!important;
+  gap:7px!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x proximity!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-btn{
+  flex:0 0 76px!important;width:76px!important;min-width:76px!important;max-width:76px!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;gap:0!important;overflow:visible!important;align-self:flex-start!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-preview.card.with-info,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-preview{
+  flex:none!important;width:76px!important;min-width:76px!important;max-width:76px!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:0!important;overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-preview .card-face{
+  width:76px!important;min-width:76px!important;max-width:76px!important;
+  height:114px!important;min-height:114px!important;max-height:114px!important;
+  aspect-ratio:auto!important;margin:0!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-preview .card-info-panel{
+  width:76px!important;min-width:76px!important;max-width:76px!important;
+  height:auto!important;min-height:40px!important;max-height:none!important;flex:0 0 auto!important;
+  margin:-1px 0 0!important;padding:3px 4px 4px!important;overflow:visible!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-preview .card-info-name{
+  display:block!important;font-size:5.7px!important;line-height:1.08!important;padding:0 0 2px!important;
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+  -webkit-line-clamp:unset!important;line-clamp:unset!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-card-preview .card-info-desc{
+  display:block!important;font-size:4.9px!important;line-height:1.1!important;padding:0!important;
+  white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+  -webkit-line-clamp:unset!important;line-clamp:unset!important;
+}
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange #choiceCancel,
+html.mobile-browser #choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay#choiceOverlay
+.heart-bond-exchange .choice-cancel{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  position:relative!important;inset:auto!important;transform:none!important;
+  flex:0 0 26px!important;width:120px!important;min-width:120px!important;max-width:120px!important;
+  height:26px!important;min-height:26px!important;max-height:26px!important;
+  margin:3px auto 0!important;padding:3px 12px!important;font-size:8px!important;line-height:1!important;
+}
+
+/* 4) Right rail piles: equal size, no fake stack shadows, top pair separated from preview. */
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile#enemyPile.pile-zone{
+  transform:translateY(-5px)!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile#enemyPile.pile-zone > .pile-inner,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile#playerPile.pile-zone > .pile-inner{
+  gap:8px!important;overflow:visible!important;
+}
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile#enemyPile .pile-inner > .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #enemyPile#enemyPile .pile-inner > .discard-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile#playerPile .pile-inner > .deck-stack,
+html.mobile-browser body:not(.front-menu-active):not(.prebattle-shell-hidden):not(.local-handoff-active)
+#app#app#app#app > .rightbar > #playerPile#playerPile .pile-inner > .discard-stack{
+  position:relative!important;box-sizing:border-box!important;
+  flex:0 0 22px!important;width:22px!important;min-width:22px!important;max-width:22px!important;
+  height:30px!important;min-height:30px!important;max-height:30px!important;
+  margin:0!important;transform:none!important;aspect-ratio:auto!important;overflow:visible!important;
+  box-shadow:none!important;filter:none!important;
+}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack,
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack,
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack.has-card,
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack.empty{
+  box-shadow:none!important;filter:none!important;
+}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack::before{inset:2px!important;box-shadow:none!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack::after{font-size:5px!important;letter-spacing:.03em!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack > .discard-top{inset:1px!important}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack > .discard-top::after{display:none!important}
+
+/* Counters live fully OUTSIDE the two cards, vertically centered. */
+html.mobile-browser #app#app#app#app .rightbar #enemyPile#enemyPile .pile-inner .deck-number,
+html.mobile-browser #app#app#app#app .rightbar #enemyPile#enemyPile .pile-inner .discard-number,
+html.mobile-browser #app#app#app#app .rightbar #playerPile#playerPile .pile-inner .deck-number,
+html.mobile-browser #app#app#app#app .rightbar #playerPile#playerPile .pile-inner .discard-number{
+  position:absolute!important;top:50%!important;bottom:auto!important;
+  width:11px!important;height:11px!important;min-width:11px!important;min-height:11px!important;
+  max-width:11px!important;max-height:11px!important;
+  transform:translateY(-50%)!important;margin:0!important;padding:0!important;
+  border:1px solid #080808!important;outline-width:1px!important;outline-offset:0!important;
+  font-size:5.5px!important;line-height:1!important;box-shadow:none!important;z-index:20!important;
+}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .discard-stack .discard-number{
+  left:-15px!important;right:auto!important;
+}
+html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-number{
+  right:-15px!important;left:auto!important;
+}
+</style>
+
 </body>
 </html>
