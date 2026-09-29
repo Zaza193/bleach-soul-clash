@@ -48955,6 +48955,30 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     }
   }
 
+  const labMobile=()=>document.documentElement.classList.contains('mobile-browser')||
+    document.documentElement.classList.contains('mobile-pwa');
+
+  function labFxScale(rect){
+    if(!labMobile()||!rect) return 1;
+    /* New Lab VFX were authored around ~80–120px battlefield cards.
+       Mobile battlefield cards are much smaller. */
+    return clamp(Math.min(rect.width/76,rect.height/112),.34,.62);
+  }
+
+  function animateLiveImportant(el,duration,draw){
+    if(!el) return Promise.resolve();
+    return new Promise(resolve=>{
+      const start=performance.now();
+      const frame=now=>{
+        const p=clamp((now-start)/duration);
+        draw(p);
+        if(p<1) requestAnimationFrame(frame);
+        else resolve();
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+
   function drawCard(c,img,x,y,w,h,label,power,alpha=1){
     c.save();c.globalAlpha*=alpha;round(c,x,y,w,h,Math.max(3,w*.06));c.clip();
     c.fillStyle='#182536';c.fillRect(x,y,w,h);
@@ -48979,29 +49003,47 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     if(!rect){await wait(Math.min(duration,120));return}
     const canvas=document.createElement('canvas');
     canvas.className='bsc-lab-vfx-canvas';
+
+    /* Use the canvas' actual CSS box as the coordinate authority.
+       This fixes Safari/PWA visualViewport vs 100vh/100vw drift. */
     Object.assign(canvas.style,{
-      position:'fixed',inset:'0',width:'100vw',height:'100vh',
+      position:'fixed',left:'0',top:'0',right:'0',bottom:'0',
+      width:'100%',height:'100%',
       zIndex:'16550',pointerEvents:'none'
     });
     document.body.appendChild(canvas);
+
     const dpr=Math.min(window.devicePixelRatio||1,2);
-    const resize=()=>{
-      canvas.width=Math.max(1,Math.round(innerWidth*dpr));
-      canvas.height=Math.max(1,Math.round(innerHeight*dpr));
-    };
-    resize();
+    const box=canvas.getBoundingClientRect();
+    const cssW=Math.max(1,box.width);
+    const cssH=Math.max(1,box.height);
+    canvas.width=Math.max(1,Math.round(cssW*dpr));
+    canvas.height=Math.max(1,Math.round(cssH*dpr));
+
     const ctx=canvas.getContext('2d');
     ctx.setTransform(dpr,0,0,dpr,0,0);
+
     const img=await loadImg(artSrc(card));
     const oldVis=hideEl?.style?.visibility;
     if(hideEl) hideEl.style.setProperty('visibility','hidden','important');
-    const pad=Math.max(50,Math.max(rect.width,rect.height)*.8);
-    const s={x:rect.left,y:rect.top,w:rect.width,h:rect.height,pad};
+
+    const fx=labFxScale(rect);
+    const pad=(labMobile()?Math.max(16,Math.max(rect.width,rect.height)*.42):Math.max(50,Math.max(rect.width,rect.height)*.8));
+    const s={
+      x:rect.left-box.left,
+      y:rect.top-box.top,
+      w:rect.width,
+      h:rect.height,
+      pad,
+      fx,
+      mobile:labMobile()
+    };
+
     const start=performance.now();
     return new Promise(resolve=>{
       const frame=now=>{
         const p=clamp((now-start)/duration);
-        ctx.clearRect(0,0,innerWidth,innerHeight);
+        ctx.clearRect(0,0,cssW,cssH);
         drawer(ctx,p,s,img,card);
         if(p<1) requestAnimationFrame(frame);
         else{
@@ -49039,17 +49081,18 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
         const dx=-Math.sin(a)*rx,dy=Math.cos(a)*ry-Math.sin(a)*rx*tilt;
         const turn=Math.atan2(dy,dx)+side*q*1.7+whip*.25,perspective=.45+.55*Math.abs(Math.sin(a));
         c.save();c.translate(x,y);c.rotate(turn);
-        const lw=(i%2?4.7:6.3)*perspective*Math.max(.45,s.w/120),lh=(i%2?1.6:3.9)*Math.max(.45,s.w/120);
+        const chainScale=s.mobile?Math.max(.20,s.w/120):Math.max(.45,s.w/120);
+        const lw=(i%2?4.7:6.3)*perspective*chainScale,lh=(i%2?1.6:3.9)*chainScale;
         const steel=c.createLinearGradient(0,-5,0,5);
         steel.addColorStop(0,'#f1f4ef');steel.addColorStop(.22,'#becbc9');steel.addColorStop(.45,'#506368');steel.addColorStop(.64,'#1b303a');steel.addColorStop(.85,'#8e9fa1');steel.addColorStop(1,'#e2e9e5');
-        ellipse(c,0,1,lw,lh,null,'#030a10',Math.max(1,4.3*s.w/120));
-        ellipse(c,0,0,lw,lh,null,steel,Math.max(.8,2.5*s.w/120));
+        ellipse(c,0,1,lw,lh,null,'#030a10',s.mobile?Math.max(.45,1.7*s.w/120):Math.max(1,4.3*s.w/120));
+        ellipse(c,0,0,lw,lh,null,steel,s.mobile?Math.max(.35,1.1*s.w/120):Math.max(.8,2.5*s.w/120));
         c.restore();
       }
       c.restore();
     }
     if(t>0)for(let k=0;k<3;k++)strand(k,false);
-    drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Шухей Хисаги',card?.currentPower??3);
+    if(!card?.__labExactDom) drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Шухей Хисаги',card?.currentPower??3);
     if(t>0){
       c.save();c.globalAlpha=fade*.18;round(c,s.x,s.y,s.w,s.h,7);c.fillStyle='#001518';c.fill();c.restore();
       for(let k=0;k<3;k++)strand(k,true);
@@ -49078,7 +49121,7 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     for(let i=0;i<bites.length;i++){
       const p=phase(t,.1+i*.16,.1+i*.16+.09);if(p<=0||p>=1)continue;
       const [nx,ny,nrx,nry]=bites[i];
-      for(let k=0;k<9;k++){const ang=k/9*TAU;c.globalAlpha=Math.sin(p*Math.PI)*.75;c.fillStyle=k%2?'#a89674':'#e9d8b6';const x=s.x+(nx+Math.cos(ang)*nrx*.6)*s.w,y=s.y+(ny+Math.sin(ang)*nry*.6)*s.h;c.fillRect(x+Math.cos(ang)*p*7,y+p*9,2.5*(1-p),3*(1-p))}
+      for(let k=0;k<9;k++){const ang=k/9*TAU;c.globalAlpha=Math.sin(p*Math.PI)*.75;c.fillStyle=k%2?'#a89674':'#e9d8b6';const x=s.x+(nx+Math.cos(ang)*nrx*.6)*s.w,y=s.y+(ny+Math.sin(ang)*nry*.6)*s.h;const f=s.mobile?s.fx:1;c.fillRect(x+Math.cos(ang)*p*7*f,y+p*9*f,Math.max(.8,2.5*f)*(1-p),Math.max(1,3*f)*(1-p))}
     }
     c.globalAlpha=1;
   }
@@ -49088,44 +49131,58 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     const exactDom=!!card?.__labExactDom;
     if(t===0){if(!exactDom) drawCard(c,img,s.x,s.y,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);return}
     const open=ease(phase(t,.02,.23))*(1-ease(phase(t,.77,1))),rise=ease(phase(t,.22,.68));
-    const cx=s.x+s.w/2,cy=s.y+s.h+Math.max(3,s.h*.03);
-    c.save();c.globalAlpha=open;glow(c,cx,cy,s.w*.85,'rgba(114,161,215,.2)');ellipse(c,cx,cy,s.w*.85*open,s.h*.09*open,'#02040b','#587792',1.2);ellipse(c,cx,cy,s.w*.72*open,s.h*.06*open,null,'#b3d6ed66',.7);c.restore();
-    if(rise>0){c.save();c.beginPath();c.rect(s.x-5,s.y+s.h*(1-rise)-4,s.w+10,s.h*rise+8);c.clip();if(!exactDom) drawCard(c,img,s.x,s.y+(1-rise)*s.h*.16,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);c.fillStyle=`rgba(1,4,13,${(1-ease(phase(t,.5,.82)))*.94})`;c.fillRect(s.x-5,s.y-5,s.w+10,s.h+20);c.restore()}
+    const f=s.mobile?s.fx:1;
+    const cx=s.x+s.w/2,cy=s.y+s.h+Math.max(1.5*f,s.h*.03);
+    c.save();c.globalAlpha=open;glow(c,cx,cy,s.w*.85,'rgba(114,161,215,.2)');ellipse(c,cx,cy,s.w*.85*open,s.h*.09*open,'#02040b','#587792',Math.max(.45,1.2*f));ellipse(c,cx,cy,s.w*.72*open,s.h*.06*open,null,'#b3d6ed66',Math.max(.3,.7*f));c.restore();
+    if(rise>0){const ex=5*f,ey=4*f;c.save();c.beginPath();c.rect(s.x-ex,s.y+s.h*(1-rise)-ey,s.w+ex*2,s.h*rise+ey*2);c.clip();if(!exactDom) drawCard(c,img,s.x,s.y+(1-rise)*s.h*.16,s.w,s.h,card?.name||'Зольдат',card?.currentPower??2);c.fillStyle=`rgba(1,4,13,${(1-ease(phase(t,.5,.82)))*.94})`;c.fillRect(s.x-ex,s.y-5*f,s.w+ex*2,s.h+20*f);c.restore()}
     for(let i=0;i<13;i++){c.save();c.globalAlpha=open*.32*(1-rise*.6);const x=s.x-10+i*(s.w+20)/12;const g=c.createLinearGradient(0,cy,0,cy-s.h*.67);g.addColorStop(0,'#09101d');g.addColorStop(.6,'#45617b');g.addColorStop(1,'transparent');c.fillStyle=g;c.beginPath();c.moveTo(x,cy);c.bezierCurveTo(x+Math.sin(t*8+i)*s.w*.15,cy-s.h*.2,x-s.w*.1,cy-s.h*.4,x+s.w*.03,cy-s.h*(.58+(i%3)*.05));c.bezierCurveTo(x+s.w*.12,cy-s.h*.4,x+Math.cos(i+t*7)*s.w*.1,cy-s.h*.2,x+s.w*.06,cy);c.fill();c.restore()}
     /* exact game card is shown here; no synthetic cross/card marker */
   }
 
   function darkPool(c,cx,y,w,alpha){c.save();c.globalAlpha=alpha;glow(c,cx,y,w*.82,'rgba(153,169,190,.13)');ellipse(c,cx,y,w*.7,Math.max(4,w*.12),'#020408','#738798',.8);for(let k=0;k<3;k++){c.globalAlpha=alpha*(.32-k*.07);ellipse(c,cx,y,w*(.72+k*.11),Math.max(4,w*.12)+k*3,null,'#aec3ce',.65)}c.restore()}
   function inkStreams(c,s,amount,t){
-    const base=s.y+s.h+7;
+    const f=s.mobile?s.fx:1;
+    const base=s.y+s.h+7*f;
     for(let i=0;i<11;i++){
-      const x=s.x-8+i*(s.w+16)/10,h=(s.h+45)*amount*(.8+(i%4)*.065),wave=Math.sin(t*8+i*1.7)*12;
+      const x=s.x-8*f+i*(s.w+16*f)/10,h=(s.h+45*f)*amount*(.8+(i%4)*.065),wave=Math.sin(t*8+i*1.7)*12*f;
       c.save();c.globalAlpha=amount*.9;const g=c.createLinearGradient(x,base,x,base-h);g.addColorStop(0,'#01030a');g.addColorStop(.63,'#091322');g.addColorStop(1,'rgba(108,133,157,0)');
-      c.beginPath();c.moveTo(x-7,base);c.bezierCurveTo(x+wave-18,base-h*.32,x-wave+20,base-h*.74,x+wave,base-h);c.bezierCurveTo(x-wave+28,base-h*.63,x+wave+8,base-h*.3,x+7,base);c.closePath();c.fillStyle=g;c.fill();
-      c.beginPath();c.moveTo(x-4,base);c.bezierCurveTo(x+wave-14,base-h*.34,x-wave+15,base-h*.72,x+wave,base-h);c.strokeStyle='rgba(160,182,200,.3)';c.lineWidth=.65;c.stroke();c.restore();
+      c.beginPath();c.moveTo(x-7*f,base);c.bezierCurveTo(x+wave-18*f,base-h*.32,x-wave+20*f,base-h*.74,x+wave,base-h);c.bezierCurveTo(x-wave+28*f,base-h*.63,x+wave+8*f,base-h*.3,x+7*f,base);c.closePath();c.fillStyle=g;c.fill();
+      c.beginPath();c.moveTo(x-4*f,base);c.bezierCurveTo(x+wave-14*f,base-h*.34,x-wave+15*f,base-h*.72,x+wave,base-h);c.strokeStyle='rgba(160,182,200,.3)';c.lineWidth=Math.max(.3,.65*f);c.stroke();c.restore();
     }
   }
   function drawKamikake(c,t,s,img,card){
     const exactDom=!!card?.__labExactDom;
-    const cx=s.x+s.w/2,base=s.y+s.h+7;
+    const f=s.mobile?s.fx:1;
+    const cx=s.x+s.w/2,base=s.y+s.h+7*f;
     const pool=ease(phase(t,.02,.18))*(1-ease(phase(t,.82,1))),cover=ease(phase(t,.12,.47)),sink=ease(phase(t,.42,.8));
     darkPool(c,cx,base,s.w,pool);
     if(sink<1){
-      c.save();c.beginPath();c.rect(s.x-8,s.y-25,s.w+16,s.h+31);c.clip();
+      c.save();c.beginPath();c.rect(s.x-8*f,s.y-25*f,s.w+16*f,s.h+31*f);c.clip();
       const dy=sink*s.h*1.15,sw=s.w*(1-sink*.14),xx=cx-sw/2;
       if(!exactDom) drawCard(c,img,xx,s.y+dy,sw,s.h,card?.name||'Джуширо Укитаке',card?.currentPower??card?.power??7,1-sink*.55);
-      c.save();round(c,xx,s.y+dy,sw,s.h,7);c.clip();
+      c.save();round(c,xx,s.y+dy,sw,s.h,Math.max(2,7*f));c.clip();
       const ink=c.createLinearGradient(0,s.y+s.h*(1-cover),0,s.y+s.h);ink.addColorStop(0,'rgba(0,3,10,0)');ink.addColorStop(.33,'rgba(2,5,13,.64)');ink.addColorStop(1,'#01030a');c.fillStyle=ink;c.fillRect(xx,s.y+s.h*(1-cover),sw,s.h*cover+dy);c.restore();c.restore();
     }
     inkStreams(c,s,Math.sin(phase(t,.06,.91)*Math.PI),t);
     const pull=phase(t,.25,.83);
-    if(pull>0&&pull<1){c.save();for(let i=0;i<21;i++){const u=(pull+i*.047)%1,x=cx+Math.sin(i*2.4)*(s.w*.48)*(1-u),y=s.y-18+u*(s.h+24);c.globalAlpha=Math.sin(u*Math.PI)*Math.sin(pull*Math.PI)*.54;c.strokeStyle='#c2cbd5';c.lineWidth=.8;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+3+u*7);c.stroke()}c.restore()}
-    const pulse=Math.sin(phase(t,.68,.9)*Math.PI);if(pulse>0){c.save();c.globalAlpha=pulse*.7;ellipse(c,cx,base,s.w*.32,Math.max(2,s.w*.04),null,'#d9e5e9',.9);c.restore()}
+    if(pull>0&&pull<1){c.save();for(let i=0;i<21;i++){const u=(pull+i*.047)%1,x=cx+Math.sin(i*2.4)*(s.w*.48)*(1-u),y=s.y-18*f+u*(s.h+24*f);c.globalAlpha=Math.sin(u*Math.PI)*Math.sin(pull*Math.PI)*.54;c.strokeStyle='#c2cbd5';c.lineWidth=Math.max(.35,.8*f);c.beginPath();c.moveTo(x,y);c.lineTo(x,y+(3+u*7)*f);c.stroke()}c.restore()}
+    const pulse=Math.sin(phase(t,.68,.9)*Math.PI);if(pulse>0){c.save();c.globalAlpha=pulse*.7;ellipse(c,cx,base,s.w*.32,Math.max(1,Math.max(2,s.w*.04)*f),null,'#d9e5e9',Math.max(.35,.9*f));c.restore()}
   }
 
   async function labHisagi(sideKey,row,uid){
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     const el=actualCard(sideKey,row,uid),rect=cardRect(sideKey,row,uid),card=cardData(sideKey,uid);
+
+    /* On mobile keep the exact battlefield card and draw only chains around it.
+       Desktop retains the original Lab presentation. */
+    if(labMobile()&&card){
+      card.__labExactDom=true;
+      try{
+        return await overlayFor(rect,Math.round(6200/1.7),drawHisagi,{card,hideEl:null});
+      } finally {
+        delete card.__labExactDom;
+      }
+    }
     return overlayFor(rect,Math.round(6200/1.7),drawHisagi,{card,hideEl:el});
   }
   async function labGlutton(sourceSideKey,sourceRow,sourceUid,targetSideKey,targetRow,targetUid){
@@ -49152,26 +49209,46 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     };
 
     el.classList.remove('manifest-hidden');
+    if(labMobile()) el.classList.add('bsc-lab-live-card');
     el.style.setProperty('visibility','visible','important');
     el.style.setProperty('opacity','0','important');
-    el.style.setProperty('transform','translateY(18px) scale(.96)','important');
+    el.style.setProperty('transform',`translateY(${labMobile()?Math.max(5,rect.height*.22):18}px) scale(.96)`,'important');
     el.style.setProperty('filter','brightness(.06) saturate(.16) contrast(1.14)','important');
     el.style.setProperty('transition','none','important');
     el.style.setProperty('z-index','30','important');
 
     const duration=Math.round(4600/1.5);
-    const anim=el.animate([
-      {opacity:0,transform:'translateY(18px) scale(.96)',filter:'brightness(.06) saturate(.16) contrast(1.14)',offset:0},
-      {opacity:.18,transform:'translateY(12px) scale(.97)',filter:'brightness(.16) saturate(.28) contrast(1.1)',offset:.22},
-      {opacity:.78,transform:'translateY(3px) scale(.995)',filter:'brightness(.62) saturate(.72)',offset:.54},
-      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:.72},
-      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:1}
-    ],{duration,easing:'cubic-bezier(.18,.82,.22,1)',fill:'both'});
+    let anim=null,livePromise=null;
+    if(labMobile()){
+      const riseY=Math.max(5,rect.height*.22);
+      livePromise=animateLiveImportant(el,duration,p=>{
+        const q=ease(phase(p,.04,.72));
+        const opacity=ease(phase(p,.10,.68));
+        const y=(1-q)*riseY;
+        const scale=.96+.04*q;
+        const bright=.06+.94*q;
+        const sat=.16+.84*q;
+        el.style.setProperty('opacity',String(opacity),'important');
+        el.style.setProperty('transform',`translateY(${y.toFixed(2)}px) scale(${scale.toFixed(4)})`,'important');
+        el.style.setProperty('filter',q>.985?'none':`brightness(${bright.toFixed(3)}) saturate(${sat.toFixed(3)}) contrast(${(1.14-.14*q).toFixed(3)})`,'important');
+      });
+    }else{
+      anim=el.animate([
+        {opacity:0,transform:'translateY(18px) scale(.96)',filter:'brightness(.06) saturate(.16) contrast(1.14)',offset:0},
+        {opacity:.18,transform:'translateY(12px) scale(.97)',filter:'brightness(.16) saturate(.28) contrast(1.1)',offset:.22},
+        {opacity:.78,transform:'translateY(3px) scale(.995)',filter:'brightness(.62) saturate(.72)',offset:.54},
+        {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:.72},
+        {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:1}
+      ],{duration,easing:'cubic-bezier(.18,.82,.22,1)',fill:'both'});
+    }
 
     try{
-      await overlayFor(rect,duration,drawSoldat,{card,hideEl:null});
+      await Promise.all([
+        overlayFor(rect,duration,drawSoldat,{card,hideEl:null}),
+        livePromise||Promise.resolve()
+      ]);
     } finally {
-      try{anim.cancel()}catch(_){}
+      try{anim?.cancel()}catch(_){}
       el.classList.remove('manifest-hidden');
       el.style.setProperty('visibility','visible','important');
       el.style.setProperty('opacity','1','important');
@@ -49180,6 +49257,7 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
       el.style.setProperty('transition','none','important');
       if(previous.zIndex) el.style.zIndex=previous.zIndex;
       else el.style.removeProperty('z-index');
+      el.classList.remove('bsc-lab-live-card');
       if(card) delete card.__labExactDom;
     }
   }
@@ -49189,12 +49267,16 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     if(card) card.__labExactDom=true;
     const clone=createExactLabCardClone(el,rect);
     const duration=3100;
+    const mobile=labMobile();
+    const y2=mobile?Math.max(1,rect.height*.03):2;
+    const y10=mobile?Math.max(4,rect.height*.13):10;
+    const y24=mobile?Math.max(7,rect.height*.30):24;
     const anim=animateExactLabCard(clone,[
       {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:0},
-      {opacity:1,transform:'translateY(2px) scale(.99)',filter:'brightness(.8)',offset:.36},
-      {opacity:.62,transform:'translateY(10px) scale(.94,.82)',filter:'brightness(.25) grayscale(.7)',offset:.66},
-      {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.04) grayscale(1)',offset:.82},
-      {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.04) grayscale(1)',offset:1}
+      {opacity:1,transform:`translateY(${y2}px) scale(.99)`,filter:'brightness(.8)',offset:.36},
+      {opacity:.62,transform:`translateY(${y10}px) scale(.94,.82)`,filter:'brightness(.25) grayscale(.7)',offset:.66},
+      {opacity:0,transform:`translateY(${y24}px) scale(.82,.42)`,filter:'brightness(.04) grayscale(1)',offset:.82},
+      {opacity:0,transform:`translateY(${y24}px) scale(.82,.42)`,filter:'brightness(.04) grayscale(1)',offset:1}
     ],{duration,easing:'cubic-bezier(.22,.78,.28,1)'});
     try{
       return await overlayFor(rect,duration,drawKamikake,{card,hideEl:el});
@@ -49214,33 +49296,54 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
     if(card) card.__labExactDom=true;
 
     el.classList.remove('manifest-hidden','returning-hidden','v242-kamikake-sink','v242-kamikake-emerge');
+    if(labMobile()) el.classList.add('bsc-lab-live-card');
     el.style.setProperty('visibility','visible','important');
     el.style.setProperty('opacity','0','important');
-    el.style.setProperty('transform','translateY(24px) scale(.82,.42)','important');
+    el.style.setProperty('transform',`translateY(${labMobile()?Math.max(7,rect.height*.30):24}px) scale(.82,.42)`,'important');
     el.style.setProperty('transform-origin','50% 100%','important');
     el.style.setProperty('filter','brightness(.05) grayscale(.92)','important');
     el.style.setProperty('transition','none','important');
     el.style.setProperty('z-index','30','important');
 
     const duration=3100;
-    const anim=el.animate([
-      {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.05) grayscale(.92)',offset:0},
-      {opacity:.22,transform:'translateY(17px) scale(.88,.60)',filter:'brightness(.13) grayscale(.82)',offset:.20},
-      {opacity:.62,transform:'translateY(9px) scale(.94,.78)',filter:'brightness(.36) grayscale(.55)',offset:.42},
-      {opacity:.94,transform:'translateY(2px) scale(.99,.97)',filter:'brightness(.82) grayscale(.12)',offset:.68},
-      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:.82},
-      {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:1}
-    ],{duration,easing:'cubic-bezier(.18,.82,.22,1)',fill:'both'});
+    let anim=null,livePromise=null;
+    if(labMobile()){
+      const dropY=Math.max(7,rect.height*.30);
+      livePromise=animateLiveImportant(el,duration,p=>{
+        const q=ease(phase(p,.04,.82));
+        const opacity=ease(phase(p,.08,.72));
+        const y=(1-q)*dropY;
+        const sx=.82+.18*q;
+        const sy=.42+.58*q;
+        const bright=.05+.95*q;
+        const gray=.92*(1-q);
+        el.style.setProperty('opacity',String(opacity),'important');
+        el.style.setProperty('transform',`translateY(${y.toFixed(2)}px) scale(${sx.toFixed(4)},${sy.toFixed(4)})`,'important');
+        el.style.setProperty('filter',q>.985?'none':`brightness(${bright.toFixed(3)}) grayscale(${gray.toFixed(3)})`,'important');
+      });
+    }else{
+      anim=el.animate([
+        {opacity:0,transform:'translateY(24px) scale(.82,.42)',filter:'brightness(.05) grayscale(.92)',offset:0},
+        {opacity:.22,transform:'translateY(17px) scale(.88,.60)',filter:'brightness(.13) grayscale(.82)',offset:.20},
+        {opacity:.62,transform:'translateY(9px) scale(.94,.78)',filter:'brightness(.36) grayscale(.55)',offset:.42},
+        {opacity:.94,transform:'translateY(2px) scale(.99,.97)',filter:'brightness(.82) grayscale(.12)',offset:.68},
+        {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:.82},
+        {opacity:1,transform:'translateY(0) scale(1)',filter:'none',offset:1}
+      ],{duration,easing:'cubic-bezier(.18,.82,.22,1)',fill:'both'});
+    }
 
     try{
-      await overlayFor(
-        rect,
-        duration,
-        (c,p,s,img,card)=>drawKamikake(c,1-p,s,img,card),
-        {card,hideEl:null}
-      );
+      await Promise.all([
+        overlayFor(
+          rect,
+          duration,
+          (c,p,s,img,card)=>drawKamikake(c,1-p,s,img,card),
+          {card,hideEl:null}
+        ),
+        livePromise||Promise.resolve()
+      ]);
     } finally {
-      try{anim.cancel()}catch(_){}
+      try{anim?.cancel()}catch(_){}
       el.classList.remove('manifest-hidden','returning-hidden','v242-kamikake-sink','v242-kamikake-emerge');
       el.style.setProperty('visibility','visible','important');
       el.style.setProperty('opacity','1','important');
@@ -49249,6 +49352,7 @@ html.mobile-browser #app#app#app#app .rightbar .pile-inner > .deck-stack .deck-n
       el.style.removeProperty('transform-origin');
       el.style.removeProperty('z-index');
       el.style.removeProperty('transition');
+      el.classList.remove('bsc-lab-live-card');
       if(card) delete card.__labExactDom;
     }
   }
@@ -49975,10 +50079,12 @@ addEventListener("DOMContentLoaded",()=>{
 </script>
 
 
-<style id="bsc-v1556-pwa-scroll-cue-restart-real">
-/* PWA only */
+<style id="bsc-v1556-pwa-restart-only">
+/* PWA only — retained from v5.5.6.
+   The obsolete scroll-cue runtime was removed in v5.5.15. */
 
-/* Replace the unreliable iOS scrollbar with a persistent on-screen affordance. */
+/* Suppress the even older pseudo-element scroll hint from v5.5.4.
+   v5.5.8's real persistent scrollbar is the only scroll affordance now. */
 html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-modal::after{
   content:none!important;
   display:none!important;
@@ -49991,57 +50097,8 @@ html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid{
   overflow-y:auto!important;
   -webkit-overflow-scrolling:touch!important;
 }
-html.mobile-pwa .pwa-mulligan-scroll-cue{
-  position:absolute!important;
-  left:50%!important;
-  bottom:62px!important;
-  transform:translateX(-50%)!important;
-  z-index:999!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:7px!important;
-  min-width:128px!important;
-  height:28px!important;
-  padding:0 12px!important;
-  border:1px solid rgba(255,255,255,.34)!important;
-  border-radius:999px!important;
-  background:rgba(5,5,5,.88)!important;
-  color:#fff!important;
-  box-shadow:
-    0 3px 12px rgba(0,0,0,.48),
-    inset 0 -3px 0 #ff5a16!important;
-  font-family:Impact,"Arial Narrow",sans-serif!important;
-  font-size:10px!important;
-  line-height:1!important;
-  letter-spacing:.12em!important;
-  text-transform:uppercase!important;
-  pointer-events:none!important;
-  opacity:1!important;
-}
-html.mobile-pwa .pwa-mulligan-scroll-cue::after{
-  content:"↓"!important;
-  display:block!important;
-  font-size:17px!important;
-  line-height:1!important;
-  animation:pwaMulliganScrollArrow .72s ease-in-out infinite alternate!important;
-}
-html.mobile-pwa .pwa-mulligan-scroll-cue.is-hidden{
-  display:none!important;
-}
-@keyframes pwaMulliganScrollArrow{
-  from{transform:translateY(-2px)}
-  to{transform:translateY(3px)}
-}
 
-/* Add a bottom fade too, so the clipped next row visibly reads as scrollable. */
-html.mobile-pwa #mulliganOverlay:not(.hidden) .mulligan-grid{
-  -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 24px),rgba(0,0,0,.42) calc(100% - 8px),transparent 100%)!important;
-  mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 24px),rgba(0,0,0,.42) calc(100% - 8px),transparent 100%)!important;
-}
-
-/* "Новая игра": make the button itself visibly/tappably larger,
-   while its layout box in .top-controls stays unchanged. */
+/* "Новая игра": visually/tappably larger without growing its layout box. */
 html.mobile-pwa .topbar,
 html.mobile-pwa .top-controls{
   overflow:visible!important;
@@ -50065,57 +50122,6 @@ html.mobile-pwa #restartBtn::before{
   display:none!important;
 }
 </style>
-
-<script id="bsc-v1556-pwa-scroll-cue-runtime">
-(() => {
-  if(!document.documentElement.classList.contains('mobile-pwa')) return;
-
-  const ensureCue = () => {
-    const overlay = document.getElementById('mulliganOverlay');
-    const modal = overlay?.querySelector('.mulligan-modal');
-    const grid = overlay?.querySelector('.mulligan-grid');
-    if(!overlay || !modal || !grid) return;
-
-    let cue = modal.querySelector('.pwa-mulligan-scroll-cue');
-    if(!cue){
-      cue = document.createElement('div');
-      cue.className = 'pwa-mulligan-scroll-cue';
-      cue.textContent = 'ЕЩЁ КАРТЫ';
-      cue.setAttribute('aria-hidden','true');
-      modal.appendChild(cue);
-    }
-
-    const update = () => {
-      const scrollable = grid.scrollHeight > grid.clientHeight + 6;
-      const atBottom = grid.scrollTop + grid.clientHeight >= grid.scrollHeight - 8;
-      cue.classList.toggle('is-hidden', !scrollable || atBottom);
-    };
-
-    if(!grid.dataset.pwaScrollCueBound){
-      grid.dataset.pwaScrollCueBound = '1';
-      grid.addEventListener('scroll', update, {passive:true});
-      addEventListener('resize', update, {passive:true});
-    }
-
-    requestAnimationFrame(()=>requestAnimationFrame(update));
-  };
-
-  const overlay = document.getElementById('mulliganOverlay');
-  if(overlay){
-    new MutationObserver(ensureCue).observe(overlay,{
-      attributes:true,
-      attributeFilter:['class'],
-      childList:true,
-      subtree:true
-    });
-  }
-
-  addEventListener('DOMContentLoaded', ensureCue, {once:true});
-  requestAnimationFrame(ensureCue);
-})();
-</script>
-
-
 <style id="bsc-v1558-pwa-visible-scrollbar">
 /* PWA only — remove the previous "ЕЩЁ КАРТЫ" badge. */
 html.mobile-pwa .pwa-mulligan-scroll-cue{
@@ -50326,6 +50332,40 @@ html.mobile-pwa #mulliganOverlay:not(.hidden) .pwa-mulligan-scrollbar::after{
   pointer-events:none!important;
 }
 </style>
+
+
+<style id="bsc-v15514-mobile-animation-lab-geometry">
+/* Mobile Browser + PWA only.  The Lab canvas is a viewport overlay, not a page-sized desktop layer. */
+html.mobile-browser .bsc-lab-vfx-canvas,
+html.mobile-pwa .bsc-lab-vfx-canvas{
+  position:fixed!important;
+  left:0!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  width:100%!important;
+  height:100%!important;
+  transform:none!important;
+  transform-origin:0 0!important;
+}
+
+/* Live Soldat/Mimihagi animation writes transform/opacity inline with !important.
+   Do not let touch hover/selection add a second transform. */
+html.mobile-browser .card.bsc-lab-live-card:hover,
+html.mobile-pwa .card.bsc-lab-live-card:hover{
+  filter:none!important;
+}
+</style>
+
+
+<script id="bsc-v15515-pwa-startup-guard">
+(() => {
+  if(!document.documentElement.classList.contains('mobile-pwa')) return;
+  addEventListener('DOMContentLoaded',()=>{
+    document.querySelectorAll('.pwa-mulligan-scroll-cue').forEach(el=>el.remove());
+  },{once:true});
+})();
+</script>
 
 </body>
 </html>
