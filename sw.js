@@ -1,5 +1,5 @@
 'use strict';
-const BUILD_VERSION = 'r6-css28-fix23-p54';
+const BUILD_VERSION = 'r6-css28-fix23-p55';
 const CACHE_PREFIX = 'bleach-soul-clash-shell-';
 const CACHE_NAME = CACHE_PREFIX + BUILD_VERSION;
 const ROOT = new URL('./', self.location.href);
